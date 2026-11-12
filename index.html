@@ -227,7 +227,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
         <div><label for="rp" class="hint">Retiro posterior</label><input type="number" id="rp" min="0" max="10" step="0.05"></div>
         <div><label for="vd" class="hint">Vereda</label><input type="number" id="vd" min="0" max="5" step="0.05"></div>
       </div><span class="hint">Los retiros los fija el certificado de parámetros urbanísticos de cada municipio; aquí son valores de ejemplo.</span></div>
-      <div class="ctl"><label>¿Cuántos dormitorios quieres?</label><div class="inline"><div><label for="nd" class="hint">En el 1.er piso</label><select id="nd"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div><div><label for="nd2" class="hint">En el 2.º piso</label><select id="nd2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div></div><span class="hint" id="nd-hint"></span></div>
+      <div class="ctl"><label for="ndt">¿Cuántos dormitorios quieres en total?</label><select id="ndt"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select><span class="hint">La herramienta los reparte entre los dos pisos; abajo puedes cambiar el reparto.</span><div class="inline" style="margin-top:6px"><div><label for="nd" class="hint">En el 1.er piso</label><select id="nd"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div><div><label for="nd2" class="hint">En el 2.º piso</label><select id="nd2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div></div><span class="hint" id="nd-hint"></span></div>
       <div class="ctl"><label for="tam">Tamaño de los ambientes</label><select id="tam"><option value="lote">Se acomodan al lote (nivel del cuadro de áreas)</option><option value="min">Mínimo que cumple el RNE</option></select><span class="hint" id="tam-hint"></span></div>
       <input type="hidden" id="pp" value="1.25"><input type="hidden" id="ty" value="franjas">
       <input type="hidden" id="pl" value="uno">
@@ -1651,6 +1651,7 @@ function render(){
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
   el('ap-row').hidden = v.sis !== 'portante';
   el('sis-hint').textContent = v.sis==='portante' ? 'Los muros de ladrillo King Kong cargan la losa y resisten el sismo; las columnas y vigas soleras solo los confinan. Es lo más económico en 1 y 2 pisos.' : 'Columnas y vigas cargan la losa; los muros son tabiques que se pueden mover. Más concreto y acero.';
+  el('ndt').value = String(Math.min(6, Math.max(1, v.nd + v.nd2)));
   el('tam-hint').textContent = v.tam === 'lote' ? `Si agrandas el lote (escribiendo las medidas o arrastrando los tiradores rojos de la planta), los ambientes crecen hacia el nivel ${NIV[nivel].toLowerCase()}; el nivel se cambia en la pestaña Cuadro de áreas.` : 'La planta es la más pequeña que cumple todo, sea cual sea el lote.';
   el('nd-hint').textContent = `${v.nd + v.nd2} dormitorios en total. ` + (v.nd===1 ? 'Abajo, el fondo del ala de dormitorios queda como comedor-estudio. ' : v.nd===3 ? 'Abajo la casa se alarga (tres franjas o casa larga con patio de luz). ' : '') + (v.nd2 ? `Arriba van ${v.nd2===1?'1 dormitorio':v.nd2+' dormitorios'} encima de los de abajo, con escalera exterior y descanso en el patio.` : 'Sin 2.º piso por ahora.');
   const nOk = r.checks.filter(c=>c.st==='ok').length, nBad = r.checks.filter(c=>c.st==='bad').length, nWarn = r.checks.length - nOk - nBad;
@@ -1765,11 +1766,26 @@ let genTimer = null;
 const regen = () => {
   if(el('nd2').value!=='0' && parseInt(el('n').value,10) < 2) el('n').value = '2';
   clearTimeout(genTimer); el('gen-msg').textContent = 'Buscando…';
-  genTimer = setTimeout(generate, 350);
+  genTimer = setTimeout(()=>{ generate(); checkTotal(); }, 350);
 };
 ids.forEach(k=> el(k).addEventListener('input', ()=>{ document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on')); if(autoKeys.includes(k)) regen(); else render(); }));
 ids.forEach(k=> el(k).addEventListener('change', ()=>{ if(autoKeys.includes(k)) regen(); else render(); }));
 [['p-base','base'],['p-pmr','pmr'],['p-chica','chica']].forEach(([id,p])=> el(id).addEventListener('click', ()=>{ load(presets[p]); el(id).classList.add('on'); render(); }));
+// Total de dormitorios: se reparte entre pisos (abajo hasta 3; arriba uno encima de cada dormitorio de abajo)
+let wantTotal = null;
+const SPLIT = {1:[1,0], 2:[2,0], 3:[3,0], 4:[2,2], 5:[3,2], 6:[3,3]};
+const checkTotal = () => {
+  if(wantTotal == null) return;
+  const got = (parseInt(el('nd').value,10)||0) + (parseInt(el('nd2').value,10)||0);
+  if(got < wantTotal) el('gen-msg').innerHTML = `<b style="color:var(--bad)">Pediste ${wantTotal} dormitorios y en ${f2(parseFloat(el('lote').value))} × ${f2(parseFloat(el('fondo').value))} m caben ${got}</b>: arriba solo va un dormitorio encima de cada uno de abajo y con 3 abajo no queda patio para la escalera. Un lote más ancho (≥ 6.75 m) permite 3 + 3. ` + el('gen-msg').innerHTML;
+  wantTotal = null;
+};
+el('ndt').addEventListener('change', ()=>{
+  const t = parseInt(el('ndt').value,10), [a,b] = SPLIT[t];
+  wantTotal = t; el('nd').value = String(a); el('nd2').value = String(b);
+  document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
+  regen();
+});
 const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; ['dis','are','reg'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg'));
