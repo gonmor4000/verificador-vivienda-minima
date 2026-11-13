@@ -107,6 +107,12 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .ca tr.tot td{font-weight:600;border-top:1.5px solid var(--ink)}
 .ca .rne{font-size:12px;color:var(--muted);max-width:30ch}
 .ca .ok{color:var(--ok)} .ca .warn{color:var(--warn)} .ca .bad{color:var(--bad)}
+.mat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.mat-p h3{font-size:14px;margin:0 0 2px;display:flex;justify-content:space-between;gap:8px}
+.mat-p p.hint{margin:0 0 6px;font-size:12px}
+.ca.mat-t{min-width:0}
+.ca.mat-t td:last-child{color:var(--muted);width:1%;white-space:nowrap}
+#mat-tbl input{width:76px;text-align:right;font:inherit;font-family:var(--f-mono);padding:3px 5px;border:1px solid var(--line);border-radius:5px;background:var(--panel);color:var(--ink)}
 .areas .cols2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
 @media (max-width:900px){.areas .cols2{grid-template-columns:minmax(0,1fr)}}
 .areas ol.how{margin:0;padding-left:22px;line-height:1.5;font-size:13px}
@@ -162,6 +168,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <button type="button" role="tab" id="tab-btn-dis" aria-selected="true" class="on">Diseño</button>
     <button type="button" role="tab" id="tab-btn-3d" aria-selected="false">3D</button>
     <button type="button" role="tab" id="tab-btn-are" aria-selected="false">Cuadro de áreas</button>
+    <button type="button" role="tab" id="tab-btn-mat" aria-selected="false">Materiales</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
     <button type="button" role="tab" id="tab-btn-cam" aria-selected="false">Cambios</button>
   </nav>
@@ -207,6 +214,33 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
         <li>La lavandería y la escalera van en el patio, sin techar (la VIS lo permite), y la escalera se cuenta <b>una sola vez</b>: arriba solo llega su descanso.</li>
         <li>Los dormitorios del 2.º piso van encima de los de abajo y el baño 2 sobre el baño 1, como en el plano.</li>
         <li>Si ni con los mínimos entra, la herramienta lo dice y propone alternativas: bajar de nivel, pasar un dormitorio arriba o el frente que haría falta.</li>
+      </ol>
+    </section>
+  </div>
+
+  <div id="tab-mat" class="areas" hidden aria-label="Materiales por etapa">
+    <section class="card">
+      <h2>Materiales por etapa</h2>
+      <p class="hint" style="margin-top:0">Metrado de la casa del plano actual, ordenado como se construye: primero el 1.er piso por partes y después el 2.º piso. Sirve para pedir a la ferretería lo que toca en cada compra. Incluye el desperdicio habitual (cemento y agregados 5 %, acero 7 %, ladrillos 3 %, bloques 5 %). No incluye encofrado, tarrajeo, pisos, instalaciones ni mano de obra.</p>
+      <div class="kpis" id="mat-kpis"></div>
+    </section>
+    <div id="mat-etapas"></div>
+    <section class="card">
+      <h2>Lista de compra</h2>
+      <p class="hint" style="margin-top:0">Totales por etapa, en las unidades en que se compra. Los precios son de referencia en soles: cámbialos por los de tu ferretería y el total se recalcula.</p>
+      <div class="ca-wrap"><table class="ca" id="mat-tbl"></table></div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px"><button type="button" id="mat-copy">Copiar lista para WhatsApp</button><span class="hint" id="mat-msg" aria-live="polite"></span></div>
+      <textarea id="mat-txt" readonly hidden style="width:100%;min-height:160px;margin-top:8px;font:12px var(--f-mono)"></textarea>
+    </section>
+    <section class="card"><h2>Cómo se calcula</h2>
+      <ol class="how">
+        <li>Las cantidades salen del plano: largo de muros en eje, vanos, columnas, vigas, losa y cimientos, las mismas medidas que usa la pestaña Diseño.</li>
+        <li><b>Cimiento corrido</b> 1:10 + 30 % de piedra grande (2.9 bolsas, 0.83 m³ de hormigón y 0.48 m³ de piedra por m³). <b>Sobrecimiento</b> 1:8 + 25 % de piedra mediana (3.7 bolsas, 0.86 m³ de hormigón y 0.40 m³ de piedra). <b>Falso piso</b> de 10 cm 1:8 (0.49 bolsas y 0.11 m³ de hormigón por m²).</li>
+        <li><b>Concreto f'c = 210 kg/cm²</b> en columnas, vigas, losa y escalera: 9.73 bolsas, 0.52 m³ de arena gruesa y 0.53 m³ de piedra chancada de ½" por m³.</li>
+        <li><b>Muros de King Kong</b> con mortero 1:5 de 1.5 cm: en soga 0.18 bolsas y 0.025 m³ de arena por m², en cabeza 0.43 bolsas y 0.061 m³.</li>
+        <li><b>Acero</b>: columnas con 4 Ø ⅜" (4 Ø ½" en pórticos) y estribos de ¼", vigas con 4 Ø ⅜" (½" en pórticos) y estribos de ¼" cada 0.25 m, losa aligerada con 3 kg/m² de ⅜" y 1 kg/m² de ¼". Varillas de 9 m: ⅜" = 5.04 kg, ½" = 8.95 kg. Alambre n.º 16: 5 % del peso del acero.</li>
+        <li>El <b>2.º piso</b> repite el 1.er piso en proporción a su área techada, más la escalera de concreto con su descanso.</li>
+        <li>Es un metrado de anteproyecto para presupuestar y comprar por etapas; el definitivo sale de los planos de estructuras firmados.</li>
       </ol>
     </section>
   </div>
@@ -267,6 +301,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Materiales</b>: metrado por etapa (1.er piso en cimentación, muros y columnas, vigas y techo; 2.º piso con escalera) con bolsas de cemento, arena, hormigón, piedra, ladrillos King Kong, ladrillos de techo, varillas de acero y alambre. Precios editables y botón para copiar la lista y mandarla por WhatsApp a la ferretería.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Las <b>puertas nunca chocan con los muebles</b>: se comprueba el barrido de cada hoja contra camas, cocina, lavadero y aparatos del baño, y los muebles se recolocan fuera de él. Nueva verificación «Puertas libres de muebles».</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Muebles en la planta: <b>inodoro, lavatorio y ducha</b> en cada baño (el lavatorio junto a la puerta), <b>cocina de 4 hornillas y lavadero</b> sobre la mesada (1.20 × 0.60), y camas: <b>doble de 1.40</b> en el dormitorio 1 (padres) y <b>simple de 0.90</b> en los de los hijos, también en el 2.º piso.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Modo dron: avanzar y retroceder siguen la <b>dirección de la cámara</b>, también hacia arriba o hacia abajo; si miras al techo y avanzas, subes.</span></li>
@@ -2124,12 +2159,160 @@ function cuadro(r){
   el('ca-rel').innerHTML = `<ul>${relaciones(r).map(c=>`<li><span class="pill ${c.st}">${lbl[c.st]}</span><span class="t">${c.t}</span><span class="d">${c.d}</span></li>`).join('')}</ul>`;
 }
 
+// ---------- Materiales por etapa (metrado) ----------
+const MAT = {
+  cem:  {n:'Cemento Portland tipo I', u:'bolsas', p:32,   d:0},
+  are:  {n:'Arena gruesa',            u:'m³',     p:75,   d:1},
+  hor:  {n:'Hormigón',                u:'m³',     p:70,   d:1},
+  pch:  {n:'Piedra chancada ½"',      u:'m³',     p:85,   d:1},
+  pgr:  {n:'Piedra grande (zanja)',   u:'m³',     p:60,   d:1},
+  pme:  {n:'Piedra mediana',          u:'m³',     p:60,   d:1},
+  kk:   {n:'Ladrillo King Kong 18 huecos', u:'unid.', p:1.30, d:0},
+  pan:  {n:'Ladrillo pandereta',      u:'unid.', p:0.90, d:0},
+  blq:  {n:'Ladrillo de techo',       u:'unid.', p:3.00, d:0},
+  a38:  {n:'Acero ⅜" (varilla de 9 m)', u:'varillas', p:30, d:0},
+  a12:  {n:'Acero ½" (varilla de 9 m)', u:'varillas', p:52, d:0},
+  a14:  {n:'Acero ¼" (alambrón)',     u:'kg',     p:5.5,  d:0},
+  alm:  {n:'Alambre negro n.º 16',    u:'kg',     p:6.5,  d:0}
+};
+const MAT_ORD = ['cem','are','hor','pch','pgr','pme','kk','pan','blq','a38','a12','a14','alm'];
+let matPrice = {}; try { matPrice = JSON.parse(localStorage.getItem('vvm-precios') || '{}') || {}; } catch(e){ matPrice = {}; }
+const mPrice = k => (matPrice[k] != null && isFinite(matPrice[k])) ? +matPrice[k] : MAT[k].p;
+const KG = {a38:5.04, a12:8.95};
+function metrado(r){
+  const v = r.v, k = r.typ ? 1 : r.fl, e = r.hL || 0.20, port = v.sis === 'portico';
+  const s2 = r.gross2 > 0 ? r.gross2 / r.gross : 0;
+  const bag = 1.05, agg = 1.05, stl = 1.07;
+  const concF = m3 => ({cem: m3*9.73*bag, are: m3*0.52*agg, pch: m3*0.53*agg});
+  const add = (o, q) => { for(const i in q) o[i] = (o[i]||0) + q[i]; return o; };
+  const steel = (o, d, kgm) => { o[d] = (o[d]||0) + kgm*stl; return o; };
+  // 1.er piso, por piso
+  const wallNet1 = r.wallNet/k, bricks1 = r.bricks/k, col1 = r.conc.col/k, viga1 = r.conc.viga/k, losa1 = r.losa/k, nC = r.nCols;
+  const P = [];
+  // cimentación
+  const cim = {}, cimN = [];
+  if(!port){
+    const vc = r.wallLen*r.cim.an*(r.cim.za-0.20), vs = r.wallLen*T*0.30;
+    add(cim, {cem: vc*2.9*bag, hor: vc*0.83*agg, pgr: vc*0.48*agg});
+    add(cim, {cem: vs*3.7*bag, hor: vs*0.86*agg, pme: vs*0.40*agg});
+    cimN.push(`Cimiento corrido ${f2(r.cim.an)} × ${f2(r.cim.za-0.20)} m: ${f1(vc)} m³`, `Sobrecimiento ${Math.round(T*100)} × 30 cm: ${f1(vs)} m³`);
+  } else {
+    const zap = nC*0.60, cc = r.wallLen*0.20, vcim = Math.max(0, r.conc.cim - zap - cc), Lvc = vcim/(0.25*0.40);
+    add(cim, concF(zap + vcim));
+    add(cim, {cem: cc*2.9*bag, hor: cc*0.83*agg, pgr: cc*0.48*agg});
+    steel(cim, 'a12', nC*12*0.994 + Lvc*4*1.10*0.994);
+    steel(cim, 'a14', Math.ceil(Lvc/0.20)*1.29*0.25);
+    cimN.push(`${nC} zapatas de 1.00 × 1.00 × 0.60 m: ${f1(zap)} m³`, `Vigas de cimentación 25 × 40: ${f1(Lvc)} m`, `Cimiento corrido bajo tabiques: ${f1(cc)} m³`);
+  }
+  const fp = Math.max(0, r.util);
+  add(cim, {cem: fp*0.49*bag, hor: fp*0.11*agg});
+  cimN.push(`Falso piso de 10 cm: ${f1(fp)} m²`);
+  // muros y columnas
+  const muro = (wn, br, vcol, n) => {
+    const o = {};
+    const mo = port ? {c:0.17, a:0.023} : (v.ap==='cabeza' ? {c:0.43, a:0.061} : {c:0.18, a:0.025});
+    o[port ? 'pan' : 'kk'] = br;
+    add(o, {cem: wn*mo.c*bag, are: wn*mo.a*agg});
+    add(o, concF(vcol));
+    const Lb = H + e + 0.60;
+    if(port){ steel(o, 'a12', n*4*Lb*0.994); steel(o, 'a14', n*(Math.ceil(H/0.12)+1)*0.99*0.25); }
+    else { steel(o, 'a38', n*4*Lb*0.56); steel(o, 'a14', n*(Math.ceil(H/0.15)+1)*(2*(T-0.04+0.21)+0.15)*0.25); }
+    return o;
+  };
+  // vigas y techo
+  const techo = (vv, ls) => {
+    const o = {};
+    add(o, concF(vv + ls*0.0875));
+    o.blq = ls*8.33*1.05;
+    const sec = port ? 0.25*Math.max(0.05, r.hv - e) : T*e;
+    const L = sec > 0 ? vv/sec : 0;
+    if(port){ steel(o, 'a12', L*4*1.10*0.994); steel(o, 'a14', Math.ceil(L/0.25)*(2*(0.21+r.hv-0.04)+0.15)*0.25); }
+    else { steel(o, 'a38', L*4*1.10*0.56); steel(o, 'a14', Math.ceil(L/0.25)*(2*(T-0.04+e-0.04)+0.15)*0.25); }
+    steel(o, 'a38', ls*3.0); steel(o, 'a14', ls*1.0);
+    return {o, L};
+  };
+  const t1 = techo(viga1, losa1);
+  P.push({et:1, id:'1.1', n:'Cimentación', q:cim, notas:cimN});
+  P.push({et:1, id:'1.2', n: port ? 'Columnas y tabiques' : 'Muros y columnas', q:muro(wallNet1, bricks1, col1, nC), notas:[`${f1(wallNet1)} m² de muro neto ${port?'(tabique)':'en '+v.ap}`, `${nC} columnas de ${port?'25':Math.round(T*100)} × 25 cm`]});
+  P.push({et:1, id:'1.3', n:'Vigas y techo', q:t1.o, notas:[`${f1(t1.L)} m de ${port?'vigas de 25 × '+Math.round(r.hv*100):'vigas soleras de '+Math.round(T*100)+' × '+Math.round(e*100)} cm`, `Losa aligerada de ${Math.round(e*100)} cm: ${f1(losa1)} m²`]});
+  if(s2 > 0){
+    const t2 = techo(viga1*s2, r.gross2);
+    P.push({et:2, id:'2.1', n: port ? 'Columnas y tabiques' : 'Muros y columnas', q:muro(wallNet1*s2, bricks1*s2, col1*s2, Math.ceil(nC*s2)), notas:[`${f1(wallNet1*s2)} m² de muro neto`, `${Math.ceil(nC*s2)} columnas`]});
+    P.push({et:2, id:'2.2', n:'Vigas y techo', q:t2.o, notas:[`${f1(t2.L)} m de vigas`, `Losa aligerada: ${f1(r.gross2)} m²`]});
+    const st = r.stair;
+    if(st){
+      const w = Math.max(0.90, st.lx1 - st.lx0), inc = Math.hypot(st.run, st.H2);
+      const vE = inc*w*0.15 + st.nR*0.25*st.cr/2*w + w*0.90*0.15;
+      const o = add({}, concF(vE)); steel(o, 'a38', vE*90);
+      P.push({et:2, id:'2.3', n:'Escalera exterior', q:o, notas:[`${st.nR} contrapasos de ${f2(st.cr)} m, ancho ${f2(w)} m, con descanso: ${f2(vE)} m³`]});
+    }
+  }
+  // acero en varillas y alambre
+  P.forEach(p=>{ const q = p.q; const kgS = (q.a38||0) + (q.a12||0) + (q.a14||0);
+    q.alm = kgS*0.05; p.kg = kgS;
+    ['a38','a12'].forEach(d=>{ if(q[d]) q[d] = q[d]/KG[d]; }); });
+  return P;
+}
+const mRound = (k, x) => MAT[k].d ? Math.ceil(x*10 - 1e-9)/10 : Math.ceil(x - 1e-9);
+const mFmt = (k, x) => MAT[k].d ? x.toLocaleString('es-PE',{minimumFractionDigits:1, maximumFractionDigits:1}) : nf(x);
+const soles = x => 'S/ ' + Math.round(x).toLocaleString('es-PE');
+let lastMat = null;
+function materiales(r){
+  const P = metrado(r), v = r.v;
+  const ets = [...new Set(P.map(p=>p.et))];
+  const tot = {}, byEt = {};
+  ets.forEach(et=> byEt[et] = {});
+  P.forEach(p=>{ for(const k in p.q){ if(p.q[k] > 1e-6){ byEt[p.et][k] = (byEt[p.et][k]||0) + p.q[k]; } } });
+  ets.forEach(et=>{ for(const k in byEt[et]){ byEt[et][k] = mRound(k, byEt[et][k]); tot[k] = (tot[k]||0) + byEt[et][k]; } });
+  const cost = q => Object.keys(q).reduce((s,k)=>s + mRound(k, q[k])*mPrice(k), 0);
+  const ETN = {1:'Etapa 1 · 1.er piso', 2:'Etapa 2 · 2.º piso'};
+  const costEt = {}; ets.forEach(et=> costEt[et] = cost(byEt[et]));
+  const costT = ets.reduce((s,et)=>s+costEt[et],0);
+  const kgT = P.reduce((s,p)=>s+p.kg,0);
+  el('mat-kpis').innerHTML = [
+    ['Cemento', `${nf(tot.cem||0)} <small>bolsas</small>`],
+    [v.sis==='portico'?'Ladrillos pandereta':'Ladrillos King Kong', nf((tot.kk||0)+(tot.pan||0))],
+    ['Acero', `${nf(kgT)} <small>kg</small>`],
+    ['Ladrillos de techo', nf(tot.blq||0)],
+    ['Materiales', `${soles(costT)} <small>${ets.length>1?ets.map(et=>soles(costEt[et])).join(' + '):'sin mano de obra'}</small>`]
+  ].map(([a,b])=>`<div class="kpi"><div class="k">${a}</div><div class="v">${b}</div></div>`).join('');
+  const row = (k, x) => `<tr><td>${MAT[k].n}</td><td class="n">${mFmt(k, mRound(k, x))}</td><td>${MAT[k].u}</td></tr>`;
+  let h = '';
+  ets.forEach(et=>{
+    h += `<section class="card"><h2>${ETN[et]} <small class="hint" style="font-weight:400">· materiales ${soles(costEt[et])}</small></h2>`;
+    h += `<div class="mat-grid">` + P.filter(p=>p.et===et).map(p=>`<div class="mat-p"><h3>${p.id} ${p.n} <span class="hint">${soles(cost(p.q))}</span></h3><p class="hint">${p.notas.join(' · ')}</p><table class="ca mat-t"><tbody>${MAT_ORD.filter(k=>p.q[k] > 1e-6).map(k=>row(k, p.q[k])).join('')}</tbody></table></div>`).join('') + `</div>`;
+    if(et===1 && ets.length===1) h += `<p class="hint" style="margin:10px 0 0">Sin 2.º piso en este plano. Si eliges dormitorios arriba en la pestaña Diseño, aquí aparece la etapa 2. Las columnas del 1.er piso ya dejan acero de empalme para crecer.</p>`;
+    h += `</section>`;
+  });
+  el('mat-etapas').innerHTML = h;
+  const ks = MAT_ORD.filter(k=>tot[k] > 0);
+  el('mat-tbl').innerHTML = `<thead><tr><th>Material</th><th>Unidad</th>${ets.map(et=>`<th class="n">Etapa ${et}</th>`).join('')}${ets.length>1?'<th class="n">Total</th>':''}<th class="n">Precio S/</th><th class="n">Subtotal</th></tr></thead><tbody>` +
+    ks.map(k=>`<tr><td>${MAT[k].n}</td><td>${MAT[k].u}</td>${ets.map(et=>`<td class="n">${byEt[et][k] ? mFmt(k, byEt[et][k]) : '—'}</td>`).join('')}${ets.length>1?`<td class="n">${mFmt(k, tot[k])}</td>`:''}<td class="n"><input type="number" class="mat-pr" data-k="${k}" min="0" step="0.1" value="${mPrice(k)}" aria-label="Precio de ${MAT[k].n}"></td><td class="n">${soles(tot[k]*mPrice(k))}</td></tr>`).join('') +
+    `<tr class="tot"><td colspan="${2+ets.length+(ets.length>1?1:0)+1}">Total de materiales</td><td class="n">${soles(costT)}</td></tr></tbody>`;
+  el('mat-tbl').querySelectorAll('.mat-pr').forEach(i=> i.addEventListener('change', ()=>{
+    const x = parseFloat(i.value); if(isFinite(x) && x >= 0) matPrice[i.dataset.k] = x; else delete matPrice[i.dataset.k];
+    try { localStorage.setItem('vvm-precios', JSON.stringify(matPrice)); } catch(e){}
+    if(lastR) materiales(lastR);
+  }));
+  let t = `Lista de materiales · casa de ${f1(r.gross)} m²${r.gross2?` + ${f1(r.gross2)} m² arriba`:''} (${v.sis==='portico'?'pórticos':'albañilería confinada, muro en '+v.ap})\n`;
+  ets.forEach(et=>{ t += `\n${ETN[et].toUpperCase()}\n`; MAT_ORD.filter(k=>byEt[et][k]).forEach(k=>{ t += `- ${MAT[k].n}: ${mFmt(k, byEt[et][k])} ${MAT[k].u}\n`; }); t += `Aprox. ${soles(costEt[et])} en materiales\n`; });
+  t += `\nSin encofrado, acabados, instalaciones ni mano de obra. Metrado de anteproyecto.`;
+  lastMat = t; el('mat-txt').value = t;
+}
+el('mat-copy').addEventListener('click', ()=>{
+  if(!lastMat) return; const ta = el('mat-txt');
+  const ok = () => { el('mat-msg').textContent = 'Lista copiada. Pégala en WhatsApp o en un correo.'; };
+  const fall = () => { ta.hidden = false; ta.focus(); ta.select(); let c = false; try { c = document.execCommand('copy'); } catch(e){} el('mat-msg').textContent = c ? 'Lista copiada.' : 'Selecciona el texto de abajo y cópialo.'; };
+  if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastMat).then(ok, fall); else fall();
+});
+
 function render(){
   const v = read();
   ['a','b','d','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
   const r = compute(v);
   draw(r); draw2(r); cutA(r); cutB(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
+  try { materiales(r); } catch(e){ console.error('materiales', e); }
   lastR = r; if(!el('tab-3d').hidden && d3) { try { build3D(r); } catch(e){ console.error('3D', e); } }
   el('ap-row').hidden = v.sis !== 'portante';
   el('sis-hint').textContent = v.sis==='portante' ? 'Los muros de ladrillo King Kong cargan la losa y resisten el sismo; las columnas y vigas soleras solo los confinan. Es lo más económico en 1 y 2 pisos.' : 'Columnas y vigas cargan la losa; los muros son tabiques que se pueden mover. Más concreto y acero.';
@@ -2299,14 +2482,14 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; if(k==='3d') open3D(); ['dis','3d','are','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; if(k==='3d') open3D(); ['dis','3d','are','mat','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d').addEventListener('click', ()=>showTab('3d'));
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-13e';
+const APP_VERSION = '2026-11-13f';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
