@@ -113,6 +113,13 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .tbl td{padding:4px 0;border-top:1px solid var(--line)}
 .tbl td:last-child{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:no-preference){.checks li{transition:background .2s}}
+.v3-bar{display:flex;flex-wrap:wrap;gap:10px 16px;align-items:center;margin:4px 0 10px}
+.v3-chk{display:inline-flex;gap:6px;align-items:center;font-size:13px}
+.v3-chk input{accent-color:var(--brick)}
+.box3d{position:relative;width:100%;height:600px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--bg);touch-action:none;cursor:grab}
+.box3d:active{cursor:grabbing}
+.box3d canvas{display:block;width:100%!important;height:100%!important}
+@media (max-width:720px){.box3d{height:420px}}
 .log{list-style:none;margin:0;padding:0}
 .log li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 14px;padding:10px 0;border-top:1px solid var(--line);line-height:1.5}
 .log li:first-child{border-top:0}
@@ -135,10 +142,29 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 
   <nav class="tabs" role="tablist" aria-label="Secciones">
     <button type="button" role="tab" id="tab-btn-dis" aria-selected="true" class="on">Diseño</button>
+    <button type="button" role="tab" id="tab-btn-3d" aria-selected="false">3D</button>
     <button type="button" role="tab" id="tab-btn-are" aria-selected="false">Cuadro de áreas</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
     <button type="button" role="tab" id="tab-btn-cam" aria-selected="false">Cambios</button>
   </nav>
+
+  <section id="tab-3d" class="card" hidden aria-label="Vista 3D">
+    <h2>Vista 3D de la casa generada</h2>
+    <p class="hint" style="margin-top:0">La misma casa de la pestaña Diseño, levantada en volumen: muros de 2.40 m con sus puertas y ventanas en el mismo lugar que en la planta, losas, columnas de confinamiento, el 2.º piso, el volado, la terraza o azotea con sus parapetos, la escalera exterior con su descanso y el lote con retiros y vereda. Arrastra para girar, rueda o pellizca para acercar.</p>
+    <div class="v3-bar">
+      <div class="seg" role="group" aria-label="Vista"><button type="button" data-v3="calle" class="on">Calle</button><button type="button" data-v3="patio">Patio</button><button type="button" data-v3="arriba">Arriba</button></div>
+      <label class="v3-chk"><input type="checkbox" id="v3-techo"> Quitar techos</label>
+      <label class="v3-chk"><input type="checkbox" id="v3-p1"> Solo el 1.er piso</label>
+    </div>
+    <div id="box3d" class="box3d"><p class="hint" id="v3-msg" style="padding:16px">Cargando el visor 3D…</p></div>
+    <div class="legend" style="margin-top:8px">
+      <span><i class="sw" style="background:#e9e2d6;outline:1px solid #8c8478"></i>Muro de ladrillo</span>
+      <span><i class="sw" style="background:#a9a49c"></i>Columna y losa de concreto</span>
+      <span><i class="sw" style="background:#9fc3d6"></i>Vidrio</span>
+      <span><i class="sw" style="background:#c9dcc4"></i>Retiro y patio</span>
+      <span><i class="sw" style="background:#c47a55"></i>Escalera</span>
+    </div>
+  </section>
 
   <div id="tab-are" class="areas" hidden aria-label="Cuadro de áreas">
     <section class="card">
@@ -222,6 +248,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>3D</b>: la casa generada en volumen, con muros, vanos, losas, columnas, 2.º piso, volado, terraza, escalera y lote. Se puede girar, acercar y quitar los techos.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Cambios</b>: aquí se anotan, con su fecha, los cambios importantes de la herramienta.</span></li>
       <li><time datetime="2026-11-12">12 nov 2026</time><span>La página se publica tal cual, sin pasar por Jekyll, para que GitHub Pages entregue el archivo sin transformarlo.</span></li>
     </ul>
@@ -530,6 +557,7 @@ function drawL(r, P){
   // muros
   const op = v.sis==='portico' ? .55 : 1;
   r.walls.forEach(([x1,y1,x2,y2_,gs])=>{
+    G3.f1.push({x1,y1,x2,y2:y2_,gaps:gs.map(q=>q.slice()),kind:'wall'});
     const L = Math.hypot(x2-x1,y2_-y1), ux=(x2-x1)/L, uy=(y2_-y1)/L; let t0=0;
     const seg=(a,b)=>{ if(b-a<=0.01) return; g += `<line x1="${X(x1+ux*a)}" y1="${Y(y1+uy*a)}" x2="${X(x1+ux*b)}" y2="${Y(y1+uy*b)}" stroke="var(--wall)" stroke-opacity="${op}" stroke-width="${tw}" stroke-linecap="square"/>`; };
     gs.filter(q=>q[1]>q[0]).slice().sort((a,b)=>a[0]-b[0]).forEach(q=>{ seg(t0,q[0]); t0=q[1];
@@ -864,6 +892,7 @@ function compute(v){
 }
 
 function draw(r){
+  G3 = {f1:[], w1:[], f2:[]};
   const {W,D,c,w,y2,rooms,v} = r;
   const L = Math.max(v.lote, W + (v.med?0:T)), F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0, v.vd);
   const padL = 40, padR = 64, top = 16, bot = 74;
@@ -933,13 +962,14 @@ function draw(r){
   const dW = r.dDoor;
   const wall = (x1,y1,x2,y2_, gaps=[]) => {
     // gaps as [start,end] in distance along wall from (x1,y1)
+    G3.f1.push({x1,y1,x2,y2:y2_,gaps:gaps.map(q=>[q[0],q[1]]),kind:'wall'});
     const L = Math.hypot(x2-x1, y2_-y1); const ux=(x2-x1)/L, uy=(y2_-y1)/L;
     let t0 = 0; const gs = gaps.filter(q=>q[1]>q[0]).sort((a,b)=>a[0]-b[0]);
     const seg = (a,b)=>{ if(b-a<=0.01) return; g += `<line x1="${X(x1+ux*a)}" y1="${Y(y1+uy*a)}" x2="${X(x1+ux*b)}" y2="${Y(y1+uy*b)}" stroke="var(--wall)" stroke-opacity="${v.sis==='portico'?.55:1}" stroke-width="${tw}" stroke-linecap="square"/>`; };
     gs.forEach(q=>{ seg(t0,q[0]); t0=q[1]; });
     seg(t0,L);
   };
-  const win = (x1,y1,x2,y2_) => { g += `<line x1="${X(x1)}" y1="${Y(y1)}" x2="${X(x2)}" y2="${Y(y2_)}" stroke="var(--wall)" stroke-width="1.2"/>`; };
+  const win = (x1,y1,x2,y2_) => { G3.w1.push([x1,y1,x2,y2_]); g += `<line x1="${X(x1)}" y1="${Y(y1)}" x2="${X(x2)}" y2="${Y(y2_)}" stroke="var(--wall)" stroke-width="1.2"/>`; };
   const wD1 = Math.max(0,r.wD1), wSC = Math.max(0,r.wSC), wD2 = Math.max(0,r.wD2);
   const yb = r.yb, P = r.P;
   let bd0, baD0, baW, baDoor;
@@ -975,6 +1005,7 @@ function draw(r){
   wall(0,y2,v.a,y2);
   // wet: C axis tabique and wall y=D-w over bath
   g += `<line x1="${X(W-c)}" y1="${Y(D-w)}" x2="${X(W-c)}" y2="${Y(D)}" stroke="var(--wall)" stroke-width="${Math.max(2,tw*0.6)}" stroke-dasharray="${v.pmr?'0':'0'}"/>`;
+  G3.f1.push({x1:W-c,y1:D-w,x2:W-c,y2:D,gaps:[],kind:'tab'});
   baDoor = Math.min(c - 0.15, 0.20);
   wall(W-c,D-w,W,D-w,[[baDoor, baDoor + (v.pmr?0.90:0.70)]]);
   }
@@ -1184,6 +1215,7 @@ function draw2(r){
     const hor = Math.abs(y2_-y1)<eps, L = hor ? x2-x1 : y2_-y1;
     const gs = opens.filter(o=> hor ? (Math.abs(o[1]-y1)<eps && Math.abs(o[3]-y1)<eps && o[0]>=x1-eps && o[2]<=x2+eps) : (Math.abs(o[0]-x1)<eps && Math.abs(o[2]-x1)<eps && o[1]>=y1-eps && o[3]<=y2_+eps))
       .map(o=> hor ? [o[0]-x1, o[2]-x1, o[4]] : [o[1]-y1, o[3]-y1, o[4]]).sort((a,b)=>a[0]-b[0]);
+    G3.f2.push({x1,y1,x2,y2:y2_,gaps:gs.map(q=>q.slice()),kind});
     const sw = kind==='wall' ? tw : Math.max(2, tw*0.6), so = kind==='light' ? .55 : op;
     let t0 = 0;
     const seg = (a,b)=>{ if(b-a<=0.01) return; g += hor ? `<line x1="${X(x1+a)}" y1="${Y(y1)}" x2="${X(x1+b)}" y2="${Y(y1)}" stroke="var(--wall)" stroke-opacity="${so}" stroke-width="${sw}" stroke-linecap="square"/>` : `<line x1="${X(x1)}" y1="${Y(y1+a)}" x2="${X(x1)}" y2="${Y(y1+b)}" stroke="var(--wall)" stroke-opacity="${so}" stroke-width="${sw}" stroke-linecap="square"/>`; };
@@ -1392,6 +1424,164 @@ function cutB(r){
   el('cutB').innerHTML = `<svg viewBox="0 0 900 ${Math.round((z1-z0)*s)}" role="img" aria-label="Corte longitudinal B-B">${g}</svg>`;
 }
 
+// ---- Vista 3D: reutiliza los muros, puertas y ventanas que dibuja la planta ----
+let G3 = {f1:[], w1:[], f2:[]}, lastR = null, d3 = null, threeP = null;
+function loadThree(){
+  if(window.THREE) return Promise.resolve();
+  if(!threeP) threeP = new Promise((res, rej)=>{ const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
+  return threeP;
+}
+function open3D(){
+  loadThree().then(()=>{ if(!d3) init3D(); if(lastR) build3D(lastR); })
+    .catch(()=>{ const m = el('v3-msg'); if(m) m.textContent = 'No se pudo cargar el visor 3D (three.js). Revisa la conexión y vuelve a abrir la pestaña.'; });
+}
+function init3D(){
+  const box = el('box3d'); box.innerHTML = '';
+  const R = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true});
+  R.setPixelRatio(Math.min(2, window.devicePixelRatio || 1));
+  box.appendChild(R.domElement);
+  const scene = new THREE.Scene();
+  const cam = new THREE.PerspectiveCamera(35, 1, 0.1, 400);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6f675b, 0.62));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.5); sun.position.set(-14, 22, 20); scene.add(sun);
+  const grp = new THREE.Group(); scene.add(grp);
+  d3 = {R, scene, cam, grp, th: -0.55, ph: 1.05, dist: 28, tgt: new THREE.Vector3(), box};
+  const size = () => { const w = box.clientWidth || 600, h = box.clientHeight || 400; R.setSize(w, h, false); cam.aspect = w/h; cam.updateProjectionMatrix(); paint3D(); };
+  if(window.ResizeObserver) new ResizeObserver(size).observe(box); else window.addEventListener('resize', size);
+  const pts = new Map(); let pinch0 = 0;
+  R.domElement.addEventListener('pointerdown', e=>{ R.domElement.setPointerCapture(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]); if(pts.size===2){ const [a,b] = [...pts.values()]; pinch0 = Math.hypot(a[0]-b[0], a[1]-b[1]); } });
+  R.domElement.addEventListener('pointermove', e=>{
+    if(!pts.has(e.pointerId)) return;
+    const [px,py] = pts.get(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]);
+    if(pts.size===2){ const [a,b] = [...pts.values()], d = Math.hypot(a[0]-b[0], a[1]-b[1]); if(pinch0){ d3.dist = Math.min(120, Math.max(5, d3.dist*pinch0/d)); } pinch0 = d; }
+    else { d3.th -= (e.clientX-px)*0.008; d3.ph = Math.min(1.52, Math.max(0.12, d3.ph - (e.clientY-py)*0.008)); }
+    paint3D();
+  });
+  const up = e=>{ pts.delete(e.pointerId); pinch0 = 0; };
+  R.domElement.addEventListener('pointerup', up); R.domElement.addEventListener('pointercancel', up);
+  R.domElement.addEventListener('wheel', e=>{ e.preventDefault(); d3.dist = Math.min(120, Math.max(5, d3.dist*(1 + e.deltaY*0.001))); paint3D(); }, {passive:false});
+  size();
+}
+function paint3D(){
+  if(!d3) return;
+  const {cam, tgt, th, ph, dist} = d3;
+  cam.position.set(tgt.x + dist*Math.sin(ph)*Math.sin(th), tgt.y + dist*Math.cos(ph), tgt.z + dist*Math.sin(ph)*Math.cos(th));
+  cam.lookAt(tgt);
+  d3.R.render(d3.scene, cam);
+}
+function view3D(k){
+  if(!d3) return;
+  if(k==='calle'){ d3.th = -0.55; d3.ph = 1.05; }
+  if(k==='patio'){ d3.th = Math.PI + 0.55; d3.ph = 1.0; }
+  if(k==='arriba'){ d3.th = 0.0001; d3.ph = 0.12; }
+  paint3D();
+}
+function build3D(r){
+  if(!d3 || !window.THREE) return;
+  const {grp} = d3, v = r.v, W = r.W, D = r.D;
+  while(grp.children.length){ const o = grp.children.pop(); o.traverse(q=>{ if(q.geometry) q.geometry.dispose(); }); }
+  const css = getComputedStyle(document.documentElement);
+  d3.scene.background = new THREE.Color((css.getPropertyValue('--bg') || '#f4f2ee').trim() || '#f4f2ee');
+  const mat = (c, o={}) => new THREE.MeshLambertMaterial(Object.assign({color:c}, o));
+  const M = {wall: mat(0xe9e2d6), tab: mat(0xf1ece4), conc: mat(0xa9a49c), slab: mat(0xc9c3b9), floor: mat(0xf7f4ef), glass: mat(0x9fc3d6, {transparent:true, opacity:0.45, depthWrite:false}),
+    green: mat(0xc9dcc4), walk: mat(0xd2cfca), street: mat(0x9a9894), stair: mat(0xc47a55), rail: mat(0x55504a), wet: mat(0xdfe8ef)};
+  const edgeM = new THREE.LineBasicMaterial({color:0x3a3530, transparent:true, opacity:0.45});
+  const ox = v.med ? 0 : T/2, oy = v.rf + T/2;
+  // caja en coordenadas de planta: x a lo ancho, y hacia el fondo desde el eje de fachada, z altura
+  const box = (x0,x1,y0,y1,z0,z1,m,edges=true) => {
+    const w = x1-x0, d = y1-y0, h = z1-z0; if(w<=0.005 || d<=0.005 || h<=0.005) return;
+    const g = new THREE.BoxGeometry(w, h, d), me = new THREE.Mesh(g, m);
+    me.position.set(ox + (x0+x1)/2, (z0+z1)/2, -(oy + (y0+y1)/2)); grp.add(me);
+    if(edges){ const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), edgeM); l.position.copy(me.position); grp.add(l); }
+  };
+  const e = r.hL || 0.20, H2 = H + e;
+  const built2 = r.gross2 > 0 && r.up && !el('v3-p1').checked;
+  const noRoof = el('v3-techo').checked;
+  const vo = v.vol && v.rf >= 0.5 && r.gross2 > 0 ? 0.50 : 0;
+  // lote, retiros, vereda y calle
+  const L = Math.max(v.lote, W + (v.med?0:T)), F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0, v.vd);
+  const lotBox = (x0,x1,y0,y1,z0,z1,m) => { const g = new THREE.BoxGeometry(x1-x0, z1-z0, y1-y0), me = new THREE.Mesh(g, m); me.position.set((x0+x1)/2, (z0+z1)/2, -(y0+y1)/2); grp.add(me); };
+  lotBox(0, L, 0, F, -0.06, -0.01, M.green);
+  lotBox(-1.5, L+1.5, -vd, 0, -0.06, 0.0, M.walk);
+  lotBox(-1.5, L+1.5, -vd-6, -vd, -0.12, -0.06, M.street);
+  const lotLine = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([[0,0],[L,0],[L,F],[0,F]].map(([x,y])=>new THREE.Vector3(x, 0.005, -y))), new THREE.LineDashedMaterial({color:0x6b655c, dashSize:0.4, gapSize:0.2}));
+  lotLine.computeLineDistances(); grp.add(lotLine);
+  // pisos de los ambientes (techados, sin el patio de luz)
+  const rooms1 = Object.values(r.rooms).filter(q=>!q.sky);
+  rooms1.forEach(q=> box(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, -0.01, 0.02, q.wet ? M.wet : M.floor, false));
+  // muros con puertas (dintel 2.10) y ventanas (alféizar 0.90, dintel 2.10)
+  const winLike = (w, a, b) => G3.w1.some(([x1,y1,x2,y2])=>{
+    const hor = Math.abs(w.y2-w.y1) < 1e-6;
+    if(hor && Math.abs(y1-w.y1)<1e-6 && Math.abs(y2-w.y1)<1e-6){ const ga = Math.min(w.x1+a*Math.sign(w.x2-w.x1), w.x1+b*Math.sign(w.x2-w.x1)), gb = Math.max(w.x1+a*Math.sign(w.x2-w.x1), w.x1+b*Math.sign(w.x2-w.x1)); return Math.min(gb, Math.max(x1,x2)) - Math.max(ga, Math.min(x1,x2)) > 0.05; }
+    if(!hor && Math.abs(x1-w.x1)<1e-6 && Math.abs(x2-w.x1)<1e-6){ const ga = Math.min(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)), gb = Math.max(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)); return Math.min(gb, Math.max(y1,y2)) - Math.max(ga, Math.min(y1,y2)) > 0.05; }
+    return false;
+  });
+  const walls = (list, z0, floor) => list.forEach(w=>{
+    const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
+    const ux = (w.x2-w.x1)/Lw, uy = (w.y2-w.y1)/Lw, t = w.kind==='wall' ? T : T*0.6, m = w.kind==='wall' ? M.wall : M.tab;
+    const hor = Math.abs(uy) < 1e-6;
+    const piece = (a, b, h0, h1, mm=m, tt=t) => {
+      if(b - a < 0.01 || h1 - h0 < 0.01) return;
+      const a2 = a <= 1e-6 ? -t/2 : a, b2 = b >= Lw - 1e-6 ? Lw + t/2 : b;
+      const px0 = w.x1 + ux*a2, px1 = w.x1 + ux*b2, py0 = w.y1 + uy*a2, py1 = w.y1 + uy*b2;
+      if(hor) box(Math.min(px0,px1), Math.max(px0,px1), w.y1 - tt/2, w.y1 + tt/2, z0+h0, z0+h1, mm);
+      else box(w.x1 - tt/2, w.x1 + tt/2, Math.min(py0,py1), Math.max(py0,py1), z0+h0, z0+h1, mm);
+    };
+    const gs = (w.gaps||[]).filter(q=>q[1]>q[0]).map(q=>[Math.max(0,q[0]), Math.min(Lw,q[1]), q[2] || (floor===1 && winLike(w, q[0], q[1]) ? 'win' : 'door')]).sort((p,q)=>p[0]-q[0]);
+    let t0 = 0;
+    gs.forEach(([a,b,k])=>{
+      piece(t0, a, 0, H);
+      if(k==='win'){ piece(a, b, 0, 0.90); piece(a, b, 2.10, H); piece(a, b, 0.90, 2.10, M.glass, 0.02); }
+      else piece(a, b, 2.10, H);
+      t0 = Math.max(t0, b);
+    });
+    piece(t0, Lw, 0, H);
+  });
+  walls(G3.f1, 0, 1);
+  // columnas de confinamiento y losa del 1.er piso
+  const cs = Math.max(T, 0.25) + 0.012;
+  (r.cols||[]).forEach(([x,y])=>{ box(x-cs/2, x+cs/2, y-cs/2, y+cs/2, 0, H, M.conc); if(built2) box(x-cs/2, x+cs/2, y-cs/2, y+cs/2, H2, H2+H, M.conc); });
+  const roof1 = !(noRoof && !built2);
+  if(roof1 || built2){
+    rooms1.forEach(q=> box(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, H, H2, M.slab));
+    if(built2 && vo) box(-T/2, W+T/2, -vo-T/2, -T/2, H, H2, M.slab);
+  }
+  // azotea o terraza: parapetos de 1.80 hacia los vecinos y baranda de 1.10 hacia calle y patio (A.010 art. 14 y 35)
+  const parapets = (x0,x1,y0,y1,z) => {
+    box(x0-T/2, x0+T/2, y0-T/2, y1+T/2, z, z+1.80, M.wall); box(x1-T/2, x1+T/2, y0-T/2, y1+T/2, z, z+1.80, M.wall);
+    [y0, y1].forEach(y=>{ box(x0, x1, y-0.03, y+0.03, z+1.06, z+1.10, M.rail); for(let x=x0+0.6; x<x1-0.1; x+=1.2) box(x-0.03, x+0.03, y-0.03, y+0.03, z, z+1.10, M.rail); box(x0, x1, y-T/2, y+T/2, z, z+0.15, M.wall); });
+  };
+  if(built2){
+    const z2 = H2, U = Object.values(r.up.rooms);
+    U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; box(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2-0.0, z2+0.02, q.wet ? M.wet : M.floor, false); });
+    walls(G3.f2, z2, 2);
+    if(!noRoof) U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; box(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2+H, z2+H+e, M.slab); });
+    // terraza del 2.º piso: barandas donde da a la calle o al patio, muro de 1.80 hacia el vecino
+    U.filter(q=>q.ter).forEach(q=>{
+      [[q.x0,'x'],[q.x1,'x']].forEach(([x])=>{ if(Math.abs(x)<1e-6 || Math.abs(x-W)<1e-6) box(x-T/2, x+T/2, q.y0-T/2, q.y1+T/2, z2, z2+1.80, M.wall); });
+      [q.y0, q.y1].forEach(y=>{ if(Math.abs(y)<1e-6 || Math.abs(y-D)<1e-6){ box(q.x0, q.x1, y-0.03, y+0.03, z2+1.06, z2+1.10, M.rail); for(let x=q.x0+0.5; x<q.x1-0.1; x+=1.0) box(x-0.03, x+0.03, y-0.03, y+0.03, z2, z2+1.10, M.rail); } });
+    });
+    if(v.ter && !(r.up.free > 0) && !noRoof) parapets(0, W, -vo, D, z2+H+e);
+  } else if(v.ter && roof1) parapets(0, W, 0, D, H2);
+  // escalera exterior: pasos de 0.25, contrapasos iguales y descanso donde llega (A.010 art. 23)
+  const st = r.stair;
+  if(st && (built2 || (v.ter && !built2))){
+    const nR = st.nR, cr = st.cr, top = nR*cr;
+    if(st.axis === 'x'){
+      for(let i=0;i<nR-1;i++){ const xa = st.dir===1 ? st.sx0 + i*0.25 : st.sx1 - (i+1)*0.25; box(xa, xa+0.25, st.y0, st.y1, Math.max(0,(i+1)*cr-0.30), (i+1)*cr, M.stair); }
+    } else {
+      for(let i=0;i<nR-1;i++){ const ya = st.ry1 - (i+1)*0.25; box(st.lx0, st.lx1, ya, ya+0.25, Math.max(0,(i+1)*cr-0.30), (i+1)*cr, M.stair); }
+    }
+    box(st.lx0, st.lx1, st.y0, st.y1, top-0.15, top, M.stair);
+    box(st.lx1-0.15, st.lx1, st.y1-0.15, st.y1, 0, top-0.15, M.conc);
+  }
+  // encuadre: centro en la casa
+  d3.tgt.set(ox + W/2, built2 ? 2.6 : 1.4, -(oy + D/2));
+  if(!d3.framed){ d3.dist = Math.max(L*1.6, F*0.95) + 6; d3.framed = true; }
+  const m = el('v3-msg'); if(m) m.remove();
+  paint3D();
+}
+
 // ---- Estirar el lote a mano sobre la planta ----
 let lotGeo = null, dragging = false;
 function bindHandles(){
@@ -1581,7 +1771,7 @@ function planArea(r, row){
 function cuadro(r){
   const v = r.v;
   const P = evalProg(v, r, nivel, v.nd, v.nd2);
-  document.querySelectorAll('.seg button').forEach(b=>b.classList.toggle('on', b.dataset.niv===nivel));
+  document.querySelectorAll('.seg button[data-niv]').forEach(b=>b.classList.toggle('on', b.dataset.niv===nivel));
   const cls = (a, x) => a == null ? '' : (a >= x.adj - 0.05 ? 'ok' : (a >= x.min - 0.05 ? 'warn' : 'bad'));
   let html = `<thead><tr><th>Ambiente</th><th class="n">Mínimo funcional</th><th class="n">Referencia ${NIV[nivel].toLowerCase()}</th><th class="n">Ajustada al lote</th><th class="n">En el plano</th><th>Exigencia del RNE (obligatoria)</th></tr></thead><tbody>`;
   P.floors.forEach(F=>{
@@ -1664,6 +1854,7 @@ function render(){
   const r = compute(v);
   draw(r); draw2(r); cutA(r); cutB(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
+  lastR = r; if(!el('tab-3d').hidden && d3) { try { build3D(r); } catch(e){ console.error('3D', e); } }
   el('ap-row').hidden = v.sis !== 'portante';
   el('sis-hint').textContent = v.sis==='portante' ? 'Los muros de ladrillo King Kong cargan la losa y resisten el sismo; las columnas y vigas soleras solo los confinan. Es lo más económico en 1 y 2 pisos.' : 'Columnas y vigas cargan la losa; los muros son tabiques que se pueden mover. Más concreto y acero.';
   el('ndt').value = String(Math.min(6, Math.max(1, v.nd + v.nd2)));
@@ -1801,9 +1992,11 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; ['dis','are','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
-el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
+const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; if(k==='3d') open3D(); ['dis','3d','are','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d').addEventListener('click', ()=>showTab('3d'));
+document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
+['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
 load(presets.base); el('p-base').classList.add('on'); render(); if(el('tam').value === 'lote') regen();
 })();
 </script>
