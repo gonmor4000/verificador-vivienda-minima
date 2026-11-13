@@ -267,6 +267,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Modo dron: avanzar y retroceder siguen la <b>dirección de la cámara</b>, también hacia arriba o hacia abajo; si miras al techo y avanzas, subes.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Botones <b>Guardar plano</b> y <b>Abrir plano</b> debajo de «Generar»: guardan en un archivo .json el terreno, los dormitorios, la estructura, las opciones, el nivel y las cotas entre ejes, y lo recuperan tal cual.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo <b>modo dron</b> en la pestaña 3D: te mueves con las flechas (o W A S D), miras con el ratón, subes y bajas con Q y E, y puedes entrar y salir de la casa. Accesos rápidos a la calle, el interior, el 2.º piso y el patio, y una cruceta para pantallas táctiles.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Las columnas de confinamiento se dibujan con el <b>mismo espesor que el muro</b> (a ras) y 25 cm a lo largo de él, en la planta, el 2.º piso y la vista 3D. Antes se dibujaban como cuadrados más gruesos que el muro. Las cantidades no cambian: ya se calculaban con 13 × 25 cm.</span></li>
@@ -1502,7 +1503,7 @@ function init3D(){
     fly: {on:false, pos: new THREE.Vector3(), yaw:0, pitch:0, keys: new Set(), raf: 0, t: 0}};
   // modo dron: ayuda, cruceta táctil y accesos rápidos (se muestran solo en ese modo)
   const help = document.createElement('div'); help.className = 'fly-help'; help.hidden = true;
-  help.innerHTML = '<b>↑ ↓</b> o <b>W S</b> avanzar y retroceder · <b>← →</b> o <b>A D</b> moverse a un lado · <b>arrastrar el ratón</b> mirar · <b>Q E</b> o <b>Re Pág / Av Pág</b> subir y bajar · <b>Mayús</b> más rápido · la rueda también avanza. El dron atraviesa los muros.';
+  help.innerHTML = '<b>↑ ↓</b> o <b>W S</b> avanzar y retroceder hacia donde miras · <b>← →</b> o <b>A D</b> moverse a un lado · <b>arrastrar el ratón</b> mirar · <b>Q E</b> o <b>Re Pág / Av Pág</b> subir y bajar · <b>Mayús</b> más rápido · la rueda también avanza. El dron atraviesa los muros.';
   const pad = document.createElement('div'); pad.className = 'fly-pad'; pad.hidden = true;
   pad.innerHTML = '<button data-k="up" aria-label="Subir">⤒</button><button data-k="fw" aria-label="Avanzar">↑</button><button data-k="dn" aria-label="Bajar">⤓</button><button data-k="lt" aria-label="Izquierda">←</button><button data-k="bk" aria-label="Retroceder">↓</button><button data-k="rt" aria-label="Derecha">→</button>';
   const go = document.createElement('div'); go.className = 'fly-go'; go.hidden = true;
@@ -1558,8 +1559,9 @@ function paint3D(){
 }
 // ---- Modo dron: moverse libremente, entrar y salir de la casa ----
 function flyMove(fw, rt, up){
-  const f = d3.fly, sy = Math.sin(f.yaw), cy = Math.cos(f.yaw);
-  f.pos.x += sy*fw + cy*rt; f.pos.z += -cy*fw + sy*rt; f.pos.y = Math.min(40, Math.max(0.3, f.pos.y + up));
+  // adelante y atrás siguen la dirección exacta de la cámara (si miras hacia arriba, subes); los lados quedan horizontales
+  const f = d3.fly, sy = Math.sin(f.yaw), cy = Math.cos(f.yaw), cp = Math.cos(f.pitch), sp = Math.sin(f.pitch);
+  f.pos.x += sy*cp*fw + cy*rt; f.pos.z += -cy*cp*fw + sy*rt; f.pos.y = Math.min(40, Math.max(0.3, f.pos.y + sp*fw + up));
 }
 function flyLoop(){
   const f = d3.fly; if(f.raf) return;
