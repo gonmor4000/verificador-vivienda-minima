@@ -256,6 +256,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>El botón <b>Actualizar</b> avisa cuando la herramienta está abierta dentro de Claude: esa copia no se actualiza sola y se refresca pidiéndoselo a Claude.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo botón <b>Actualizar</b> arriba a la derecha: compara tu versión con la última publicada y, si hay una nueva, la carga. La versión que estás usando se ve junto al botón.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>3D</b>: la casa generada en volumen, con muros, vanos, losas, columnas, 2.º piso, volado, terraza, escalera y lote. Se puede girar, acercar y quitar los techos.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Cambios</b>: aquí se anotan, con su fecha, los cambios importantes de la herramienta.</span></li>
@@ -2007,10 +2008,11 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-13b';
+const APP_VERSION = '2026-11-13c';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 el('upd-btn').addEventListener('click', async ()=>{
   const b = el('upd-btn'), m = el('upd-msg');
+  if(!/(^|\.)github\.io$/.test(location.hostname)){ m.textContent = 'Esta copia no se actualiza sola: abre la página publicada o pide a Claude que actualice la vista.'; return; }
   b.disabled = true; m.textContent = 'Buscando…';
   try {
     const res = await fetch(location.pathname + '?v=' + Date.now(), {cache:'no-store'});
