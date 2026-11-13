@@ -301,6 +301,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo control <b>Patio de luz (largo)</b>: cuando la planta tiene patio de luz (casa larga de 3 dormitorios en un piso) puedes fijar su largo entre 1.00 y 3.00 m o dejar que la herramienta lo elija. Debajo se ven sus medidas entre ejes y libres; si la planta no tiene patio de luz, lo indica.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Materiales</b>: metrado por etapa (1.er piso en cimentación, muros y columnas, vigas y techo; 2.º piso con escalera) con bolsas de cemento, arena, hormigón, piedra, ladrillos King Kong, ladrillos de techo, varillas de acero y alambre. Precios editables y botón para copiar la lista y mandarla por WhatsApp a la ferretería.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Las <b>puertas nunca chocan con los muebles</b>: se comprueba el barrido de cada hoja contra camas, cocina, lavadero y aparatos del baño, y los muebles se recolocan fuera de él. Nueva verificación «Puertas libres de muebles».</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Muebles en la planta: <b>inodoro, lavatorio y ducha</b> en cada baño (el lavatorio junto a la puerta), <b>cocina de 4 hornillas y lavadero</b> sobre la mesada (1.20 × 0.60), y camas: <b>doble de 1.40</b> en el dormitorio 1 (padres) y <b>simple de 0.90</b> en los de los hijos, también en el 2.º piso.</span></li>
@@ -334,6 +335,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
       </div><span class="hint">Los retiros los fija el certificado de parámetros urbanísticos de cada municipio; aquí son valores de ejemplo.</span></div>
       <div class="ctl"><label for="ndt">¿Cuántos dormitorios quieres en total?</label><select id="ndt"><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option></select><span class="hint">La herramienta los reparte entre los dos pisos; abajo puedes cambiar el reparto.</span><div class="inline" style="margin-top:6px"><div><label for="nd" class="hint">En el 1.er piso</label><select id="nd"><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div><div><label for="nd2" class="hint">En el 2.º piso</label><select id="nd2"><option value="0">0</option><option value="1">1</option><option value="2">2</option><option value="3">3</option></select></div></div><span class="hint" id="nd-hint"></span></div>
       <div class="ctl"><label for="tam">Tamaño de los ambientes</label><select id="tam"><option value="lote">Se acomodan al lote (nivel del cuadro de áreas)</option><option value="min">Mínimo que cumple el RNE</option></select><span class="hint" id="tam-hint"></span></div>
+      <div class="ctl" id="pp-ctl"><label for="ppm">Patio de luz (largo)</label><select id="ppm"><option value="auto">Automático: lo elige la herramienta</option><option value="1.00">1.00 m</option><option value="1.25">1.25 m</option><option value="1.50">1.50 m</option><option value="1.75">1.75 m</option><option value="2.00">2.00 m</option><option value="2.25">2.25 m</option><option value="2.50">2.50 m</option><option value="2.75">2.75 m</option><option value="3.00">3.00 m</option></select><span class="hint" id="pp-hint"></span></div>
       <input type="hidden" id="pp" value="1.25"><input type="hidden" id="ty" value="franjas">
       <input type="hidden" id="pl" value="uno">
       <div class="chk"><input type="checkbox" id="ter"><label for="ter">Terraza<br><span class="hint">En el 2.º piso sobre el dormitorio 2 o, si no, azotea transitable sobre el techo.</span></label></div>
@@ -2317,6 +2319,8 @@ function render(){
   el('ap-row').hidden = v.sis !== 'portante';
   el('sis-hint').textContent = v.sis==='portante' ? 'Los muros de ladrillo King Kong cargan la losa y resisten el sismo; las columnas y vigas soleras solo los confinan. Es lo más económico en 1 y 2 pisos.' : 'Columnas y vigas cargan la losa; los muros son tabiques que se pueden mover. Más concreto y acero.';
   el('ndt').value = String(Math.min(6, Math.max(1, v.nd + v.nd2)));
+  { const hasPz = r.typ === 'T3L' && r.rooms && r.rooms.pz, pz = hasPz ? r.rooms.pz : null;
+    el('pp-hint').innerHTML = hasPz ? `Este plano tiene un patio de luz de <b>${f2(v.a)} × ${f2(r.pp)} m</b> entre ejes (${f2(pz.cw)} × ${f2(pz.cd)} m libres, ${f1(Math.max(0,pz.cw*pz.cd))} m²) entre los dormitorios 1 y 2. Aquí eliges su largo; el ancho es la crujía de dormitorios, que se ajusta abajo.` : 'Este plano no tiene patio de luz: todos los ambientes dan a la calle o al patio posterior. Aparece en la casa larga (3 dormitorios en el 1.er piso en un lote angosto); el largo que elijas aquí se usará entonces.'; }
   el('tam-hint').textContent = v.tam === 'lote' ? `Si agrandas el lote (escribiendo las medidas o arrastrando los tiradores rojos de la planta), los ambientes crecen hacia el nivel ${NIV[nivel].toLowerCase()}; el nivel se cambia en la pestaña Cuadro de áreas.` : 'La planta es la más pequeña que cumple todo, sea cual sea el lote.';
   el('nd-hint').textContent = `${v.nd + v.nd2} dormitorios en total. ` + (v.nd===1 ? 'Abajo, el fondo del ala de dormitorios queda como comedor-estudio. ' : v.nd===3 ? 'Abajo la casa se alarga (tres franjas o casa larga con patio de luz). ' : '') + (v.nd2 ? `Arriba van ${v.nd2===1?'1 dormitorio':v.nd2+' dormitorios'} encima de los de abajo, con escalera exterior y descanso en el patio.` : 'Sin 2.º piso por ahora.');
   const nOk = r.checks.filter(c=>c.st==='ok').length, nBad = r.checks.filter(c=>c.st==='bad').length, nWarn = r.checks.length - nOk - nBad;
@@ -2358,10 +2362,11 @@ function generate(){
   const dMax = Math.floor((base.fondo - base.rf - base.rp - T)/M + 1e-6)*M;
   const dHi = fill ? Math.max(5.00, Math.min(12.00, dMax)) : (t3 ? 10.00 : 8.00);
   if(t3 && ty==='larga'){
+    const ppFix = el('ppm').value, ppList = ppFix === 'auto' ? [1.00,1.25,1.50,1.75,2.00] : [parseFloat(ppFix)];
     const d = Math.floor((base.fondo - base.rf - base.rp - T)/M + 1e-6)*M;
     for(const a of range(2.50,4.00)){
       const b = Math.round((Wt - a)*100)/100; if(b < 2.50 || b > 5.00) continue;
-      for(const y2 of range(2.75,3.75)) for(const w of range(1.50,2.75)) for(const c of range(1.25,2.25)) for(const pp of [1.00,1.25,1.50,1.75,2.00]){
+      for(const y2 of range(2.75,3.75)) for(const w of range(1.50,2.75)) for(const c of range(1.25,2.25)) for(const pp of ppList){
         tried++;
         const v = Object.assign({}, base, {a,b,d,y2,w,c,pp,ty:'larga',lote});
         const r = compute(v);
@@ -2397,7 +2402,7 @@ function generate(){
   let note = '';
   if(!best && base.nd === 3 && base.pl === 'uno'){
     const L = search(Wt, 'larga'); tried += L.tried;
-    if(L.best){ best = L.best; note = `<b style="color:var(--ok)">Casa larga de un piso:</b> en ${f2(base.lote)} m de frente los 3 dormitorios no caben en tres franjas, así que van en fila a lo largo de la medianera, con un patio de luz de ${f2(best.v.pp)} m para el dormitorio del medio. `; }
+    if(L.best){ best = L.best; note = `<b style="color:var(--ok)">Casa larga de un piso:</b> en ${f2(base.lote)} m de frente los 3 dormitorios no caben en tres franjas, así que van en fila a lo largo de la medianera, con un patio de luz de ${f2(best.v.pp)} m${el('ppm').value==='auto'?'':' (el que fijaste)'} para el dormitorio del medio. `; }
   }
   const msg = el('gen-msg');
   if(!best){
@@ -2408,7 +2413,7 @@ function generate(){
       // 3 dormitorios no entran en un piso: se pasa al 2.º piso
       el('nd').value = '2'; el('nd2').value = String(Math.min(2, base.nd2 + 1)); if(parseInt(el('n').value,10) < 2) el('n').value = '2';
       generate();
-      msg.innerHTML = `<b style="color:var(--warn)">Los 3 dormitorios no entran en el 1.er piso</b> en ${f2(base.lote)} × ${f2(base.fondo)} m, ni en franjas ni como casa larga${need ? ` (en franjas harían falta ${f2(base.med ? need : need + T)} m de frente)` : ''}. Paso uno al 2.º piso${base.nd2 ? ' (con 3 dormitorios abajo la casa ocupa el fondo y no queda patio para la escalera y su descanso)' : ''}: ` + msg.innerHTML;
+      msg.innerHTML = `<b style="color:var(--warn)">Los 3 dormitorios no entran en el 1.er piso</b> en ${f2(base.lote)} × ${f2(base.fondo)} m, ni en franjas ni como casa larga${el('ppm').value!=='auto' ? ` con un patio de luz de ${f2(parseFloat(el('ppm').value))} m (prueba uno más corto o <b>Automático</b>)` : ''}${need ? ` (en franjas harían falta ${f2(base.med ? need : need + T)} m de frente)` : ''}. Paso uno al 2.º piso${base.nd2 ? ' (con 3 dormitorios abajo la casa ocupa el fondo y no queda patio para la escalera y su descanso)' : ''}: ` + msg.innerHTML;
       return;
     }
     render();
@@ -2427,6 +2432,7 @@ function generate(){
 el('save-plan').addEventListener('click', ()=>{
   const data = {app:'verificador-vivienda-minima', formato:1, guardado:new Date().toISOString(), nivel, valores:{}};
   ids.forEach(k=>{ const e = el(k); data.valores[k] = e.type==='checkbox' ? e.checked : e.value; });
+  data.valores.ppm = el('ppm').value;
   const v = read(), r = lastR;
   const name = `plano_${f2(v.lote)}x${f2(v.fondo)}_${v.nd + v.nd2}dorm${r ? '_' + f1(r.gross + (r.gross2||0)) + 'm2' : ''}.json`.replace(/\.(?=\d)/g, ',');
   const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
@@ -2443,6 +2449,7 @@ el('open-file').addEventListener('change', ()=>{
       const data = JSON.parse(rd.result);
       if(!data || data.app !== 'verificador-vivienda-minima' || !data.valores) throw new Error('formato');
       ids.forEach(k=>{ if(!(k in data.valores)) return; const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
+      el('ppm').value = data.valores.ppm || 'auto';
       if(NIV[data.nivel]){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
       clearTimeout(genTimer); wantTotal = null;
       document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on'));
@@ -2454,6 +2461,7 @@ el('open-file').addEventListener('change', ()=>{
   };
   rd.readAsText(fl);
 });
+el('ppm').addEventListener('change', ()=>{ if(el('ppm').value !== 'auto') el('pp').value = el('ppm').value; regen(); });
 el('gen').addEventListener('click', ()=>{ el('gen-msg').textContent = 'Buscando…'; setTimeout(generate, 30); });
 
 // Los datos del terreno y del programa regeneran la planta solos; las cotas entre ejes solo redibujan.
@@ -2489,7 +2497,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-13f';
+const APP_VERSION = '2026-11-13g';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
