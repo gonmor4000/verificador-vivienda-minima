@@ -120,6 +120,9 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .box3d:active{cursor:grabbing}
 .box3d canvas{display:block;width:100%!important;height:100%!important}
 @media (max-width:720px){.box3d{height:420px}}
+.upd{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.upd .ver{font-family:var(--f-mono)}
+.upd button:disabled{opacity:.6;cursor:default}
 .log{list-style:none;margin:0;padding:0}
 .log li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 14px;padding:10px 0;border-top:1px solid var(--line);line-height:1.5}
 .log li:first-child{border-top:0}
@@ -137,6 +140,11 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
       <button type="button" id="p-base" class="on">Propuesta base</button>
       <button type="button" id="p-pmr">Versión accesible</button>
       <button type="button" id="p-chica">Lote de 5.50 m</button>
+    </div>
+    <div class="upd">
+      <span class="ver" id="ver"></span>
+      <button type="button" id="upd-btn">Actualizar</button>
+      <span id="upd-msg" aria-live="polite"></span>
     </div>
   </header>
 
@@ -248,6 +256,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo botón <b>Actualizar</b> arriba a la derecha: compara tu versión con la última publicada y, si hay una nueva, la carga. La versión que estás usando se ve junto al botón.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>3D</b>: la casa generada en volumen, con muros, vanos, losas, columnas, 2.º piso, volado, terraza, escalera y lote. Se puede girar, acercar y quitar los techos.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Cambios</b>: aquí se anotan, con su fecha, los cambios importantes de la herramienta.</span></li>
       <li><time datetime="2026-11-12">12 nov 2026</time><span>La página se publica tal cual, sin pasar por Jekyll, para que GitHub Pages entregue el archivo sin transformarlo.</span></li>
@@ -1997,6 +2006,20 @@ el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d'
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
+// Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
+const APP_VERSION = '2026-11-13b';
+el('ver').textContent = 'Versión ' + APP_VERSION;
+el('upd-btn').addEventListener('click', async ()=>{
+  const b = el('upd-btn'), m = el('upd-msg');
+  b.disabled = true; m.textContent = 'Buscando…';
+  try {
+    const res = await fetch(location.pathname + '?v=' + Date.now(), {cache:'no-store'});
+    const found = (await res.text()).match(/APP_VERSION = '(\d{4}-\d{2}-\d{2}[a-z]*)'/);
+    if(found && found[1] === APP_VERSION){ m.textContent = 'Ya tienes la última versión.'; b.disabled = false; return; }
+  } catch(e){}
+  m.textContent = 'Actualizando…';
+  location.replace(location.pathname + '?v=' + Date.now());
+});
 load(presets.base); el('p-base').classList.add('on'); render(); if(el('tam').value === 'lote') regen();
 })();
 </script>
