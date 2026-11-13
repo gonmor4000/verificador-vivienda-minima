@@ -267,6 +267,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Muebles en la planta: <b>inodoro, lavatorio y ducha</b> en cada baño (el lavatorio junto a la puerta), <b>cocina de 4 hornillas y lavadero</b> sobre la mesada (1.20 × 0.60), y camas: <b>doble de 1.40</b> en el dormitorio 1 (padres) y <b>simple de 0.90</b> en los de los hijos, también en el 2.º piso.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Modo dron: avanzar y retroceder siguen la <b>dirección de la cámara</b>, también hacia arriba o hacia abajo; si miras al techo y avanzas, subes.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Botones <b>Guardar plano</b> y <b>Abrir plano</b> debajo de «Generar»: guardan en un archivo .json el terreno, los dormitorios, la estructura, las opciones, el nivel y las cotas entre ejes, y lo recuperan tal cual.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo <b>modo dron</b> en la pestaña 3D: te mueves con las flechas (o W A S D), miras con el ratón, subes y bajas con Q y E, y puedes entrar y salir de la casa. Accesos rápidos a la calle, el interior, el 2.º piso y el patio, y una cruceta para pantallas táctiles.</span></li>
@@ -340,7 +341,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
         <span><i class="sw" style="background:var(--wet)"></i>Núcleo húmedo</span>
         <span><i class="sw" style="background:var(--ok-soft)"></i>Retiro</span>
         <span><i class="sw" style="border-top:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);border-radius:0"></i>Vereda</span>
-        <span><i class="sw" style="background:var(--furn)"></i>Cama y mesada</span>
+        <span><i class="sw" style="background:var(--furn)"></i>Muebles: camas, mesada, cocina, inodoro, lavatorio y ducha</span>
         <span><i class="sw" style="border-top:1.5px dashed var(--brick);border-radius:0"></i>Línea de corte</span>
         <span><i class="sw" style="background:var(--bad-soft);outline:1px solid var(--bad)"></i>Ambiente que no cumple</span>
         <span id="lg-pmr" hidden><i class="sw" style="border:1.5px dashed var(--brick);border-radius:50%"></i>Giro de 1.50 m</span>
@@ -574,8 +575,8 @@ function drawL(r, P){
   g += `<rect x="${X(pz.x0)}" y="${Y(pz.y1)}" width="${(pz.x1-pz.x0)*s}" height="${(pz.y1-pz.y0)*s}" fill="var(--ok-soft)"/>`;
   g += `<line x1="${X(pz.x0)}" y1="${Y(pz.y0)}" x2="${X(pz.x1)}" y2="${Y(pz.y1)}" stroke="var(--ok)" stroke-width=".8"/><line x1="${X(pz.x0)}" y1="${Y(pz.y1)}" x2="${X(pz.x1)}" y2="${Y(pz.y0)}" stroke="var(--ok)" stroke-width=".8"/>`;
   // camas (cabecera contra el muro hacia la calle), mesada y muebles de baño
-  const bw = 1.40, bl = 1.90;
-  ['d1','d2','d3'].forEach((k,i)=>{ const q = rooms[k];
+  const bl = 1.90;
+  ['d1','d2','d3'].forEach((k,i)=>{ const q = rooms[k], bw = k==='d1' ? 1.40 : 0.90;
     const bx = v.pmr ? q.x0 + T/2 : Math.max(q.x0 + T/2 + 0.10, Math.min((q.x0+q.x1)/2 - bw/2, q.x1 - T/2 - r.dDoor - 0.05 - bw));
     const by = k==='d1' ? q.y1 - T/2 - bl : q.y0 + T/2;
     g += `<rect x="${X(bx)}" y="${Y(by+bl)}" width="${bw*s}" height="${bl*s}" rx="3" fill="var(--furn)"/>`;
@@ -594,6 +595,7 @@ function drawL(r, P){
     seg(t0,L);
   });
   r.doors.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
+    G3.d1.push([hx,hy,ux,uy,nx,ny,wd]);
     g += `<line x1="${X(hx)}" y1="${Y(hy)}" x2="${X(hx+nx*wd)}" y2="${Y(hy+ny*wd)}" stroke="var(--wall)" stroke-width="1.6"/>`;
     const pts=[]; for(let i=0;i<=12;i++){ const t=i/12*Math.PI/2; pts.push(`${X(hx+wd*(Math.cos(t)*ux+Math.sin(t)*nx))},${Y(hy+wd*(Math.cos(t)*uy+Math.sin(t)*ny))}`); }
     g += `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--muted)" stroke-width="1"/>`;
@@ -921,7 +923,7 @@ function compute(v){
 }
 
 function draw(r){
-  G3 = {f1:[], w1:[], f2:[]};
+  G3 = {f1:[], w1:[], f2:[], d1:[], d2:[]};
   const {W,D,c,w,y2,rooms,v} = r;
   const L = Math.max(v.lote, W + (v.med?0:T)), F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0, v.vd);
   const padL = 40, padR = 64, top = 16, bot = 74;
@@ -964,7 +966,7 @@ function draw(r){
   if(tL){ g += drawL(r, {X,Y,s,tw,v}); } else {
   // furniture
   const bed = (q, front) => {
-    const bw = 1.40, bl = 1.90;
+    const bw = q === rooms.d1 ? 1.40 : 0.90, bl = 1.90; // dormitorio 1 = padres (cama de 1.40); los demás = hijos (cama simple de 0.90)
     let bx = v.pmr ? q.x0 + T/2 : Math.max(q.x0 + T/2 + 0.10, Math.min((q.x0+q.x1)/2 - bw/2, q.x1 - T/2 - r.dDoor - 0.05 - bw));
     const by = front ? q.y1 - T/2 - bl : q.y0 + T/2;
     g += `<rect x="${X(bx)}" y="${Y(by+bl)}" width="${bw*s}" height="${bl*s}" rx="3" fill="var(--furn)"/>`;
@@ -976,7 +978,7 @@ function draw(r){
   bed(rooms.d1, true); if(v.nd >= 2) bed(rooms.d2, false);
   const co = rooms.co;
   if(t3){
-    const q = rooms.d3, bl = 1.90, bw = 1.40, bx = q.x1 - T/2 - bl, by = (q.y0+q.y1)/2 - bw/2 + 0.15;
+    const q = rooms.d3, bl = 1.90, bw = 0.90, bx = q.x1 - T/2 - bl, by = (q.y0+q.y1)/2 - bw/2 + 0.15;
     g += `<rect x="${X(bx)}" y="${Y(by+bw)}" width="${bl*s}" height="${bw*s}" rx="3" fill="var(--furn)"/><rect x="${X(q.x1-T/2-0.45)}" y="${Y(by+bw)+4}" width="${0.35*s}" height="${bw*s-8}" rx="2" fill="var(--panel)" opacity=".7"/>`;
     g += `<rect x="${X(W-T/2-0.60)}" y="${Y(co.y1-T/2)}" width="${0.60*s}" height="${(co.y1-co.y0-T)*s}" fill="var(--furn)"/>`;
   } else g += `<rect x="${X(co.x0+T/2)}" y="${Y(co.y1-T/2)}" width="${0.60*s}" height="${(co.y1-co.y0-T)*s}" fill="var(--furn)"/>`;
@@ -1041,6 +1043,7 @@ function draw(r){
   // columns
   // puertas: hoja y arco de giro
   const door = (hx,hy,ux,uy,nx,ny,wd) => {
+    G3.d1.push([hx,hy,ux,uy,nx,ny,wd]);
     g += `<line x1="${X(hx)}" y1="${Y(hy)}" x2="${X(hx+nx*wd)}" y2="${Y(hy+ny*wd)}" stroke="var(--wall)" stroke-width="1.6"/>`;
     const pts=[]; for(let i=0;i<=12;i++){ const t=i/12*Math.PI/2; pts.push(`${X(hx+wd*(Math.cos(t)*ux+Math.sin(t)*nx))},${Y(hy+wd*(Math.cos(t)*uy+Math.sin(t)*ny))}`); }
     g += `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--muted)" stroke-width="1"/>`;
@@ -1072,6 +1075,7 @@ function draw(r){
   const cs = Math.max(6, 0.25*s*0.9);
   if(v.sis==='portico') cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)"/>`; });
   else g += colSvg(cols, G3.f1, X, Y, s);
+  g += furnWet(r, X, Y, s);
   // labels
   const lab = (q, yy) => {
     const cx = X((q.x0+q.x1)/2), cy = yy===undefined ? Y((q.y0+q.y1)/2) : Y(yy);
@@ -1253,6 +1257,7 @@ function draw2(r){
     seg(t0, L);
   });
   doors.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
+    G3.d2.push([hx,hy,ux,uy,nx,ny,wd]);
     g += `<line x1="${X(hx)}" y1="${Y(hy)}" x2="${X(hx+nx*wd)}" y2="${Y(hy+ny*wd)}" stroke="var(--wall)" stroke-width="1.6"/>`;
     const pts=[]; for(let i=0;i<=12;i++){ const t=i/12*Math.PI/2; pts.push(`${X(hx+wd*(Math.cos(t)*ux+Math.sin(t)*nx))},${Y(hy+wd*(Math.cos(t)*uy+Math.sin(t)*ny))}`); }
     g += `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--muted)" stroke-width="1"/>`;
@@ -1262,6 +1267,7 @@ function draw2(r){
   const cs = Math.max(6, 0.25*s*0.9);
   if(v.sis==='portico') r.cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)"/>`; });
   else g += colSvg(r.cols, G3.f2, X, Y, s);
+  g += furnUp(r, X, Y, s);
   R.forEach(([k,q])=>{ if(!q.n) return; const cx = X((q.x0+q.x1)/2), cy = Y((q.y0+q.y1)/2), fs = (q.x1-q.x0)*s < 90 ? 11 : 13;
     const A = Math.max(0,(q.x1-q.x0-T)*(q.y1-q.y0-T));
     g += `<text x="${cx}" y="${cy-2}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="${fs}" fill="${q.sky||q.ter?'var(--ok)':'var(--ink)'}">${q.n}</text>`;
@@ -1453,6 +1459,98 @@ function cutB(r){
   
   [['1',0],['4',D]].forEach(([n,y])=>{ g += `<text x="${X(U(y))}" y="${Z(z1)+12}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" fill="var(--muted)">${n}</text>`; });
   el('cutB').innerHTML = `<svg viewBox="0 0 900 ${Math.round((z1-z0)*s)}" role="img" aria-label="Corte longitudinal B-B">${g}</svg>`;
+}
+
+// ---- Muebles de la planta: baño (ducha, inodoro, lavatorio), cocina de 1.20 × 0.60 y camas del 2.º piso ----
+const FS = 'fill="var(--panel)" stroke="var(--wet-line)" stroke-width="1"';
+// muro del ambiente donde abre una puerta: S (lado calle), N (lado patio), O (x menor), E (x mayor)
+function doorWalls(q, doors){
+  const out = [], e = T + 0.05;
+  doors.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
+    const ax = hx + ux*wd/2, ay = hy + uy*wd/2;
+    if(ax < q.x0 - e || ax > q.x1 + e || ay < q.y0 - e || ay > q.y1 + e) return;
+    const d = {S: Math.abs(ay-q.y0), N: Math.abs(ay-q.y1), O: Math.abs(ax-q.x0), E: Math.abs(ax-q.x1)};
+    const k = Object.keys(d).sort((a,b)=>d[a]-d[b])[0];
+    if(d[k] <= e) out.push({k, at: (k==='S'||k==='N') ? ax : ay});
+  });
+  return out;
+}
+// sistema local de un muro: t a lo largo (desde el extremo indicado), u hacia dentro del ambiente
+function wallFrame(q, k, fromEnd){
+  const x0 = q.x0+T/2, x1 = q.x1-T/2, y0 = q.y0+T/2, y1 = q.y1-T/2, hor = k==='S'||k==='N';
+  const L = hor ? x1-x0 : y1-y0, D = hor ? y1-y0 : x1-x0;
+  const P = (t, u) => { const tt = fromEnd ? L - t : t;
+    if(k==='S') return [x0+tt, y0+u]; if(k==='N') return [x0+tt, y1-u]; if(k==='O') return [x0+u, y0+tt]; return [x1-u, y0+tt]; };
+  return {L, D, P};
+}
+function rectTU(F, t0, t1, u0, u1, X, Y, extra='', rx=2){
+  const [ax, ay] = F.P(t0, u0), [bx, by] = F.P(t1, u1);
+  const xa = Math.min(ax,bx), xb = Math.max(ax,bx), ya = Math.min(ay,by), yb = Math.max(ay,by);
+  return `<rect x="${X(xa)}" y="${Y(yb)}" width="${X(xb)-X(xa)}" height="${Y(ya)-Y(yb)}" rx="${rx}" ${extra}/>`;
+}
+function ellTU(F, t, u, rt, ru, X, Y, s, extra){
+  const [cx, cy] = F.P(t, u), hor = Math.abs(F.P(1,0)[1] - F.P(0,0)[1]) < 1e-9;
+  return `<ellipse cx="${X(cx)}" cy="${Y(cy)}" rx="${(hor?rt:ru)*s}" ry="${(hor?ru:rt)*s}" ${extra}/>`;
+}
+function bathSvg(q, doors, X, Y, s){
+  if(!q) return '';
+  const dw = doorWalls(q, doors), used = new Set(dw.map(d=>d.k));
+  const cand = ['S','N','O','E'].filter(k=>!used.has(k)).map(k=>({k, F: wallFrame(q, k, false)})).sort((a,b)=>b.F.L-a.F.L);
+  if(!cand.length) return '';
+  const {k} = cand[0];
+  // el lavatorio va junto a la puerta y la ducha al fondo
+  let fromEnd = false;
+  if(dw.length){ const F0 = wallFrame(q, k, false), d = dw[0], hor = k==='S'||k==='N';
+    const st = hor ? q.x0+T/2 : q.y0+T/2; fromEnd = (d.at - st) > F0.L/2; }
+  const F = wallFrame(q, k, fromEnd), L = F.L;
+  const sh = Math.min(0.80, Math.max(0.60, L - 1.00)), shD = Math.min(0.80, F.D);
+  let g = '';
+  // ducha al fondo: plato con desagüe
+  g += rectTU(F, L - sh, L, 0, shD, X, Y, FS, 1);
+  g += `<line x1="${X(F.P(L-sh,0)[0])}" y1="${Y(F.P(L-sh,0)[1])}" x2="${X(F.P(L,shD)[0])}" y2="${Y(F.P(L,shD)[1])}" stroke="var(--wet-line)" stroke-width=".6"/><line x1="${X(F.P(L,0)[0])}" y1="${Y(F.P(L,0)[1])}" x2="${X(F.P(L-sh,shD)[0])}" y2="${Y(F.P(L-sh,shD)[1])}" stroke="var(--wet-line)" stroke-width=".6"/>`;
+  // lavatorio junto a la puerta
+  const lw = Math.min(0.50, Math.max(0.35, (L - sh - 0.45)/2));
+  g += rectTU(F, 0.05, 0.05 + lw, 0, 0.40, X, Y, FS, 3) + ellTU(F, 0.05 + lw/2, 0.21, lw*0.32, 0.12, X, Y, s, 'fill="none" stroke="var(--wet-line)" stroke-width=".8"');
+  // inodoro entre los dos: tanque contra el muro y taza ovalada
+  const tc = (0.05 + lw + (L - sh))/2;
+  g += rectTU(F, tc - 0.20, tc + 0.20, 0, 0.18, X, Y, FS, 2) + ellTU(F, tc, 0.42, 0.18, 0.25, X, Y, s, FS);
+  return g;
+}
+function kitchenSvg(q, strip, X, Y, s){
+  // strip: [x0, y0, x1, y1] de la mesada de 0.60 que ya se dibuja; encima van el lavadero y la cocina de 4 hornillas (1.20 × 0.60 juntas)
+  const [x0, y0, x1, y1] = strip, hor = (x1-x0) > (y1-y0);
+  const k = hor ? (Math.abs(y0 - (q.y0+T/2)) < 0.02 ? 'S' : 'N') : (Math.abs(x0 - (q.x0+T/2)) < 0.02 ? 'O' : 'E');
+  const F = wallFrame(q, k, false), L = F.L;
+  const st = hor ? x0 - (q.x0+T/2) : y0 - (q.y0+T/2);
+  let g = '';
+  const hob0 = st + 0.05, sink0 = st + Math.max(0.70, L - st - 0.60);
+  g += rectTU(F, hob0, hob0 + 0.56, 0.03, 0.57, X, Y, FS, 2);
+  [[0.15,0.15],[0.41,0.15],[0.15,0.41],[0.41,0.41]].forEach(([a,b])=> g += ellTU(F, hob0 + a, 0.03 + b, 0.075, 0.075, X, Y, s, 'fill="none" stroke="var(--wet-line)" stroke-width=".8"'));
+  g += rectTU(F, sink0, sink0 + 0.50, 0.08, 0.50, X, Y, FS, 4) + ellTU(F, sink0 + 0.25, 0.06, 0.03, 0.03, X, Y, s, 'fill="var(--wet-line)"');
+  return g;
+}
+function furnWet(r, X, Y, s){
+  const R = r.rooms, co = R.co, W = r.W; if(!co) return '';
+  let g = bathSvg(R.ba, G3.d1, X, Y, s);
+  const strip = (r.typ === 'T3' || r.typ === 'T3L') ? [W-T/2-0.60, co.y0+T/2, W-T/2, co.y1-T/2] : [co.x0+T/2, co.y0+T/2, co.x0+T/2+0.60, co.y1-T/2];
+  g += kitchenSvg(co, strip, X, Y, s);
+  return g;
+}
+function furnUp(r, X, Y, s){
+  if(!r.up) return '';
+  let g = '';
+  Object.values(r.up.rooms).forEach(q=>{
+    if(q.wet){ g += bathSvg(q, G3.d2, X, Y, s); return; }
+    if(!/^Dormitorio/.test(q.n || '')) return;
+    // cama simple (hijos) con la cabecera contra un muro sin puerta, el más largo
+    const used = new Set(doorWalls(q, G3.d2).map(d=>d.k));
+    const opts = ['S','N','O','E'].filter(k=>!used.has(k)).map(k=>({k, F: wallFrame(q, k, false)})).filter(o=>o.F.L >= 0.90 && o.F.D >= 1.90);
+    if(!opts.length) return;
+    const pick = opts.find(o=>o.k==='O'||o.k==='E') || opts[0], F = pick.F, t0 = Math.min(0.10, F.L - 0.90);
+    g += rectTU(F, t0, t0 + 0.90, 0, 1.90, X, Y, 'fill="var(--furn)"', 3);
+    g += rectTU(F, t0 + 0.06, t0 + 0.84, 0.05, 0.40, X, Y, 'fill="var(--panel)" opacity=".7"', 2);
+  });
+  return g;
 }
 
 // ---- Vista 3D: reutiliza los muros, puertas y ventanas que dibuja la planta ----
