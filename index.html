@@ -258,6 +258,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Las columnas de confinamiento se dibujan con el <b>mismo espesor que el muro</b> (a ras) y 25 cm a lo largo de él, en la planta, el 2.º piso y la vista 3D. Antes se dibujaban como cuadrados más gruesos que el muro. Las cantidades no cambian: ya se calculaban con 13 × 25 cm.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Dentro de Claude, junto al botón <b>Actualizar</b> aparece el enlace <b>Abrir la última versión</b>: abre la página publicada en una pestaña nueva, siempre con lo más reciente.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>El botón <b>Actualizar</b> avisa cuando la herramienta está abierta dentro de Claude: esa copia no se actualiza sola y se refresca pidiéndoselo a Claude.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo botón <b>Actualizar</b> arriba a la derecha: compara tu versión con la última publicada y, si hay una nueva, la carga. La versión que estás usando se ve junto al botón.</span></li>
@@ -1053,8 +1054,9 @@ function draw(r){
   g += cutMark(X(xB), YL(-vd)+2, 'B', -1, 0) + cutMark(X(xB), YL(F)-2, 'B', -1, 0);
   g += drawStair(X, Y, s, r.stair, false);
   const cols = r.cols;
-  const cs = Math.max(6, (v.sis==='portico'?0.25:Math.max(T,0.2))*s*0.9);
-  cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)"/>`; });
+  const cs = Math.max(6, 0.25*s*0.9);
+  if(v.sis==='portico') cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)"/>`; });
+  else g += colSvg(cols, G3.f1, X, Y, s);
   // labels
   const lab = (q, yy) => {
     const cx = X((q.x0+q.x1)/2), cy = yy===undefined ? Y((q.y0+q.y1)/2) : Y(yy);
@@ -1242,8 +1244,9 @@ function draw2(r){
   });
   if(vo){ g += `<line x1="${X(0)}" y1="${Y(0)}" x2="${X(W)}" y2="${Y(0)}" stroke="var(--muted)" stroke-dasharray="6 4"/><text x="${X(W)+6}" y="${Y(-vo/2)+4}" font-size="10" fill="var(--brick)">volado ${f2(vo)}</text>`; }
   g += drawStair(X, Y, s, st, true);
-  const cs = Math.max(6, (v.sis==='portico'?0.25:Math.max(T,0.2))*s*0.9);
-  r.cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)"/>`; });
+  const cs = Math.max(6, 0.25*s*0.9);
+  if(v.sis==='portico') r.cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)"/>`; });
+  else g += colSvg(r.cols, G3.f2, X, Y, s);
   R.forEach(([k,q])=>{ if(!q.n) return; const cx = X((q.x0+q.x1)/2), cy = Y((q.y0+q.y1)/2), fs = (q.x1-q.x0)*s < 90 ? 11 : 13;
     const A = Math.max(0,(q.x1-q.x0-T)*(q.y1-q.y0-T));
     g += `<text x="${cx}" y="${cy-2}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="${fs}" fill="${q.sky||q.ter?'var(--ok)':'var(--ink)'}">${q.n}</text>`;
@@ -1439,6 +1442,28 @@ function cutB(r){
 
 // ---- Vista 3D: reutiliza los muros, puertas y ventanas que dibuja la planta ----
 let G3 = {f1:[], w1:[], f2:[]}, lastR = null, d3 = null, threeP = null;
+// Columnas de confinamiento: mismo espesor que el muro (a ras) y 25 cm a lo largo de él.
+// En un encuentro de muros la columna sigue a los muros que llegan (L, T o cruz); sin muro, 25 × 25.
+function colRects(x, y, list){
+  const e = 0.02, h = 0.125, th = T/2;
+  let L = false, R = false, U = false, D = false, any = false;
+  list.forEach(w=>{
+    if(w.kind === 'tab') return;
+    const hor = Math.abs(w.y2-w.y1) < 1e-6, ver = Math.abs(w.x2-w.x1) < 1e-6;
+    if(hor && Math.abs(w.y1-y) < e){ const a = Math.min(w.x1,w.x2), b = Math.max(w.x1,w.x2); if(x >= a-e && x <= b+e){ any = true; if(b > x+e) R = true; if(a < x-e) L = true; } }
+    if(ver && Math.abs(w.x1-x) < e){ const a = Math.min(w.y1,w.y2), b = Math.max(w.y1,w.y2); if(y >= a-e && y <= b+e){ any = true; if(b > y+e) U = true; if(a < y-e) D = true; } }
+  });
+  const rs = [];
+  if(L || R) rs.push([x-(L?h:th), y-th, x+(R?h:th), y+th]);
+  if(U || D) rs.push([x-th, y-(D?h:th), x+th, y+(U?h:th)]);
+  if(!any || !rs.length) return [[x-h, y-h, x+h, y+h]];
+  return rs;
+}
+function colSvg(cols, list, X, Y, s){
+  let g = '';
+  cols.forEach(([x,y])=>{ colRects(x, y, list).forEach(([x0,y0,x1,y1])=>{ g += `<rect x="${X(x0)}" y="${Y(y1)}" width="${(x1-x0)*s}" height="${(y1-y0)*s}" fill="var(--wall)" stroke="var(--panel)" stroke-width=".8"/>`; }); });
+  return g;
+}
 function loadThree(){
   if(window.THREE) return Promise.resolve();
   if(!threeP) threeP = new Promise((res, rej)=>{ const sc = document.createElement('script'); sc.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); });
@@ -1552,8 +1577,12 @@ function build3D(r){
   });
   walls(G3.f1, 0, 1);
   // columnas de confinamiento y losa del 1.er piso
-  const cs = Math.max(T, 0.25) + 0.012;
-  (r.cols||[]).forEach(([x,y])=>{ box(x-cs/2, x+cs/2, y-cs/2, y+cs/2, 0, H, M.conc); if(built2) box(x-cs/2, x+cs/2, y-cs/2, y+cs/2, H2, H2+H, M.conc); });
+  const cs = 0.25 + 0.012;
+  const colAt = (x, y, z0, z1, list) => {
+    if(v.sis === 'portico') box(x-cs/2, x+cs/2, y-cs/2, y+cs/2, z0, z1, M.conc);
+    else colRects(x, y, list).forEach(([x0,y0,x1,y1])=> box(x0-0.006, x1+0.006, y0-0.006, y1+0.006, z0, z1, M.conc));
+  };
+  (r.cols||[]).forEach(([x,y])=>{ colAt(x, y, 0, H, G3.f1); if(built2) colAt(x, y, H2, H2+H, G3.f2); });
   const roof1 = !(noRoof && !built2);
   if(roof1 || built2){
     rooms1.forEach(q=> box(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, H, H2, M.slab));
@@ -2011,7 +2040,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-13d';
+const APP_VERSION = '2026-11-13e';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
