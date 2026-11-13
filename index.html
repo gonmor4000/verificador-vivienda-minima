@@ -267,6 +267,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Las <b>puertas nunca chocan con los muebles</b>: se comprueba el barrido de cada hoja contra camas, cocina, lavadero y aparatos del baño, y los muebles se recolocan fuera de él. Nueva verificación «Puertas libres de muebles».</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Muebles en la planta: <b>inodoro, lavatorio y ducha</b> en cada baño (el lavatorio junto a la puerta), <b>cocina de 4 hornillas y lavadero</b> sobre la mesada (1.20 × 0.60), y camas: <b>doble de 1.40</b> en el dormitorio 1 (padres) y <b>simple de 0.90</b> en los de los hijos, también en el 2.º piso.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Modo dron: avanzar y retroceder siguen la <b>dirección de la cámara</b>, también hacia arriba o hacia abajo; si miras al techo y avanzas, subes.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Botones <b>Guardar plano</b> y <b>Abrir plano</b> debajo de «Generar»: guardan en un archivo .json el terreno, los dormitorios, la estructura, las opciones, el nivel y las cotas entre ejes, y lo recuperan tal cual.</span></li>
@@ -579,8 +580,7 @@ function drawL(r, P){
   ['d1','d2','d3'].forEach((k,i)=>{ const q = rooms[k], bw = k==='d1' ? 1.40 : 0.90;
     const bx = v.pmr ? q.x0 + T/2 : Math.max(q.x0 + T/2 + 0.10, Math.min((q.x0+q.x1)/2 - bw/2, q.x1 - T/2 - r.dDoor - 0.05 - bw));
     const by = k==='d1' ? q.y1 - T/2 - bl : q.y0 + T/2;
-    g += `<rect x="${X(bx)}" y="${Y(by+bl)}" width="${bw*s}" height="${bl*s}" rx="3" fill="var(--furn)"/>`;
-    g += `<rect x="${X(bx)+4}" y="${k==='d1' ? Y(by+bl)+4 : Y(by+0.45)}" width="${bw*s-8}" height="${0.35*s}" rx="2" fill="var(--panel)" opacity=".7"/>`;
+    G3.beds.push({q, x0:bx, y0:by, x1:bx+bw, y1:by+bl, head: k==='d1' ? 'N' : 'S'});
   });
   const co = rooms.co;
   g += `<rect x="${X(W-T/2-0.60)}" y="${Y(co.y1-T/2)}" width="${0.60*s}" height="${(co.y1-co.y0-T)*s}" fill="var(--furn)"/>`;
@@ -923,7 +923,7 @@ function compute(v){
 }
 
 function draw(r){
-  G3 = {f1:[], w1:[], f2:[], d1:[], d2:[]};
+  G3 = {f1:[], w1:[], f2:[], d1:[], d2:[], beds:[]};
   const {W,D,c,w,y2,rooms,v} = r;
   const L = Math.max(v.lote, W + (v.med?0:T)), F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0, v.vd);
   const padL = 40, padR = 64, top = 16, bot = 74;
@@ -969,8 +969,7 @@ function draw(r){
     const bw = q === rooms.d1 ? 1.40 : 0.90, bl = 1.90; // dormitorio 1 = padres (cama de 1.40); los demás = hijos (cama simple de 0.90)
     let bx = v.pmr ? q.x0 + T/2 : Math.max(q.x0 + T/2 + 0.10, Math.min((q.x0+q.x1)/2 - bw/2, q.x1 - T/2 - r.dDoor - 0.05 - bw));
     const by = front ? q.y1 - T/2 - bl : q.y0 + T/2;
-    g += `<rect x="${X(bx)}" y="${Y(by+bl)}" width="${bw*s}" height="${bl*s}" rx="3" fill="var(--furn)"/>`;
-    g += `<rect x="${X(bx)+4}" y="${front ? Y(by+bl)+4 : Y(by+0.45)}" width="${bw*s-8}" height="${0.35*s}" rx="2" fill="var(--panel)" opacity=".7"/>`;
+    G3.beds.push({q, x0:bx, y0:by, x1:bx+bw, y1:by+bl, head: front ? 'N' : 'S'});
     if(v.pmr){ const cx = bx + bw + 0.75, cy = by + bl/2; circle(cx, cy, q); }
   };
   const circs = [];
@@ -979,7 +978,7 @@ function draw(r){
   const co = rooms.co;
   if(t3){
     const q = rooms.d3, bl = 1.90, bw = 0.90, bx = q.x1 - T/2 - bl, by = (q.y0+q.y1)/2 - bw/2 + 0.15;
-    g += `<rect x="${X(bx)}" y="${Y(by+bw)}" width="${bl*s}" height="${bw*s}" rx="3" fill="var(--furn)"/><rect x="${X(q.x1-T/2-0.45)}" y="${Y(by+bw)+4}" width="${0.35*s}" height="${bw*s-8}" rx="2" fill="var(--panel)" opacity=".7"/>`;
+    G3.beds.push({q, x0:bx, y0:by, x1:bx+bl, y1:by+bw, head:'E'});
     g += `<rect x="${X(W-T/2-0.60)}" y="${Y(co.y1-T/2)}" width="${0.60*s}" height="${(co.y1-co.y0-T)*s}" fill="var(--furn)"/>`;
   } else g += `<rect x="${X(co.x0+T/2)}" y="${Y(co.y1-T/2)}" width="${0.60*s}" height="${(co.y1-co.y0-T)*s}" fill="var(--furn)"/>`;
   if(v.pmr){
@@ -1492,27 +1491,66 @@ function ellTU(F, t, u, rt, ru, X, Y, s, extra){
   const [cx, cy] = F.P(t, u), hor = Math.abs(F.P(1,0)[1] - F.P(0,0)[1]) < 1e-9;
   return `<ellipse cx="${X(cx)}" cy="${Y(cy)}" rx="${(hor?rt:ru)*s}" ry="${(hor?ru:rt)*s}" ${extra}/>`;
 }
+// ---- Las puertas nunca chocan con los muebles: barrido de cada hoja contra cada mueble ----
+function swingPts(doors){
+  const P = [];
+  doors.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
+    for(let rr = 0.08; rr <= wd + 1e-6; rr += 0.08) for(let a = 0; a <= 90; a += 7.5){ const t = a*Math.PI/180; P.push([hx + rr*(Math.cos(t)*ux + Math.sin(t)*nx), hy + rr*(Math.cos(t)*uy + Math.sin(t)*ny)]); }
+    for(let a = 0; a <= 90; a += 3){ const t = a*Math.PI/180; P.push([hx + wd*(Math.cos(t)*ux + Math.sin(t)*nx), hy + wd*(Math.cos(t)*uy + Math.sin(t)*ny)]); }
+  });
+  return P;
+}
+const hitRect = (P, x0, y0, x1, y1, m=0.03) => P.some(([x,y])=> x > Math.min(x0,x1)-m && x < Math.max(x0,x1)+m && y > Math.min(y0,y1)-m && y < Math.max(y0,y1)+m);
+// rectángulo real de un trozo (t, u) de un muro
+const boxTU = (F, t0, t1, u0, u1) => { const [ax,ay] = F.P(t0,u0), [bx,by] = F.P(t1,u1); return [Math.min(ax,bx), Math.min(ay,by), Math.max(ax,bx), Math.max(ay,by)]; };
+const FURN_HITS = [];
+function bedSvg(b, X, Y, s){
+  const {x0,y0,x1,y1,head} = b, w = x1-x0, h = y1-y0;
+  let g = `<rect x="${X(x0)}" y="${Y(y1)}" width="${w*s}" height="${h*s}" rx="3" fill="var(--furn)"/>`;
+  const pl = head==='N' ? [x0+0.06, y1-0.40, x1-0.06, y1-0.05] : head==='S' ? [x0+0.06, y0+0.05, x1-0.06, y0+0.40] : head==='E' ? [x1-0.40, y0+0.06, x1-0.05, y1-0.06] : [x0+0.05, y0+0.06, x0+0.40, y1-0.06];
+  g += `<rect x="${X(pl[0])}" y="${Y(pl[3])}" width="${(pl[2]-pl[0])*s}" height="${(pl[3]-pl[1])*s}" rx="2" fill="var(--panel)" opacity=".7"/>`;
+  return g;
+}
+// busca, cerca de la posición original, una cama del mismo tamaño que no toque el barrido de ninguna puerta
+function placeBed(b, P){
+  if(!hitRect(P, b.x0, b.y0, b.x1, b.y1)) return b;
+  const q = b.q, ix0 = q.x0+T/2, ix1 = q.x1-T/2, iy0 = q.y0+T/2, iy1 = q.y1-T/2;
+  const long = Math.max(b.x1-b.x0, b.y1-b.y0), short = Math.min(b.x1-b.x0, b.y1-b.y0), cands = [];
+  for(const head of ['N','S','E','O']){
+    const vert = head==='N' || head==='S', w = vert ? short : long, h = vert ? long : short;
+    if(w > ix1-ix0+1e-6 || h > iy1-iy0+1e-6) continue;
+    if(vert){ const y0 = head==='N' ? iy1-h : iy0; for(let x = ix0; x <= ix1-w+1e-6; x += 0.05) cands.push({q, x0:x, y0, x1:x+w, y1:y0+h, head}); }
+    else { const x0 = head==='E' ? ix1-w : ix0; for(let y = iy0; y <= iy1-h+1e-6; y += 0.05) cands.push({q, x0, y0:y, x1:x0+w, y1:y+h, head}); }
+  }
+  const ok = cands.filter(c=>!hitRect(P, c.x0, c.y0, c.x1, c.y1));
+  if(!ok.length){ FURN_HITS.push(q.n); return b; }
+  const d = c => Math.hypot(c.x0-b.x0, c.y0-b.y0) + (c.head===b.head ? 0 : 3);
+  return ok.sort((a,c)=>d(a)-d(c))[0];
+}
 function bathSvg(q, doors, X, Y, s){
   if(!q) return '';
-  const dw = doorWalls(q, doors), used = new Set(dw.map(d=>d.k));
-  const cand = ['S','N','O','E'].filter(k=>!used.has(k)).map(k=>({k, F: wallFrame(q, k, false)})).sort((a,b)=>b.F.L-a.F.L);
-  if(!cand.length) return '';
-  const {k} = cand[0];
-  // el lavatorio va junto a la puerta y la ducha al fondo
-  let fromEnd = false;
-  if(dw.length){ const F0 = wallFrame(q, k, false), d = dw[0], hor = k==='S'||k==='N';
-    const st = hor ? q.x0+T/2 : q.y0+T/2; fromEnd = (d.at - st) > F0.L/2; }
-  const F = wallFrame(q, k, fromEnd), L = F.L;
-  const sh = Math.min(0.80, Math.max(0.60, L - 1.00)), shD = Math.min(0.80, F.D);
+  const dw = doorWalls(q, doors), used = new Set(dw.map(d=>d.k)), P = swingPts(doors);
+  // la fila de aparatos: ducha al fondo, inodoro y lavatorio junto a la puerta; se prueban todos los muros y los dos sentidos
+  const layout = F => { const L = F.L, sh = Math.min(0.80, Math.max(0.60, L - 1.00)), shD = Math.min(0.80, F.D), lw = Math.min(0.50, Math.max(0.35, (L - sh - 0.45)/2)), tc = (0.05 + lw + (L - sh))/2;
+    return {L, sh, shD, lw, tc, boxes:[boxTU(F, L-sh, L, 0, shD), boxTU(F, 0.05, 0.05+lw, 0, 0.40), boxTU(F, tc-0.20, tc+0.20, 0, 0.67)]}; };
+  const opts = [];
+  ['S','N','O','E'].forEach(k=>[false,true].forEach(fe=>{ const F = wallFrame(q, k, fe); if(F.L < 1.20 || F.D < 0.70) return; const Lo = layout(F);
+    const hit = Lo.boxes.some(b=>hitRect(P, ...b)); let pref = (used.has(k) ? 2 : 0) - F.L*0.1;
+    if(dw.length && !used.has(k)){ const hor = k==='S'||k==='N', st = hor ? q.x0+T/2 : q.y0+T/2, near = (dw[0].at - st) > F.L/2; if(near !== fe) pref += 0.5; }
+    opts.push({k, F, Lo, hit, pref}); }));
+  if(!opts.length) return '';
+  opts.sort((a,b)=> (a.hit-b.hit) || (a.pref-b.pref));
+  const best = opts[0]; if(best.hit) FURN_HITS.push(q.n || 'Baño');
+  const F = best.F, {L, sh, shD} = best.Lo;
   let g = '';
   // ducha al fondo: plato con desagüe
   g += rectTU(F, L - sh, L, 0, shD, X, Y, FS, 1);
   g += `<line x1="${X(F.P(L-sh,0)[0])}" y1="${Y(F.P(L-sh,0)[1])}" x2="${X(F.P(L,shD)[0])}" y2="${Y(F.P(L,shD)[1])}" stroke="var(--wet-line)" stroke-width=".6"/><line x1="${X(F.P(L,0)[0])}" y1="${Y(F.P(L,0)[1])}" x2="${X(F.P(L-sh,shD)[0])}" y2="${Y(F.P(L-sh,shD)[1])}" stroke="var(--wet-line)" stroke-width=".6"/>`;
   // lavatorio junto a la puerta
-  const lw = Math.min(0.50, Math.max(0.35, (L - sh - 0.45)/2));
+  const lw = best.Lo.lw;
   g += rectTU(F, 0.05, 0.05 + lw, 0, 0.40, X, Y, FS, 3) + ellTU(F, 0.05 + lw/2, 0.21, lw*0.32, 0.12, X, Y, s, 'fill="none" stroke="var(--wet-line)" stroke-width=".8"');
   // inodoro entre los dos: tanque contra el muro y taza ovalada
-  const tc = (0.05 + lw + (L - sh))/2;
+  const tc = best.Lo.tc;
   g += rectTU(F, tc - 0.20, tc + 0.20, 0, 0.18, X, Y, FS, 2) + ellTU(F, tc, 0.42, 0.18, 0.25, X, Y, s, FS);
   return g;
 }
@@ -1523,7 +1561,11 @@ function kitchenSvg(q, strip, X, Y, s){
   const F = wallFrame(q, k, false), L = F.L;
   const st = hor ? x0 - (q.x0+T/2) : y0 - (q.y0+T/2);
   let g = '';
-  const hob0 = st + 0.05, sink0 = st + Math.max(0.70, L - st - 0.60);
+  const P = swingPts(G3.d1), len = hor ? x1-x0 : y1-y0, free = t => !hitRect(P, ...boxTU(F, t, t + 0.56, 0, 0.57), 0.005);
+  let hob0 = st + 0.05, sink0 = st + Math.max(0.70, len - 0.60);
+  const slots = []; for(let t = st; t <= st + len - 0.60 + 1e-6; t += 0.05) slots.push(t);
+  if(!free(hob0)){ const f = slots.find(t=>free(t) && Math.abs(t - sink0) >= 0.60); if(f !== undefined) hob0 = f; else FURN_HITS.push('Cocina'); }
+  if(!free(sink0) || Math.abs(sink0 - hob0) < 0.60){ const f = slots.slice().reverse().find(t=>free(t) && Math.abs(t - hob0) >= 0.60); if(f !== undefined) sink0 = f; else FURN_HITS.push('Cocina'); }
   g += rectTU(F, hob0, hob0 + 0.56, 0.03, 0.57, X, Y, FS, 2);
   [[0.15,0.15],[0.41,0.15],[0.15,0.41],[0.41,0.41]].forEach(([a,b])=> g += ellTU(F, hob0 + a, 0.03 + b, 0.075, 0.075, X, Y, s, 'fill="none" stroke="var(--wet-line)" stroke-width=".8"'));
   g += rectTU(F, sink0, sink0 + 0.50, 0.08, 0.50, X, Y, FS, 4) + ellTU(F, sink0 + 0.25, 0.06, 0.03, 0.03, X, Y, s, 'fill="var(--wet-line)"');
@@ -1531,25 +1573,29 @@ function kitchenSvg(q, strip, X, Y, s){
 }
 function furnWet(r, X, Y, s){
   const R = r.rooms, co = R.co, W = r.W; if(!co) return '';
-  let g = bathSvg(R.ba, G3.d1, X, Y, s);
+  FURN_HITS.length = 0;
+  const P = swingPts(G3.d1);
+  let g = G3.beds.map(b=> bedSvg(placeBed(b, P), X, Y, s)).join('');
+  g += bathSvg(R.ba, G3.d1, X, Y, s);
   const strip = (r.typ === 'T3' || r.typ === 'T3L') ? [W-T/2-0.60, co.y0+T/2, W-T/2, co.y1-T/2] : [co.x0+T/2, co.y0+T/2, co.x0+T/2+0.60, co.y1-T/2];
   g += kitchenSvg(co, strip, X, Y, s);
+  const hits = [...new Set(FURN_HITS)];
+  r.checks.push({g:'Circulación', t:'Puertas libres de muebles', st: hits.length ? 'bad' : 'ok', d: hits.length ? `El giro de una puerta toca los muebles en: <b>${hits.join(', ')}</b>. Ensancha ese ambiente o mueve la puerta.` : 'Ninguna puerta, al abrirse, toca una cama, la cocina, el lavadero o los aparatos del baño: los muebles se colocan fuera del barrido de cada hoja.'});
   return g;
 }
 function furnUp(r, X, Y, s){
   if(!r.up) return '';
-  let g = '';
+  let g = ''; FURN_HITS.length = 0;
   Object.values(r.up.rooms).forEach(q=>{
     if(q.wet){ g += bathSvg(q, G3.d2, X, Y, s); return; }
     if(!/^Dormitorio/.test(q.n || '')) return;
     // cama simple (hijos) con la cabecera contra un muro sin puerta, el más largo
-    const used = new Set(doorWalls(q, G3.d2).map(d=>d.k));
-    const opts = ['S','N','O','E'].filter(k=>!used.has(k)).map(k=>({k, F: wallFrame(q, k, false)})).filter(o=>o.F.L >= 0.90 && o.F.D >= 1.90);
-    if(!opts.length) return;
-    const pick = opts.find(o=>o.k==='O'||o.k==='E') || opts[0], F = pick.F, t0 = Math.min(0.10, F.L - 0.90);
-    g += rectTU(F, t0, t0 + 0.90, 0, 1.90, X, Y, 'fill="var(--furn)"', 3);
-    g += rectTU(F, t0 + 0.06, t0 + 0.84, 0.05, 0.40, X, Y, 'fill="var(--panel)" opacity=".7"', 2);
+    const P = swingPts(G3.d2), ix0 = q.x0+T/2, iy0 = q.y0+T/2, ix1 = q.x1-T/2, iy1 = q.y1-T/2;
+    const start = (ix1-ix0 >= 1.90) ? {q, x0:ix0, y0:iy0+0.10, x1:ix0+1.90, y1:iy0+1.00, head:'O'} : {q, x0:ix0+0.10, y0:iy0, x1:ix0+1.00, y1:iy0+1.90, head:'S'};
+    g += bedSvg(placeBed(start, P), X, Y, s);
   });
+  const hits = [...new Set(FURN_HITS)];
+  if(hits.length) r.checks.push({g:'Circulación', t:'Puertas libres de muebles (2.º piso)', st:'bad', d:`El giro de una puerta toca los muebles en: <b>${hits.join(', ')}</b>.`});
   return g;
 }
 
