@@ -118,6 +118,14 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .v3-chk input{accent-color:var(--brick)}
 .box3d{position:relative;width:100%;height:600px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--bg);touch-action:none;cursor:grab}
 .box3d:active{cursor:grabbing}
+.box3d.fly{cursor:crosshair}
+.fly-help{position:absolute;left:10px;top:10px;max-width:calc(100% - 20px);background:rgba(20,18,16,.72);color:#fff;font-size:12px;line-height:1.5;padding:8px 10px;border-radius:6px;pointer-events:none}
+.fly-help b{font-family:var(--f-mono);font-weight:500}
+.fly-pad{position:absolute;right:10px;bottom:10px;display:grid;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,42px);gap:4px}
+.fly-pad button,.fly-go button{background:rgba(20,18,16,.7);color:#fff;border:0;border-radius:6px;font-size:16px;padding:0;touch-action:none}
+.fly-go{position:absolute;left:10px;bottom:10px;display:flex;flex-wrap:wrap;gap:4px}
+.fly-go button{font-size:12px;padding:6px 10px}
+#v3-fly.on{background:var(--brick);color:#fff;border-color:var(--brick)}
 .box3d canvas{display:block;width:100%!important;height:100%!important}
 @media (max-width:720px){.box3d{height:420px}}
 .upd{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
@@ -165,6 +173,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
       <div class="seg" role="group" aria-label="Vista"><button type="button" data-v3="calle" class="on">Calle</button><button type="button" data-v3="patio">Patio</button><button type="button" data-v3="arriba">Arriba</button></div>
       <label class="v3-chk"><input type="checkbox" id="v3-techo"> Quitar techos</label>
       <label class="v3-chk"><input type="checkbox" id="v3-p1"> Solo el 1.er piso</label>
+      <button type="button" id="v3-fly" aria-pressed="false">Modo dron</button>
     </div>
     <div id="box3d" class="box3d"><p class="hint" id="v3-msg" style="padding:16px">Cargando el visor 3D…</p></div>
     <div class="legend" style="margin-top:8px">
@@ -258,6 +267,8 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Botones <b>Guardar plano</b> y <b>Abrir plano</b> debajo de «Generar»: guardan en un archivo .json el terreno, los dormitorios, la estructura, las opciones, el nivel y las cotas entre ejes, y lo recuperan tal cual.</span></li>
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo <b>modo dron</b> en la pestaña 3D: te mueves con las flechas (o W A S D), miras con el ratón, subes y bajas con Q y E, y puedes entrar y salir de la casa. Accesos rápidos a la calle, el interior, el 2.º piso y el patio, y una cruceta para pantallas táctiles.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Las columnas de confinamiento se dibujan con el <b>mismo espesor que el muro</b> (a ras) y 25 cm a lo largo de él, en la planta, el 2.º piso y la vista 3D. Antes se dibujaban como cuadrados más gruesos que el muro. Las cantidades no cambian: ya se calculaban con 13 × 25 cm.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Dentro de Claude, junto al botón <b>Actualizar</b> aparece el enlace <b>Abrir la última versión</b>: abre la página publicada en una pestaña nueva, siempre con lo más reciente.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>El botón <b>Actualizar</b> avisa cuando la herramienta está abierta dentro de Claude: esa copia no se actualiza sola y se refresca pidiéndoselo a Claude.</span></li>
@@ -291,6 +302,9 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
       <div class="chk"><input type="checkbox" id="vol"><label for="vol">Volado hacia la calle<br><span class="hint">El 2.º piso sale 0.50 m sobre el retiro frontal (A.010 art. 13).</span></label></div>
       <div class="chk"><input type="checkbox" id="pmr"><label for="pmr">Exigir vivienda accesible (A.120, art. 30)<br><span class="hint">Giro de 1.50 m en cada ambiente, ba&ntilde;o accesible y puertas de 0.90 m.</span></label></div>
       <button type="button" id="gen" class="gen">Generar plano para este terreno</button>
+      <div class="inline" style="margin-top:8px"><button type="button" id="save-plan">Guardar plano</button><button type="button" id="open-plan">Abrir plano</button></div>
+      <input type="file" id="open-file" accept=".json,application/json" hidden>
+      <p class="hint" id="save-msg" aria-live="polite" style="margin:6px 0 0">Guarda en un archivo el terreno, los dormitorios, la estructura y las cotas entre ejes, y ábrelo después para recuperar este mismo plano.</p>
       <p class="hint" id="gen-msg" aria-live="polite" style="margin:8px 0 0">Cada vez que cambias el terreno, los dormitorios o la estructura, la planta se regenera sola: busca en módulo de 25 cm la vivienda de menor área que cumple todo.</p>
 
       <h2 style="margin-top:16px">Ajuste manual entre ejes</h2>
@@ -1481,9 +1495,37 @@ function init3D(){
   const scene = new THREE.Scene();
   const cam = new THREE.PerspectiveCamera(35, 1, 0.1, 400);
   scene.add(new THREE.HemisphereLight(0xffffff, 0x6f675b, 0.62));
+  scene.add(new THREE.AmbientLight(0xffffff, 0.22)); // para que techos y muros interiores se lean desde dentro
   const sun = new THREE.DirectionalLight(0xffffff, 0.5); sun.position.set(-14, 22, 20); scene.add(sun);
   const grp = new THREE.Group(); scene.add(grp);
-  d3 = {R, scene, cam, grp, th: -0.55, ph: 1.05, dist: 28, tgt: new THREE.Vector3(), box};
+  d3 = {R, scene, cam, grp, th: -0.55, ph: 1.05, dist: 28, tgt: new THREE.Vector3(), box,
+    fly: {on:false, pos: new THREE.Vector3(), yaw:0, pitch:0, keys: new Set(), raf: 0, t: 0}};
+  // modo dron: ayuda, cruceta táctil y accesos rápidos (se muestran solo en ese modo)
+  const help = document.createElement('div'); help.className = 'fly-help'; help.hidden = true;
+  help.innerHTML = '<b>↑ ↓</b> o <b>W S</b> avanzar y retroceder · <b>← →</b> o <b>A D</b> moverse a un lado · <b>arrastrar el ratón</b> mirar · <b>Q E</b> o <b>Re Pág / Av Pág</b> subir y bajar · <b>Mayús</b> más rápido · la rueda también avanza. El dron atraviesa los muros.';
+  const pad = document.createElement('div'); pad.className = 'fly-pad'; pad.hidden = true;
+  pad.innerHTML = '<button data-k="up" aria-label="Subir">⤒</button><button data-k="fw" aria-label="Avanzar">↑</button><button data-k="dn" aria-label="Bajar">⤓</button><button data-k="lt" aria-label="Izquierda">←</button><button data-k="bk" aria-label="Retroceder">↓</button><button data-k="rt" aria-label="Derecha">→</button>';
+  const go = document.createElement('div'); go.className = 'fly-go'; go.hidden = true;
+  go.innerHTML = '<button data-go="calle">En la calle</button><button data-go="dentro">Dentro</button><button data-go="piso2">2.º piso</button><button data-go="patio">En el patio</button>';
+  box.append(help, pad, go);
+  d3.flyUI = [help, pad, go];
+  pad.querySelectorAll('button').forEach(b=>{
+    const k = b.dataset.k;
+    b.addEventListener('pointerdown', e=>{ e.preventDefault(); e.stopPropagation(); d3.fly.keys.add(k); flyLoop(); });
+    ['pointerup','pointerleave','pointercancel'].forEach(t=> b.addEventListener(t, ()=> d3.fly.keys.delete(k)));
+  });
+  go.querySelectorAll('button').forEach(b=> b.addEventListener('click', e=>{ e.stopPropagation(); flyTo(b.dataset.go); }));
+  const keyMap = {ArrowUp:'fw', KeyW:'fw', ArrowDown:'bk', KeyS:'bk', ArrowLeft:'lt', KeyA:'lt', ArrowRight:'rt', KeyD:'rt', KeyQ:'up', PageUp:'up', KeyE:'dn', PageDown:'dn'};
+  const flyActive = () => d3.fly.on && !el('tab-3d').hidden;
+  window.addEventListener('keydown', e=>{
+    if(!flyActive()) return;
+    const t = e.target; if(t && /INPUT|SELECT|TEXTAREA/.test(t.tagName)) return;
+    if(e.key === 'Shift'){ d3.fly.fast = true; return; }
+    const k = keyMap[e.code]; if(!k) return;
+    e.preventDefault(); d3.fly.keys.add(k); flyLoop();
+  });
+  window.addEventListener('keyup', e=>{ if(e.key === 'Shift') d3.fly.fast = false; const k = keyMap[e.code]; if(k) d3.fly.keys.delete(k); });
+  window.addEventListener('blur', ()=> d3.fly.keys.clear());
   const size = () => { const w = box.clientWidth || 600, h = box.clientHeight || 400; R.setSize(w, h, false); cam.aspect = w/h; cam.updateProjectionMatrix(); paint3D(); };
   if(window.ResizeObserver) new ResizeObserver(size).observe(box); else window.addEventListener('resize', size);
   const pts = new Map(); let pinch0 = 0;
@@ -1492,23 +1534,61 @@ function init3D(){
     if(!pts.has(e.pointerId)) return;
     const [px,py] = pts.get(e.pointerId); pts.set(e.pointerId, [e.clientX, e.clientY]);
     if(pts.size===2){ const [a,b] = [...pts.values()], d = Math.hypot(a[0]-b[0], a[1]-b[1]); if(pinch0){ d3.dist = Math.min(120, Math.max(5, d3.dist*pinch0/d)); } pinch0 = d; }
+    else if(d3.fly.on){ d3.fly.yaw += (e.clientX-px)*0.005; d3.fly.pitch = Math.min(1.4, Math.max(-1.4, d3.fly.pitch - (e.clientY-py)*0.005)); }
     else { d3.th -= (e.clientX-px)*0.008; d3.ph = Math.min(1.52, Math.max(0.12, d3.ph - (e.clientY-py)*0.008)); }
     paint3D();
   });
   const up = e=>{ pts.delete(e.pointerId); pinch0 = 0; };
   R.domElement.addEventListener('pointerup', up); R.domElement.addEventListener('pointercancel', up);
-  R.domElement.addEventListener('wheel', e=>{ e.preventDefault(); d3.dist = Math.min(120, Math.max(5, d3.dist*(1 + e.deltaY*0.001))); paint3D(); }, {passive:false});
+  R.domElement.addEventListener('wheel', e=>{ e.preventDefault(); if(d3.fly.on){ flyMove(-e.deltaY*0.004, 0, 0); paint3D(); return; } d3.dist = Math.min(120, Math.max(5, d3.dist*(1 + e.deltaY*0.001))); paint3D(); }, {passive:false});
   size();
 }
 function paint3D(){
   if(!d3) return;
   const {cam, tgt, th, ph, dist} = d3;
+  if(d3.fly.on){
+    const f = d3.fly, cp = Math.cos(f.pitch);
+    cam.position.copy(f.pos);
+    cam.lookAt(f.pos.x + Math.sin(f.yaw)*cp, f.pos.y + Math.sin(f.pitch), f.pos.z - Math.cos(f.yaw)*cp);
+    d3.R.render(d3.scene, cam); return;
+  }
   cam.position.set(tgt.x + dist*Math.sin(ph)*Math.sin(th), tgt.y + dist*Math.cos(ph), tgt.z + dist*Math.sin(ph)*Math.cos(th));
   cam.lookAt(tgt);
   d3.R.render(d3.scene, cam);
 }
+// ---- Modo dron: moverse libremente, entrar y salir de la casa ----
+function flyMove(fw, rt, up){
+  const f = d3.fly, sy = Math.sin(f.yaw), cy = Math.cos(f.yaw);
+  f.pos.x += sy*fw + cy*rt; f.pos.z += -cy*fw + sy*rt; f.pos.y = Math.min(40, Math.max(0.3, f.pos.y + up));
+}
+function flyLoop(){
+  const f = d3.fly; if(f.raf) return;
+  f.t = performance.now();
+  const step = now => {
+    const dt = Math.min(0.05, (now - f.t)/1000); f.t = now;
+    if(!f.on || !f.keys.size){ f.raf = 0; return; }
+    const v = (f.fast ? 6 : 2.2)*dt, K = f.keys;
+    flyMove((K.has('fw')?v:0) - (K.has('bk')?v:0), (K.has('rt')?v:0) - (K.has('lt')?v:0), (K.has('up')?v*0.8:0) - (K.has('dn')?v*0.8:0));
+    paint3D(); f.raf = requestAnimationFrame(step);
+  };
+  f.raf = requestAnimationFrame(step);
+}
+function flyTo(k){
+  const h = d3.flyHome; if(!h) return;
+  const p = h[k] || h.calle; d3.fly.pos.set(p[0], p[1], p[2]); d3.fly.yaw = p[3]; d3.fly.pitch = p[4] || 0; paint3D();
+}
+function setFly(on){
+  if(!d3) return;
+  d3.fly.on = on; d3.fly.keys.clear();
+  el('v3-fly').classList.toggle('on', on); el('v3-fly').setAttribute('aria-pressed', on);
+  d3.box.classList.toggle('fly', on); d3.flyUI.forEach(n=> n.hidden = !on);
+  d3.cam.fov = on ? 62 : 35; d3.cam.updateProjectionMatrix();
+  if(on){ flyTo('calle'); document.querySelectorAll('[data-v3]').forEach(x=>x.classList.remove('on')); d3.R.domElement.focus && d3.R.domElement.focus(); }
+  paint3D();
+}
 function view3D(k){
   if(!d3) return;
+  if(d3.fly.on) setFly(false);
   if(k==='calle'){ d3.th = -0.55; d3.ph = 1.05; }
   if(k==='patio'){ d3.th = Math.PI + 0.55; d3.ph = 1.0; }
   if(k==='arriba'){ d3.th = 0.0001; d3.ph = 0.12; }
@@ -1619,6 +1699,14 @@ function build3D(r){
   }
   // encuadre: centro en la casa
   d3.tgt.set(ox + W/2, built2 ? 2.6 : 1.4, -(oy + D/2));
+  // puntos de partida del dron (x, altura, z, rumbo, cabeceo); 0 = mirando hacia el fondo del lote
+  const Z = y => -(oy + y), sc = r.rooms.sc || Object.values(r.rooms)[0];
+  d3.flyHome = {
+    calle: [ox + W/2, 1.6, vd + 4, 0, -0.05],
+    dentro: [ox + (sc.x0+sc.x1)/2, 1.6, Z(sc.y0 + 0.5), 0, -0.1],
+    piso2: built2 ? [ox + W/2, H2 + 1.6, Z(0.6), 0, -0.15] : [ox + W/2, H2 + 3.5, Z(-1.5), 0, -0.5],
+    patio: [ox + W/2, 1.6, Z(D + Math.max(1.2, (F - v.rf - D - T) - 0.6)), Math.PI, -0.05]
+  };
   if(!d3.framed){ d3.dist = Math.max(L*1.6, F*0.95) + 6; d3.framed = true; }
   const m = el('v3-msg'); if(m) m.remove();
   paint3D();
@@ -2006,6 +2094,37 @@ function generate(){
     ? `<b style="color:var(--ok)">Plano generado:</b> ${f1(best.r.gross)} m² techados. De ${nf(tried)} combinaciones que revisé, es la que cumple todo y deja cada ambiente más cerca de su superficie del nivel ${NIV[nivel].toLowerCase()} ajustada a este lote. Puedes ajustarlo a mano abajo.`
     : `<b style="color:var(--ok)">Plano generado:</b> ${f1(best.r.gross)} m² techados, el menor de ${nf(tried)} combinaciones revisadas que cumple todo. Puedes ajustarlo a mano abajo.`);
 }
+// Guardar y abrir el plano como archivo .json (todos los datos de entrada y las cotas entre ejes)
+el('save-plan').addEventListener('click', ()=>{
+  const data = {app:'verificador-vivienda-minima', formato:1, guardado:new Date().toISOString(), nivel, valores:{}};
+  ids.forEach(k=>{ const e = el(k); data.valores[k] = e.type==='checkbox' ? e.checked : e.value; });
+  const v = read(), r = lastR;
+  const name = `plano_${f2(v.lote)}x${f2(v.fondo)}_${v.nd + v.nd2}dorm${r ? '_' + f1(r.gross + (r.gross2||0)) + 'm2' : ''}.json`.replace(/\.(?=\d)/g, ',');
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 2000);
+  el('save-msg').innerHTML = `Guardado como <b>${name}</b> en tu carpeta de descargas.`;
+});
+el('open-plan').addEventListener('click', ()=> el('open-file').click());
+el('open-file').addEventListener('change', ()=>{
+  const fl = el('open-file').files[0]; if(!fl) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const data = JSON.parse(rd.result);
+      if(!data || data.app !== 'verificador-vivienda-minima' || !data.valores) throw new Error('formato');
+      ids.forEach(k=>{ if(!(k in data.valores)) return; const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
+      if(NIV[data.nivel]){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
+      clearTimeout(genTimer); wantTotal = null;
+      document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on'));
+      render();
+      el('gen-msg').innerHTML = `<b style="color:var(--ok)">Plano abierto:</b> ${fl.name}. Es exactamente el plano guardado; si cambias el terreno o los dormitorios, se vuelve a generar.`;
+      el('save-msg').innerHTML = `Abierto <b>${fl.name}</b>.`;
+    } catch(e){ el('save-msg').innerHTML = `<b style="color:var(--bad)">No pude abrir ${fl.name}</b>: no es un plano guardado con esta herramienta.`; }
+    el('open-file').value = '';
+  };
+  rd.readAsText(fl);
+});
 el('gen').addEventListener('click', ()=>{ el('gen-msg').textContent = 'Buscando…'; setTimeout(generate, 30); });
 
 // Los datos del terreno y del programa regeneran la planta solos; las cotas entre ejes solo redibujan.
@@ -2036,6 +2155,7 @@ el('ndt').addEventListener('change', ()=>{
 });
 const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; if(k==='3d') open3D(); ['dis','3d','are','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d').addEventListener('click', ()=>showTab('3d'));
+el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
