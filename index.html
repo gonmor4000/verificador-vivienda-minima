@@ -79,6 +79,14 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .rules ol{margin:0;padding-left:22px}
 .rules li{margin:6px 0;line-height:1.5}
 .rules .src{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:0 7px;margin-left:4px;white-space:nowrap}
+.pro-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:end}
+@media (max-width:900px){.pro-two{grid-template-columns:minmax(0,1fr)}}
+.pro-plan svg{max-width:900px;display:block;margin:0 auto}
+.pro-one{display:grid;gap:22px}
+#pro-cutA svg{max-width:760px;display:block}
+.pro-cut{cursor:grab;touch-action:none}
+.pro-cut:active{cursor:grabbing}
+.seg button:disabled{opacity:.4;cursor:not-allowed}
 .cuts{display:grid;grid-template-columns:minmax(0,2fr) minmax(0,3fr);gap:18px;align-items:end}
 @media (max-width:900px){.cuts{grid-template-columns:minmax(0,1fr)}}
 .legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
@@ -170,6 +178,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 
   <nav class="tabs" role="tablist" aria-label="Secciones">
     <button type="button" role="tab" id="tab-btn-dis" aria-selected="true" class="on">Diseño</button>
+    <button type="button" role="tab" id="tab-btn-pro" aria-selected="false">Diseño Pro</button>
     <button type="button" role="tab" id="tab-btn-3d" aria-selected="false">3D</button>
     <button type="button" role="tab" id="tab-btn-are" aria-selected="false">Cuadro de áreas</button>
     <button type="button" role="tab" id="tab-btn-mat" aria-selected="false">Materiales</button>
@@ -219,6 +228,29 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
         <li>Los dormitorios del 2.º piso van encima de los de abajo y el baño 2 sobre el baño 1, como en el plano.</li>
         <li>Si ni con los mínimos entra, la herramienta lo dice y propone alternativas: bajar de nivel, pasar un dormitorio arriba o el frente que haría falta.</li>
       </ol>
+    </section>
+  </div>
+
+  <div id="tab-pro" class="areas" hidden aria-label="Diseño Pro">
+    <section class="card plan">
+      <h2>Planta de arquitectura</h2>
+      <p class="hint" style="margin-top:0">Plano para el expediente: ejes con su grilla, cotas entre ejes y totales, cotas libres de cada ambiente (en rojo), vanos de puertas (P) y ventanas (V). <b>Arrastra las líneas de corte A y B</b> para mover los cortes de abajo.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px"><span class="hint">Piso</span><div class="seg" role="group" aria-label="Piso"><button type="button" data-pp="1">1.er piso</button><button type="button" data-pp="2" id="pro-f2">2.º piso</button></div></div>
+      <div id="pro-plan" class="pro-plan"></div>
+    </section>
+    <section class="card plan">
+      <h2>Cortes</h2>
+      <div class="pro-one">
+        <div><p class="hint" id="pro-capA" style="margin:0 0 4px"></p><div id="pro-cutA"></div></div>
+        <div><p class="hint" id="pro-capB" style="margin:0 0 4px"></p><div id="pro-cutB"></div></div>
+      </div>
+    </section>
+    <section class="card plan">
+      <h2>Elevaciones</h2>
+      <div class="pro-two">
+        <div><p class="hint" style="margin:0 0 4px">Elevación principal, desde la calle</p><div id="pro-elF"></div></div>
+        <div><p class="hint" style="margin:0 0 4px">Elevación posterior, desde el fondo del patio</p><div id="pro-elP"></div></div>
+      </div>
     </section>
   </div>
 
@@ -305,6 +337,8 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Diseño Pro</b>: planta de arquitectura con ejes, grilla, cotas entre ejes y totales, cotas libres de cada ambiente y vanos (1.er y 2.º piso); <b>cortes A-A y B-B que se mueven arrastrando su línea</b> sobre la planta; y <b>elevaciones</b> principal y posterior. La planta de la pestaña Diseño queda más simple, sin líneas de corte.</span></li>
+      <li><time datetime="2026-11-13">13 nov 2026</time><span><b>Tipos de escalera</b> al 2.º piso, todas mínimas (pasos de 0.25, contrapasos ≤ 0.18, ancho 0.90): de un tramo, en L, en U y de caracol de 1.60 m. Se ven en la planta, el 3D, los cortes y el metrado. El lavadero se corre si la escalera lo tapa, y la ventana del estar del 2.º piso ya no choca con la puerta de llegada.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span><b>Guardar plano dentro de Claude</b>: como allí la página no puede descargar archivos, el plano se copia al portapapeles y aparece en un recuadro; se recupera con «Abrir plano» (archivo) o pegando el texto. En la página publicada en GitHub sigue descargando el archivo .json.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span><b>Cotas editables</b> en la planta: haz clic en una cota entre ejes, escribe la medida y pulsa Enter. Las demás cotas se mantienen (el total crece o se achica) y el plano se redibuja con sus verificaciones. Esc cancela.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo control <b>Patio de luz (largo)</b>: cuando la planta tiene patio de luz (casa larga de 3 dormitorios en un piso) puedes fijar su largo entre 1.00 y 3.00 m o dejar que la herramienta lo elija. Debajo se ven sus medidas entre ejes y libres; si la planta no tiene patio de luz, lo indica.</span></li>
@@ -346,6 +380,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
       <input type="hidden" id="pl" value="uno">
       <div class="chk"><input type="checkbox" id="ter"><label for="ter">Terraza<br><span class="hint">En el 2.º piso sobre el dormitorio 2 o, si no, azotea transitable sobre el techo.</span></label></div>
       <div class="chk"><input type="checkbox" id="vol"><label for="vol">Volado hacia la calle<br><span class="hint">El 2.º piso sale 0.50 m sobre el retiro frontal (A.010 art. 13).</span></label></div>
+      <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
       <div class="chk"><input type="checkbox" id="pmr"><label for="pmr">Exigir vivienda accesible (A.120, art. 30)<br><span class="hint">Giro de 1.50 m en cada ambiente, ba&ntilde;o accesible y puertas de 0.90 m.</span></label></div>
       <button type="button" id="gen" class="gen">Generar plano para este terreno</button>
       <div class="inline" style="margin-top:8px"><button type="button" id="save-plan">Guardar plano</button><button type="button" id="open-plan">Abrir plano</button></div>
@@ -388,7 +423,6 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
         <span><i class="sw" style="background:var(--ok-soft)"></i>Retiro</span>
         <span><i class="sw" style="border-top:1.5px solid var(--muted);border-bottom:1.5px solid var(--muted);border-radius:0"></i>Vereda</span>
         <span><i class="sw" style="background:var(--furn)"></i>Muebles: camas, mesada, cocina, inodoro, lavatorio y ducha</span>
-        <span><i class="sw" style="border-top:1.5px dashed var(--brick);border-radius:0"></i>Línea de corte</span>
         <span><i class="sw" style="background:var(--bad-soft);outline:1px solid var(--bad)"></i>Ambiente que no cumple</span>
         <span id="lg-pmr" hidden><i class="sw" style="border:1.5px dashed var(--brick);border-radius:50%"></i>Giro de 1.50 m</span>
       </div>
@@ -400,13 +434,6 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
       <div id="checks"></div>
     </section>
 
-    <section class="card plan cortes" aria-label="Cortes">
-      <h2>Cortes</h2>
-      <div class="cuts">
-        <div><p class="hint" style="margin:0 0 4px">Corte A-A, transversal: dormitorio 1 y sala</p><div id="cutA"></div></div>
-        <div><p class="hint" style="margin:0 0 4px">Corte B-B, longitudinal: de la calle al patio por la sala y la cocina</p><div id="cutB"></div></div>
-      </div>
-    </section>
   </div>
 
   </div>
@@ -418,11 +445,11 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 (function(){
 let T = 0.13; const H = 2.40, M = 0.25;
 const presets = {
-  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:1.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote'},
-  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:1.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote'},
-  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:1.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote'}
+  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:1.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'recta'},
+  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:1.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'recta'},
+  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:1.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'recta'}
 };
-const ids = ['a','b','d','y2','w','c','lote','fondo','rf','rp','vd','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam'];
+const ids = ['a','b','d','y2','w','c','lote','fondo','rf','rp','vd','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc'];
 const el = id => document.getElementById(id);
 const f2 = x => x.toFixed(2);
 const f1 = x => x.toFixed(1);
@@ -436,7 +463,7 @@ function read(){
   const v = {};
   ['a','b','d','y2','w','c','lote','fondo','rf','rp','vd','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
   v.nd = parseInt(el('nd').value,10)||2; v.nd2 = parseInt(el('nd2').value,10)||0; v.pl = el('pl').value; v.pp = parseFloat(el('pp').value)||1.25; v.ty = el('ty').value; v.sis = el('sis').value; v.ap = el('ap').value; v.z = parseFloat(el('z').value); v.s = parseFloat(el('s').value); v.n = parseInt(el('n').value,10);
-  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked;
+  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'recta';
   return v;
 }
 
@@ -995,9 +1022,12 @@ function draw(r){
     const sY = r.stair && r.stair.axis==='y', pLx = sY ? 0.15 : L/2, pAn = sY ? 'start' : 'middle';
     g += `<text x="${XL(pLx)}" y="${YL(F - Math.min(v.rp, patio)/2 - (patio>v.rp+1.5 ? (patio-v.rp)/2 : 0))+4}" text-anchor="${pAn}" font-size="11.5" font-weight="600" fill="var(--ok)">Patio-lavandería = retiro posterior</text>`;
     g += `<text x="${XL(pLx)}" y="${YL(F - Math.min(v.rp, patio)/2 - (patio>v.rp+1.5 ? (patio-v.rp)/2 : 0))+20}" text-anchor="${pAn}" font-size="10.5" fill="var(--ok)">${f2(patio)} m libres</text>`; }
-  const lavX = r.typ==='T3' ? v.a + r.P + 0.05 : v.a + 0.02;
-  g += `<rect x="${X(lavX)}" y="${Y(D + T/2 + 0.55)}" width="${0.55*s}" height="${0.55*s}" rx="3" fill="var(--furn)" stroke="var(--wet-line)" stroke-width="1"/>`;
-  g += `<text x="${X(lavX + 0.28)}" y="${Y(D + T/2 + 0.55) - 6}" text-anchor="middle" font-size="10.5" fill="var(--muted)">lavadero</text>`;
+  let lavX = r.typ==='T3' ? v.a + r.P + 0.05 : v.a + 0.02, lavY = D + T/2;
+  { const sb = r.stair && r.stair.box, hit = (x, y) => sb && x < sb.x1 + 0.05 && x + 0.55 > sb.x0 - 0.05 && y < sb.y1 + 0.05 && y + 0.55 > sb.y0 - 0.05;
+    if(hit(lavX, lavY)){ const c = [W - T/2 - 0.60, T/2 + 0.05, v.a + 0.02].find(x=>!hit(x, lavY)); if(c !== undefined) lavX = c; else lavY = sb.y1 + 0.10; }
+    if(sb && sb.x1 < W - 1.6 && lavY < sb.y1 && lavX < sb.x1 + 1.7 && lavX + 0.55 > sb.x1) lavY = sb.y1 + 0.10; }
+  g += `<rect x="${X(lavX)}" y="${Y(lavY + 0.55)}" width="${0.55*s}" height="${0.55*s}" rx="3" fill="var(--furn)" stroke="var(--wet-line)" stroke-width="1"/>`;
+  g += `<text x="${X(lavX + 0.28)}" y="${Y(lavY + 0.55) - 6}" text-anchor="middle" font-size="10.5" fill="var(--muted)">lavadero</text>`;
   g += `<rect id="lot-rect" x="${XL(0)}" y="${YL(F)}" width="${L*s}" height="${F*s}" fill="none" stroke="var(--muted)" stroke-width="1.2" stroke-dasharray="8 4 2 4"/>`;
   g += `<text id="lot-lbl" x="${XL(0)+4}" y="${YL(F)+14}" font-size="10.5" fill="var(--muted)">Límite del lote ${f2(v.lote)} × ${f2(v.fondo)} m</text>`;
   lotGeo = {XL0: XL(0), YL0: YL(0), s, L, F};
@@ -1107,13 +1137,6 @@ function draw(r){
   door(W-c+baDoor, D-w+T/2, 1,0, 0,1, v.pmr?0.90:0.70);
   }
   }
-  // líneas de corte
-  const yA = y2/2, xB = r.cb ? r.cb.xB : (t3 ? v.a + r.P/2 : v.a + (W-c-v.a)/2);
-  const cutMark = (x,y,lab,sx,sy) => `<path d="M${x+sx*11},${y+sy*11} L${x-sy*6},${y+sx*6} L${x+sy*6},${y-sx*6} Z" fill="var(--brick)"/><text x="${x-sx*10 + (sy? (x<200?-10:10):0)}" y="${y-sy*8+4 + (sx? 14:0)}" text-anchor="middle" font-family="var(--f-mono)" font-weight="600" font-size="12" fill="var(--brick)">${lab}</text>`;
-  g += `<line x1="${X(-0.35)}" y1="${Y(yA)}" x2="${X(W+0.30)}" y2="${Y(yA)}" stroke="var(--brick)" stroke-width="1.2" stroke-dasharray="10 4 2 4"/>`;
-  g += cutMark(X(-0.35), Y(yA), 'A', 0, -1) + cutMark(X(W+0.30), Y(yA), 'A', 0, -1);
-  g += `<line x1="${X(xB)}" y1="${YL(-vd)}" x2="${X(xB)}" y2="${YL(F)}" stroke="var(--brick)" stroke-width="1.2" stroke-dasharray="10 4 2 4"/>`;
-  g += cutMark(X(xB), YL(-vd)+2, 'B', -1, 0) + cutMark(X(xB), YL(F)-2, 'B', -1, 0);
   g += drawStair(X, Y, s, r.stair, false);
   const cols = r.cols;
   const cs = Math.max(6, 0.25*s*0.9);
@@ -1157,6 +1180,62 @@ function draw(r){
 }
 
 // ---------- 2.º piso: dormitorios sobre los de abajo, muros alineados, escalera con descanso ----------
+// ---------- Escaleras mínimas: un tramo, en L, en U y caracol (A.010 art. 23: paso 0.25, contrapaso ≤ 0.18, ancho 0.90) ----------
+const ESC_N = {recta:'de un tramo', L:'en L', U:'en U', caracol:'de caracol'};
+function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2){
+  const cr = H2/nR, run = (nR-1)*0.25, B = 0.90;
+  const st = {type, nR, cr, H2, run, lx0, lx1, y0, y1, W, treads:[], lands:[], path:[], axis:'x'};
+  // tramo recto: arranca en (sx,sy), sube en la dirección (dx,dy); el ancho va hacia (wx,wy)
+  const flight = (sx, sy, dx, dy, wx, wy, k, i0) => {
+    for(let j=0;j<k-1;j++){ const a = j*0.25, b = a + 0.25;
+      const P = [[sx+dx*a, sy+dy*a], [sx+dx*b, sy+dy*b], [sx+dx*b+wx*B, sy+dy*b+wy*B], [sx+dx*a+wx*B, sy+dy*a+wy*B]];
+      st.treads.push({poly:P, z:(i0+j+1)*cr}); }
+    const L = (k-1)*0.25; st.path.push([sx+wx*B/2, sy+wy*B/2], [sx+dx*L+wx*B/2, sy+dy*L+wy*B/2]);
+  };
+  const land = (x0, y0_, x1, y1_, z) => st.lands.push({x0:Math.min(x0,x1), y0:Math.min(y0_,y1_), x1:Math.max(x0,x1), y1:Math.max(y0_,y1_), z});
+  land(lx0, y0, lx1, y1, H2);
+  const k1 = Math.floor(nR/2), k2 = nR - k1, r1 = (k1-1)*0.25, r2 = (k2-1)*0.25;
+  if(type === 'recta'){
+    if(lx0 - run >= 0.05){ flight(lx0-run, y0, 1,0, 0,1, nR, 0); st.need = 1.80; }
+    else if(lx1 + run <= W - 0.05){ flight(lx1+run, y0, -1,0, 0,1, nR, 0); st.need = 1.80; }
+    else { flight(lx0, y1+run, 0,-1, 1,0, nR, 0); st.axis = 'y'; st.need = 0.92 + run + 0.30; }
+  } else if(type === 'L'){
+    // descanso de esquina junto al de llegada; primer tramo perpendicular al muro, desde el patio
+    if(lx0 - r2 - B >= 0.05){ const c1 = lx0 - r2; flight(c1-B, y1+r1, 0,-1, 1,0, k1, 0); land(c1-B, y0, c1, y1, k1*cr); flight(c1, y0, 1,0, 0,1, k2, k1); }
+    else if(lx1 + r2 + B <= W - 0.05){ const c1 = lx1 + r2; flight(c1, y1+r1, 0,-1, 1,0, k1, 0); land(c1, y0, c1+B, y1, k1*cr); flight(c1, y0, -1,0, 0,1, k2, k1); }
+    else return null;
+    st.axis = 'y'; st.need = 0.92 + r1 + 0.30;
+  } else if(type === 'U'){
+    // dos tramos paralelos al muro posterior y un descanso de media vuelta de 0.90 × 1.80
+    if(lx0 - r2 - B >= 0.05){ const c1 = lx0 - r2; flight(c1+r1, y1, -1,0, 0,1, k1, 0); land(c1-B, y0, c1, y1+B, k1*cr); flight(c1, y0, 1,0, 0,1, k2, k1); }
+    else if(lx1 + r2 + B <= W - 0.05){ const c1 = lx1 + r2; flight(c1-r1, y1, 1,0, 0,1, k1, 0); land(c1, y0, c1+B, y1+B, k1*cr); flight(c1, y0, -1,0, 0,1, k2, k1); }
+    else return null;
+    st.need = 0.92 + B + B;
+  } else if(type === 'caracol'){
+    // diámetro 1.60: pasos de 0.25 en la línea de huella, a 0.50 del eje
+    const R = 0.80, a = 0.25/0.50, n = nR - 1;
+    let cx, side;
+    if(lx0 - 2*R >= 0.05){ cx = lx0 - R; side = 1; } else if(lx1 + 2*R <= W - 0.05){ cx = lx1 + R; side = -1; } else return null;
+    const cy = y0 + R, aEnd = side > 0 ? 0 : Math.PI, dir = side > 0 ? 1 : -1; // el último paso apunta al descanso
+    for(let j=0;j<n;j++){
+      const t0 = aEnd - dir*(n-j)*a, t1 = t0 + dir*a, P = [[cx + 0.08*Math.cos(t0), cy + 0.08*Math.sin(t0)]];
+      for(let i=0;i<=4;i++){ const t = t0 + (t1-t0)*i/4; P.push([cx + R*Math.cos(t), cy + R*Math.sin(t)]); }
+      P.push([cx + 0.08*Math.cos(t1), cy + 0.08*Math.sin(t1)]);
+      st.treads.push({poly:P, z:(j+1)*cr, sec:{cx, cy, t0, t1, R}});
+    }
+    for(let i=0;i<=24;i++){ const t = aEnd - dir*n*a*(1 - i/24); st.path.push([cx + 0.5*Math.cos(t), cy + 0.5*Math.sin(t)]); }
+    st.spiral = {cx, cy, R}; st.need = 0.02 + 2*R + 0.60;
+  }
+  const xs = [], ys = [];
+  st.treads.forEach(t=>t.poly.forEach(([x,y])=>{ xs.push(x); ys.push(y); }));
+  st.lands.forEach(l=>{ xs.push(l.x0,l.x1); ys.push(l.y0,l.y1); });
+  st.box = {x0:Math.min(...xs), x1:Math.max(...xs), y0:Math.min(...ys), y1:Math.max(...ys)};
+  st.ry1 = st.box.y1; st.fits = patio0 >= st.need - 1e-6;
+  // concreto: pasos (huella × contrapaso/2 + garganta de 0.15) y descansos de 0.15
+  const polyA = P => Math.abs(P.reduce((s,[x,y],i)=>{ const [u,w] = P[(i+1)%P.length]; return s + x*w - u*y; },0))/2;
+  st.vol = st.treads.reduce((s,t)=>s + polyA(t.poly)*(0.15*1.15 + cr/2),0) + st.lands.reduce((s,l)=>s + (l.x1-l.x0)*(l.y1-l.y0)*0.15,0);
+  return st;
+}
 function etapa2(v, rooms, W, D, hL, add, gross){
   const nd2 = v.nd2 || 0;
   const slots = ['d1','d2','d3'].filter(k=>rooms[k]);
@@ -1191,10 +1270,8 @@ function etapa2(v, rooms, W, D, hL, add, gross){
     const y0 = D + T/2 + 0.02, y1 = y0 + 0.90;
     const patio0 = v.fondo - v.rf - D - T;
     if(lx1 - lx0 >= 0.90 - 1e-6){
-      // a lo largo del muro posterior (deja el patio libre) o, si no entra, perpendicular a él, hacia el fondo
-      if(lx0 - run >= 0.05) stair = {axis:'x', sx0: lx0 - run, sx1: lx0, dir: 1, lx0, lx1, y0, y1, nR, run, cr: H2/nR, H2};
-      else if(lx1 + run <= W - 0.05) stair = {axis:'x', sx0: lx1, sx1: lx1 + run, dir: -1, lx0, lx1, y0, y1, nR, run, cr: H2/nR, H2};
-      else if(patio0 >= 0.92 + run + 0.30 - 1e-6) stair = {axis:'y', lx0, lx1, y0, y1, ry0: y1, ry1: y1 + run, nR, run, cr: H2/nR, H2};
+      stair = makeStair(v.esc || 'recta', lx0, lx1, y0, y1, W, patio0, nR, H2);
+      if(!stair && (v.esc||'recta') !== 'recta') { stair = makeStair('recta', lx0, lx1, y0, y1, W, patio0, nR, H2); if(stair) stair.fallback = v.esc; }
     }
   }
   if(stair) stair.built = nd2 > 0;
@@ -1206,7 +1283,9 @@ function etapa2(v, rooms, W, D, hL, add, gross){
     gross2 = gross - terA + (v.vol && v.rf >= 0.5 ? W*0.50 : 0);
     const fits = nd2 <= slots.length;
     add(G,'Dormitorios en el 2.º piso', fits ? 'ok':'bad', fits ? `${nd2===1?'El dormitorio va':'Los '+nd2+' dormitorios van'} exactamente encima de los dormitorios de abajo: mismos ejes, muros alineados de piso a piso y la misma losa (manual).${up.free?` Sobre el resto del ala queda ${v.ter?'una terraza':'un estudio'}.`:''}` : `Arriba solo caben <b>${slots.length}</b> dormitorios, uno sobre cada dormitorio de abajo, para que los muros queden alineados.`);
-    add(G,'Escalera con descanso', stair && (stair.axis==='y' || patio >= 1.80-1e-6) ? 'ok':'bad', stair ? `Escalera recta exterior en el patio${stair.axis==='y'?', perpendicular al muro posterior porque a lo ancho no entra':', pegada al muro posterior'}: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23), y un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso.${patio < 1.80 ? ' El patio no deja 0.90 m de paso junto a la escalera.' : ''}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`);
+    { const okE = stair && stair.fits && !stair.fallback, tN = stair ? ESC_N[stair.type] : '';
+      const extra = stair ? (stair.type==='caracol' ? ` Caracol de ${f2(2*stair.spiral.R)} m de diámetro con pasos de 0.25 a 0.50 m del eje: la A.010 la admite en viviendas de hasta 2 pisos.` : stair.type==='U' ? ' Dos tramos paralelos al muro posterior con un descanso de media vuelta de 0.90 × 1.80 m.' : stair.type==='L' ? ' Un tramo desde el patio hacia el muro posterior, un descanso de esquina de 0.90 × 0.90 m y otro tramo pegado al muro.' : (stair.axis==='y' ? ' Perpendicular al muro posterior porque a lo ancho no entra.' : ' Pegada al muro posterior.')) : '';
+      add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra junto al muro posterior: se dibuja la de un tramo. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23), y un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso.${extra}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
     if(v.n < 2) add(G,'Pisos para el sismo', 'warn', `Con dormitorios en el 2.º piso la densidad de muros se verifica para 2 pisos.`);
     add(G,'Baño 2', 'ok', `Sobre el baño del 1.er piso: mismas montantes y desagües.`);
   }
@@ -1215,28 +1294,24 @@ function etapa2(v, rooms, W, D, hL, add, gross){
 
 function drawStair(X, Y, s, st, upper){
   if(!st) return '';
-  const dash = st.built ? '' : 'stroke-dasharray="5 3"';
+  const col = 'var(--brick)', dash = upper ? 'stroke-dasharray="5 3"' : (st.built ? '' : 'stroke-dasharray="5 3"'), op = upper ? .45 : .9;
+  const pts = P => P.map(([x,y])=>`${X(x)},${Y(y)}`).join(' ');
   let g = '';
-  const col = 'var(--brick)';
-  if(st.axis==='y'){
-    g += `<rect x="${X(st.lx0)}" y="${Y(st.ry1)}" width="${(st.lx1-st.lx0)*s}" height="${(st.ry1-st.ry0)*s}" fill="none" stroke="${col}" stroke-width="1.2" ${upper?'stroke-dasharray="5 3"':dash}/>`;
-    for(let i=1;i<st.nR-1;i++){ const y = st.ry0 + i*0.25; g += `<line x1="${X(st.lx0)}" y1="${Y(y)}" x2="${X(st.lx1)}" y2="${Y(y)}" stroke="${col}" stroke-width=".6" opacity="${upper?.4:.8}"/>`; }
-    g += `<rect x="${X(st.lx0)}" y="${Y(st.y1)}" width="${(st.lx1-st.lx0)*s}" height="${(st.y1-st.y0)*s}" fill="${upper?'var(--brick-soft)':'none'}" stroke="${col}" stroke-width="1.4" ${upper?'':dash}/>`;
-    const xm = (st.lx0+st.lx1)/2;
-    g += `<line x1="${X(xm)}" y1="${Y(st.ry1-0.1)}" x2="${X(xm)}" y2="${Y(st.y1-0.05)}" stroke="${col}" stroke-width="1"/><path d="M${X(xm)},${Y(st.y1-0.05)} l-4,-7 l8,0 Z" fill="${col}"/>`;
-    g += `<text x="${X(st.lx1)+6}" y="${Y((st.y0+st.y1)/2)+3}" font-size="9.5" fill="${col}">descanso</text>`;
-    g += `<text x="${X(st.lx1)+6}" y="${Y((st.ry0+st.ry1)/2)+3}" font-size="10" fill="${col}">${upper ? 'escalera (baja)' : (st.built ? 'sube al 2.º piso' : 'escalera futura')}</text><text x="${X(st.lx1)+6}" y="${Y((st.ry0+st.ry1)/2)+16}" font-size="10" fill="${col}">${st.nR} × ${f2(st.cr)}</text>`;
-    return g;
+  st.lands.forEach((l,i)=>{ g += `<rect x="${X(l.x0)}" y="${Y(l.y1)}" width="${(l.x1-l.x0)*s}" height="${(l.y1-l.y0)*s}" fill="${upper && i===0 ? 'var(--brick-soft)' : 'none'}" stroke="${col}" stroke-width="1.4" ${i===0 && upper ? '' : dash}/>`; });
+  st.treads.forEach(t=>{ g += `<polygon points="${pts(t.poly)}" fill="none" stroke="${col}" stroke-width=".7" opacity="${op}" ${dash}/>`; });
+  if(st.spiral) g += `<circle cx="${X(st.spiral.cx)}" cy="${Y(st.spiral.cy)}" r="${Math.max(2, 0.08*s)}" fill="${col}"/>`;
+  if(!upper && st.path.length > 1){
+    const P = st.path, [ax,ay] = P[P.length-2], [bx,by] = P[P.length-1];
+    g += `<polyline points="${pts(P)}" fill="none" stroke="${col}" stroke-width="1"/>`;
+    const ang = Math.atan2(-(by-ay), bx-ax);
+    g += `<path d="M${X(bx)},${Y(by)} l${(-7*Math.cos(ang) - 4*Math.sin(ang)).toFixed(1)},${(-7*Math.sin(ang) + 4*Math.cos(ang)).toFixed(1)} l${(8*Math.sin(ang)).toFixed(1)},${(-8*Math.cos(ang)).toFixed(1)} Z" fill="${col}"/>`;
+    g += `<circle cx="${X(P[0][0])}" cy="${Y(P[0][1])}" r="2.5" fill="${col}"/>`;
   }
-  {
-    g += `<rect x="${X(st.sx0)}" y="${Y(st.y1)}" width="${(st.sx1-st.sx0)*s}" height="${(st.y1-st.y0)*s}" fill="none" stroke="${col}" stroke-width="1.2" ${upper?'stroke-dasharray="5 3"':dash}/>`;
-    for(let i=1;i<st.nR-1;i++){ const x = st.sx0 + i*0.25; g += `<line x1="${X(x)}" y1="${Y(st.y0)}" x2="${X(x)}" y2="${Y(st.y1)}" stroke="${col}" stroke-width=".6" opacity="${upper?.4:.8}"/>`; }
-  }
-  g += `<rect x="${X(st.lx0)}" y="${Y(st.y1)}" width="${(st.lx1-st.lx0)*s}" height="${(st.y1-st.y0)*s}" fill="${upper?'var(--brick-soft)':'none'}" stroke="${col}" stroke-width="1.4" ${upper?'':dash}/>`;
-  const ym = (st.y0+st.y1)/2, xa = st.dir>0 ? st.sx0+0.1 : st.sx1-0.1, xb = st.dir>0 ? st.lx0-0.05 : st.lx1+0.05;
-  g += `<line x1="${X(xa)}" y1="${Y(ym)}" x2="${X(xb)}" y2="${Y(ym)}" stroke="${col}" stroke-width="1"/><path d="M${X(xb)},${Y(ym)} l${-st.dir*7},-4 l0,8 Z" fill="${col}"/>`;
-  g += `<text x="${X((st.lx0+st.lx1)/2)}" y="${Y(st.y1)-4}" text-anchor="middle" font-size="9.5" fill="${col}">descanso</text>`;
-  g += `<text x="${X((st.sx0+st.sx1)/2)}" y="${Y(st.y1)-4}" text-anchor="middle" font-size="10" fill="${col}">${upper ? 'escalera (baja)' : (st.built ? 'sube al 2.º piso' : 'escalera futura')} · ${st.nR} × ${f2(st.cr)}</text>`;
+  const b = st.box, l0 = st.lands[0];
+  g += `<text x="${X((l0.x0+l0.x1)/2)}" y="${Y(l0.y1)-4}" text-anchor="middle" font-size="9.5" fill="${col}">llegada</text>`;
+  const right = b.x1 < (st.W || 99) - 1.6, top = st.labTop, tx = top ? X((b.x0+b.x1)/2) : right ? X(b.x1)+6 : X(b.x0)-6, anc = top ? 'middle' : right ? 'start' : 'end', ty = top ? Y(b.y1) - 22 : Y((b.y0+b.y1)/2);
+  g += `<text x="${tx}" y="${ty}" text-anchor="${anc}" font-size="10" fill="${col}">${upper ? 'escalera (baja)' : (st.built ? 'sube al 2.º piso' : 'escalera futura')}</text>`;
+  g += `<text x="${tx}" y="${ty+13}" text-anchor="${anc}" font-size="10" fill="${col}">${ESC_N[st.type]} · ${st.nR} × ${f2(st.cr)}</text>`;
   return g;
 }
 
@@ -1246,7 +1321,7 @@ function draw2(r){
   if(!r.gross2 || !up){ box.innerHTML = ''; el('p2').hidden = true; return; }
   el('p2').hidden = false;
   const vo = v.vol && v.rf >= 0.5 ? 0.50 : 0;
-  const ext = st && st.axis==='y' ? st.ry1 - D + 0.6 : 1.4;
+  const ext = st ? Math.max(1.4, st.box.y1 - D + 0.6) : 1.4;
   const pad = 40, s = Math.min(520/(W+1.4), 34);
   const X = x => pad + x*s, Y = y => pad + (D + ext - y)*s;
   const tw = Math.max(3, T*s), op = v.sis==='portico' ? .55 : 1, eps = 1e-6;
@@ -1271,7 +1346,7 @@ function draw2(r){
   const dW = r.dDoor;
   R.forEach(([k,q])=>{
     if(q.sky) return;
-    const isDorm = q.grp.startsWith('d') || q.grp.startsWith('e');
+    const isDorm = q.grp.startsWith('d') || (q.grp.startsWith('e') && q.grp !== 'estar');
     if(!q.ter && Math.abs(q.y0)<eps && (isDorm || q.grp==='estar')){ const L = q.x1-q.x0-T, ww = Math.min(1.5, L-0.6); if(ww>0.4){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,yf,c+ww/2,yf,'win']); } }
     if(!q.ter && Math.abs(q.y1-D)<eps && (isDorm || q.wet)){ const L = q.x1-q.x0-T, ww = q.wet ? 0.5 : Math.min(1.2, L-0.6); if(ww>0.3){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,D,c+ww/2,D,'win']); } }
     if(q.grp==='estar') return;
@@ -1324,188 +1399,7 @@ function draw2(r){
 }
 
 // ---------- cortes ----------
-function cutCommon(r){
-  const v = r.v, e = r.hL || 0.20, H2 = H + e;
-  const built2 = r.gross2 > 0;
-  const azo = v.ter && !(built2 && r.up && r.up.free > 0), vo = (v.vol && v.rf >= 0.5) ? 0.50 : 0;
-  return {v, e, H2, built2, azo, vo};
-}
 const levelTag = (x, y, txt, anchor='start') => `<line x1="${x-6}" y1="${y}" x2="${x+6}" y2="${y}" stroke="var(--muted)" stroke-width="1"/><path d="M${x-4},${y-6} L${x+4},${y-6} L${x},${y} Z" fill="var(--muted)"/><text x="${anchor==='start'?x+9:x-9}" y="${y+4}" text-anchor="${anchor}" font-family="var(--f-mono)" font-size="10.5" fill="var(--muted)">${txt}</text>`;
-
-function foundation(P, xc, t){
-  // P: helpers {X,Z,add}; xc: centro del muro en el corte; t: espesor
-  const {X,Z,v,r} = P; let g = '';
-  if(v.sis === 'portante'){
-    const cm = r.cim;
-    g += `<rect x="${X(xc-cm.an/2)}" y="${Z(-0.20)}" width="${cm.an*P.s}" height="${(cm.za-0.20)*P.s}" fill="var(--muted)" fill-opacity=".35" stroke="var(--muted)" stroke-width=".8"/>`;
-    g += `<rect x="${X(xc-t/2)}" y="${Z(0)}" width="${t*P.s}" height="${0.20*P.s}" fill="var(--muted)" fill-opacity=".6"/>`;
-  } else {
-    g += `<rect x="${X(xc-0.20)}" y="${Z(-0.20)}" width="${0.40*P.s}" height="${0.50*P.s}" fill="var(--muted)" fill-opacity=".35" stroke="var(--muted)" stroke-width=".8"/>`;
-    g += `<rect x="${X(xc-t/2)}" y="${Z(0)}" width="${t*P.s}" height="${0.20*P.s}" fill="var(--muted)" fill-opacity=".6"/>`;
-  }
-  return g;
-}
-
-function cutA(r){
-  const {W,D,y2,v} = r; const {e,H2,built2,azo,vo} = cutCommon(r);
-  const yc = y2/2;
-  const x0 = -1.0, x1 = W + 1.6, z0 = -1.45, z1 = 2*H2 + ((azo && built2) ? 2.2 : 0.5);
-  const s = 640/(x1-x0);
-  const X = x => (x-x0)*s, Z = z => (z1-z)*s;
-  const P = {X,Z,s,v,r};
-  const port = v.sis==='portico', op = port ? .55 : 1;
-  let g = '';
-  // suelo
-  g += `<rect x="${X(x0)}" y="${Z(0)}" width="${(x1-x0)*s}" height="${(0-z0)*s}" fill="var(--ok-soft)"/>`;
-  g += `<line x1="${X(x0)}" y1="${Z(0)}" x2="${X(x1)}" y2="${Z(0)}" stroke="var(--ink)" stroke-width="1.4"/>`;
-  // muros cortados en x = 0, a, W
-  const walls = [0, v.a, W];
-  walls.forEach(x=>{
-    g += foundation(P, x, T);
-    g += `<rect x="${X(x-T/2)}" y="${Z(H)}" width="${T*s}" height="${H*s}" fill="var(--wall)" fill-opacity="${op}"/>`;
-  });
-  // zapatas y columnas vistas (pórticos) en el eje 2
-  if(port){ walls.forEach(x=>{
-    g += `<rect x="${X(x-0.5)}" y="${Z(-0.60)}" width="${1.0*s}" height="${0.60*s}" fill="none" stroke="var(--muted)" stroke-dasharray="4 3"/>`;
-    g += `<rect x="${X(x-0.125)}" y="${Z(H2)}" width="${0.25*s}" height="${(H2+0.60)*s}" fill="none" stroke="var(--muted)" stroke-dasharray="4 3"/>`;
-  }); }
-  // losa y vigas
-  const losa = (zb, solid) => {
-    let q = `<rect x="${X(-T/2)}" y="${Z(zb+e)}" width="${(W+T)*s}" height="${e*s}" fill="${solid?'var(--muted)':'none'}" fill-opacity=".55" stroke="var(--muted)" stroke-width="${solid?0.8:1}" ${solid?'':'stroke-dasharray="5 3"'}/>`;
-    walls.forEach(x=>{
-      if(port){ q += `<rect x="${X(x-0.125)}" y="${Z(zb+e)}" width="${0.25*s}" height="${r.hv*s}" fill="${solid?'var(--wall)':'none'}" stroke="var(--wall)" ${solid?'':'stroke-dasharray="5 3"'}/>`; }
-      else if(solid) q += `<rect x="${X(x-T/2)}" y="${Z(zb+e)}" width="${T*s}" height="${e*s}" fill="var(--wall)"/>`;
-    });
-    return q;
-  };
-  g += losa(H, true);
-  // 2.º piso
-  if(built2){
-    walls.forEach(x=>{ g += `<rect x="${X(x-T/2)}" y="${Z(H2+H)}" width="${T*s}" height="${H*s}" fill="var(--wall)" fill-opacity="${op}"/>`; });
-    g += losa(H2+H, true);
-  } else if(!azo) {
-    walls.forEach(x=>{ g += `<rect x="${X(x-T/2)}" y="${Z(H2+H)}" width="${T*s}" height="${H*s}" fill="none" stroke="var(--muted)" stroke-dasharray="5 3"/>`; });
-    g += losa(H2+H, false);
-  }
-  if(azo){ const zr = built2 ? 2*H2 : H2;
-    [0, W].forEach(x=>{ g += `<rect x="${X(x-T/2)}" y="${Z(zr+1.80)}" width="${T*s}" height="${1.80*s}" fill="var(--wall)" fill-opacity=".7"/>`; });
-    g += `<text x="${X(W/2)}" y="${Z(zr+0.9)}" text-anchor="middle" font-size="11" fill="var(--muted)">azotea-terraza · parapetos de 1.80 hacia los vecinos</text>`; }
-  // mobiliario: cama en el dormitorio 1, mesa en la sala
-  const bw = 1.40;
-  const bx = v.pmr ? T/2 : Math.min(v.a/2 - bw/2, v.a - T/2 - r.dDoor - 0.05 - bw);
-  g += `<rect x="${X(bx)}" y="${Z(0.45)}" width="${bw*s}" height="${0.45*s}" rx="2" fill="var(--furn)"/>`;
-  const mx = v.a + (W - v.a)/2;
-  g += `<rect x="${X(mx-0.45)}" y="${Z(0.75)}" width="${0.90*s}" height="${0.05*s}" fill="var(--furn)"/><rect x="${X(mx-0.40)}" y="${Z(0.70)}" width="3" height="${0.70*s}" fill="var(--furn)"/><rect x="${X(mx+0.40)-3}" y="${Z(0.70)}" width="3" height="${0.70*s}" fill="var(--furn)"/>`;
-  // textos
-  const t = (x,z,txt,fs=12,fill='var(--ink)',w=600) => `<text x="${X(x)}" y="${Z(z)}" text-anchor="middle" font-family="var(--f-display)" font-weight="${w}" font-size="${fs}" fill="${fill}">${txt}</text>`;
-  g += t(v.a/2, 1.55, 'Dormitorio 1'); g += t(v.a + (W-v.a)/2, 1.55, 'Sala-comedor');
-  if(built2){ g += t(v.a/2, H2+1.4, r.up.rooms.d1.n); g += t(v.a+(W-v.a)/2, H2+1.4, 'Estar-hall'); }
-  else if(!azo) g += t(W/2, H2+1.4, '2.º piso: crecimiento futuro', 11.5, 'var(--muted)', 400);
-  g += t(-0.55, 1.2, 'vecino', 10.5, 'var(--muted)', 400); g += t(W+0.55, 1.6, 'vecino', 10.5, 'var(--muted)', 400);
-  // cotas de nivel
-  const xr = X(W+0.45);
-  g += levelTag(xr, Z(0), 'NPT ±0.00');
-  g += levelTag(xr, Z(H2), `+${f2(H2)}`);
-  if(built2) g += levelTag(xr, Z(2*H2), `+${f2(2*H2)}`);
-  // altura libre
-  const xa = X(v.a - T/2 - 0.25);
-  g += `<line x1="${xa}" y1="${Z(0)}" x2="${xa}" y2="${Z(H)}" stroke="var(--brick)" stroke-width="1"/><text x="${xa-4}" y="${Z(H/2)}" text-anchor="end" font-family="var(--f-mono)" font-size="10.5" fill="var(--brick)">${f2(H)}</text>`;
-  // nota cimentación
-  const cimTxt = v.sis==='portante' ? `cimiento corrido ${f2(r.cim.an)} × ${f2(r.cim.za-0.20)} · sobrecimiento ${f2(T)} × 0.30` : `zapatas 1.00 × 1.00 × 0.60 (en línea discontinua) · cimiento ligero de tabiques`;
-  g += `<text x="${X(W/2)}" y="${Z(z0)-6}" text-anchor="middle" font-size="10.5" fill="var(--muted)">${cimTxt}</text>`;
-  // ejes
-  [['A',0],['B',v.a],['D',W]].forEach(([n,x])=>{ g += `<text x="${X(x)}" y="${Z(z1)+12}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" fill="var(--muted)">${n}</text>`; });
-  el('cutA').innerHTML = `<svg viewBox="0 0 640 ${Math.round((z1-z0)*s)}" role="img" aria-label="Corte transversal A-A">${g}</svg>`;
-}
-
-function cutB(r){
-  const {W,D,c,w,y2,v} = r; const {e,H2,built2,azo,vo} = cutCommon(r);
-  const F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0,v.vd);
-  const t3 = r.typ === 'T3';
-  const xB = r.cb ? r.cb.xB : (t3 ? v.a + r.P/2 : v.a + (W - c - v.a)/2);
-  const oy = v.rf + T/2;
-  const u0 = -vd - 1.0, u1 = F + 0.6, z0 = -1.45, z1 = 2*H2 + ((azo && built2) ? 1.6 : 0.5);
-  const s = 900/(u1-u0);
-  const X = u => (u-u0)*s, Z = z => (z1-z)*s;
-  const U = y => y + oy; // coordenada de la casa → lote
-  const P = {X:(y)=>X(U(y)),Z,s,v,r};
-  const port = v.sis==='portico', op = port ? .55 : 1;
-  let g = '';
-  // terreno: pista, vereda, retiro, casa, patio
-  g += `<rect x="${X(u0)}" y="${Z(-0.05)}" width="${(u1-u0)*s}" height="${(-0.05-z0)*s}" fill="var(--ok-soft)"/>`;
-  const gl = (a,b,z) => `<line x1="${X(a)}" y1="${Z(z)}" x2="${X(b)}" y2="${Z(z)}" stroke="var(--ink)" stroke-width="1.4"/>`;
-  g += gl(u0,-vd,-0.25) + gl(-vd,0,-0.10) + gl(0,oy-T/2,-0.05) + gl(U(-T/2),U(D+T/2),0) + gl(U(D+T/2),F,-0.05);
-  g += `<line x1="${X(-vd)}" y1="${Z(-0.25)}" x2="${X(-vd)}" y2="${Z(-0.10)}" stroke="var(--ink)" stroke-width="1.4"/>`;
-  // límites del lote
-  [0,F].forEach(u=>{ g += `<line x1="${X(u)}" y1="${Z(z0+0.2)}" x2="${X(u)}" y2="${Z(H2+0.6)}" stroke="var(--muted)" stroke-width="1" stroke-dasharray="8 4 2 4"/>`; });
-  // aberturas de fachada y muro posterior en el plano del corte
-  const dW = r.dDoor, wSC = Math.max(0,r.wSC);
-  const scDoor0 = v.a + 0.30, scw0 = Math.min(W - 0.30 - wSC, scDoor0 + 1.30);
-  const bd0 = r.cb ? r.cb.bd0 : v.a + T/2 + (t3 ? 0.10 : 0.60), bw0 = (t3 || r.cb) ? -9 : W - c/2 - 0.25;
-  const inG = (a,b) => xB >= a && xB <= b;
-  const front = inG(scDoor0, scDoor0+1.0) ? {k:'door', top:2.10} : (inG(scw0,scw0+wSC) ? {k:'win', sill:0.90, top:2.10} : {k:'wall'});
-  const back = inG(bd0, bd0+dW) ? {k:'door', top:2.10} : (inG(bw0,bw0+0.5) ? {k:'win', sill:1.50, top:2.10} : {k:'wall'});
-  const cutWall = (y, o, z0_, solid) => {
-    let q = '';
-    const xw = X(U(y)-T/2), ww = T*s;
-    const rect = (za,zb,f) => `<rect x="${xw}" y="${Z(z0_+zb)}" width="${ww}" height="${(zb-za)*s}" fill="${f?'var(--wall)':'none'}" fill-opacity="${op}" ${f?'':'stroke="var(--muted)" stroke-dasharray="5 3"'}/>`;
-    if(o.k==='wall') q += rect(0,H,solid);
-    else { q += rect(o.top,H,solid); if(o.k==='win'){ q += rect(0,o.sill,solid); q += `<line x1="${X(U(y))}" y1="${Z(z0_+o.sill)}" x2="${X(U(y))}" y2="${Z(z0_+o.top)}" stroke="var(--wall)" stroke-width="1.2"/>`; } }
-    return q;
-  };
-  g += P.X ? foundation(P, 0, T) + foundation(P, D, T) : '';
-  g += cutWall(0, front, 0, true) + cutWall(D, back, 0, true);
-  // dintel visible
-  if(front.k==='door') g += `<text x="${X(U(0))+8}" y="${Z(1.05)}" font-size="10" fill="var(--muted)">puerta 2.10</text>`;
-  // losa + vigas/soleras
-  const losa = (zb, solid) => {
-    let q = `<rect x="${X(U(-T/2))}" y="${Z(zb+e)}" width="${(D+T)*s}" height="${e*s}" fill="${solid?'var(--muted)':'none'}" fill-opacity=".55" stroke="var(--muted)" stroke-width="${solid?0.8:1}" ${solid?'':'stroke-dasharray="5 3"'}/>`;
-    const ys = port ? [0, y2, D] : [0, D];
-    ys.forEach(y=>{
-      if(port) q += `<rect x="${X(U(y)-0.125)}" y="${Z(zb+e)}" width="${0.25*s}" height="${r.hv*s}" fill="${solid?'var(--wall)':'none'}" stroke="var(--wall)" ${solid?'':'stroke-dasharray="5 3"'}/>`;
-      else if(solid) q += `<rect x="${X(U(y)-T/2)}" y="${Z(zb+e)}" width="${T*s}" height="${e*s}" fill="var(--wall)"/>`;
-    });
-    return q;
-  };
-  g += losa(H, true);
-  // 2.º piso
-  const f2o = {k:'win', sill:0.90, top:2.10};
-  if(built2 || !azo){
-    g += cutWall(-vo, built2 ? f2o : {k:'wall'}, H2, built2) + cutWall(D, built2 ? back : {k:'wall'}, H2, built2);
-    g += losa(H2+H, built2);
-    if(vo) g += `<rect x="${X(U(-T/2-vo))}" y="${Z(H2+H+e)}" width="${vo*s}" height="${e*s}" fill="${built2?'var(--muted)':'none'}" fill-opacity=".55" stroke="var(--muted)" ${built2?'':'stroke-dasharray="5 3"'}/>`;
-  }
-  if(vo){ g += `<rect x="${X(U(-T/2-vo))}" y="${Z(H+e)}" width="${vo*s}" height="${e*s}" fill="${built2?'var(--muted)':'none'}" fill-opacity=".55" stroke="var(--muted)" ${built2?'':'stroke-dasharray="5 3"'}/>`;
-    g += `<text x="${X(U(-vo))-6}" y="${Z(H-0.10)}" text-anchor="end" font-size="10" fill="var(--brick)">volado ${f2(vo)}</text>`; }
-  if(azo){ const zr = built2 ? 2*H2 : H2;
-    [U(-T/2-(built2?vo:0)), U(D+T/2)].forEach(u=>{ g += `<rect x="${X(u)-1.5}" y="${Z(zr+1.10)}" width="3" height="${1.10*s}" fill="var(--wall)"/>`; });
-    g += `<text x="${X(U(D/2))}" y="${Z(zr+0.6)}" text-anchor="middle" font-size="11" fill="var(--muted)">azotea-terraza · baranda de 1.10</text>`; }
-  // mobiliario visto: mesada de cocina y mesa
-  if(!t3 && !r.cb) g += `<rect x="${X(U(D-w+T/2))}" y="${Z(0.90)}" width="${(w-T)*s}" height="${0.90*s}" fill="var(--furn)" fill-opacity=".8"/>`;
-  if(!t3 && !r.cb) g += `<rect x="${X(U(D-w+T/2))}" y="${Z(1.50+0.70)}" width="${(w-T)*s}" height="${0.70*s}" fill="none" stroke="var(--furn)" stroke-width="1.2"/>`;
-  const my = (t3 || r.cb) ? y2/2 : (D-w)/2 + 0.6;
-  g += `<rect x="${X(U(my)-0.45)}" y="${Z(0.75)}" width="${0.90*s}" height="${0.05*s}" fill="var(--furn)"/>`;
-  // escalera exterior (etapa 2) en el patio
-  const su0 = U(D+T/2) + 0.05, su1 = su0 + 0.90;
-  g += `<rect x="${X(su0)}" y="${Z(H2)}" width="${0.90*s}" height="${H2*s}" fill="none" stroke="var(--brick)" stroke-width="1.2" ${built2?'':'stroke-dasharray="5 3"'}/>`;
-  g += `<line x1="${X(su0)}" y1="${Z(H2)}" x2="${X(su1)}" y2="${Z(H2)}" stroke="var(--brick)" stroke-width="3"/>`;
-  // textos
-  const t = (u,z,txt,fs=12,fill='var(--ink)',wt=600) => `<text x="${X(u)}" y="${Z(z)}" text-anchor="middle" font-family="var(--f-display)" font-weight="${wt}" font-size="${fs}" fill="${fill}">${txt}</text>`;
-  if(r.cb){ r.cb.labels.forEach(([a0,a1,n],i)=>{ g += t(U((a0+a1)/2), 1.55, n, i?11:12); }); }
-  else if(t3){ g += t(U(y2/2), 1.55, 'Sala-comedor'); g += t(U(y2 + r.m/2), 1.55, 'Cocina', 11); g += t(U(r.yb + r.y3/2), 1.55, 'Pasaje', 11); }
-  else { g += t(U((D-w)/2), 1.55, 'Sala-comedor'); g += t(U(D-w/2), 1.20, 'Cocina', 11); }
-  if(built2) g += t(U(D/2), H2+1.4, 'Estar-hall');
-  else if(!azo) g += t(U(D/2), H2+1.4, '2.º piso: crecimiento futuro', 11.5, 'var(--muted)', 400);
-  g += t(su0+1.6, H2/2, built2?'escalera':'escalera futura', 10.5, 'var(--brick)', 400);
-  const lt = (a,b,txt) => (b-a > 0.6) ? `<text x="${X((a+b)/2)}" y="${Z(-0.55)}" text-anchor="middle" font-size="10.5" fill="var(--muted)">${txt}</text>` : '';
-  g += lt(u0,-vd,'calle') + lt(-vd,0,'vereda') + lt(0,v.rf,`retiro ${f2(v.rf)}`) + lt(U(D+T/2),F,`patio ${f2(F-U(D+T/2))}`);
-  // niveles
-  g += levelTag(X(U(D/2)), Z(0), 'NPT ±0.00', 'start');
-  g += levelTag(X(U(-T/2-vo))-12, Z(H2), `+${f2(H2)}`, 'end');
-  
-  [['1',0],['4',D]].forEach(([n,y])=>{ g += `<text x="${X(U(y))}" y="${Z(z1)+12}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" fill="var(--muted)">${n}</text>`; });
-  el('cutB').innerHTML = `<svg viewBox="0 0 900 ${Math.round((z1-z0)*s)}" role="img" aria-label="Corte longitudinal B-B">${g}</svg>`;
-}
 
 // ---- Muebles de la planta: baño (ducha, inodoro, lavatorio), cocina de 1.20 × 0.60 y camas del 2.º piso ----
 const FS = 'fill="var(--panel)" stroke="var(--wet-line)" stroke-width="1"';
@@ -1787,6 +1681,91 @@ function view3D(k){
   if(k==='arriba'){ d3.th = 0.0001; d3.ph = 0.12; }
   paint3D();
 }
+// Volúmenes de la casa como cajas (x a lo ancho, y hacia el fondo desde el eje de fachada, z altura): los usan el 3D, los cortes y las elevaciones
+function houseBoxes(r, o){
+  const out = [], v = r.v, W = r.W, D = r.D;
+  const B = (x0,x1,y0,y1,z0,z1,m,e=true) => { if(x1-x0<=0.005 || y1-y0<=0.005 || z1-z0<=0.005) return; out.push({x0,x1,y0,y1,z0,z1,m,e}); };
+  const e = r.hL || 0.20, H2 = H + e, built2 = o.built2, noRoof = o.noRoof;
+  const vo = v.vol && v.rf >= 0.5 && r.gross2 > 0 ? 0.50 : 0;
+  // pisos de los ambientes (techados, sin el patio de luz)
+  const rooms1 = Object.values(r.rooms).filter(q=>!q.sky);
+  rooms1.forEach(q=> B(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, -0.01, 0.02, q.wet ? 'wet' : 'floor', false));
+  // muros con puertas (dintel 2.10) y ventanas (alféizar 0.90, dintel 2.10)
+  const winLike = (w, a, b) => G3.w1.some(([x1,y1,x2,y2])=>{
+    const hor = Math.abs(w.y2-w.y1) < 1e-6;
+    if(hor && Math.abs(y1-w.y1)<1e-6 && Math.abs(y2-w.y1)<1e-6){ const ga = Math.min(w.x1+a*Math.sign(w.x2-w.x1), w.x1+b*Math.sign(w.x2-w.x1)), gb = Math.max(w.x1+a*Math.sign(w.x2-w.x1), w.x1+b*Math.sign(w.x2-w.x1)); return Math.min(gb, Math.max(x1,x2)) - Math.max(ga, Math.min(x1,x2)) > 0.05; }
+    if(!hor && Math.abs(x1-w.x1)<1e-6 && Math.abs(x2-w.x1)<1e-6){ const ga = Math.min(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)), gb = Math.max(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)); return Math.min(gb, Math.max(y1,y2)) - Math.max(ga, Math.min(y1,y2)) > 0.05; }
+    return false;
+  });
+  const walls = (list, z0, floor) => list.forEach(w=>{
+    const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
+    const ux = (w.x2-w.x1)/Lw, uy = (w.y2-w.y1)/Lw, t = w.kind==='wall' ? T : T*0.6, m = w.kind==='wall' ? 'wall' : 'tab';
+    const hor = Math.abs(uy) < 1e-6;
+    const piece = (a, b, h0, h1, mm=m, tt=t) => {
+      if(b - a < 0.01 || h1 - h0 < 0.01) return;
+      const a2 = a <= 1e-6 ? -t/2 : a, b2 = b >= Lw - 1e-6 ? Lw + t/2 : b;
+      const px0 = w.x1 + ux*a2, px1 = w.x1 + ux*b2, py0 = w.y1 + uy*a2, py1 = w.y1 + uy*b2;
+      if(hor) B(Math.min(px0,px1), Math.max(px0,px1), w.y1 - tt/2, w.y1 + tt/2, z0+h0, z0+h1, mm);
+      else B(w.x1 - tt/2, w.x1 + tt/2, Math.min(py0,py1), Math.max(py0,py1), z0+h0, z0+h1, mm);
+    };
+    const gs = (w.gaps||[]).filter(q=>q[1]>q[0]).map(q=>[Math.max(0,q[0]), Math.min(Lw,q[1]), q[2] || (floor===1 && winLike(w, q[0], q[1]) ? 'win' : 'door')]).sort((p,q)=>p[0]-q[0]);
+    let t0 = 0;
+    gs.forEach(([a,b,k])=>{
+      piece(t0, a, 0, H);
+      if(k==='win'){ piece(a, b, 0, 0.90); piece(a, b, 2.10, H); piece(a, b, 0.90, 2.10, 'glass', 0.02); }
+      else piece(a, b, 2.10, H);
+      t0 = Math.max(t0, b);
+    });
+    piece(t0, Lw, 0, H);
+  });
+  walls(G3.f1, 0, 1);
+  // columnas de confinamiento y losa del 1.er piso
+  const cs = 0.25 + 0.012;
+  const colAt = (x, y, z0, z1, list) => {
+    if(v.sis === 'portico') B(x-cs/2, x+cs/2, y-cs/2, y+cs/2, z0, z1, 'conc');
+    else colRects(x, y, list).forEach(([x0,y0,x1,y1])=> B(x0-0.006, x1+0.006, y0-0.006, y1+0.006, z0, z1, 'conc'));
+  };
+  (r.cols||[]).forEach(([x,y])=>{ colAt(x, y, 0, H, G3.f1); if(built2) colAt(x, y, H2, H2+H, G3.f2); });
+  const roof1 = !(noRoof && !built2);
+  if(roof1 || built2){
+    rooms1.forEach(q=> B(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, H, H2, 'slab'));
+    if(built2 && vo) B(-T/2, W+T/2, -vo-T/2, -T/2, H, H2, 'slab');
+  }
+  // azotea o terraza: parapetos de 1.80 hacia los vecinos y baranda de 1.10 hacia calle y patio (A.010 art. 14 y 35)
+  const parapets = (x0,x1,y0,y1,z) => {
+    B(x0-T/2, x0+T/2, y0-T/2, y1+T/2, z, z+1.80, 'wall'); B(x1-T/2, x1+T/2, y0-T/2, y1+T/2, z, z+1.80, 'wall');
+    [y0, y1].forEach(y=>{ B(x0, x1, y-0.03, y+0.03, z+1.06, z+1.10, 'rail'); for(let x=x0+0.6; x<x1-0.1; x+=1.2) B(x-0.03, x+0.03, y-0.03, y+0.03, z, z+1.10, 'rail'); B(x0, x1, y-T/2, y+T/2, z, z+0.15, 'wall'); });
+  };
+  if(built2){
+    const z2 = H2, U = Object.values(r.up.rooms);
+    U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; B(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2-0.0, z2+0.02, q.wet ? 'wet' : 'floor', false); });
+    walls(G3.f2, z2, 2);
+    if(!noRoof) U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; B(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2+H, z2+H+e, 'slab'); });
+    // terraza del 2.º piso: barandas donde da a la calle o al patio, muro de 1.80 hacia el vecino
+    U.filter(q=>q.ter).forEach(q=>{
+      [[q.x0,'x'],[q.x1,'x']].forEach(([x])=>{ if(Math.abs(x)<1e-6 || Math.abs(x-W)<1e-6) B(x-T/2, x+T/2, q.y0-T/2, q.y1+T/2, z2, z2+1.80, 'wall'); });
+      [q.y0, q.y1].forEach(y=>{ if(Math.abs(y)<1e-6 || Math.abs(y-D)<1e-6){ B(q.x0, q.x1, y-0.03, y+0.03, z2+1.06, z2+1.10, 'rail'); for(let x=q.x0+0.5; x<q.x1-0.1; x+=1.0) B(x-0.03, x+0.03, y-0.03, y+0.03, z2, z2+1.10, 'rail'); } });
+    });
+    if(v.ter && !(r.up.free > 0) && !noRoof) parapets(0, W, -vo, D, z2+H+e);
+  } else if(v.ter && roof1) parapets(0, W, 0, D, H2);
+  // escalera exterior: pasos de 0.25, contrapasos iguales y descansos (A.010 art. 23)
+  const st = r.stair;
+  if(st && (built2 || (v.ter && !built2) || o.future)){
+    st.treads.forEach(t=>{
+      const z1 = t.z, z0 = Math.max(0, t.z - 0.30), xs = t.poly.map(q=>q[0]), ys = t.poly.map(q=>q[1]);
+      const bb = {x0:Math.min(...xs), x1:Math.max(...xs), y0:Math.min(...ys), y1:Math.max(...ys)};
+      if(t.sec){ const {cx, cy, t0, t1, R} = t.sec, am = (t0+t1)/2, wid = Math.abs(t1-t0)*R*0.62;
+        out.push(Object.assign({z0: t.z - 0.05, z1, m:'stair', e:true, rot:{cx: cx + Math.cos(am)*(R+0.04)/2, cy: cy + Math.sin(am)*(R+0.04)/2, ang: am, len: R - 0.04, wid}}, bb));
+      } else B(bb.x0, bb.x1, bb.y0, bb.y1, z0, z1, 'stair');
+    });
+    st.lands.forEach(l=>{ B(l.x0, l.x1, l.y0, l.y1, l.z - 0.15, l.z, 'stair');
+      const px0 = (l.x0+l.x1)/2 >= (st.lx0+st.lx1)/2 - 1e-6 ? l.x1 - 0.15 : l.x0;
+      B(px0, px0 + 0.15, l.y1-0.15, l.y1, 0, l.z-0.15, 'conc'); });
+    if(st.spiral) B(st.spiral.cx-0.06, st.spiral.cx+0.06, st.spiral.cy-0.06, st.spiral.cy+0.06, 0, st.H2 + 0.9, 'rail');
+  }
+  return out;
+}
+
 function build3D(r){
   if(!d3 || !window.THREE) return;
   const {grp} = d3, v = r.v, W = r.W, D = r.D;
@@ -1817,79 +1796,12 @@ function build3D(r){
   lotBox(-1.5, L+1.5, -vd-6, -vd, -0.12, -0.06, M.street);
   const lotLine = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([[0,0],[L,0],[L,F],[0,F]].map(([x,y])=>new THREE.Vector3(x, 0.005, -y))), new THREE.LineDashedMaterial({color:0x6b655c, dashSize:0.4, gapSize:0.2}));
   lotLine.computeLineDistances(); grp.add(lotLine);
-  // pisos de los ambientes (techados, sin el patio de luz)
-  const rooms1 = Object.values(r.rooms).filter(q=>!q.sky);
-  rooms1.forEach(q=> box(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, -0.01, 0.02, q.wet ? M.wet : M.floor, false));
-  // muros con puertas (dintel 2.10) y ventanas (alféizar 0.90, dintel 2.10)
-  const winLike = (w, a, b) => G3.w1.some(([x1,y1,x2,y2])=>{
-    const hor = Math.abs(w.y2-w.y1) < 1e-6;
-    if(hor && Math.abs(y1-w.y1)<1e-6 && Math.abs(y2-w.y1)<1e-6){ const ga = Math.min(w.x1+a*Math.sign(w.x2-w.x1), w.x1+b*Math.sign(w.x2-w.x1)), gb = Math.max(w.x1+a*Math.sign(w.x2-w.x1), w.x1+b*Math.sign(w.x2-w.x1)); return Math.min(gb, Math.max(x1,x2)) - Math.max(ga, Math.min(x1,x2)) > 0.05; }
-    if(!hor && Math.abs(x1-w.x1)<1e-6 && Math.abs(x2-w.x1)<1e-6){ const ga = Math.min(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)), gb = Math.max(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)); return Math.min(gb, Math.max(y1,y2)) - Math.max(ga, Math.min(y1,y2)) > 0.05; }
-    return false;
+  houseBoxes(r, {built2, noRoof}).forEach(b=>{
+    if(!b.rot) return box(b.x0, b.x1, b.y0, b.y1, b.z0, b.z1, M[b.m], b.e);
+    const g = new THREE.BoxGeometry(b.rot.len, b.z1-b.z0, b.rot.wid), me = new THREE.Mesh(g, M[b.m]);
+    me.position.set(ox + b.rot.cx, (b.z0+b.z1)/2, -(oy + b.rot.cy)); me.rotation.y = b.rot.ang; grp.add(me);
+    const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), edgeM); l.position.copy(me.position); l.rotation.y = b.rot.ang; grp.add(l);
   });
-  const walls = (list, z0, floor) => list.forEach(w=>{
-    const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
-    const ux = (w.x2-w.x1)/Lw, uy = (w.y2-w.y1)/Lw, t = w.kind==='wall' ? T : T*0.6, m = w.kind==='wall' ? M.wall : M.tab;
-    const hor = Math.abs(uy) < 1e-6;
-    const piece = (a, b, h0, h1, mm=m, tt=t) => {
-      if(b - a < 0.01 || h1 - h0 < 0.01) return;
-      const a2 = a <= 1e-6 ? -t/2 : a, b2 = b >= Lw - 1e-6 ? Lw + t/2 : b;
-      const px0 = w.x1 + ux*a2, px1 = w.x1 + ux*b2, py0 = w.y1 + uy*a2, py1 = w.y1 + uy*b2;
-      if(hor) box(Math.min(px0,px1), Math.max(px0,px1), w.y1 - tt/2, w.y1 + tt/2, z0+h0, z0+h1, mm);
-      else box(w.x1 - tt/2, w.x1 + tt/2, Math.min(py0,py1), Math.max(py0,py1), z0+h0, z0+h1, mm);
-    };
-    const gs = (w.gaps||[]).filter(q=>q[1]>q[0]).map(q=>[Math.max(0,q[0]), Math.min(Lw,q[1]), q[2] || (floor===1 && winLike(w, q[0], q[1]) ? 'win' : 'door')]).sort((p,q)=>p[0]-q[0]);
-    let t0 = 0;
-    gs.forEach(([a,b,k])=>{
-      piece(t0, a, 0, H);
-      if(k==='win'){ piece(a, b, 0, 0.90); piece(a, b, 2.10, H); piece(a, b, 0.90, 2.10, M.glass, 0.02); }
-      else piece(a, b, 2.10, H);
-      t0 = Math.max(t0, b);
-    });
-    piece(t0, Lw, 0, H);
-  });
-  walls(G3.f1, 0, 1);
-  // columnas de confinamiento y losa del 1.er piso
-  const cs = 0.25 + 0.012;
-  const colAt = (x, y, z0, z1, list) => {
-    if(v.sis === 'portico') box(x-cs/2, x+cs/2, y-cs/2, y+cs/2, z0, z1, M.conc);
-    else colRects(x, y, list).forEach(([x0,y0,x1,y1])=> box(x0-0.006, x1+0.006, y0-0.006, y1+0.006, z0, z1, M.conc));
-  };
-  (r.cols||[]).forEach(([x,y])=>{ colAt(x, y, 0, H, G3.f1); if(built2) colAt(x, y, H2, H2+H, G3.f2); });
-  const roof1 = !(noRoof && !built2);
-  if(roof1 || built2){
-    rooms1.forEach(q=> box(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, H, H2, M.slab));
-    if(built2 && vo) box(-T/2, W+T/2, -vo-T/2, -T/2, H, H2, M.slab);
-  }
-  // azotea o terraza: parapetos de 1.80 hacia los vecinos y baranda de 1.10 hacia calle y patio (A.010 art. 14 y 35)
-  const parapets = (x0,x1,y0,y1,z) => {
-    box(x0-T/2, x0+T/2, y0-T/2, y1+T/2, z, z+1.80, M.wall); box(x1-T/2, x1+T/2, y0-T/2, y1+T/2, z, z+1.80, M.wall);
-    [y0, y1].forEach(y=>{ box(x0, x1, y-0.03, y+0.03, z+1.06, z+1.10, M.rail); for(let x=x0+0.6; x<x1-0.1; x+=1.2) box(x-0.03, x+0.03, y-0.03, y+0.03, z, z+1.10, M.rail); box(x0, x1, y-T/2, y+T/2, z, z+0.15, M.wall); });
-  };
-  if(built2){
-    const z2 = H2, U = Object.values(r.up.rooms);
-    U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; box(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2-0.0, z2+0.02, q.wet ? M.wet : M.floor, false); });
-    walls(G3.f2, z2, 2);
-    if(!noRoof) U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; box(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2+H, z2+H+e, M.slab); });
-    // terraza del 2.º piso: barandas donde da a la calle o al patio, muro de 1.80 hacia el vecino
-    U.filter(q=>q.ter).forEach(q=>{
-      [[q.x0,'x'],[q.x1,'x']].forEach(([x])=>{ if(Math.abs(x)<1e-6 || Math.abs(x-W)<1e-6) box(x-T/2, x+T/2, q.y0-T/2, q.y1+T/2, z2, z2+1.80, M.wall); });
-      [q.y0, q.y1].forEach(y=>{ if(Math.abs(y)<1e-6 || Math.abs(y-D)<1e-6){ box(q.x0, q.x1, y-0.03, y+0.03, z2+1.06, z2+1.10, M.rail); for(let x=q.x0+0.5; x<q.x1-0.1; x+=1.0) box(x-0.03, x+0.03, y-0.03, y+0.03, z2, z2+1.10, M.rail); } });
-    });
-    if(v.ter && !(r.up.free > 0) && !noRoof) parapets(0, W, -vo, D, z2+H+e);
-  } else if(v.ter && roof1) parapets(0, W, 0, D, H2);
-  // escalera exterior: pasos de 0.25, contrapasos iguales y descanso donde llega (A.010 art. 23)
-  const st = r.stair;
-  if(st && (built2 || (v.ter && !built2))){
-    const nR = st.nR, cr = st.cr, top = nR*cr;
-    if(st.axis === 'x'){
-      for(let i=0;i<nR-1;i++){ const xa = st.dir===1 ? st.sx0 + i*0.25 : st.sx1 - (i+1)*0.25; box(xa, xa+0.25, st.y0, st.y1, Math.max(0,(i+1)*cr-0.30), (i+1)*cr, M.stair); }
-    } else {
-      for(let i=0;i<nR-1;i++){ const ya = st.ry1 - (i+1)*0.25; box(st.lx0, st.lx1, ya, ya+0.25, Math.max(0,(i+1)*cr-0.30), (i+1)*cr, M.stair); }
-    }
-    box(st.lx0, st.lx1, st.y0, st.y1, top-0.15, top, M.stair);
-    box(st.lx1-0.15, st.lx1, st.y1-0.15, st.y1, 0, top-0.15, M.conc);
-  }
   // encuadre: centro en la casa
   d3.tgt.set(ox + W/2, built2 ? 2.6 : 1.4, -(oy + D/2));
   // puntos de partida del dron (x, altura, z, rumbo, cabeceo); 0 = mirando hacia el fondo del lote
@@ -2313,10 +2225,9 @@ function metrado(r){
     P.push({et:2, id:'2.2', n:'Vigas y techo', q:t2.o, notas:[`${f1(t2.L)} m de vigas`, `Losa aligerada: ${f1(r.gross2)} m²`]});
     const st = r.stair;
     if(st){
-      const w = Math.max(0.90, st.lx1 - st.lx0), inc = Math.hypot(st.run, st.H2);
-      const vE = inc*w*0.15 + st.nR*0.25*st.cr/2*w + w*0.90*0.15;
+      const vE = st.vol;
       const o = add({}, concF(vE)); steel(o, 'a38', vE*90);
-      P.push({et:2, id:'2.3', n:'Escalera exterior', q:o, notas:[`${st.nR} contrapasos de ${f2(st.cr)} m, ancho ${f2(w)} m, con descanso: ${f2(vE)} m³`]});
+      P.push({et:2, id:'2.3', n:'Escalera ' + ESC_N[st.type], q:o, notas:[`${st.nR} contrapasos de ${f2(st.cr)} m, ${st.lands.length > 1 ? st.lands.length + ' descansos' : 'con descanso'}: ${f2(vE)} m³`]});
     }
   }
   // acero en varillas y alambre
@@ -2378,14 +2289,225 @@ el('mat-copy').addEventListener('click', ()=>{
   if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastMat).then(ok, fall); else fall();
 });
 
+// ---------- Diseño Pro: planta con ejes y cotas, cortes que se desplazan y elevaciones ----------
+let proFloor = 1, proCut = {y:null, x:null}, proGeo = null, proRAF = 0;
+function axesOf(r){
+  const v = r.v, W = r.W, D = r.D, tL = r.typ === 'T3L', t3 = r.typ === 'T3';
+  const ax = t3 ? [['A',0],['B',v.a],['C',v.a+r.P],['D',W]] : [['A',0],['B',v.a],['C',W-r.c],['D',W]];
+  const ay = tL ? [['1',0],['2',r.y2],['3',r.yp],['4',r.yd],['5',D]] : t3 ? [['1',0],['2',r.y2],['3',r.yb],['4',D]] : [['1',0],['2',r.y2],['3',D-r.w],['4',D]];
+  return {ax, ay};
+}
+function gapList(w, floor){
+  const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1), hor = Math.abs(w.y2-w.y1) < 1e-6;
+  const winLike = (a, b) => G3.w1.some(([x1,y1,x2,y2])=>{
+    const sg = hor ? Math.sign(w.x2-w.x1) : Math.sign(w.y2-w.y1), base = hor ? w.x1 : w.y1;
+    const ga = Math.min(base+a*sg, base+b*sg), gb = Math.max(base+a*sg, base+b*sg);
+    if(hor && Math.abs(y1-w.y1)<1e-6 && Math.abs(y2-w.y1)<1e-6) return Math.min(gb, Math.max(x1,x2)) - Math.max(ga, Math.min(x1,x2)) > 0.05;
+    if(!hor && Math.abs(x1-w.x1)<1e-6 && Math.abs(x2-w.x1)<1e-6) return Math.min(gb, Math.max(y1,y2)) - Math.max(ga, Math.min(y1,y2)) > 0.05;
+    return false; });
+  return (w.gaps||[]).filter(q=>q[1]>q[0]).map(q=>[Math.max(0,q[0]), Math.min(Lw,q[1]), q[2] || (floor===1 && winLike(q[0], q[1]) ? 'win' : 'door')]).sort((p,q)=>p[0]-q[0]);
+}
+const dimH = (X, Y, x0, x1, y, txt, col='var(--ink)') => { const a = X(x0), b = X(x1), yy = Y(y);
+  return `<line x1="${a}" y1="${yy}" x2="${b}" y2="${yy}" stroke="${col}" stroke-width=".7"/><line x1="${a-4}" y1="${yy+4}" x2="${a+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><line x1="${b-4}" y1="${yy+4}" x2="${b+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><text x="${(a+b)/2}" y="${yy-4}" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text>`; };
+const dimV = (X, Y, y0, y1, x, txt, col='var(--ink)') => { const a = Y(y0), b = Y(y1), xx = X(x);
+  return `<line x1="${xx}" y1="${a}" x2="${xx}" y2="${b}" stroke="${col}" stroke-width=".7"/><line x1="${xx-4}" y1="${a+4}" x2="${xx+4}" y2="${a-4}" stroke="${col}" stroke-width="1.1"/><line x1="${xx-4}" y1="${b+4}" x2="${xx+4}" y2="${b-4}" stroke="${col}" stroke-width="1.1"/><text transform="translate(${xx-4},${(a+b)/2}) rotate(-90)" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text>`; };
+const bubble = (x, y, n) => `<circle cx="${x}" cy="${y}" r="10" fill="var(--panel)" stroke="var(--ink)" stroke-width=".9"/><text x="${x}" y="${y+4}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" font-weight="600" fill="var(--ink)">${n}</text>`;
+function proDefaults(r){
+  const st = r.stair, F = Math.max(r.v.fondo, r.v.rf + r.D + T), oy = r.v.rf + T/2;
+  const yMax = F - oy - 0.1;
+  if(proCut.y === null || proCut.y > yMax) proCut.y = Math.round((r.y2/2)*20)/20;
+  if(proCut.x === null || proCut.x > r.W + 0.3){ const xB = r.cb ? r.cb.xB : (r.typ==='T3' ? r.v.a + r.P/2 : r.v.a + (r.W - r.c - r.v.a)/2); proCut.x = Math.round(xB*20)/20; }
+  return {yMin: -oy + 0.05, yMax, xMin: -0.30, xMax: r.W + 0.30};
+}
+function proPlan(r){
+  const v = r.v, W = r.W, D = r.D, f2nd = proFloor === 2 && r.gross2 > 0 && r.up;
+  const list = f2nd ? G3.f2 : G3.f1, doors = f2nd ? G3.d2 : G3.d1, A = axesOf(r), st = r.stair;
+  const lim = proDefaults(r), vo = f2nd && v.vol && v.rf >= 0.5 ? 0.50 : 0;
+  const yTop = Math.max(D + 0.6, st ? st.box.y1 + 0.4 : 0), yBot = -vo - 0.2;
+  const s = Math.min(70, 820/(W + 4.4)), x0 = -2.2, y1 = yTop + 1.4;
+  const X = x => (x - x0)*s, Y = y => (y1 - y)*s;
+  const vw = Math.round((W + 2.2 - x0)*s), vh = Math.round((y1 - (yBot - 2.3))*s);
+  let g = '';
+  // ejes y burbujas
+  A.ax.forEach(([n,x])=>{ g += `<line x1="${X(x)}" y1="${Y(yBot-1.45)}" x2="${X(x)}" y2="${Y(yTop+0.55)}" stroke="var(--muted)" stroke-width=".6" stroke-dasharray="14 4 2 4"/>` + bubble(X(x), Y(yBot-1.75), n) + bubble(X(x), Y(yTop+0.85), n); });
+  A.ay.forEach(([n,y])=>{ g += `<line x1="${X(-1.45)}" y1="${Y(y)}" x2="${X(W+1.45)}" y2="${Y(y)}" stroke="var(--muted)" stroke-width=".6" stroke-dasharray="14 4 2 4"/>` + bubble(X(-1.75), Y(y), n) + bubble(X(W+1.75), Y(y), n); });
+  // ambientes: nombre, área y cotas interiores libres
+  const rooms = f2nd ? Object.values(r.up.rooms) : Object.values(r.rooms);
+  rooms.forEach(q=>{
+    const yy0 = f2nd && Math.abs(q.y0) < 1e-6 ? -vo : q.y0;
+    if(q.sky || q.ter){ g += `<rect x="${X(q.x0+T/2)}" y="${Y(q.y1-T/2)}" width="${(q.x1-q.x0-T)*s}" height="${(q.y1-yy0-T)*s}" fill="var(--ok-soft)"/>`; }
+    else if(q.wet) g += `<rect x="${X(q.x0+T/2)}" y="${Y(q.y1-T/2)}" width="${(q.x1-q.x0-T)*s}" height="${(q.y1-yy0-T)*s}" fill="var(--wet)"/>`;
+  });
+  // muros cortados (relleno), ventanas y puertas
+  list.forEach(w=>{
+    const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
+    const ux = (w.x2-w.x1)/Lw, uy = (w.y2-w.y1)/Lw, t = w.kind==='wall' ? T : T*0.6, hor = Math.abs(uy) < 1e-6;
+    const rect = (a, b, fill, extra='') => { const a2 = a <= 1e-6 ? -t/2 : a, b2 = b >= Lw-1e-6 ? Lw + t/2 : b;
+      const px0 = w.x1+ux*a2, px1 = w.x1+ux*b2, py0 = w.y1+uy*a2, py1 = w.y1+uy*b2;
+      const [rx0, rx1, ry0, ry1] = hor ? [Math.min(px0,px1), Math.max(px0,px1), w.y1-t/2, w.y1+t/2] : [w.x1-t/2, w.x1+t/2, Math.min(py0,py1), Math.max(py0,py1)];
+      return `<rect x="${X(rx0)}" y="${Y(ry1)}" width="${(rx1-rx0)*s}" height="${(ry1-ry0)*s}" fill="${fill}" ${extra}/>`; };
+    let t0 = 0;
+    gapList(w, f2nd ? 2 : 1).forEach(([a,b,k])=>{
+      if(a > t0) g += rect(t0, a, w.kind==='light' ? 'var(--muted)' : 'var(--wall)');
+      if(k==='win'){ const pa = [w.x1+ux*a, w.y1+uy*a], pb = [w.x1+ux*b, w.y1+uy*b], nx = -uy*t/2, ny = ux*t/2;
+        [-1,0,1].forEach(sg=> g += `<line x1="${X(pa[0]+nx*sg)}" y1="${Y(pa[1]+ny*sg)}" x2="${X(pb[0]+nx*sg)}" y2="${Y(pb[1]+ny*sg)}" stroke="var(--wall)" stroke-width="${sg?0.8:1.4}"/>`);
+        g += `<text x="${X((pa[0]+pb[0])/2 + (hor ? 0 : (w.x1 < W/2 ? -0.35 : 0.35)))}" y="${Y((pa[1]+pb[1])/2 + (hor ? (w.y1 < D/2 ? -0.32 : 0.30) : 0))+3}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" fill="var(--wet-line)">V ${f2(b-a)}</text>`; }
+      t0 = Math.max(t0, b);
+    });
+    if(t0 < Lw) g += rect(t0, Lw, w.kind==='light' ? 'var(--muted)' : 'var(--wall)');
+  });
+  doors.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
+    g += `<line x1="${X(hx)}" y1="${Y(hy)}" x2="${X(hx+nx*wd)}" y2="${Y(hy+ny*wd)}" stroke="var(--wall)" stroke-width="1.6"/>`;
+    const pts=[]; for(let i=0;i<=12;i++){ const t=i/12*Math.PI/2; pts.push(`${X(hx+wd*(Math.cos(t)*ux+Math.sin(t)*nx))},${Y(hy+wd*(Math.cos(t)*uy+Math.sin(t)*ny))}`); }
+    g += `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--muted)" stroke-width=".8"/>`;
+    g += `<text x="${X(hx+ux*wd/2+nx*wd*0.45)}" y="${Y(hy+uy*wd/2+ny*wd*0.45)+3}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" fill="var(--muted)">P ${f2(wd)}</text>`;
+  });
+  const cs = Math.max(5, 0.25*s*0.95);
+  if(v.sis==='portico') r.cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)" stroke="var(--panel)" stroke-width=".8"/>`; });
+  else g += colSvg(r.cols, list, X, Y, s);
+  if(st) g += drawStair(X, Y, s, st, f2nd);
+  rooms.forEach(q=>{
+    if(!q.n || q.open && q.sky) { if(q.sky) g += `<text x="${X((q.x0+q.x1)/2)}" y="${Y((q.y0+q.y1)/2)+4}" text-anchor="middle" font-size="10.5" fill="var(--ok)">patio de luz</text>`; return; }
+    const yy0 = f2nd && Math.abs(q.y0) < 1e-6 ? -vo : q.y0, cw = q.x1-q.x0-T, cd = q.y1-yy0-T, cx = (q.x0+q.x1)/2, cy = (yy0+q.y1)/2;
+    g += `<text x="${X(cx)}" y="${Y(cy)+2}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="${cw*s < 90 ? 10.5 : 12}" fill="var(--ink)">${q.n}</text>`;
+    if(!q.ter) g += `<text x="${X(cx)}" y="${Y(cy)+15}" text-anchor="middle" font-family="var(--f-mono)" font-size="9.5" fill="var(--muted)">${f1(Math.max(0,cw*cd))} m²</text>`;
+    if(!q.open && cw > 1.0 && cd > 1.3) g += dimH(X, Y, q.x0+T/2, q.x1-T/2, yy0 + T/2 + Math.min(0.45, cd*0.2), f2(cw), 'var(--brick)');
+    if(!q.open && cd > 1.0 && cw > 1.3) g += dimV(X, Y, yy0+T/2, q.y1-T/2, q.x0 + T/2 + Math.min(0.40, cw*0.18), f2(cd), 'var(--brick)');
+  });
+  // cotas entre ejes y totales
+  const xs = A.ax.map(a=>a[1]), ys = A.ay.map(a=>a[1]);
+  for(let i=0;i<xs.length-1;i++) if(xs[i+1]-xs[i] > 0.01) g += dimH(X, Y, xs[i], xs[i+1], yBot-0.55, f2(xs[i+1]-xs[i]));
+  g += dimH(X, Y, xs[0], xs[xs.length-1], yBot-1.0, f2(xs[xs.length-1]-xs[0]));
+  for(let i=0;i<ys.length-1;i++) if(ys[i+1]-ys[i] > 0.01) g += dimV(X, Y, ys[i], ys[i+1], -0.55, f2(ys[i+1]-ys[i]));
+  g += dimV(X, Y, ys[0], ys[ys.length-1], -1.0, f2(ys[ys.length-1]-ys[0]));
+  g += dimH(X, Y, -T/2, W+T/2, yTop+0.25, `${f2(W+T)} exterior`, 'var(--muted)');
+  if(st){ const b = st.box; g += dimV(X, Y, D+T/2, b.y1, W+0.55, f2(b.y1-D-T/2), 'var(--brick)'); }
+  // líneas de corte desplazables
+  const ya = proCut.y, xb = proCut.x;
+  const arrowUp = (x, y, lab) => `<path d="M${x-7},${y+2} L${x+7},${y+2} L${x},${y-10} Z" fill="var(--brick)"/><text x="${x}" y="${y+16}" text-anchor="middle" font-family="var(--f-mono)" font-weight="700" font-size="12" fill="var(--brick)">${lab}</text>`;
+  const arrowL = (x, y, lab) => `<path d="M${x+2},${y-7} L${x+2},${y+7} L${x-10},${y} Z" fill="var(--brick)"/><text x="${x+14}" y="${y+4}" font-family="var(--f-mono)" font-weight="700" font-size="12" fill="var(--brick)">${lab}</text>`;
+  g += `<g class="pro-cut" data-cut="y"><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="transparent" stroke-width="18"/>${arrowUp(X(-1.25), Y(ya), 'A')}${arrowUp(X(W+1.25), Y(ya), 'A')}<title>Arrastra para mover el corte A-A</title></g>`;
+  g += `<g class="pro-cut" data-cut="x"><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="transparent" stroke-width="18"/>${arrowL(X(xb), Y(yBot-1.25), 'B')}${arrowL(X(xb), Y(yTop+0.35), 'B')}<title>Arrastra para mover el corte B-B</title></g>`;
+  // escala gráfica
+  const sx = X(-1.9), sy = Y(yBot-2.15);
+  g += `<text x="${X(W+1.9)}" y="${sy+8}" text-anchor="end" font-family="var(--f-mono)" font-size="10" fill="var(--muted)">${f2nd ? '2.º piso · NPT ' + f2SignLevel(H + (r.hL||0.20)) : '1.er piso · NPT ±0.00'} · cotas en metros</text>`;
+  g += `<g font-family="var(--f-mono)" font-size="9" fill="var(--muted)">${[0,1,2].map(i=>`<rect x="${sx+i*s}" y="${sy-4}" width="${s}" height="4" fill="${i%2?'var(--panel)':'var(--ink)'}" stroke="var(--ink)" stroke-width=".6"/><text x="${sx+i*s}" y="${sy+10}" text-anchor="middle">${i}</text>`).join('')}<text x="${sx+3*s}" y="${sy+10}" text-anchor="middle">3 m</text></g>`;
+  proGeo = {X, Y, s, x0, y1, lim};
+  el('pro-plan').innerHTML = `<svg viewBox="0 0 ${vw} ${vh}" role="img" aria-label="Planta de arquitectura del ${f2nd?'2.º':'1.er'} piso con ejes y cotas">${g}</svg>`;
+  bindProCuts();
+}
+const f2SignLevel = z => (z > 0 ? '+' : '±') + f2(z);
+function bindProCuts(){
+  const svg = el('pro-plan').querySelector('svg'); if(!svg) return;
+  svg.querySelectorAll('.pro-cut').forEach(gc=>{
+    gc.addEventListener('pointerdown', ev=>{
+      ev.preventDefault(); const k = gc.dataset.cut; gc.setPointerCapture(ev.pointerId);
+      const move = e=>{
+        const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; const q = pt.matrixTransform(svg.getScreenCTM().inverse());
+        const G = proGeo, L = G.lim;
+        if(k==='y'){ const y = G.y1 - q.y/G.s; proCut.y = Math.max(L.yMin, Math.min(L.yMax, Math.round(y*20)/20)); }
+        else { const x = q.x/G.s + G.x0; proCut.x = Math.max(L.xMin, Math.min(L.xMax, Math.round(x*20)/20)); }
+        const ls = gc.querySelectorAll('line'), Xp = G.X(proCut.x), Yp = G.Y(proCut.y);
+        if(k==='y') ls.forEach(l=>{ l.setAttribute('y1', Yp); l.setAttribute('y2', Yp); });
+        else ls.forEach(l=>{ l.setAttribute('x1', Xp); l.setAttribute('x2', Xp); });
+        if(!proRAF) proRAF = requestAnimationFrame(()=>{ proRAF = 0; if(lastR) proCuts(lastR); });
+      };
+      const up = ()=>{ gc.removeEventListener('pointermove', move); gc.removeEventListener('pointerup', up); gc.removeEventListener('pointercancel', up); if(lastR) proPlan(lastR); };
+      gc.addEventListener('pointermove', move); gc.addEventListener('pointerup', up); gc.addEventListener('pointercancel', up);
+    });
+  });
+}
+// Corte o elevación: plano vertical en y = pos (axis 'A', se mira hacia el fondo o, con look = -1, hacia la calle) o en x = pos (axis 'B', se mira hacia el eje A)
+function proSection(r, axis, pos, look, title){
+  const v = r.v, W = r.W, D = r.D, e = r.hL || 0.20, H2 = H + e, built2 = r.gross2 > 0 && !!r.up;
+  const L = Math.max(v.lote, W + (v.med?0:T)), F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0, v.vd), ox = v.med ? 0 : T/2, oy = v.rf + T/2;
+  const bx = houseBoxes(r, {built2, noRoof:false}).filter(b=> b.m !== 'floor' && b.m !== 'wet');
+  // cimientos bajo los muros del 1.er piso
+  G3.f1.forEach(w=>{ if(w.kind !== 'wall') return; const hor = Math.abs(w.y2-w.y1) < 1e-6, a0 = hor ? Math.min(w.x1,w.x2) : Math.min(w.y1,w.y2), a1 = hor ? Math.max(w.x1,w.x2) : Math.max(w.y1,w.y2);
+    const an = v.sis==='portante' ? r.cim.an : 0.40, zb = v.sis==='portante' ? -r.cim.za : -0.70;
+    const P = (wd, z0, z1, m) => bx.push(hor ? {x0:a0-wd/2, x1:a1+wd/2, y0:w.y1-wd/2, y1:w.y1+wd/2, z0, z1, m} : {x0:w.x1-wd/2, x1:w.x1+wd/2, y0:a0-wd/2, y1:a1+wd/2, z0, z1, m});
+    P(an, zb, -0.20, 'cim'); P(T, -0.20, 0, 'sob'); });
+  if(v.sis==='portico') r.cols.forEach(([x,y])=> bx.push({x0:x-0.5, x1:x+0.5, y0:y-0.5, y1:y+0.5, z0:-1.30, z1:-0.70, m:'cim'}));
+  const EP = 1e-4;
+  const pr = b => axis==='A'
+    ? (look > 0 ? {u0:b.x0, u1:b.x1, cut: b.y0 < pos-EP && b.y1 > pos+EP, vis: b.y0 >= pos-EP, d: b.y0-pos} : {u0:-b.x1, u1:-b.x0, cut: b.y0 < pos-EP && b.y1 > pos+EP, vis: b.y1 <= pos+EP, d: pos-b.y1})
+    : {u0:b.y0, u1:b.y1, cut: b.x0 < pos-EP && b.x1 > pos+EP, vis: b.x1 <= pos+EP, d: pos-b.x1};
+  const uA = axis==='A' ? (look > 0 ? [-ox, L-ox] : [-(L-ox), ox]) : [-oy-vd, F-oy];
+  const zTop = (built2 ? 2*H2 : H2) + (v.ter ? 1.9 : 0.4) + 0.5, zBot = -1.6;
+  const u0 = uA[0] - 1.5, u1 = uA[1] + 2.4, s = Math.min(60, 860/(u1-u0));
+  const X = u => (u-u0)*s, Z = z => (zTop-z)*s, vw = Math.round((u1-u0)*s), vh = Math.round((zTop-zBot)*s + 30);
+  let g = '';
+  const elev = !bx.some(b=>pr(b).cut && b.z1 > 0.05);
+  // terreno
+  g += `<rect x="0" y="${Z(0)}" width="${vw}" height="${(0-zBot)*s}" fill="var(--ok-soft)"/>`;
+  // lo que se ve más allá: del más lejano al más cercano
+  const FILL = {wall:'var(--panel)', tab:'var(--panel)', conc:'var(--panel)', slab:'var(--line)', glass:'var(--wet)', stair:'var(--brick-soft)', rail:'var(--muted)', cim:'var(--line)', sob:'var(--line)'};
+  bx.map(b=>({b, p:pr(b)})).filter(o=>!o.p.cut && o.p.vis && o.b.z1 > 0.01).sort((a,b)=>b.p.d-a.p.d).forEach(({b,p})=>{
+    const op = Math.max(.35, 1 - p.d/10).toFixed(2);
+    g += `<rect x="${X(p.u0)}" y="${Z(b.z1)}" width="${(p.u1-p.u0)*s}" height="${(b.z1-Math.max(0,b.z0))*s}" fill="${FILL[b.m]||'var(--panel)'}" stroke="${b.m==='stair'?'var(--brick)':'var(--muted)'}" stroke-opacity="${op}" stroke-width=".7"/>`; });
+  // lo cortado
+  const CUT = {wall:'var(--wall)', tab:'var(--wall)', conc:'var(--wall)', slab:'var(--wall)', stair:'var(--brick)', rail:'var(--wall)', cim:'var(--muted)', sob:'var(--muted)'};
+  bx.forEach(b=>{ const p = pr(b); if(!p.cut) return;
+    if(b.m==='glass'){ const um = (p.u0+p.u1)/2; g += `<line x1="${X(um)}" y1="${Z(b.z0)}" x2="${X(um)}" y2="${Z(b.z1)}" stroke="var(--wet-line)" stroke-width="1.6"/>`; return; }
+    g += `<rect x="${X(p.u0)}" y="${Z(b.z1)}" width="${(p.u1-p.u0)*s}" height="${(b.z1-b.z0)*s}" fill="${CUT[b.m]||'var(--wall)'}" ${b.m==='cim'||b.m==='sob' ? 'fill-opacity=".55"' : ''}/>`; });
+  g += `<line x1="0" y1="${Z(0)}" x2="${vw}" y2="${Z(0)}" stroke="var(--ink)" stroke-width="1.4"/>`;
+  // límites del lote y vecinos
+  uA.forEach((u,i)=>{ g += `<line x1="${X(u)}" y1="${Z(zBot+0.2)}" x2="${X(u)}" y2="${Z(zTop-0.3)}" stroke="var(--muted)" stroke-width=".8" stroke-dasharray="10 4 2 4"/>`; });
+  const tx = (u, z, t, fs=10.5, fill='var(--muted)', wt=400, anc='middle') => `<text x="${X(u)}" y="${Z(z)}" text-anchor="${anc}" font-family="var(--f-display)" font-weight="${wt}" font-size="${fs}" fill="${fill}">${t}</text>`;
+  if(axis==='A'){ g += tx(uA[0]-0.65, 1.2, 'vecino') + tx(uA[1]+0.75, 1.2, 'vecino'); }
+  else { g += tx(-oy-vd/2, -0.45, 'vereda') + tx(-oy-vd-0.65, -0.45, 'calle') + tx(F-oy+0.75, 1.2, 'vecino'); if(v.rf > 0.6) g += tx(-oy+v.rf/2, -0.45, `retiro ${f2(v.rf)}`); }
+  // nombres de los ambientes cortados
+  if(!elev){
+    const inR = q => axis==='A' ? (q.y0 < pos && q.y1 > pos) : (q.x0 < pos && q.x1 > pos);
+    const um = q => axis==='A' ? (look > 0 ? (q.x0+q.x1)/2 : -(q.x0+q.x1)/2) : (q.y0+q.y1)/2;
+    Object.values(r.rooms).filter(inR).forEach(q=>{ if(!q.sky) g += tx(um(q), 1.55, q.n, 11, 'var(--ink)', 600); });
+    if(built2) Object.values(r.up.rooms).filter(inR).forEach(q=>{ if(q.n && !q.sky) g += tx(um(q), H2+1.55, q.n, 11, q.ter?'var(--ok)':'var(--ink)', 600); });
+  }
+  // ejes
+  const A = axesOf(r), axl = axis==='A' ? A.ax.map(([n,x])=>[n, look > 0 ? x : -x]) : A.ay.map(([n,y])=>[n,y]);
+  axl.forEach(([n,u])=>{ g += `<line x1="${X(u)}" y1="${Z(-0.05)}" x2="${X(u)}" y2="${Z(zBot+0.45)}" stroke="var(--muted)" stroke-width=".6" stroke-dasharray="8 3 2 3"/>` + bubble(X(u), Z(zBot+0.25), n); });
+  // niveles y alturas
+  const uR = uA[1] + 0.25, lv = [[0,'NPT ±0.00'],[H2, `${built2?'NPT':'techo'} +${f2(H2)}`]];
+  if(built2) lv.push([2*H2, `techo +${f2(2*H2)}`]);
+  lv.forEach(([z,t])=>{ g += levelTag(X(uR), Z(z), t); });
+  const uD = uA[0] - 0.35;
+  g += dimV(X, Z, 0, H, uD, f2(H)) + dimV(X, Z, H, H2, uD, f2(e));
+  if(built2) g += dimV(X, Z, H2, H2+H, uD, f2(H)) + dimV(X, Z, H2+H, 2*H2, uD, f2(e));
+  g += dimV(X, Z, 0, built2 ? 2*H2 : H2, uD - 0.45, f2(built2 ? 2*H2 : H2), 'var(--muted)');
+  if(!elev && v.sis==='portante') g += tx((uA[0]+uA[1])/2, zBot+0.75, `cimiento corrido ${f2(r.cim.an)} × ${f2(r.cim.za-0.20)} · sobrecimiento ${f2(T)} × 0.30`, 10);
+  return `<svg viewBox="0 0 ${vw} ${vh}" role="img" aria-label="${title}">${g}</svg>`;
+}
+function proCuts(r){
+  const lim = proDefaults(r);
+  el('pro-cutA').innerHTML = proSection(r, 'A', proCut.y, 1, 'Corte A-A');
+  el('pro-cutB').innerHTML = proSection(r, 'B', proCut.x, -1, 'Corte B-B');
+  const yA = proCut.y, xB = proCut.x;
+  el('pro-capA').textContent = `Corte A-A, transversal: a ${f2(yA)} m del eje 1 (fachada), mirando hacia el fondo.`;
+  el('pro-capB').textContent = `Corte B-B, longitudinal: a ${f2(xB)} m del eje A, de la calle al patio.`;
+}
+function proElev(r){
+  const v = r.v, F = Math.max(v.fondo, v.rf + r.D + T), oy = v.rf + T/2;
+  el('pro-elF').innerHTML = proSection(r, 'A', -oy - 0.01, 1, 'Elevación principal');
+  el('pro-elP').innerHTML = proSection(r, 'A', F - oy + 0.01, -1, 'Elevación posterior');
+}
+function proRender(r){
+  if(el('tab-pro').hidden) return;
+  const has2 = r.gross2 > 0 && !!r.up; if(!has2) proFloor = 1;
+  el('pro-f2').disabled = !has2;
+  document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.classList.toggle('on', +b.dataset.pp === proFloor));
+  proPlan(r); proCuts(r); proElev(r);
+}
+document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.addEventListener('click', ()=>{ if(b.disabled) return; proFloor = +b.dataset.pp; if(lastR) proRender(lastR); }));
+
 function render(){
   const v = read();
   ['a','b','d','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
   const r = compute(v);
-  draw(r); draw2(r); cutA(r); cutB(r);
+  draw(r); draw2(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
   try { materiales(r); } catch(e){ console.error('materiales', e); }
-  lastR = r; if(!el('tab-3d').hidden && d3) { try { build3D(r); } catch(e){ console.error('3D', e); } }
+  lastR = r; try { proRender(r); } catch(e){ console.error('diseño pro', e); }
+  if(!el('tab-3d').hidden && d3) { try { build3D(r); } catch(e){ console.error('3D', e); } }
   el('ap-row').hidden = v.sis !== 'portante';
   el('sis-hint').textContent = v.sis==='portante' ? 'Los muros de ladrillo King Kong cargan la losa y resisten el sismo; las columnas y vigas soleras solo los confinan. Es lo más económico en 1 y 2 pisos.' : 'Columnas y vigas cargan la losa; los muros son tabiques que se pueden mover. Más concreto y acero.';
   el('ndt').value = String(Math.min(6, Math.max(1, v.nd + v.nd2)));
@@ -2557,7 +2679,7 @@ el('ppm').addEventListener('change', ()=>{ if(el('ppm').value !== 'auto') el('pp
 el('gen').addEventListener('click', ()=>{ el('gen-msg').textContent = 'Buscando…'; setTimeout(generate, 30); });
 
 // Los datos del terreno y del programa regeneran la planta solos; las cotas entre ejes solo redibujan.
-const autoKeys = ['lote','fondo','rf','rp','vd','nd','nd2','pmr','sis','ap','med','tam'];
+const autoKeys = ['lote','fondo','rf','rp','vd','nd','nd2','pmr','sis','ap','med','tam','esc'];
 let genTimer = null;
 const regen = () => {
   if(el('nd2').value!=='0' && parseInt(el('n').value,10) < 2) el('n').value = '2';
@@ -2582,14 +2704,14 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; if(k==='3d') open3D(); ['dis','3d','are','mat','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; if(k==='3d') open3D(); ['dis','pro','3d','are','mat','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d').addEventListener('click', ()=>showTab('3d'));
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat'));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-13i';
+const APP_VERSION = '2026-11-13j';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
