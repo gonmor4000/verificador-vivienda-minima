@@ -113,6 +113,11 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .tbl td{padding:4px 0;border-top:1px solid var(--line)}
 .tbl td:last-child{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:no-preference){.checks li{transition:background .2s}}
+.log{list-style:none;margin:0;padding:0}
+.log li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 14px;padding:10px 0;border-top:1px solid var(--line);line-height:1.5}
+.log li:first-child{border-top:0}
+.log time{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+@media (max-width:720px){.log li{grid-template-columns:minmax(0,1fr)}}
 </style>
 
 <div class="wrap">
@@ -132,6 +137,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <button type="button" role="tab" id="tab-btn-dis" aria-selected="true" class="on">Diseño</button>
     <button type="button" role="tab" id="tab-btn-are" aria-selected="false">Cuadro de áreas</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
+    <button type="button" role="tab" id="tab-btn-cam" aria-selected="false">Cambios</button>
   </nav>
 
   <div id="tab-are" class="areas" hidden aria-label="Cuadro de áreas">
@@ -210,6 +216,15 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
       <li>La escalera al 2.º piso o a la azotea es exterior, recta y en el patio: contrapaso ≤ 0.18 m y paso de 0.25 m. Llega a un <b>descanso</b> de 1.00 × 0.90 m pegado al muro posterior, frente al estar, y la puerta del 2.º piso abre sobre ese descanso. Va a lo largo del muro si entra; si no, perpendicular, hacia el fondo del patio. <span class="src">A.010 art. 23 + diseño</span></li>
       <li>El suelo S3 se trata como blando: cimiento corrido de 0.60 × 1.00 m en vez de 0.40 × 0.80 m. <span class="src">Manual</span></li>
     </ol>
+  </section>
+
+  <section id="tab-cam" class="card rules" hidden aria-label="Cambios">
+    <h2>Cambios importantes</h2>
+    <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
+    <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Cambios</b>: aquí se anotan, con su fecha, los cambios importantes de la herramienta.</span></li>
+      <li><time datetime="2026-11-12">12 nov 2026</time><span>La página se publica tal cual, sin pasar por Jekyll, para que GitHub Pages entregue el archivo sin transformarlo.</span></li>
+    </ul>
   </section>
 
   <div id="tab-dis">
@@ -1786,9 +1801,9 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; ['dis','are','reg'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; ['dis','are','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg'));
+document.querySelectorAll('.seg button').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
 load(presets.base); el('p-base').classList.add('on'); render(); if(el('tam').value === 'lote') regen();
 })();
 </script>
