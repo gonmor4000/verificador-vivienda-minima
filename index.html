@@ -122,6 +122,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 @media (max-width:720px){.box3d{height:420px}}
 .upd{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
 .upd .ver{font-family:var(--f-mono)}
+.upd a{color:var(--brick);font-weight:600}
 .upd button:disabled{opacity:.6;cursor:default}
 .log{list-style:none;margin:0;padding:0}
 .log li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 14px;padding:10px 0;border-top:1px solid var(--line);line-height:1.5}
@@ -145,6 +146,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
       <span class="ver" id="ver"></span>
       <button type="button" id="upd-btn">Actualizar</button>
       <span id="upd-msg" aria-live="polite"></span>
+      <a id="upd-link" href="https://gonmor4000.github.io/verificador-vivienda-minima/" target="_blank" rel="noopener" hidden>Abrir la última versión ↗</a>
     </div>
   </header>
 
@@ -256,6 +258,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-13">13 nov 2026</time><span>Dentro de Claude, junto al botón <b>Actualizar</b> aparece el enlace <b>Abrir la última versión</b>: abre la página publicada en una pestaña nueva, siempre con lo más reciente.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>El botón <b>Actualizar</b> avisa cuando la herramienta está abierta dentro de Claude: esa copia no se actualiza sola y se refresca pidiéndoselo a Claude.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nuevo botón <b>Actualizar</b> arriba a la derecha: compara tu versión con la última publicada y, si hay una nueva, la carga. La versión que estás usando se ve junto al botón.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>3D</b>: la casa generada en volumen, con muros, vanos, losas, columnas, 2.º piso, volado, terraza, escalera y lote. Se puede girar, acercar y quitar los techos.</span></li>
@@ -2008,11 +2011,14 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-13c';
+const APP_VERSION = '2026-11-13d';
 el('ver').textContent = 'Versión ' + APP_VERSION;
+// Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
+const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
+if(!ON_PAGES){ const a = el('upd-link'); a.hidden = false; a.addEventListener('click', ()=>{ a.href = 'https://gonmor4000.github.io/verificador-vivienda-minima/?v=' + Date.now(); }); }
 el('upd-btn').addEventListener('click', async ()=>{
   const b = el('upd-btn'), m = el('upd-msg');
-  if(!/(^|\.)github\.io$/.test(location.hostname)){ m.textContent = 'Esta copia no se actualiza sola: abre la página publicada o pide a Claude que actualice la vista.'; return; }
+  if(!ON_PAGES){ m.textContent = 'Esta copia no se actualiza sola: abre la última versión con el enlace o pide a Claude que actualice la vista.'; return; }
   b.disabled = true; m.textContent = 'Buscando…';
   try {
     const res = await fetch(location.pathname + '?v=' + Date.now(), {cache:'no-store'});
