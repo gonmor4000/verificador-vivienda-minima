@@ -266,3 +266,49 @@ def pozos(rows):
             r.append('|'.join(line.split()))
     return dict(h=['Altura (m)|Pozo de 1 a 2 lados|<|Pozo de 3 a 4 lados|<', '^|A|B|A|B'], r=r,
                 n=['Distancias perpendiculares al vano, en metros. A = dormitorios, salas y comedores; B = cocinas y patios techados.'])
+
+# A.130 (texto de 2006): tablas 1 a 3, transcritas de la separata impresa (págs. 140-142)
+_cat = 'Resistencia al fuego ({a} Hrs)|Semi resist. al fuego ({b} Hrs)|Incombust. con protección (1 Hrs)'
+T[('A130', 'TABLA Nº 1')] = dict(
+    title='Tabla Nº 1. Recubrimientos mínimos de protección al fuego en elementos estructurales',
+    h=['Elementos estructurales protegidos|Material aislante|Recubrimiento mínimo por material aislante (en pulgadas), categorías|<|<',
+       '^|^|' + _cat.format(a=6, b=6)],
+    r=['Armaduras en vigas y columnas de concreto armado|Concreto estructural|1 1/2|1 1/2|1 1/2',
+       'Armadura en viguetas de concreto|Concreto estructural|1 1/4|1|3/4',
+       'Armaduras y amarres en losas de pisos y techos|Concreto estructural|1|3/4|3/4',
+       'Columnas de acero y todos los elementos de tijerales principales|Concreto estructural|2 1/2|1 1/2|1',
+       'Elementos de 6 x 6|Concreto estructural|2|1|1',
+       'Elementos de 6 x 8|Concreto estructural|1 1/2|1|1',
+       'Elementos de 12 x 12|Concreto estructural|2|1|1',
+       'Vigas de acero; tendones en vigas pre o post esforzadas|Concreto estructural|4|2 1/2|1 1/2',
+       'Tendones en placas pre o post esforzadas|Concreto estructural||1 1/2|1'],
+    n=['Transcrita de la separata impresa (pág. 140). La segunda categoría dice «(6 Hrs)» en el original.'],
+    end='Este espesor se protegerá')
+T[('A130', 'TABLA Nº 2')] = dict(
+    title='Tabla Nº 2. Espesores mínimos para protección al fuego en pisos, techos y cielo raso',
+    h=['Construcción de pisos o techos|Construcción de cielo raso|Espesor mínimo total en pulgadas, categorías|<|<',
+       '^|^|' + _cat.format(a=4, b=2)],
+    r=['Losa de concreto|Ninguno|6 1/2|4 1/2|3 1/2',
+       'Losa de concreto|Enlucido de yeso o mortero contra el fondo del techo|6|4|3',
+       'Aligerado de viguetas de concreto estructural y ladrillo hueco de techos|Enlucido de yeso o mortero contra el fondo del techo||6” de ladrillo y 2” de losa|',
+       'Aligerado de viguetas de concreto estructural y ladrillo hueco de techos|Ninguno|||5 ½ (4” de ladrillo y 1 ½” de losa)',
+       'Viguetas de concreto|Cielo raso suspendido de vermiculita de 1” de espesor mínimo colgado 6” debajo de las viguetas|3 (sólo losa)|2 (sólo losa)|',
+       'Viguetas de acero con losa de concreto|Cielo raso enlucido en malla incombustible asegurada contra el fondo de las viguetas, de espesor mínimo 5/8” y mortero 1:3||2 ¼” (sólo losa)|2” (sólo losa) Combustible e Construcción pesada'],
+    n=['Transcrita de la separata impresa (pág. 141). La última celda está tal como se imprimió.'],
+    end='Artículo')
+T[('A130', 'TABLA Nº 3')] = dict(
+    title='Tabla Nº 3. Espesores mínimos para protección al fuego en paredes y tabiques',
+    h=['Materiales de paredes o tabiques|Construcción|Espesor mínimo total en pulgadas, categorías|<|<',
+       '^|^|' + _cat.format(a=4, b=2)],
+    r=['Concreto armado|Sólido sin enlucir|6 1/2|4 1/2|3 1/2',
+       'Ladrillos de arcilla cocida, calcáreos o de:|Ladrillos sólidos sin enlucir|8|6|4',
+       'Bloques huecos de concreto|Espesor mínimo de cascarón 2 ¼” sin enlucir|8||',
+       '^|Espesor mínimo de cascarón 1 3/4” sin enlucir|12||',
+       '^|Espesor mínimo de cascarón 1 3/8” sin enlucir||8|6',
+       'Ladrillos huecos de arcilla cocida, no portantes|Dos celdas mínimo dentro del espesor de la pared, enlucido en ambas caras||7|5',
+       '^|Tres celdas mínimo dentro del espesor de la pared, enlucido en ambas caras|12||',
+       'Bloqueo|Enlucido o sin enlucir|6|4|3',
+       'Tabique sólido de mortero o yeso|Armazón interno incombustible|||2',
+       'Paneles de yeso prensado||||2'],
+    n=['Transcrita de la separata impresa (págs. 141-142).'],
+    end='Artículo')
