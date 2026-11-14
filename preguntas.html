@@ -1,0 +1,155 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preguntas de normativa</title>
+<meta name="description" content="Tablón de preguntas y respuestas técnicas sobre el RNE del Perú, cada una con el artículo que la sustenta.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#f9faf9; --ink:#1d2320; --muted:#5d6762; --line:#cfd5d1;
+  --brick:#a94a26; --brick-soft:rgba(169,74,38,.10);
+  --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --no:#b03a2e; --no-soft:rgba(176,58,46,.11); --warn:#a46a0c; --warn-soft:rgba(164,106,12,.13);
+  --f-display:"Archivo",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --no:#ec8a7e; --no-soft:rgba(236,138,126,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --no:#ec8a7e; --no-soft:rgba(236,138,126,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15); color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-display);font-size:15px;line-height:1.55}
+a{color:var(--brick)}
+.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px;padding:16px 16px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
+.top h1{font-size:22px;margin:0;letter-spacing:-.01em}
+.top p{margin:2px 0 0;color:var(--muted);font-size:13.5px;max-width:80ch}
+.top nav{display:flex;gap:8px;flex-wrap:wrap}
+.top nav a{font-size:13.5px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:6px 11px;color:var(--ink);background:var(--bg)}
+.top nav a:hover{border-color:var(--brick)}
+main{max-width:900px;margin:0 auto;padding:16px 16px 60px}
+.tools{position:sticky;top:0;background:var(--bg);padding:8px 0 10px;z-index:2}
+input[type=search]{width:100%;font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}
+input:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--brick);outline-offset:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tags button{font:inherit;font-size:12.5px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:12px;padding:2px 10px;cursor:pointer}
+.tags button.on{background:var(--brick);border-color:var(--brick);color:var(--panel)}
+.count{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+details.q{background:var(--panel);border:1px solid var(--line);border-radius:8px;margin:10px 0}
+details.q[open]{border-color:var(--brick)}
+details.q summary{cursor:pointer;list-style:none;padding:12px 16px;display:flex;gap:10px;align-items:baseline}
+details.q summary::-webkit-details-marker{display:none}
+summary .t{font-weight:600;font-size:16px;flex:1}
+summary .v{font-size:12px;font-weight:600;border-radius:10px;padding:1px 9px;white-space:nowrap}
+@media (max-width:600px){details.q summary{flex-direction:column;gap:4px} summary .v{white-space:normal}}
+.v.si{background:var(--ok-soft);color:var(--ok)} .v.no{background:var(--no-soft);color:var(--no)} .v.dep{background:var(--warn-soft);color:var(--warn)}
+.body{padding:0 16px 14px;border-top:1px solid var(--line)}
+.body p,.body li{max-width:75ch}
+.body ul{padding-left:20px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;color:var(--muted);margin-top:10px}
+.meta .tg{background:var(--bg);border-radius:10px;padding:0 8px}
+a.cit{font-family:var(--f-mono);font-size:13px;white-space:nowrap;text-decoration:none;background:var(--brick-soft);border-radius:4px;padding:0 4px}
+a.cit:hover{text-decoration:underline}
+.add{margin-top:28px;font-size:13.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+mark{background:rgba(224,168,62,.35);color:inherit;border-radius:2px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>Preguntas de normativa</h1>
+    <p>Dudas técnicas sobre el RNE que ya salieron, con su respuesta y el artículo que la sustenta. Cada cita abre el texto vigente en el RNE consultable.</p>
+  </div>
+  <nav><a href="./">← Verificador</a><a href="rne.html">RNE consultable</a></nav>
+</header>
+<main>
+  <div class="tools">
+    <input id="q" type="search" placeholder="Buscar: escalera, retiro, PMR, pisos…" autocomplete="off" aria-label="Buscar en las preguntas">
+    <div class="tags" id="tags"></div>
+    <p class="count" id="count"></p>
+  </div>
+  <div id="list"></div>
+  <p class="add">¿Otra duda? Pídesela a Claude en el proyecto y se agrega aquí con su fecha y su artículo. Las respuestas se basan en el texto vigente (A.010 RM 191-2021, A.020 RM 188-2021, A.120 RM 075-2023); los parámetros urbanísticos de cada municipalidad pueden pedir más.</p>
+</main>
+<script>
+// Cita: «A010 8.3 l» → enlace a rne.html#A010-art-8.3-l
+const C = (txt, anchor) => `<a class="cit" href="rne.html#${anchor}">${txt}</a>`;
+// v: 'si' | 'no' | 'dep' (depende)
+const Q = [
+{ id:'escalera-retiros', fecha:'2026-11-14', tags:['Escalera','Retiros'],
+  q:'¿La escalera puede ir en el retiro frontal? ¿Y en el posterior?',
+  v:'dep', vt:'Frontal solo en casos puntuales · posterior no',
+  a:`<p><b>Retiro frontal:</b> solo en tres casos que la norma permite expresamente (${C('A.010 art. 8.3','A010-art-8.3')}):</p>
+  <ul><li>Gradas o rampas para subir o bajar <b>hasta 1.50 m</b> desde el nivel de la vereda (${C('8.3 a','A010-art-8.3-a')}).</li>
+  <li>Escaleras <b>abiertas</b> a pisos superiores <b>independientes</b>, cuando son una <b>ampliación</b> de la edificación original y <b>solo para vivienda</b> (${C('8.3 l','A010-art-8.3-l')}). Es el caso típico de la casa que luego suma un departamento arriba con acceso propio.</li>
+  <li>Escaleras que <b>bajan</b> a niveles inferiores, como un semisótano (${C('8.3 m','A010-art-8.3-m')}).</li></ul>
+  <p>La escalera interior de una casa nueva hacia su 2.º piso <b>no</b> entra en esa lista: va dentro del área edificable.</p>
+  <p><b>Retiro posterior:</b> no. La lista de lo permitido en retiros laterales y posteriores (${C('A.010 art. 8.2','A010-art-8.2')}) no incluye escaleras: solo cercos, piscinas, equipos de ventilación y estacionamiento de bicicletas. El retiro es una «distancia mínima libre» (${C('8.1 c','A010-art-8.1-c')}).</p>
+  <p><b>Ojo con el área libre:</b> si el lote no tiene retiro posterior pero sí un área libre mínima, la escalera tampoco es gratis: se computa como área techada, contando el área bajo ella (${C('A.010 art. 9.1 c','A010-art-9.1-c')}), y el área libre es la que no tiene proyección de área techada (${C('9.3','A010-art-9.3')}). Una escalera en el patio le resta área libre y, si está frente a ventanas, puede romper la medida del pozo de luz (${C('A.020 art. 11.4 a','A020-art-11.4-a')}).</p>
+  <p>Siempre revisa el <b>certificado de parámetros</b> de la municipalidad: fija los retiros y puede ser más estricto.</p>` },
+{ id:'pisos-unifamiliar', fecha:'2026-11-14', tags:['Altura','Unifamiliar'],
+  q:'¿Hay un límite de pisos para la vivienda unifamiliar?',
+  v:'dep', vt:'Lo fija la municipalidad',
+  a:`<p>La A.020 no pone un límite de pisos. La altura máxima la da el <b>certificado de parámetros urbanísticos</b> de la municipalidad, en metros; si viene en pisos, en zona residencial cada piso cuenta como <b>3.00 m como máximo</b> (${C('A.010 art. 10.1 a','A010-art-10.1-a')}). La altura se mide desde el punto más alto de la vereda (${C('10.1 c','A010-art-10.1-c')}).</p>
+  <p>El otro límite es <b>estructural</b>: la albañilería confinada (E.070) tiene su propio tope, que no está en los documentos subidos y conviene verificar con el texto de la E.070.</p>` },
+{ id:'pmr', fecha:'2026-11-14', tags:['Accesibilidad','Unifamiliar','Multifamiliar'],
+  q:'¿Una vivienda unifamiliar tiene que ser accesible (baño PMR)?',
+  v:'no', vt:'No en unifamiliar',
+  a:`<p>La A.120 de 2023 exige accesibilidad en las <b>áreas de circulación comunes</b> de multifamiliares, bifamiliares, uso colectivo, conjuntos residenciales y quintas: vestíbulo de ingreso con rampa o medio mecánico, y rampas o ascensor en las circulaciones comunes cuando se exige ascensor (${C('A.120 art. 28 a','A120-art-28-a')}). Puertas principales de 1.00 m e interiores de 0.90 m en esas áreas (${C('28 b','A120-art-28-b')}).</p>
+  <p>Dentro de una vivienda unifamiliar no se exige baño PMR. En el verificador la versión accesible es opcional (son unos 10 m² más).</p>` },
+{ id:'escalera-ancho', fecha:'2026-11-14', tags:['Escalera','Multifamiliar','Bifamiliar'],
+  q:'¿Qué ancho debe tener la escalera?',
+  v:'dep', vt:'0.90 · 1.00 · 1.20 m',
+  a:`<ul><li><b>Dentro de la vivienda:</b> 0.90 m libres entre muros; 0.80 m si un lado es abierto o son dos tramos sin muro intermedio (${C('A.020 art. 15.1 a','A020-art-15.1-a')}). Puede ser caracol si el paso mide al menos 0.25 m a 0.50 m del eje (${C('15.1 b','A020-art-15.1-b')}). Pasamanos a 1.00 m (${C('15.1 c','A020-art-15.1-c')}).</li>
+  <li><b>Bifamiliar, o escalera exterior que da acceso a dos viviendas en el piso siguiente:</b> 1.00 m entre muros (${C('15.2 g','A020-art-15.2-g')}).</li>
+  <li><b>Escalera común de multifamiliares y conjuntos:</b> 1.20 m entre muros (${C('15.2 b','A020-art-15.2-b')}).</li></ul>
+  <p>Paso y contrapaso, y máximo de pasos por tramo: ${C('A.010 art. 23.2','A010-art-23.2')}.</p>` },
+{ id:'bifamiliar', fecha:'2026-11-14', tags:['Bifamiliar','Unifamiliar'],
+  q:'¿Cuándo una casa deja de ser unifamiliar y pasa a ser bifamiliar?',
+  v:'dep', vt:'Con una 2.ª vivienda independiente',
+  a:`<p>Cuando en el mismo lote hay <b>dos unidades de vivienda independientes</b>, por ejemplo un 2.º piso con su propia cocina, baño y acceso. La A.020 las clasifica como tipologías distintas (${C('A.020 art. 4','A020-art-4')}).</p>
+  <p>Consecuencias: la escalera exterior que sirve a la segunda vivienda pasa a 1.00 m (${C('15.2 g','A020-art-15.2-g')}), y el vestíbulo de ingreso común debe ser accesible (${C('A.120 art. 28 a','A120-art-28-a')}). Si la segunda vivienda es una ampliación con acceso propio, su escalera abierta puede ir en el retiro frontal (${C('A.010 art. 8.3 l','A010-art-8.3-l')}).</p>` },
+{ id:'vigencia', fecha:'2026-11-14', tags:['Vigencia'],
+  q:'¿Las normas del RNE que usamos son las últimas?',
+  v:'si', vt:'Sí, a nov 2026',
+  a:`<p>Revisado el 14 nov 2026: A.010 (RM 191-2021), A.020 (RM 188-2021), A.070 (RM 061-2021), A.120 (RM 075-2023), A.040 (RM 068-2020) y A.030 (RM 005-2019) son las vigentes; el resto sigue con el texto de 2006 y sus cambios de 2012 y 2014.</p>
+  <p>Hay dos <b>proyectos en consulta, sin aprobar</b>:</p>
+  <ul><li><a href="https://www.gob.pe/institucion/vivienda/normas-legales/7086219-214-2025-vivienda" target="_blank" rel="noopener">RM 214-2025</a> (ago 2025), A.020 y G.040: áreas mínimas de 25 m² unifamiliar (como ahora), 40 m² multifamiliar y 16 m² vivienda colectiva.</li>
+  <li><a href="https://www.elperuano.pe/noticia/300415-cambios-en-las-normas-de-seguridad-vivienda-abre-consulta-publica-sobre-la-norma-a130" target="_blank" rel="noopener">RM 264-2026</a> (jul 2026), A.130 Requisitos de seguridad.</li></ul>
+  <p>Lo único aprobado en 2026 es la <a href="https://elperuano.pe/noticia/301148-construyes-o-disenas-cambian-las-reglas-del-reglamento-nacional-de-edificaciones-conoce-las-novedades" target="_blank" rel="noopener">RM 278-2026</a>, que cambia los principios generales (G.010 y G.020), no las normas A.</p>` },
+{ id:'em110-ccs', fecha:'2026-11-14', tags:['Sostenibilidad','Vigencia'],
+  q:'¿Son obligatorios la EM.110 y el Código Técnico de Construcción Sostenible?',
+  v:'dep', vt:'Voluntarios salvo casos',
+  a:`<p><b>EM.110</b> (Confort térmico y lumínico con eficiencia energética, incorporada al RNE por el D.S. 006-2014-VIVIENDA): es de <b>aplicación voluntaria</b> en nuevas construcciones.</p>
+  <p><b>Código Técnico de Construcción Sostenible</b> (D.S. 014-2021-VIVIENDA, modificado por la RM 299-2024-VIVIENDA): es <b>obligatorio</b> para los proyectos de vivienda sostenible del <b>Fondo MIVIVIENDA</b> (Nuevo Crédito MIVIVIENDA) y para edificaciones y habilitaciones urbanas nuevas <b>promovidas por el sector público</b>. Para el resto es opcional.</p>
+  <p>Para una casa autoconstruida con financiamiento propio, ninguno de los dos es exigible; sirven como buena práctica (orientación, ventilación cruzada, aislamiento del techo).</p>` },
+];
+
+const $ = s => document.querySelector(s);
+const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const strip = h => h.replace(/<[^>]+>/g,' ');
+const TAGS = [...new Set(Q.flatMap(x => x.tags))].sort((a,b)=>a.localeCompare(b,'es'));
+let tag = null;
+$('#tags').innerHTML = TAGS.map(t => `<button type="button" data-t="${t}">${t}</button>`).join('');
+$('#tags').onclick = e => { const b = e.target.closest('button'); if(!b) return; tag = tag === b.dataset.t ? null : b.dataset.t; render(); };
+$('#q').oninput = () => render();
+function fmt(d){ const [y,m,dd] = d.split('-'); return `${+dd} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][m-1]} ${y}`; }
+function render(){
+  document.querySelectorAll('#tags button').forEach(b => b.classList.toggle('on', b.dataset.t === tag));
+  const words = fold($('#q').value.trim()).split(/\s+/).filter(Boolean);
+  const open = location.hash.slice(1);
+  const list = Q.filter(x => (!tag || x.tags.includes(tag)) && words.every(w => fold(x.q + ' ' + strip(x.a) + ' ' + x.tags.join(' ')).includes(w)));
+  $('#list').innerHTML = list.map(x => `<details class="q" id="${x.id}" ${open === x.id || (words.length && list.length <= 3) ? 'open' : ''}>
+    <summary><span class="t">${x.q}</span><span class="v ${x.v}">${x.vt}</span></summary>
+    <div class="body">${x.a}<div class="meta"><span>Respondida el ${fmt(x.fecha)}</span>${x.tags.map(t=>`<span class="tg">${t}</span>`).join('')}<a href="#${x.id}">Enlace</a></div></div></details>`).join('') || '<p>No hay preguntas con esas palabras.</p>';
+  $('#count').textContent = `${list.length} de ${Q.length} preguntas`;
+}
+render();
+if(location.hash){ const d = document.getElementById(location.hash.slice(1)); if(d){ d.open = true; d.scrollIntoView(); } }
+addEventListener('hashchange', () => { const d = document.getElementById(location.hash.slice(1)); if(d){ d.open = true; d.scrollIntoView(); } });
+</script>
+</body>
+</html>
