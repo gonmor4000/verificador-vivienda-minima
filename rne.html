@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>RNE consultable</title>
+<meta name="description" content="Reglamento Nacional de Edificaciones del Perú (Título III.1 Arquitectura): índice por norma, artículo y numeral, buscador y cruce con el RNE ilustrado.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#f9faf9; --ink:#1d2320; --muted:#5d6762; --line:#cfd5d1;
+  --brick:#a94a26; --brick-soft:rgba(169,74,38,.10); --mark:rgba(224,168,62,.35);
+  --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --warn:#a46a0c; --warn-soft:rgba(164,106,12,.13);
+  --f-display:"Archivo",system-ui,sans-serif; --f-body:"Archivo",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14); --mark:rgba(224,168,62,.30);
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14); --mark:rgba(224,168,62,.30);
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15); color-scheme:dark}
+*{box-sizing:border-box}
+html{scroll-padding-top:16px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+a{color:var(--brick)}
+button{font:inherit;font-weight:500;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:6px 11px;cursor:pointer}
+button:hover{border-color:var(--brick)}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:2px solid var(--brick);outline-offset:2px}
+.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px;padding:16px max(16px,env(safe-area-inset-left,0px)) 12px;border-bottom:1px solid var(--line);background:var(--panel)}
+.top h1{font-family:var(--f-display);font-size:22px;margin:0;letter-spacing:-.01em}
+.top p{margin:2px 0 0;color:var(--muted);font-size:13.5px;max-width:80ch}
+.top nav{display:flex;gap:8px;flex-wrap:wrap}
+.top nav a{font-size:13.5px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:6px 11px;color:var(--ink);background:var(--bg)}
+.top nav a:hover{border-color:var(--brick)}
+.app{display:grid;grid-template-columns:320px minmax(0,1fr);min-height:calc(100vh - 80px)}
+.app.ilu-open{grid-template-columns:300px minmax(0,1fr) minmax(360px,42vw)}
+aside{border-right:1px solid var(--line);background:var(--panel);padding:14px 14px 40px;position:sticky;top:0;height:100vh;overflow:auto}
+main{padding:18px max(16px,3vw) 80px;min-width:0}
+.search{width:100%;font:inherit;font-size:15px;padding:9px 11px;border:1px solid var(--line);border-radius:7px;background:var(--bg);color:var(--ink)}
+.hint{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+.lbl{font-family:var(--f-display);font-size:11.5px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:16px 0 6px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips a{font-size:12.5px;text-decoration:none;border:1px solid var(--line);border-radius:12px;padding:2px 9px;color:var(--ink);background:var(--bg)}
+.chips a:hover{border-color:var(--brick);color:var(--brick)}
+.norms{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
+.norms a{font-family:var(--f-mono);font-size:12.5px;text-align:center;text-decoration:none;border:1px solid var(--line);border-radius:5px;padding:4px 0;color:var(--ink);background:var(--bg)}
+.norms a.on{background:var(--brick);border-color:var(--brick);color:var(--panel)}
+.norms a.vig::after{content:"•";color:var(--ok);margin-left:2px}
+.norms a.on.vig::after{color:var(--panel)}
+.toc{list-style:none;margin:0;padding:0;font-size:13.5px}
+.toc li{margin:0}
+.toc a{display:block;text-decoration:none;color:var(--ink);padding:3px 6px;border-radius:4px;line-height:1.35}
+.toc a:hover{background:var(--brick-soft)}
+.toc a.cur{background:var(--brick-soft);color:var(--brick)}
+.toc .h1 a{font-weight:600;margin-top:8px;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.04em}
+.toc .h2 a{font-weight:600;color:var(--muted);font-size:12.5px;padding-left:12px}
+.toc .n{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:inline-block;min-width:2.6em}
+.res{list-style:none;margin:0;padding:0}
+.res li{border-top:1px solid var(--line)}
+.res a{display:block;text-decoration:none;color:var(--ink);padding:7px 4px}
+.res a:hover{background:var(--brick-soft)}
+.res b{font-family:var(--f-mono);font-size:12.5px;color:var(--brick);font-weight:500}
+.res span{display:block;font-size:12.5px;color:var(--muted)}
+mark{background:var(--mark);color:inherit;border-radius:2px}
+.nhead{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:6px}
+.nhead h2{font-family:var(--f-display);font-size:26px;margin:0;letter-spacing:-.01em}
+.nhead h2 small{font-family:var(--f-mono);font-size:15px;color:var(--brick);font-weight:500;margin-right:8px}
+.badges{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.badge{font-size:12px;border-radius:10px;padding:1px 9px;border:1px solid var(--line);color:var(--muted)}
+.badge.ok{color:var(--ok);background:var(--ok-soft);border-color:transparent}
+.badge.warn{color:var(--warn);background:var(--warn-soft);border-color:transparent}
+details.rm{margin-top:10px;font-size:14px}
+details.rm summary{cursor:pointer;color:var(--muted)}
+details.rm p{color:var(--muted)}
+h3.cap{font-family:var(--f-display);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:34px 0 4px}
+h3.cap.sub{font-size:12.5px;margin-top:22px}
+.art{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:12px 16px;margin:12px 0;max-width:900px}
+.art:target,.art.flash{border-color:var(--brick);box-shadow:0 0 0 3px var(--brick-soft)}
+.ahead{display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 10px}
+.ahead h4{font-family:var(--f-display);font-size:16.5px;margin:0;font-weight:600}
+.ahead h4 .an{font-family:var(--f-mono);color:var(--brick);font-weight:500;margin-right:6px}
+.link{font-family:var(--f-mono);font-size:12px;color:var(--muted);text-decoration:none;border:1px solid var(--line);border-radius:4px;padding:0 5px}
+.link:hover{color:var(--brick);border-color:var(--brick)}
+.ilu{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px;align-items:center}
+.ilu a{font-size:12.5px;text-decoration:none;border-radius:10px;padding:1px 9px;background:var(--warn-soft);color:var(--warn)}
+.ilu a:hover{text-decoration:underline}
+.ilu em{font-size:12px;color:var(--muted);font-style:normal}
+.art p{margin:7px 0;max-width:80ch}
+.art p.num,.art p.lit{position:relative;padding:2px 6px;margin-left:-6px;border-radius:5px}
+.art p.lit{margin-left:16px}
+.art p.num:target,.art p.lit:target,.art p.flash{background:var(--mark)}
+.art .lab{font-family:var(--f-mono);font-size:13px;font-weight:500;color:var(--brick);text-decoration:none;margin-right:4px}
+.art .lab:hover{text-decoration:underline}
+.art .lab.copied::after{content:" ✓ enlace copiado";font-family:var(--f-body);font-size:11.5px;color:var(--ok)}
+.art p.subh{font-weight:600;margin-top:12px}
+.tab{margin:8px 0;border:1px solid var(--line);border-radius:6px;overflow:auto;max-width:80ch}
+.tab .tt{font-weight:600;font-size:13.5px;padding:6px 10px;border-bottom:1px solid var(--line);background:var(--bg)}
+.tab pre{margin:0;padding:8px 10px;font-family:var(--f-mono);font-size:12.5px;line-height:1.45;white-space:pre-wrap}
+.tab .tn{font-size:11.5px;color:var(--muted);padding:0 10px 6px}
+.fig{font-size:13px;color:var(--muted);font-style:italic}
+.pane{border-left:1px solid var(--line);background:var(--panel);position:sticky;top:0;height:100vh;display:flex;flex-direction:column}
+.pane .ph{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 10px;border-bottom:1px solid var(--line);font-size:13px}
+.pane .ph .w{color:var(--warn);font-size:12px}
+.pane iframe{flex:1;width:100%;border:0;background:#fff}
+.iluidx{max-width:900px}
+.iluidx table{border-collapse:collapse;width:100%;font-size:14px;background:var(--panel);border:1px solid var(--line)}
+.iluidx th,.iluidx td{text-align:left;padding:5px 8px;border-top:1px solid var(--line);vertical-align:top}
+.iluidx th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)}
+.iluidx td.m{font-family:var(--f-mono);white-space:nowrap}
+.intro{max-width:900px}
+.intro .art{padding:14px 18px}
+.menu{display:none}
+@media (max-width:900px){
+  .app,.app.ilu-open{grid-template-columns:minmax(0,1fr)}
+  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line);padding:12px 16px}
+  aside.closed .collapsible{display:none}
+  .menu{display:inline-block;margin-top:8px}
+  .pane{display:none!important}
+  main{padding:14px 16px 60px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>RNE consultable</h1>
+    <p>Reglamento Nacional de Edificaciones del Perú, Título III.1 Arquitectura (A.010 a A.130): índice por norma, artículo y numeral, buscador y cruce con el <b>RNE ilustrado</b>. Cada artículo y numeral tiene su propio enlace.</p>
+  </div>
+  <nav><a href="./">← Verificador</a><a href="#ilustrado">Índice del ilustrado</a><a href="#ayuda">Cómo se usa</a></nav>
+</header>
+<div class="app" id="app">
+  <aside id="side">
+    <input id="q" class="search" type="search" placeholder="Buscar: pozo de luz, 11.4, contrapaso…" autocomplete="off" aria-label="Buscar en el RNE">
+    <p class="hint">Escribe palabras (sin importar tildes) o un número como «A.020 11.4».</p>
+    <button type="button" class="menu" id="menu">Mostrar índice</button>
+    <div class="collapsible">
+      <div id="results" hidden></div>
+      <div id="browse">
+        <div class="lbl">Vivienda unifamiliar</div>
+        <div class="chips" id="chips"></div>
+        <div class="lbl">Normas <span style="text-transform:none;letter-spacing:0;font-weight:400">(• vigente actualizada)</span></div>
+        <div class="norms" id="norms"></div>
+        <div class="lbl" id="toclbl">Índice</div>
+        <ul class="toc" id="toc"></ul>
+      </div>
+    </div>
+  </aside>
+  <main id="main"></main>
+  <section class="pane" id="pane" hidden aria-label="RNE ilustrado">
+    <div class="ph"><div><b>RNE ilustrado</b> <span id="panep"></span><div class="w">Edición 2012, texto de 2006: compara con el vigente.</div></div>
+      <div style="display:flex;gap:6px"><a id="paneopen" target="_blank" rel="noopener" class="link" style="padding:3px 7px">Abrir aparte</a><button type="button" id="paneclose">Cerrar</button></div></div>
+    <iframe id="pdf" title="RNE ilustrado"></iframe>
+  </section>
+</div>
+
+<script src="rne/rne-data.js"></script>
+<script src="rne/ilustrado-data.js"></script>
+<script>
+(function(){
+const N = window.RNE_NORMAS, I = window.RNE_ILU;
+const byId = {}; N.forEach(n => byId[n.id] = n);
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const PDF = 'rne/' + I.pdf;
+let curNorm = null;
+
+// Temas frecuentes para vivienda unifamiliar (enlaces a numerales)
+const TEMAS = [
+  ['Área mínima 25 m²','A020-art-8.1-c'],['Altura 2.30 m','A020-art-9'],['Mobiliario y antropometría','A020-art-10'],
+  ['Pozo de luz','A020-art-11.4-a'],['Puertas','A020-art-12.2'],['Ventanas 10 % / 5 %','A020-art-12.4'],['Alféizar 1.00 m','A020-art-12.5-c'],
+  ['Pasajes 0.90','A020-art-13'],['Escalera de vivienda','A020-art-15.1'],['Paso y contrapaso','A010-art-23.2'],['Azotea y parapetos','A020-art-18'],
+  ['Muros y cercos','A020-art-19'],['Volados','A010-art-13'],['Retiros','A010-art-8'],['Área techada','A010-art-9'],['Altura de edificación','A010-art-10'],
+  ['Vigas ≥ 2.10','A010-art-18.3'],['Ventilación','A010-art-38'],['Accesibilidad (A.120)','A120-art-2'],['Contra incendio','A020-art-27']
+];
+$('#chips').innerHTML = TEMAS.map(([t,h]) => `<a href="#${h}">${esc(t)}</a>`).join('');
+$('#norms').innerHTML = N.map(n => `<a href="#${n.id}" data-n="${n.id}" class="${n.vigente?'vig':''}" title="${esc(n.code+' '+n.title)}">${n.code}</a>`).join('');
+
+// ---------- render de texto ----------
+function linkify(t){
+  return esc(t).replace(/\b(Norma(?:s)? Técnica(?:s)? |Norma |norma )?A\.\s?(0[1-9]0|1[0-3]0)\b/g, (m, pre, d) => {
+    const id = 'A' + d; return byId[id] ? `<a href="#${id}">${m}</a>` : m; });
+}
+function iluChips(sec){
+  const c = I.cross[sec.id]; if(!c || !c.length) return '';
+  return '<div class="ilu"><em>RNE ilustrado:</em>' + c.map(([nm,o]) => {
+    const a = I.arts[nm][o]; const p = a.p[0] === a.p[1] ? 'p. '+a.p[0] : 'pp. '+a.p[0]+'–'+a.p[1];
+    return `<a href="${PDF}#page=${a.p[0]}" data-page="${a.p[0]}" title="Artículo ${o} de la ${nm.replace('A0','A.0')} de 2006: ${esc(a.t)}">${p} · ${nm.replace('A0','A.0')} art. ${o} (2006) ${esc(a.t)}</a>`;
+  }).join('') + '</div>';
+}
+function block(b){
+  const [k, id, text, x] = b;
+  if(k === 'num' || k === 'lit') return `<p class="${k}" id="${id}"><a class="lab" href="#${id}" title="Enlace a este numeral">${esc(x)}</a>${linkify(text)}</p>`;
+  if(k === 'tab'){ const long = x && x.split('\n').length > 14; const pre = x ? `<pre>${esc(x)}</pre>` : ''; return `<div class="tab"><div class="tt">${linkify(text)}</div>${long ? `<details><summary style="cursor:pointer;padding:6px 10px;color:var(--muted);font-size:13px">Ver tabla (${x.split('\n').length} líneas)</summary>${pre}</details>` : pre}<div class="tn">Tabla tal como sale del texto del PDF oficial: si se ve desordenada, revisa la separata.</div></div>`; }
+  if(k === 'fig') return `<p class="fig">${esc(text)} (gráfico no incluido: ver la separata oficial)</p>`;
+  if(k === 'sub') return `<p class="subh">${esc(text)}</p>`;
+  return `<p>${linkify(text)}</p>`;
+}
+function artTitle(s){
+  if(s.t === 'art') return `<span class="an">Art. ${s.n}</span>${esc(s.title || '')}`;
+  return esc(s.title);
+}
+function renderNorm(id){
+  const n = byId[id]; if(!n) return;
+  curNorm = id;
+  document.querySelectorAll('#norms a').forEach(a => a.classList.toggle('on', a.dataset.n === id));
+  const iluN = I.normas[id];
+  let h = `<div class="nhead" id="${n.id}"><h2><small>${n.code}</small>${esc(n.title)}</h2><div class="badges">`;
+  h += n.vigente ? `<span class="badge ok">Versión: ${esc(n.version)}</span>` : `<span class="badge">Versión del archivo: ${esc(n.version)}</span>`;
+  if(iluN) h += `<a class="badge warn" href="${PDF}#page=${iluN.p[0]}" data-page="${iluN.p[0]}">Ilustrado pp. ${iluN.p[0]}–${iluN.p[1]}: ${esc(iluN.ed)}</a>`;
+  else h += `<span class="badge">Sin RNE ilustrado</span>`;
+  h += `</div>`;
+  if(n.rm) h += `<details class="rm"><summary>Resolución que la aprueba (considerandos)</summary>${n.rm.map(p=>`<p>${linkify(p)}</p>`).join('')}</details>`;
+  h += `</div>`;
+  let toc = '';
+  for(const s of n.secs){
+    if(s.t === 'h'){
+      h += `<h3 class="cap ${s.lvl===2?'sub':''}" id="${s.id}">${esc(s.title)}</h3>`;
+      toc += `<li class="h${s.lvl}"><a href="#${s.id}">${esc(s.title)}</a></li>`;
+      continue;
+    }
+    if(s.t === 'intro' && !s.b.length) continue;
+    if(s.t === 'intro' && s.b.length <= 1 && (!s.b[0] || s.b[0][2].length < 140)) continue;
+    const title = s.t === 'art' ? (s.title || (s.b[0] ? s.b[0][2].split(/\s+/).slice(0,9).join(' ') + '…' : '')) : s.title;
+    h += `<article class="art" id="${s.id}"><div class="ahead"><h4>${artTitle(s)}</h4><a class="link" href="#${s.id}" title="Enlace a este artículo">#</a></div>${iluChips(s)}${s.b.map(block).join('')}</article>`;
+    toc += `<li><a href="#${s.id}" data-s="${s.id}">${s.t==='art'?`<span class="n">${s.n}</span>`:''}${esc(title)}</a></li>`;
+  }
+  $('#main').innerHTML = h;
+  $('#toc').innerHTML = toc;
+  $('#toclbl').textContent = 'Índice de la ' + n.code;
+}
+
+// ---------- vistas especiales ----------
+function renderHelp(){
+  curNorm = null;
+  document.querySelectorAll('#norms a').forEach(a => a.classList.remove('on'));
+  $('#toc').innerHTML = ''; $('#toclbl').textContent = 'Índice';
+  $('#main').innerHTML = `<div class="intro" id="ayuda"><div class="art"><div class="ahead"><h4>Cómo se usa</h4></div>
+  <p><b>Buscar.</b> Escribe en la caja de la izquierda palabras («pozo de luz», «contrapaso») o un número («A.020 11.4», «23.2»). Los resultados muestran la norma, el artículo y el párrafo.</p>
+  <p><b>Recorrer.</b> Elige una norma (A.010 … A.130) y usa su índice por capítulos y artículos. Los temas de vivienda unifamiliar llevan directo al numeral.</p>
+  <p><b>Enlazar.</b> Cada artículo (#) y cada numeral o literal (11.4, a) …) tiene un enlace estable, por ejemplo <a href="#A020-art-11.4-a">rne.html#A020-art-11.4-a</a>. Al hacer clic en la etiqueta se copia el enlace. La pestaña «Reglas» del verificador usa estos enlaces.</p>
+  <p><b>RNE ilustrado.</b> Las etiquetas naranjas abren el PDF ilustrado en la página donde aparece el mismo tema. En pantalla ancha se abre al costado para leer los dos a la vez; en el celular, en otra pestaña.</p>
+  <p><b>Ojo con las versiones.</b> El ilustrado es de 2012 y dibuja la A.010 y la A.020 de 2006. Las vigentes son la A.010 (RM 191-2021), la A.020 (RM 188-2021) y la A.120 (RM 075-2023), que cambiaron la numeración y varias medidas. Por eso cada etiqueta dice el artículo antiguo al que corresponde: sirve para ver el dibujo, pero manda el texto vigente. Las normas sin «•» (A.050, A.060, A.080 a A.110, A.130) están aquí como vienen en el archivo, en su texto de 2006.</p>
+  <p><b>Fuente.</b> Texto de las separatas de El Peruano, convertido automáticamente: las tablas pueden verse desordenadas y los gráficos no están. Ante una duda, la separata oficial manda.</p></div>
+  <div class="art"><div class="ahead"><h4>Normas</h4></div>${N.map(n=>`<p><a href="#${n.id}"><b>${n.code}</b> ${esc(n.title)}</a> · <span style="color:var(--muted)">${esc(n.version)}</span></p>`).join('')}</div></div>`;
+}
+function renderIlu(){
+  curNorm = null;
+  document.querySelectorAll('#norms a').forEach(a => a.classList.remove('on'));
+  const rev = {};
+  for(const [k, arr] of Object.entries(I.cross)) for(const [nm,o] of arr) (rev[nm+'-'+o] = rev[nm+'-'+o] || []).push(k);
+  let h = `<div class="iluidx" id="ilustrado"><div class="nhead"><h2>Índice del RNE ilustrado</h2><div class="badges"><span class="badge warn">Edición 2012 · texto de 2006</span></div>
+  <p style="color:var(--muted);max-width:80ch">Cada artículo del ilustrado con su página y el artículo vigente donde está hoy ese tema. Un tema sin equivalente vigente puede haberse eliminado o pasado a otra norma.</p></div>`;
+  let toc = '';
+  for(const nm of Object.keys(I.arts)){
+    h += `<h3 class="cap" id="ilu-${nm}">${nm.replace('A0','A.0')} · ${esc(I.normas[nm].ed)}</h3><table><thead><tr><th>Art. 2006</th><th>Tema</th><th>Página</th><th>Hoy está en</th></tr></thead><tbody>`;
+    toc += `<li class="h1"><a href="#ilu-${nm}">${nm.replace('A0','A.0')} ilustrada</a></li>`;
+    for(const [o, a] of Object.entries(I.arts[nm])){
+      const now = (rev[nm+'-'+o] || []).map(k => { const [nid, , num] = k.split('-'); return `<a href="#${k}">${byId[nid].code} art. ${num}</a>`; }).join(', ') || '<span style="color:var(--muted)">—</span>';
+      h += `<tr><td class="m">${o}</td><td>${esc(a.t)}</td><td class="m"><a href="${PDF}#page=${a.p[0]}" data-page="${a.p[0]}">${a.p[0]===a.p[1]?a.p[0]:a.p[0]+'–'+a.p[1]}</a></td><td>${now}</td></tr>`;
+    }
+    h += `</tbody></table>`;
+  }
+  $('#main').innerHTML = h + '</div>';
+  $('#toc').innerHTML = toc; $('#toclbl').textContent = 'Ilustrado';
+}
+
+// ---------- navegación por ancla ----------
+function go(){
+  const hash = decodeURIComponent(location.hash.slice(1));
+  if(!hash || hash === 'ayuda'){ renderHelp(); if(hash) scrollTo(0,0); return; }
+  if(hash === 'ilustrado' || hash.startsWith('ilu-')){ renderIlu(); const el = document.getElementById(hash); if(el) el.scrollIntoView(); return; }
+  const nid = hash.split('-')[0];
+  if(!byId[nid]){ renderHelp(); return; }
+  if(curNorm !== nid) renderNorm(nid);
+  let el = document.getElementById(hash);
+  // ancla aproximada: si no existe el literal o numeral, sube al artículo
+  let h2 = hash;
+  while(!el && h2.includes('-art-')){ const cut = Math.max(h2.lastIndexOf('-'), h2.lastIndexOf('.')); if(cut <= h2.indexOf('-art-')+4) break; h2 = h2.slice(0, cut); el = document.getElementById(h2); }
+  if(el){
+    el.scrollIntoView({block: el.tagName === 'P' ? 'center' : 'start'});
+    document.querySelectorAll('.flash').forEach(x => x.classList.remove('flash'));
+    el.classList.add('flash');
+    const art = el.closest('.art'); if(art && art !== el) art.classList.add('flash');
+    document.querySelectorAll('#toc a.cur').forEach(a => a.classList.remove('cur'));
+    const ta = art && document.querySelector(`#toc a[data-s="${CSS.escape(art.id)}"]`);
+    if(ta){ ta.classList.add('cur'); if(innerWidth > 900) ta.scrollIntoView({block:'nearest'}); }
+  } else scrollTo(0,0);
+  if(innerWidth <= 900) $('#side').classList.add('closed'), $('#menu').textContent = 'Mostrar índice';
+}
+addEventListener('hashchange', go);
+
+// copiar enlace al hacer clic en una etiqueta
+document.addEventListener('click', e => {
+  const lab = e.target.closest('.lab, .link');
+  if(lab && lab.getAttribute('href') && lab.getAttribute('href')[0] === '#'){
+    const url = location.href.split('#')[0] + lab.getAttribute('href');
+    if(navigator.clipboard) navigator.clipboard.writeText(url).then(() => { lab.classList.add('copied'); setTimeout(() => lab.classList.remove('copied'), 1600); }).catch(()=>{});
+  }
+  const pg = e.target.closest('a[data-page]');
+  if(pg && innerWidth > 900){ e.preventDefault(); openPdf(+pg.dataset.page); }
+});
+
+// ---------- panel del ilustrado ----------
+function openPdf(p){
+  const url = PDF + '#page=' + p;
+  $('#pane').hidden = false; $('#app').classList.add('ilu-open');
+  $('#panep').textContent = '· p. ' + p; $('#paneopen').href = url;
+  const f = $('#pdf'); f.src = 'about:blank'; setTimeout(() => f.src = url, 30);
+}
+$('#paneclose').onclick = () => { $('#pane').hidden = true; $('#app').classList.remove('ilu-open'); $('#pdf').src = 'about:blank'; };
+$('#menu').onclick = () => { const s = $('#side'); s.classList.toggle('closed'); $('#menu').textContent = s.classList.contains('closed') ? 'Mostrar índice' : 'Ocultar índice'; };
+
+// ---------- búsqueda ----------
+const IDX = [];
+for(const n of N) for(const s of n.secs){
+  if(!s.b) continue;
+  const head = `${n.code} ${s.t==='art'?'art. '+s.n+' '+(s.title||''):s.title}`;
+  IDX.push({id:s.id, norm:n, head, text:fold(head), raw:head, art:s});
+  for(const b of s.b){
+    const raw = (b[3] && b[0]!=='tab' ? b[3]+' ' : '') + b[2] + (b[0]==='tab' && b[3] ? ' ' + b[3] : '');
+    IDX.push({id: b[1] || s.id, norm:n, head, text:fold(raw), raw, art:s, lab: b[0]==='num'||b[0]==='lit' ? b[3] : ''});
+  }
+}
+function snippet(raw, terms){
+  const f = fold(raw); let i = f.indexOf(terms[0]); if(i < 0) i = 0;
+  const a = Math.max(0, i - 60), z = Math.min(raw.length, i + 140);
+  let s = (a ? '…' : '') + raw.slice(a, z) + (z < raw.length ? '…' : '');
+  let out = esc(s);
+  for(const t of terms){ if(t.length < 2) continue;
+    const fs = fold(s); let res = '', k = 0, j;
+    // resaltar respetando el texto original
+    const src = s; let pos = 0; const parts = [];
+    while((j = fold(src).indexOf(t, pos)) >= 0){ parts.push(esc(src.slice(pos, j)), '<mark>' + esc(src.slice(j, j + t.length)) + '</mark>'); pos = j + t.length; }
+    if(parts.length){ parts.push(esc(src.slice(pos))); out = parts.join(''); break; }
+  }
+  return out;
+}
+function search(q){
+  q = q.trim();
+  if(!q){ $('#results').hidden = true; $('#browse').hidden = false; return; }
+  $('#results').hidden = false; $('#browse').hidden = true;
+  // número directo: «A.020 11.4», «a020 art 11.4 a», «23.2»
+  const m = fold(q).match(/^(?:a\.?\s?(\d{3}))?\s*(?:art(?:iculo|\.)?\s*)?(\d+)(?:\.(\d+))?(?:\s*([a-z])\)?)?$/);
+  let direct = [];
+  if(m){
+    const norms = m[1] ? ['A'+m[1]] : N.map(n => n.id);
+    for(const nid of norms){
+      let id = `${nid}-art-${m[2]}` + (m[3] ? '.' + m[3] : '') + (m[4] ? '-' + m[4] : '');
+      if(document.getElementById(id) || findSec(id)) direct.push(id);
+    }
+  }
+  const terms = fold(q).split(/\s+/).filter(Boolean);
+  const hits = []; const seen = new Set();
+  if(!m || !direct.length){
+    const phrase = fold(q);
+    for(const e of IDX){
+      if(terms.every(t => e.text.includes(t))){
+        const key = e.id; if(seen.has(key)) continue; seen.add(key);
+        // prioridad: frase exacta, título, normas vigentes y de vivienda
+        e.score = (e.text.includes(phrase) ? 10 : 0) + (e.raw === e.head ? 4 : 0) + (e.norm.vigente ? 3 : 0) + (e.norm.id === 'A020' ? 3 : e.norm.id === 'A010' ? 2 : 0);
+        e.ord = hits.length; hits.push(e);
+      }
+    }
+    hits.sort((a, b) => b.score - a.score || a.ord - b.ord);
+    if(hits.length > 120) hits.length = 120;
+  }
+  let h = '';
+  if(direct.length) h += '<ul class="res">' + direct.map(id => { const s = findSec(id); return `<li><a href="#${id}"><b>${id.replace(/^A(\d{3})-art-/, (x,d)=>'A.'+d+' art. ')}</b><span>${esc(s ? (s.title||'') : '')}</span></a></li>`; }).join('') + '</ul>';
+  if(hits.length) h += `<div class="lbl">${hits.length >= 120 ? 'Más de 120' : hits.length} resultado${hits.length===1?'':'s'}</div><ul class="res">` + hits.map(e => `<li><a href="#${e.id}"><b>${esc(e.norm.code)} ${e.art.t==='art' ? 'art. '+e.art.n : ''}${e.lab ? ' · '+esc(e.lab) : ''}</b> ${esc(e.art.title||'')}<span>${snippet(e.raw, terms)}</span></a></li>`).join('') + '</ul>';
+  if(!h) h = '<p class="hint">Sin resultados. Prueba con otra palabra o sin plural.</p>';
+  $('#results').innerHTML = h;
+}
+function findSec(id){
+  const nid = id.split('-')[0]; const n = byId[nid]; if(!n) return null;
+  const artId = id.replace(/^(A\d{3}-art-\d+).*/, '$1');
+  const s = n.secs.find(x => x.id === artId); if(!s) return null;
+  if(id === artId) return s;
+  return s.b.some(b => b[1] === id) ? s : null;
+}
+let tmr; $('#q').addEventListener('input', e => { clearTimeout(tmr); tmr = setTimeout(() => search(e.target.value), 120); });
+$('#q').addEventListener('keydown', e => { if(e.key === 'Enter'){ const a = $('#results a'); if(a){ location.hash = a.getAttribute('href'); } } if(e.key === 'Escape'){ e.target.value=''; search(''); } });
+$('#results').addEventListener('click', e => { if(e.target.closest('a') && innerWidth <= 900){ /* cerrar en móvil */ } });
+
+go();
+})();
+</script>
+</body>
+</html>

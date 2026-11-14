@@ -79,6 +79,9 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .rules ol{margin:0;padding-left:22px}
 .rules li{margin:6px 0;line-height:1.5}
 .rules .src{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:0 7px;margin-left:4px;white-space:nowrap}
+a.rne{color:inherit;text-decoration:underline dotted;text-underline-offset:2px}
+a.rne:hover{color:var(--brick);text-decoration-style:solid}
+.rules .src a.rne{color:var(--brick)}
 .pro-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:end}
 @media (max-width:900px){.pro-two{grid-template-columns:minmax(0,1fr)}}
 .pro-plan svg{max-width:900px;display:block;margin:0 auto}
@@ -283,12 +286,12 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 
   <section id="tab-reg" class="card rules" hidden aria-label="Reglas implícitas">
     <h2>Reglas que usa la herramienta</h2>
-    <p class="hint" style="margin-top:0">Lo que no eliges tú pero decide la forma de la casa. Las medidas del lote, los retiros, los dormitorios, la estructura, el suelo y las opciones (terraza, volado, accesible) son datos de entrada y no están aquí. Cada regla dice de dónde sale: norma (RNE), manual de construcción, antropometría o decisión de diseño de este estudio.</p>
+    <p class="hint" style="margin-top:0">Lo que no eliges tú pero decide la forma de la casa. Las medidas del lote, los retiros, los dormitorios, la estructura, el suelo y las opciones (terraza, volado, accesible) son datos de entrada y no están aquí. Cada regla dice de dónde sale: norma (RNE), manual de construcción, antropometría o decisión de diseño de este estudio. Las citas del RNE son enlaces: abren ese artículo o numeral en el <a href="rne.html" target="_blank" rel="noopener" class="rne-home">RNE consultable</a>, con su texto vigente y la página del RNE ilustrado.</p>
 
     <h3>Módulo y geometría</h3>
     <ol>
       <li>Todas las medidas entre ejes son múltiplos de <b>25 cm</b> (ladrillo King Kong de 24 + 1 cm de junta): paños sin ladrillos cortados. <span class="src">Diseño</span></li>
-      <li>El muro mide <b>2.40 m</b> de alto: 24 hiladas de 10 cm, por encima de los 2.30 m de la A.020. <span class="src">RNE + diseño</span></li>
+      <li>El muro mide <b>2.40 m</b> de alto: 24 hiladas de 10 cm, por encima de los 2.30 m de la A.020. <span class="src">A.020 art. 9.1 + diseño</span></li>
       <li>El fondo construido se prefiere múltiplo de <b>40 cm</b> para que entren viguetas enteras. <span class="src">Diseño</span></li>
       <li>La casa ocupa todo el frente del lote; el fondo es el mínimo que cumple, salvo en la «casa larga», que toma todo el fondo edificable. <span class="src">Diseño</span></li>
       <li>Planta de <b>dos crujías</b>: dormitorios a lo largo de una medianera; sala, cocina y baño en la otra. <span class="src">Diseño</span></li>
@@ -338,6 +341,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevo <b>RNE consultable</b> (rne.html): las normas A.010 a A.130 con índice por capítulo, artículo y numeral, buscador y cruce con el <b>RNE ilustrado</b> (página del PDF y aviso cuando el ilustrado es de la versión 2006). Cada cita del RNE en la herramienta (Reglas, verificaciones, cuadro de áreas) es ahora un <b>enlace</b> que abre ese artículo o numeral.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Reglas revisadas con el RNE vigente</b> (A.010 RM 191-2021, A.020 RM 188-2021 y A.120 RM 075-2023): el patio de luz de la casa larga deja <b>2.00 m libres</b> frente a la ventana del dormitorio (A.020 art. 11.4 a; antes se aceptaba 1.00); parapetos y muros de terraza hacia el vecino de <b>2.10 m</b> (A.020 art. 18.4 y 19.3; antes 1.80); la escalera verifica 17 pasos como máximo por tramo (A.010 art. 23.2 a) y pasamanos a 1.00 m (A.020 art. 15.1 c); ventanas, puertas y pasajes citan la A.020 (art. 12.2, 12.4, 12.5 c y 13); la vivienda accesible pasa a ser opcional (la A.120 de 2023 solo la exige en áreas comunes, art. 28).</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Diseño Pro</b>: planta de arquitectura con ejes, grilla, cotas entre ejes y totales, cotas libres de cada ambiente y vanos (1.er y 2.º piso); <b>cortes A-A y B-B que se mueven arrastrando su línea</b> sobre la planta; y <b>elevaciones</b> principal y posterior. La planta de la pestaña Diseño queda más simple, sin líneas de corte.</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span><b>Tipos de escalera</b> al 2.º piso, todas mínimas (pasos de 0.25, contrapasos ≤ 0.18, ancho 0.90): de un tramo, en L, en U y de caracol de 1.60 m. Se ven en la planta, el 3D, los cortes y el metrado. El lavadero se corre si la escalera lo tapa, y la ventana del estar del 2.º piso ya no choca con la puerta de llegada.</span></li>
@@ -2733,5 +2737,39 @@ el('upd-btn').addEventListener('click', async ()=>{
   location.replace(location.pathname + '?v=' + Date.now());
 });
 load(presets.base); el('p-base').classList.add('on'); render(); if(el('tam').value === 'lote') regen();
+})();
+
+// Citas del RNE → enlaces a rne.html (cada «A.020 art. 11.4 a» abre ese numeral en otra pestaña)
+(function(){
+  const RNE_URL = (/github\.io$/.test(location.hostname) || location.protocol === 'file:' || location.hostname === 'localhost') ? 'rne.html' : 'https://gonmor4000.github.io/verificador-vivienda-minima/rne.html';
+  const RE = /A\.(0[1-9]0|1[0-3]0)(?:( art\. ?)(\d+(?:\.\d+)*)(?: ([a-df-np-xz])(?![\wáéíóúñ]))?((?:(?: y |, )\d+(?:\.\d+)*(?: [a-df-np-xz](?![\wáéíóúñ]))?)*))?/g;
+  const SUB = /((?: y |, ))(\d+(?:\.\d+)*)(?: ([a-df-np-xz])(?![\wáéíóúñ]))?/g;
+  const href = (n, num, lit) => RNE_URL + '#A' + n + (num ? '-art-' + num + (lit ? '-' + lit : '') : '');
+  const a = (h, t) => `<a class="rne" href="${h}" target="_blank" rel="noopener" title="Ver en el RNE">${t}</a>`;
+  const esc = t => t.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  function conv(text){
+    return esc(text).replace(RE, (m, n, art, num, lit, rest) => {
+      if(!art) return a(href(n), m);
+      let out = a(href(n, num, lit), 'A.' + n + art + num + (lit ? ' ' + lit : ''));
+      if(rest) out += rest.replace(SUB, (mm, sep, num2, lit2) => sep + a(href(n, num2, lit2), num2 + (lit2 ? ' ' + lit2 : '')));
+      return out;
+    });
+  }
+  const SKIP = new Set(['A','SCRIPT','STYLE','TEXTAREA','INPUT','SELECT','OPTION','BUTTON','svg','SVG','CANVAS','TITLE']);
+  function link(root){
+    if(!root || root.nodeType !== 1 || root.closest && root.closest('svg, a, button, textarea')) return;
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode(t){
+      for(let e = t.parentNode; e && e !== root.parentNode; e = e.parentNode) if(SKIP.has(e.nodeName) || e.nodeName === 'svg') return NodeFilter.FILTER_REJECT;
+      return /A\.(0[1-9]0|1[0-3]0)/.test(t.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }});
+    const list = []; while(w.nextNode()) list.push(w.currentNode);
+    for(const t of list){ const span = document.createElement('span'); span.innerHTML = conv(t.nodeValue);
+      const frag = document.createDocumentFragment(); while(span.firstChild) frag.appendChild(span.firstChild); t.parentNode.replaceChild(frag, t); }
+  }
+  document.querySelectorAll('a.rne-home').forEach(x => x.href = RNE_URL);
+  link(document.body);
+  let pend = new Set(), raf = 0;
+  const obs = new MutationObserver(ms => { for(const m of ms) if(m.target.nodeType === 1 && !m.target.closest('svg')) pend.add(m.target);
+    if(!raf) raf = requestAnimationFrame(() => { raf = 0; const p = pend; pend = new Set(); obs.disconnect(); p.forEach(link); obs.observe(document.body, {childList:true, subtree:true}); }); });
+  obs.observe(document.body, {childList:true, subtree:true});
 })();
 </script>
