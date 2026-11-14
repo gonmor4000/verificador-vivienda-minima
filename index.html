@@ -117,24 +117,28 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
 .seg button.on{background:var(--brick);color:#fff}
 .pj-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:-4px 0 12px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
 .pj-bar .seg button{padding:6px 10px}
+.v3-etlbl{position:absolute;top:10px;left:10px;z-index:2;pointer-events:none;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:5px 9px;font-size:12.5px;max-width:calc(100% - 20px)}
+.v3-etlbl b{color:var(--brick)}
 .pj-bar.off .seg{opacity:.45}
 .pj-cap{margin:2px 0 6px;font-size:13px;font-weight:600;color:var(--brick)}
 .pj-casco svg{filter:grayscale(1) contrast(1.05)}
 .pj-fut{opacity:.28;outline:2px dashed var(--line);outline-offset:4px}
-.et-line{display:flex;width:100%;margin-top:12px;border:1px solid var(--line);border-radius:6px;overflow:hidden;font-size:12px}
-.et-line > div{min-width:0;padding:6px 6px;border-right:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.et-line > div:last-child{border-right:0}
-.et-line .sv{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(127,127,127,.12) 6px 12px)}
-.et-line .ob{background:var(--brick);color:#fff}
-.et-card .et-h{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.et-line{display:grid;grid-template-columns:minmax(150px,auto) 1fr;gap:8px 12px;align-items:center;margin-top:14px;font-size:13px}
+.et-line .lb b{display:block}
+.et-line .lb span{color:var(--muted);font-size:12px}
+.et-line .bar{display:flex;height:22px;border:1px solid var(--line);border-radius:5px;overflow:hidden;min-width:0}
+.et-line .sv{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(127,127,127,.18) 6px 12px)}
+.et-line .ob{background:var(--brick)}
+.et-line .gap{background:transparent}
+.et-card .et-h{display:flex;flex-direction:column;align-items:flex-start;gap:4px}
 .et-card .et-h h2{margin:0}
 .et-card .et-c{font-weight:700;font-size:18px}
-.et-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:8px}
+.et-cols{display:grid;grid-template-columns:1fr;gap:14px;margin-top:10px;max-width:760px}
 .et-cols h3{font-size:13px;margin:0 0 4px}
 .et-cols ul{margin:0;padding-left:18px}
 .et-cols li{margin:2px 0}
-.et-t td.n{white-space:nowrap}
-.et-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.et-t{width:100%}.et-t td{white-space:normal}.et-t td.n{white-space:nowrap;width:1%}
+.et-opts{display:grid;grid-template-columns:1fr;gap:12px;max-width:760px}
 .et-opts > div{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
 .et-opts h3{margin:0 0 4px;font-size:14px}
 .et-opts p{margin:4px 0;font-size:13px}
@@ -234,8 +238,10 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
       <label class="v3-chk"><input type="checkbox" id="v3-techo"> Quitar techos</label>
       <label class="v3-chk"><input type="checkbox" id="v3-p1"> Solo el 1.er piso</label>
       <button type="button" id="v3-fly" aria-pressed="false">Modo dron</button>
+      <div class="seg" role="group" aria-label="Etapa que se ve en el 3D" id="v3-et"><button type="button" data-v3et="0">Sin etapas</button><button type="button" data-v3et="1">Etapa 1</button><button type="button" data-v3et="2">Etapa 2</button><button type="button" data-v3et="3">Etapa 3</button><button type="button" data-v3et="4">Etapa 4</button><button type="button" data-v3et="5">Etapa 5</button></div>
     </div>
-    <div id="box3d" class="box3d"><p class="hint" id="v3-msg" style="padding:16px">Cargando el visor 3D…</p></div>
+    <div style="position:relative"><div id="v3-etlbl" class="v3-etlbl"></div>
+    <div id="box3d" class="box3d"><p class="hint" id="v3-msg" style="padding:16px">Cargando el visor 3D…</p></div></div>
     <div class="legend" style="margin-top:8px">
       <span><i class="sw" style="background:#e9e2d6;outline:1px solid #8c8478"></i>Muro de ladrillo</span>
       <span><i class="sw" style="background:#a9a49c"></i>Columna y losa de concreto</span>
@@ -455,6 +461,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Pestaña <b>Etapas</b> ordenada en vertical: línea de tiempo con una fila por etapa (ahorro y obra sobre los mismos años) y cada etapa en una columna (qué incluye, qué queda para después y su tabla de costos completa, que antes se cortaba). En el <b>3D</b>, botones de etapa (sin etapas, 1 a 5) en la barra del visor y un rótulo en la vista que dice qué etapa estás viendo.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Escalera automática</b> (nueva opción por defecto): prueba la de un tramo, en U, en L y de caracol y usa la primera que entra en el patio. Si eliges una que no entra, se usa otra que sí y la verificación lo dice. En planta escalonada, el tramo puede bajar por el <b>patio del escalón</b>, pegado al muro del eje B, y casi no ocupa el retiro posterior. Si ninguna entra, la verificación dice cuánto patio pide cada una y las salidas: más patio, un escalón más hondo o la escalera en el retiro frontal (A.010 art. 8.3 l).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: <b>plantas PREVI redibujadas en detalle</b> en 10 proyectos (Frías, Arnao, Stirling, Svenssons, Atelier 5, Ohl, Correa, Kikutake-Maki-Kurokawa y la propuesta española): muros con sus vanos, muebles, números de recinto con su leyenda, patios con su forma real, vacíos marcados con X y escala gráfica de 2 m. Todas las plantas de una ficha a la misma escala. Son redibujos propios revisados contra los planos de las fuentes.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Nueva pestaña <b>Etapas</b> y botón <b>«Proyección en el tiempo»</b>. La casa se construye en 5 etapas: 1 casco habitable (estructura, baño y cocina con instalaciones, sin acabados), 2 acabados del 1.er piso, 3 casco del 2.º piso con escalera, 4 acabados del 2.º piso, fachada y azotea, y 5 diversificación (departamento independiente, tienda o 3.er piso, con lo que pide la norma). Cada etapa dice qué incluye, su costo por partida calculado con la casa del plano y los meses de ahorro y de obra. Con el botón, la planta y el 3D muestran la casa al final de cada etapa (ladrillo visto, fierros de empalme, 2.º piso por construir). Materiales usa la misma numeración (casco del 2.º piso = etapa 3).</span></li>
@@ -2613,8 +2620,11 @@ function etapas(r){
     ['Tiempo total', `${f1(yrs)} <small>años con S/ ${nf(etAhorro)} al mes</small>`],
     ['Por m²', `${soles(tot/(A1 + A2))} <small>con mano de obra</small>`]
   ].map(([a,b])=>`<div class="kpi"><div class="k">${a}</div><div class="v">${b}</div></div>`).join('');
-  el('et-line').innerHTML = [1,2,3,4].map(k=>`<div class="sv" style="flex:${E[k].sav}" title="Etapa ${k}: ${E[k].sav} meses de ahorro">Ahorro ${k} · ${E[k].sav} m</div><div class="ob" style="flex:${Math.max(E[k].ob, 1.5)}" title="Etapa ${k}: ${f1(E[k].ob)} meses de obra">Obra ${k}</div>`).join('');
-  el('et-note').innerHTML = `Rayado: meses ahorrando para la etapa; color: meses de obra. Total: unos <b>${Math.round(yrs*2)/2} años</b> desde que se tiene el lote, frente a los 16 años típicos de la autoconstrucción en Lima (GRADE).` + (has2 ? '' : ` <b>Tu plano no tiene 2.º piso</b>: las etapas 3 y 4 suponen un 2.º piso del mismo tamaño con 2 dormitorios y baño. Elige dormitorios arriba en la pestaña Diseño para calcularlas con tu plano.`) + ` La pestaña Diseño calcula la casa a S/ ${nf(r.v.cm2)}/m², un precio de constructora con gastos generales; aquí se suma partida por partida.`;
+  { let t0 = 0; const Tt = mSav + mOb;
+    el('et-line').innerHTML = [1,2,3,4].map(k=>{ const a = E[k].sav, o = E[k].ob, pre = t0; t0 += a + o;
+      const y0 = pre/12, y1 = t0/12;
+      return `<div class="lb"><b>Etapa ${k} · ${ET_N[k]}</b><span>${a} meses de ahorro + ${f1(o)} de obra · año ${f1(y0)} a ${f1(y1)}</span></div><div class="bar" title="Etapa ${k}"><div class="gap" style="flex:${pre}"></div><div class="sv" style="flex:${a}"></div><div class="ob" style="flex:${o}"></div><div class="gap" style="flex:${Tt - t0}"></div></div>`; }).join(''); }
+  el('et-note').innerHTML = `Cada fila es una etapa sobre la misma línea de tiempo: rayado, meses ahorrando; color, meses de obra. Total: unos <b>${Math.round(yrs*2)/2} años</b> desde que se tiene el lote, frente a los 16 años típicos de la autoconstrucción en Lima (GRADE).` + (has2 ? '' : ` <b>Tu plano no tiene 2.º piso</b>: las etapas 3 y 4 suponen un 2.º piso del mismo tamaño con 2 dormitorios y baño. Elige dormitorios arriba en la pestaña Diseño para calcularlas con tu plano.`) + ` La pestaña Diseño calcula la casa a S/ ${nf(r.v.cm2)}/m², un precio de constructora con gastos generales; aquí se suma partida por partida.`;
   box.innerHTML = [1,2,3,4].map(k=>{ const s = E[k];
     return `<section class="card et-card"><div class="et-h"><h2>Etapa ${k} · ${ET_N[k]}</h2><span class="et-c">${soles(s.cost)}</span><span class="hint">${s.sav} meses de ahorro · unos ${f1(s.ob)} meses de obra · ${f1(s.A)} m²${(k>2 && !has2)?' supuestos':''}</span><button type="button" data-pjgo="${k}">Ver en planta y 3D</button></div>
       <p class="hint" style="margin:6px 0 0">${s.why}</p>
@@ -2645,6 +2655,8 @@ function applyProj(r){
   const on = pj.on, st = pj.st, has2 = r.gross2 > 0;
   el('pj-on').checked = on; el('pj-bar').classList.toggle('off', !on);
   document.querySelectorAll('#pj-seg button').forEach(b=>{ const k = +b.dataset.pj; b.classList.toggle('on', on && k===st); b.setAttribute('aria-pressed', on && k===st); });
+  document.querySelectorAll('#v3-et button').forEach(b=>{ const k = +b.dataset.v3et, sel = on ? k===st : k===0; b.classList.toggle('on', sel); b.setAttribute('aria-pressed', sel); });
+  { const lb = el('v3-etlbl'); if(lb) lb.innerHTML = on ? `<b>Etapa ${st}</b> · ${ET_N[st]}` : '<b>Casa terminada</b> · sin etapas'; }
   const b1 = el('svgbox'), b2 = el('svgbox2'), c1 = el('pj-cap1'), c2 = el('pj-cap2');
   b1.classList.toggle('pj-casco', on && st===1);
   b2.classList.toggle('pj-casco', on && st===3);
@@ -2657,6 +2669,7 @@ function applyProj(r){
 }
 el('pj-on').addEventListener('change', ()=> setProj(el('pj-on').checked));
 document.querySelectorAll('#pj-seg button').forEach(b=> b.addEventListener('click', ()=> setProj(true, +b.dataset.pj)));
+document.querySelectorAll('#v3-et button').forEach(b=> b.addEventListener('click', ()=>{ const k = +b.dataset.v3et; if(k) setProj(true, k); else setProj(false); }));
 el('et-ahorro').addEventListener('change', ()=>{ const x = parseFloat(el('et-ahorro').value); if(isFinite(x) && x >= 100){ etAhorro = x; try { localStorage.setItem('vvm-ahorro', String(x)); } catch(e){} } if(lastR) etapas(lastR); });
 // 3D: material de cada caja según la etapa (casco = ladrillo visto y piso de cemento)
 function pjBox(b, H2, r){
@@ -3125,7 +3138,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14k';
+const APP_VERSION = '2026-11-14l';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
