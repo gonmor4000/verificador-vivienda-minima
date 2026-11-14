@@ -548,6 +548,30 @@ function plantaHTML(id){
   <p class="cap">${esc(P.nota)} Redibujo propio de la distribución, a partir de ${esc(P.cita)}; no es el plano original.</p>`;
 }
 
+// ---------- Planos originales: página exacta del PDF de la fuente (se abre en la web de la fuente, no se copia aquí) ----------
+const ORIG = {
+  i1:[['torres',5,'Casa Zamora: planta 1978 y plantas 2003, a 1:250'],['gutierrez',11,'Fig. 8: láminas del concurso'],['socks',0,'Láminas del concurso (plantas, axonometrías, alzados)']],
+  i2:[['gutierrez',17,'Fig. 18 y 19: lámina del concurso y plantas redibujadas']],
+  i3:[['gutierrez',11,'Fig. 10: lámina del concurso con plantas de las casas']],
+  i4:[['gutierrez',13,'Fig. 12 y 13: plantas de la casa en hilera y de fin de hilera'],['gutierrez',12,'Fig. 11: plano del conjunto'],['lucas',8,'Fig. 8: estado original']],
+  i5:[['gutierrez',10,'Fig. 7: lámina del concurso con tipos A1 a A6']],
+  i6:[['lucas',7,'Fig. 7: planta de la casa (9.60 × 7.20 m)'],['gutierrez',9,'Fig. 2: lámina del concurso']],
+  i7:[['gutierrez',16,'Fig. 16 y 17: lámina del concurso y plantas redibujadas'],['correaF',0,'Dibujos del archivo de Correa']],
+  i8:[['yi',4,'Planta tipo A-2 acotada a 1/50 y etapas de crecimiento'],['gutierrez',15,'Fig. 15: plantas redibujadas'],['gutierrez',14,'Fig. 14: lámina del concurso']],
+  i9:[['upm',34,'Reconstrucción de las plantas bajas P_1B y G_1B'],['upm',35,'Plantas altas 2A y 2E'],['upm',37,'Plantas G_1A y G_1B\''],['upm',41,'Fig. 2.21: planta baja construida (P5 a P8)'],['upm',49,'Fig. 3.5: planta baja del tipo G'],['gutierrez',10,'Fig. 6: lámina del concurso']],
+  i10:[['gutierrez',10,'Fig. 5: lámina del concurso']],
+  i11:[['gutierrez',11,'Fig. 9: lámina del concurso con plantas'],['lucas',8,'Detalles y secciones']],
+  i12:[['gutierrez',9,'Fig. 4: lámina del concurso']],
+  i13:[['gutierrez',9,'Fig. 3: lámina del concurso']],
+  p7:[['torres',7,'Casa Frías: plantas 1978 y 2003, a 1:250']],
+  p12:[['torres',6,'Casa Arnao: plantas 1978 y 2003, a 1:250']]
+};
+function origLinks(id){
+  return (ORIG[id]||[]).map(([k,pg,d])=>{ const S = SRC[k]; if(!S) return '';
+    const url = S.u + (pg && /\.pdf|download/.test(S.u) ? '#page='+pg : '');
+    return `<a class="main" href="${url}" target="_blank" rel="noopener">Ver plano original${pg?` · pág. ${pg}`:''} ↗<small>${esc(d)} — ${esc(S.t.split(/[.«]/)[0])}</small></a>`; }).join('');
+}
+
 function drawEvo(evo){
   const p = evo.p, W = 420, H = 170, l = 36, b = 30, t = 14, r = 8;
   const max = Math.ceil(Math.max(...p.map(x=>x[1]))/50)*50;
@@ -620,7 +644,7 @@ const dlg = $('#ficha');
 function openF(id){
   const r = R.find(x=>x.id===id); if(!r) return;
   const rows = [['Grupo', GRP[r.g].n], ['Código', r.cod], ['Año', r.y], ['Autores', r.a], ['País', r.pais||'Perú'], ['Estado', EST[r.est] + (r.win?' · premiado':'')], ['Sistema', r.sist]].concat(r.datos||[]);
-  const links = [`<a class="main" href="${gimg(r.q)}" target="_blank" rel="noopener">Ver planos e imágenes (búsqueda ya preparada) ↗<small>Google Imágenes: «${esc(r.q)}»</small></a>`]
+  const links = [origLinks(r.id), `<a class="main" href="${gimg(r.q)}" target="_blank" rel="noopener">Ver planos e imágenes (búsqueda ya preparada) ↗<small>Google Imágenes: «${esc(r.q)}»</small></a>`]
     .concat(r.f.map(k=>SRC[k] ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${esc(SRC[k].t)} ↗${SRC[k].nota?`<small>${esc(SRC[k].nota)}</small>`:''}</a>` : ''));
   const E = r.esq && ESQ[r.esq];
   dlg.innerHTML = `<div class="f-head"><div><span class="hint" style="font-family:var(--f-mono)">${esc(r.cod)} · ${esc(GRP[r.g].n)}</span><h2 id="f-title">${esc(r.t)}</h2><span class="who">${esc(r.a)}</span></div><button type="button" id="f-close" aria-label="Cerrar">Cerrar ✕</button></div>
@@ -629,7 +653,7 @@ function openF(id){
     ${E ? `<h3>Esquema de la idea</h3><div class="fig-big">${drawEsq(r.esq,true)}</div><p class="cap">${esc(E.caption)} Redibujo libre${E.dims?' (medidas de la fuente)':', sin escala'}; no es el plano original.</p>
       <div class="legend"><span><i style="background:var(--built)"></i>construido</span><span><i style="background:var(--patio)"></i>patio</span><span><i style="background:var(--shop)"></i>comercio / servicio</span><span><i style="background:var(--grow)"></i>crecimiento</span></div>` : ''}
     ${r.evo ? `<h3>Evolución en el tiempo</h3><div class="evo">${drawEvo(r.evo)}</div><p class="cap">${esc(r.evo.nota)}</p>` : ''}
-    <h3>Dónde ver los planos</h3><div class="links">${links.join('')}</div>
+    <h3>Planos originales y fuentes</h3><p class="cap" style="margin-top:0">Los botones «Ver plano original» abren el PDF de la fuente en la página exacta (si el sitio pide comprobar que eres una persona, acepta y vuelve a pulsar).</p><div class="links">${links.join('')}</div>
   </div><div>
     <h3>Ficha</h3><table class="dat">${rows.map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>
     <h3>Idea</h3><p>${esc(r.idea)}</p>
