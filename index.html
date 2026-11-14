@@ -115,6 +115,29 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
 .seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
 .seg button{border:0;border-radius:0;background:none;padding:6px 14px;font-weight:600;color:var(--muted)}
 .seg button.on{background:var(--brick);color:#fff}
+.pj-bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:-4px 0 12px;padding:8px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel)}
+.pj-bar .seg button{padding:6px 10px}
+.pj-bar.off .seg{opacity:.45}
+.pj-cap{margin:2px 0 6px;font-size:13px;font-weight:600;color:var(--brick)}
+.pj-casco svg{filter:grayscale(1) contrast(1.05)}
+.pj-fut{opacity:.28;outline:2px dashed var(--line);outline-offset:4px}
+.et-line{display:flex;width:100%;margin-top:12px;border:1px solid var(--line);border-radius:6px;overflow:hidden;font-size:12px}
+.et-line > div{min-width:0;padding:6px 6px;border-right:1px solid var(--line);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.et-line > div:last-child{border-right:0}
+.et-line .sv{background:repeating-linear-gradient(135deg,transparent 0 6px,rgba(127,127,127,.12) 6px 12px)}
+.et-line .ob{background:var(--brick);color:#fff}
+.et-card .et-h{display:flex;flex-wrap:wrap;gap:6px 14px;align-items:baseline}
+.et-card .et-h h2{margin:0}
+.et-card .et-c{font-weight:700;font-size:18px}
+.et-cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px;margin-top:8px}
+.et-cols h3{font-size:13px;margin:0 0 4px}
+.et-cols ul{margin:0;padding-left:18px}
+.et-cols li{margin:2px 0}
+.et-t td.n{white-space:nowrap}
+.et-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.et-opts > div{border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+.et-opts h3{margin:0 0 4px;font-size:14px}
+.et-opts p{margin:4px 0;font-size:13px}
 .ca-wrap{overflow-x:auto}
 .ca{width:100%;border-collapse:collapse;font-size:12.5px;min-width:760px}
 .ca th{font-weight:600;text-align:left;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:bottom}
@@ -192,10 +215,16 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <button type="button" role="tab" id="tab-btn-3d" aria-selected="false">3D</button>
     <button type="button" role="tab" id="tab-btn-are" aria-selected="false">Cuadro de áreas</button>
     <button type="button" role="tab" id="tab-btn-mat" aria-selected="false">Materiales</button>
+    <button type="button" role="tab" id="tab-btn-eta" aria-selected="false">Etapas</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
     <button type="button" role="tab" id="tab-btn-rne" aria-selected="false">RNE</button>
     <button type="button" role="tab" id="tab-btn-cam" aria-selected="false">Cambios</button>
   </nav>
+  <div class="pj-bar" id="pj-bar">
+    <label class="v3-chk"><input type="checkbox" id="pj-on"> <b>Proyección en el tiempo</b></label>
+    <div class="seg" role="group" aria-label="Etapa de la casa" id="pj-seg"><button type="button" data-pj="1">1 Casco</button><button type="button" data-pj="2">2 Acabados</button><button type="button" data-pj="3">3 2.º piso</button><button type="button" data-pj="4">4 Terminada</button><button type="button" data-pj="5">5 Crece</button></div>
+    <span class="hint" id="pj-txt">Actívala para ver la casa como queda al final de cada etapa, en la planta y en el 3D.</span>
+  </div>
 
   <section id="tab-3d" class="card" hidden aria-label="Vista 3D">
     <h2>Vista 3D de la casa generada</h2>
@@ -213,6 +242,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
       <span><i class="sw" style="background:#9fc3d6"></i>Vidrio</span>
       <span><i class="sw" style="background:#c9dcc4"></i>Retiro y patio</span>
       <span><i class="sw" style="background:#c47a55"></i>Escalera</span>
+      <span><i class="sw" style="background:#b8664a"></i>Ladrillo visto (casco, con la proyección en el tiempo)</span>
     </div>
   </section>
 
@@ -271,7 +301,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
   <div id="tab-mat" class="areas" hidden aria-label="Materiales por etapa">
     <section class="card">
       <h2>Materiales por etapa</h2>
-      <p class="hint" style="margin-top:0">Metrado de la casa del plano actual, ordenado como se construye: primero el 1.er piso por partes y después el 2.º piso. Sirve para pedir a la ferretería lo que toca en cada compra. Incluye el desperdicio habitual (cemento y agregados 5 %, acero 7 %, ladrillos 3 %, bloques 5 %). No incluye encofrado, tarrajeo, pisos, instalaciones ni mano de obra.</p>
+      <p class="hint" style="margin-top:0">Metrado de la casa del plano actual, ordenado como se construye: primero el casco del 1.er piso por partes (etapa 1) y después el del 2.º piso (etapa 3). Los acabados (etapas 2 y 4) se presupuestan en la pestaña <b>Etapas</b>. Sirve para pedir a la ferretería lo que toca en cada compra. Incluye el desperdicio habitual (cemento y agregados 5 %, acero 7 %, ladrillos 3 %, bloques 5 %). No incluye encofrado, tarrajeo, pisos, instalaciones ni mano de obra.</p>
       <div class="kpis" id="mat-kpis"></div>
     </section>
     <div id="mat-etapas"></div>
@@ -292,6 +322,26 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
         <li>El <b>2.º piso</b> repite el 1.er piso en proporción a su área techada, más la escalera de concreto con su descanso.</li>
         <li>Es un metrado de anteproyecto para presupuestar y comprar por etapas; el definitivo sale de los planos de estructuras firmados.</li>
       </ol>
+    </section>
+  </div>
+
+  <div id="tab-eta" class="areas" hidden aria-label="Etapas de crecimiento">
+    <section class="card">
+      <h2>Etapas de crecimiento de la casa</h2>
+      <p class="hint" style="margin-top:0">Cómo se construye esta casa por partes, como lo hacen la mayoría de las familias en el Perú: primero lo que da seguridad y salud (estructura, agua y desagüe), después el confort, y al final lo que el vecino puede tapar (fachada y muros laterales). Los montos se calculan con <b>la casa que tienes en la pestaña Diseño</b> y con los precios de la pestaña Materiales; incluyen mano de obra. Son estimaciones de anteproyecto, no un presupuesto.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:4px 0 12px"><label for="et-ahorro" class="hint">Ahorro de la familia al mes (S/)</label><input type="number" id="et-ahorro" min="100" step="50" style="width:110px"><span class="hint">Por defecto S/ 1 550, lo que una familia que autoconstruye en Lima puede pagar al mes (GRADE, 2024).</span></div>
+      <div class="kpis" id="et-kpis"></div>
+      <div id="et-line" class="et-line" aria-label="Línea de tiempo"></div>
+      <p class="hint" id="et-note" style="margin:6px 0 0"></p>
+    </section>
+    <div id="et-cards"></div>
+    <section class="card"><h2>Etapa 5 · Diversificación</h2>
+      <p class="hint" style="margin-top:0">Cuando la casa ya está terminada, deja de ser solo la casa de una familia: se parte para alquilar o para un hijo que forma su hogar, se abre un negocio o se sube otro piso. Es lo que pasó en PREVI (Lima) en 40 años, donde varias casas se volvieron multifamiliares. No tiene un costo fijo: depende de la opción. Conviene <b>decidirlo desde la etapa 1</b>, porque los cimientos, las columnas y la escalera ya tienen que estar pensados para eso.</p>
+      <div class="et-opts" id="et-opts"></div>
+    </section>
+    <section class="card"><h2>Cómo se calcula</h2>
+      <ol class="how" id="et-how"></ol>
+      <p class="hint" style="margin:8px 0 0">Fuentes: <a href="https://grade.org.pe/wp-content/uploads/GRADEADI_AUTOCONSTRUCCION.pdf" target="_blank" rel="noopener">GRADE y ADI Perú, «Cuantificación y caracterización de la autoconstrucción en el Perú» (2024)</a>: ahorro de S/ 1 550 al mes, S/ 146 000 en 22 etapas y 16 años. <a href="https://revistas.pucp.edu.pe/index.php/arquitectura/article/download/22291/21559" target="_blank" rel="noopener">D. Torres, «PREVI Lima y la experiencia del tiempo» (PUCP)</a>: instalación, densificación, consolidación y diversificación. <a href="https://arquitecturaviva.com/obras/viviendas-quinta-monroy" target="_blank" rel="noopener">Elemental, Quinta Monroy (Iquique, 2004)</a>: se entrega «la mitad difícil» (estructura, baño, cocina, escalera) y la familia hace el resto.</p>
     </section>
   </div>
 
@@ -405,6 +455,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Nueva pestaña <b>Etapas</b> y botón <b>«Proyección en el tiempo»</b>. La casa se construye en 5 etapas: 1 casco habitable (estructura, baño y cocina con instalaciones, sin acabados), 2 acabados del 1.er piso, 3 casco del 2.º piso con escalera, 4 acabados del 2.º piso, fachada y azotea, y 5 diversificación (departamento independiente, tienda o 3.er piso, con lo que pide la norma). Cada etapa dice qué incluye, su costo por partida calculado con la casa del plano y los meses de ahorro y de obra. Con el botón, la planta y el 3D muestran la casa al final de cada etapa (ladrillo visto, fierros de empalme, 2.º piso por construir). Materiales usa la misma numeración (casco del 2.º piso = etapa 3).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevo tablón de <b>Preguntas de normativa</b> (preguntas.html): las dudas técnicas que ya salieron (escalera en los retiros, pisos, PMR, anchos de escalera, bifamiliar, vigencia, EM.110), cada una con su respuesta y el artículo enlazado. Enlazado desde la pestaña RNE y el RNE consultable.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: botones <b>«Ver plano original»</b> en las fichas de PREVI que abren el PDF de la fuente en la página exacta del plano: láminas del concurso de los 13 equipos internacionales y plantas de 1978 y 2003 de las casas Zamora, Arnao y Frías.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: <b>plantas interiores de 9 proyectos PREVI</b>, medidas con la escala de los planos publicados. Se suman Atelier 5, Correa, Svenssons y la propuesta española (tipos P y G), y la <b>evolución real de tres casas de 1978 a 2003</b>, piso por piso: Stirling (casa Zamora), Morales-Montagne (casa Arnao) y Miró Quesada-Williams-Núñez (casa Frías). Corregido qué crecimiento en m² corresponde a cada casa (Arnao: de 61 a 172 m²; Frías: de 92 a 191 m²).</span></li>
@@ -496,10 +547,11 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     </section>
 
     <section class="card plan" aria-label="Plano">
-      <h2>Planta en el lote, etapa 1</h2>
+      <h2>Planta en el lote, etapas 1 y 2</h2>
+      <p class="pj-cap" id="pj-cap1" hidden></p>
       <div id="svgbox"></div>
       <p class="hint" style="margin:0">Haz clic en una cota entre ejes (o llega a ella con Tab y pulsa Enter) para escribir su medida; las demás cotas se mantienen.</p>
-      <div id="p2" hidden><h2 style="margin-top:10px">Planta del 2.º piso, etapa 2</h2><div id="svgbox2"></div></div>
+      <div id="p2" hidden><h2 style="margin-top:10px">Planta del 2.º piso, etapas 3 y 4</h2><p class="pj-cap" id="pj-cap2" hidden></p><div id="svgbox2"></div></div>
       <div class="legend">
         <span><i class="sw" style="background:var(--wall)"></i>Muro y columna</span>
         <span><i class="sw" style="background:var(--wet)"></i>Núcleo húmedo</span>
@@ -1376,7 +1428,7 @@ function etapa2(v, rooms, W, D, hL, add, gross){
   const patio = v.fondo - v.rf - D - T;
   let gross2 = 0;
   if(nd2 > 0){
-    const G = 'Etapa 2';
+    const G = 'Etapa 3 · 2.º piso';
     const terA = Object.values(up.rooms).filter(q=>q.ter).reduce((s,q)=>s+(q.x1-q.x0)*(q.y1-q.y0),0);
     gross2 = gross - terA + (v.vol && v.rf >= 0.5 ? W*0.50 : 0);
     const fits = nd2 <= slots.length;
@@ -1872,7 +1924,8 @@ function build3D(r){
   d3.scene.background = new THREE.Color((css.getPropertyValue('--bg') || '#f4f2ee').trim() || '#f4f2ee');
   const mat = (c, o={}) => new THREE.MeshLambertMaterial(Object.assign({color:c}, o));
   const M = {wall: mat(0xe9e2d6), tab: mat(0xf1ece4), conc: mat(0xa9a49c), slab: mat(0xc9c3b9), floor: mat(0xf7f4ef), glass: mat(0x9fc3d6, {transparent:true, opacity:0.45, depthWrite:false}),
-    green: mat(0xc9dcc4), walk: mat(0xd2cfca), street: mat(0x9a9894), stair: mat(0xc47a55), rail: mat(0x55504a), wet: mat(0xdfe8ef)};
+    green: mat(0xc9dcc4), walk: mat(0xd2cfca), street: mat(0x9a9894), stair: mat(0xc47a55), rail: mat(0x55504a), wet: mat(0xdfe8ef),
+    brick: mat(0xb8664a), cem: mat(0xbdb8b0), rebar: mat(0x4a3428)};
   const edgeM = new THREE.LineBasicMaterial({color:0x3a3530, transparent:true, opacity:0.45});
   const ox = v.med ? 0 : T/2, oy = v.rf + T/2;
   // caja en coordenadas de planta: x a lo ancho, y hacia el fondo desde el eje de fachada, z altura
@@ -1883,7 +1936,7 @@ function build3D(r){
     if(edges){ const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), edgeM); l.position.copy(me.position); grp.add(l); }
   };
   const e = r.hL || 0.20, H2 = H + e;
-  const built2 = r.gross2 > 0 && r.up && !el('v3-p1').checked;
+  const built2 = r.gross2 > 0 && r.up && !el('v3-p1').checked && !(pj.on && pj.st < 3);
   const noRoof = el('v3-techo').checked;
   const vo = v.vol && v.rf >= 0.5 && r.gross2 > 0 ? 0.50 : 0;
   // lote, retiros, vereda y calle
@@ -1894,7 +1947,7 @@ function build3D(r){
   lotBox(-1.5, L+1.5, -vd-6, -vd, -0.12, -0.06, M.street);
   const lotLine = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([[0,0],[L,0],[L,F],[0,F]].map(([x,y])=>new THREE.Vector3(x, 0.005, -y))), new THREE.LineDashedMaterial({color:0x6b655c, dashSize:0.4, gapSize:0.2}));
   lotLine.computeLineDistances(); grp.add(lotLine);
-  houseBoxes(r, {built2, noRoof}).forEach(b=>{
+  houseBoxes(r, {built2, noRoof}).map(b=>pjBox(b, H2, r)).filter(Boolean).concat(pjRebar(r, built2, H2)).forEach(b=>{
     if(!b.rot) return box(b.x0, b.x1, b.y0, b.y1, b.z0, b.z1, M[b.m], b.e);
     const g = new THREE.BoxGeometry(b.rot.len, b.z1-b.z0, b.rot.wid), me = new THREE.Mesh(g, M[b.m]);
     me.position.set(ox + b.rot.cx, (b.z0+b.z1)/2, -(oy + b.rot.cy)); me.rotation.y = b.rot.ang; grp.add(me);
@@ -2262,7 +2315,7 @@ function cuadro(r){
   const nD = v.nd + v.nd2;
   addV('Obligatorio (RNE y VIS)', totPlan >= 35 ? 'ok':'bad', 'Área techada VIS', `El plano tiene <b>${f1(totPlan)} m²</b> frente a 35 m² (Anexo 1 VIS). El programa de referencia no cambia esta exigencia.`);
   addV('Obligatorio (RNE y VIS)', nD >= 2 ? 'ok':'warn', 'Dormitorios VIS', nD >= 2 ? `<b>${nD}</b> dormitorios frente a 2.` : 'La VIS con crecimiento pide 2 dormitorios: el comedor-estudio se puede cerrar luego.');
-  const planBad = r.checks.filter(c=>c.st==='bad' && /Norma|Antropometría|Iluminación|Ventilación|Circulación|Etapa 2/.test(c.g));
+  const planBad = r.checks.filter(c=>c.st==='bad' && /Norma|Antropometría|Iluminación|Ventilación|Circulación|Etapa 3/.test(c.g));
   addV('Obligatorio (RNE y VIS)', planBad.length ? 'bad':'ok', 'Iluminación, ventilación, alturas, pasajes y escalera', planBad.length ? `No cumple en el plano: ${planBad.map(c=>c.t.toLowerCase()).join(', ')}. Mira la pestaña Diseño.` : 'El plano cumple A.010 art. 20, 23 y 38 y la altura libre de la A.020: son las exigencias que no se negocian con el nivel.');
   const patio = v.fondo - v.rf - r.D - T;
   const ext = P.L.filter(x=>x.ext).reduce((s,x)=>s+x.adj,0), patioA = P.Wmax*patio;
@@ -2393,7 +2446,7 @@ function materiales(r){
   P.forEach(p=>{ for(const k in p.q){ if(p.q[k] > 1e-6){ byEt[p.et][k] = (byEt[p.et][k]||0) + p.q[k]; } } });
   ets.forEach(et=>{ for(const k in byEt[et]){ byEt[et][k] = mRound(k, byEt[et][k]); tot[k] = (tot[k]||0) + byEt[et][k]; } });
   const cost = q => Object.keys(q).reduce((s,k)=>s + mRound(k, q[k])*mPrice(k), 0);
-  const ETN = {1:'Etapa 1 · 1.er piso', 2:'Etapa 2 · 2.º piso'};
+  const ETN = {1:'Etapa 1 · casco del 1.er piso', 2:'Etapa 3 · casco del 2.º piso'}, ETK = {1:1, 2:3};
   const costEt = {}; ets.forEach(et=> costEt[et] = cost(byEt[et]));
   const costT = ets.reduce((s,et)=>s+costEt[et],0);
   const kgT = P.reduce((s,p)=>s+p.kg,0);
@@ -2409,12 +2462,12 @@ function materiales(r){
   ets.forEach(et=>{
     h += `<section class="card"><h2>${ETN[et]} <small class="hint" style="font-weight:400">· materiales ${soles(costEt[et])}</small></h2>`;
     h += `<div class="mat-grid">` + P.filter(p=>p.et===et).map(p=>`<div class="mat-p"><h3>${p.id} ${p.n} <span class="hint">${soles(cost(p.q))}</span></h3><p class="hint">${p.notas.join(' · ')}</p><table class="ca mat-t"><tbody>${MAT_ORD.filter(k=>p.q[k] > 1e-6).map(k=>row(k, p.q[k])).join('')}</tbody></table></div>`).join('') + `</div>`;
-    if(et===1 && ets.length===1) h += `<p class="hint" style="margin:10px 0 0">Sin 2.º piso en este plano. Si eliges dormitorios arriba en la pestaña Diseño, aquí aparece la etapa 2. Las columnas del 1.er piso ya dejan acero de empalme para crecer.</p>`;
+    if(et===1 && ets.length===1) h += `<p class="hint" style="margin:10px 0 0">Sin 2.º piso en este plano. Si eliges dormitorios arriba en la pestaña Diseño, aquí aparece la etapa 3 (casco del 2.º piso). Las columnas del 1.er piso ya dejan acero de empalme para crecer.</p>`;
     h += `</section>`;
   });
   el('mat-etapas').innerHTML = h;
   const ks = MAT_ORD.filter(k=>tot[k] > 0);
-  el('mat-tbl').innerHTML = `<thead><tr><th>Material</th><th>Unidad</th>${ets.map(et=>`<th class="n">Etapa ${et}</th>`).join('')}${ets.length>1?'<th class="n">Total</th>':''}<th class="n">Precio S/</th><th class="n">Subtotal</th></tr></thead><tbody>` +
+  el('mat-tbl').innerHTML = `<thead><tr><th>Material</th><th>Unidad</th>${ets.map(et=>`<th class="n">Etapa ${ETK[et]}</th>`).join('')}${ets.length>1?'<th class="n">Total</th>':''}<th class="n">Precio S/</th><th class="n">Subtotal</th></tr></thead><tbody>` +
     ks.map(k=>`<tr><td>${MAT[k].n}</td><td>${MAT[k].u}</td>${ets.map(et=>`<td class="n">${byEt[et][k] ? mFmt(k, byEt[et][k]) : '—'}</td>`).join('')}${ets.length>1?`<td class="n">${mFmt(k, tot[k])}</td>`:''}<td class="n"><input type="number" class="mat-pr" data-k="${k}" min="0" step="0.1" value="${mPrice(k)}" aria-label="Precio de ${MAT[k].n}"></td><td class="n">${soles(tot[k]*mPrice(k))}</td></tr>`).join('') +
     `<tr class="tot"><td colspan="${2+ets.length+(ets.length>1?1:0)+1}">Total de materiales</td><td class="n">${soles(costT)}</td></tr></tbody>`;
   el('mat-tbl').querySelectorAll('.mat-pr').forEach(i=> i.addEventListener('change', ()=>{
@@ -2433,6 +2486,152 @@ el('mat-copy').addEventListener('click', ()=>{
   const fall = () => { ta.hidden = false; ta.focus(); ta.select(); let c = false; try { c = document.execCommand('copy'); } catch(e){} el('mat-msg').textContent = c ? 'Lista copiada.' : 'Selecciona el texto de abajo y cópialo.'; };
   if(navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastMat).then(ok, fall); else fall();
 });
+
+// ---------- Etapas de crecimiento y proyección de la casa en el tiempo ----------
+// Precios unitarios de referencia (S/, Lima 2026, con mano de obra salvo donde se dice). Supuestos de anteproyecto.
+const ET_R = {mo:0.75, bano:2800, coc:900, elec:70, carp:60, pcalle:1200, pulido:30, tarr:28, pint:10, cer:65, ench:70, enchB:18, enchC:4, puerta:550, mcoc:2000, terma:600, fach:55, azot:45, parap:120};
+const ET_N = {1:'Casco habitable', 2:'Acabados del 1.er piso', 3:'Casco del 2.º piso', 4:'Acabados del 2.º piso, fachada y azotea', 5:'Diversificación'};
+const ET_S = {1:'Casco', 2:'Acabados', 3:'2.º piso', 4:'Terminada', 5:'Crece'};
+let pj = (()=>{ try { const o = JSON.parse(localStorage.getItem('vvm-proy') || 'null'); if(o && o.st >= 1 && o.st <= 5) return {on:!!o.on, st:o.st}; } catch(e){} return {on:false, st:1}; })();
+const pjOn = () => pj.on;
+let etAhorro = (()=>{ try { const x = parseFloat(localStorage.getItem('vvm-ahorro')); return isFinite(x) && x >= 100 ? x : 1550; } catch(e){ return 1550; } })();
+const half = x => Math.max(0.5, Math.round(x*2)/2);
+function etapasCalc(r){
+  const v = r.v, R = ET_R, P = metrado(r);
+  const cP = p => Object.keys(p.q).reduce((s,k)=> s + mRound(k, p.q[k])*mPrice(k), 0);
+  const k = r.typ ? 1 : r.fl, A1 = r.gross, wall1 = r.wallNet/k, u1 = A1*(1 - (r.wallPct||10)/100);
+  const has2 = r.gross2 > 0, A2 = has2 ? r.gross2 : A1, u2 = A2*0.9, wall2 = wall1*A2/A1;
+  const m1 = P.filter(p=>p.et===1).reduce((s,p)=>s+cP(p), 0);
+  const m2 = has2 ? P.filter(p=>p.et===2).reduce((s,p)=>s+cP(p), 0) : P.filter(p=>p.id==='1.2'||p.id==='1.3').reduce((s,p)=>s+cP(p), 0) + 1000;
+  const b2 = has2 ? (r.up && Object.values(r.up.rooms).some(q=>q.wet) ? 1 : 0) : 1;
+  const nd2 = has2 ? (v.nd2 || 0) : 2, e = r.hL || 0.20;
+  const sup2 = has2 ? '' : ' (supuesto)';
+  const E = {
+    1: {A:A1, it:[
+      ['Estructura y muros: cimientos, muros, columnas, vigas y techo (materiales, como en la pestaña Materiales)', m1],
+      ['Mano de obra del casco (maestro y peón)', m1*R.mo],
+      ['Agua, desagüe y aparatos básicos del baño, la cocina y la lavandería', R.bano + R.coc],
+      ['Luz: tablero, tomacorrientes y puntos de luz empotrados', R.elec*A1],
+      ['Puerta de calle y ventanas con vidrio', R.pcalle + R.carp*A1],
+      ['Piso de cemento pulido', R.pulido*u1]],
+      inc:['Cimientos de todo el lote edificable, pensados para dos pisos', 'Muros de ladrillo King Kong, columnas, vigas y techo aligerado', 'Columnas con acero de empalme que asoma sobre el techo, para el 2.º piso', 'Baño, cocina y lavandería con agua, desagüe y luz empotrados (tubos dentro del muro y del piso)', 'Puerta de calle con chapa, ventanas con vidrio y piso de cemento pulido'],
+      no:['Tarrajeo, pintura y cerámicos', 'Puertas interiores (se usan cortinas)', 'Fachada en ladrillo visto'],
+      why:'Es «la mitad difícil» que propone Elemental: lo que una familia no puede hacer bien sola y que no se puede corregir después (estructura, agua y desagüe). Con esto la familia ya se muda y deja de pagar alquiler.',
+      ob: half(Math.max(2, A1/14))},
+    2: {A:A1, it:[
+      ['Tarrajeo de muros y cielo raso', (wall1*1.6 + u1)*R.tarr],
+      ['Pintura interior', (wall1*1.6 + u1)*R.pint],
+      ['Cerámico en pisos', u1*R.cer],
+      ['Enchape del baño y de la cocina', (R.enchB + R.enchC)*R.ench],
+      [`Puertas interiores (${v.nd + 1}) con marco y chapa`, (v.nd + 1)*R.puerta],
+      ['Mueble de cocina con lavadero y terma eléctrica', R.mcoc + R.terma]],
+      inc:['Tarrajeo y pintura por dentro', 'Cerámico en pisos, enchape del baño y de la cocina', 'Puertas de los dormitorios y del baño', 'Mueble de cocina y terma'],
+      no:['Fachada y muros laterales (el vecino puede construir más alto y taparlos)', 'Tarrajeo del techo por encima (será el piso de arriba)'],
+      why:'Se hace antes de subir porque es lo que más cambia la vida diaria (limpieza, humedad, privacidad) y cuesta menos de la mitad que el 2.º piso. Al construir arriba hay que proteger los pisos y cuidar el polvo y el agua del vaciado del techo.',
+      ob: half(Math.max(1, A1/32))},
+    3: {A:A2, it:[
+      [`Muros, columnas, vigas, techo y escalera del 2.º piso${sup2} (materiales)`, m2],
+      ['Mano de obra del casco', m2*R.mo],
+      ...(b2 ? [['Agua y desagüe del baño 2 con aparatos básicos', R.bano*b2]] : []),
+      ['Luz empotrada del 2.º piso', R.elec*A2],
+      ['Ventanas con vidrio', R.carp*A2],
+      ['Piso de cemento pulido', R.pulido*u2]],
+      inc:[`Escalera ${r.stair ? ESC_N[r.stair.type] : 'de concreto'} (A.010 art. 23: pasos de 0.25, contrapasos de hasta 0.18)`, `Muros, columnas y techo del 2.º piso${nd2 ? `, con ${nd2} dormitorio${nd2>1?'s':''}` : ''}${b2 ? ' y el baño 2' : ''}`, 'Instalaciones empotradas y ventanas', 'Piso de cemento pulido'],
+      no:['Tarrajeo, pintura, cerámicos y puertas interiores del 2.º piso', 'Fachada'],
+      why:'Es la etapa de la densificación: llegan los hijos o un pariente y faltan dormitorios. Va sobre la estructura de la etapa 1, por eso aquella tuvo que pensarse para dos pisos.',
+      ob: half(Math.max(2, A2/16))},
+    4: {A:A2, it:[
+      ['Tarrajeo y pintura interior del 2.º piso', (wall2*1.6 + u2)*(R.tarr + R.pint)],
+      ['Cerámico en pisos', u2*R.cer],
+      ...(b2 ? [['Enchape y terma del baño 2', R.enchB*R.ench + R.terma]] : []),
+      [`Puertas interiores (${nd2 + b2})`, (nd2 + b2)*R.puerta],
+      ['Fachada: tarrajeo y pintura exterior', r.W*(2*(H + e) + 1.10)*R.fach],
+      ['Azotea: impermeabilización y ladrillo pastelero', A2*R.azot],
+      ['Parapetos y barandas de la azotea (A.020 art. 18.4)', (2*r.D + 2*r.W)*R.parap]],
+      inc:['Acabados del 2.º piso, como la etapa 2', 'Fachada terminada y pintada', 'Azotea impermeabilizada, con parapetos de 2.10 hacia los vecinos y baranda de 1.10 hacia la calle y el patio'],
+      no:[],
+      why:'La fachada va al final porque ya no cambia: el 2.º piso está hecho y la casa se ve terminada. Es la consolidación de PREVI.',
+      ob: half(Math.max(1, A2/25))}
+  };
+  for(const s in E){ E[s].cost = E[s].it.reduce((a,b)=>a + b[1], 0); E[s].sav = Math.ceil(E[s].cost/etAhorro); }
+  return {E, has2, A1, A2};
+}
+function etapas(r){
+  const box = el('et-cards'); if(!box) return;
+  el('et-ahorro').value = String(etAhorro);
+  const {E, has2, A1, A2} = etapasCalc(r);
+  const tot = [1,2,3,4].reduce((s,k)=>s + E[k].cost, 0), mSav = [1,2,3,4].reduce((s,k)=>s + E[k].sav, 0), mOb = [1,2,3,4].reduce((s,k)=>s + E[k].ob, 0);
+  const yrs = (mSav + mOb)/12;
+  el('et-kpis').innerHTML = [
+    ['Casa terminada', `${soles(tot)} <small>${f1(A1 + A2)} m²</small>`],
+    ['Para mudarse (etapa 1)', soles(E[1].cost)],
+    ['Tiempo total', `${f1(yrs)} <small>años con S/ ${nf(etAhorro)} al mes</small>`],
+    ['Por m²', `${soles(tot/(A1 + A2))} <small>con mano de obra</small>`]
+  ].map(([a,b])=>`<div class="kpi"><div class="k">${a}</div><div class="v">${b}</div></div>`).join('');
+  el('et-line').innerHTML = [1,2,3,4].map(k=>`<div class="sv" style="flex:${E[k].sav}" title="Etapa ${k}: ${E[k].sav} meses de ahorro">Ahorro ${k} · ${E[k].sav} m</div><div class="ob" style="flex:${Math.max(E[k].ob, 1.5)}" title="Etapa ${k}: ${f1(E[k].ob)} meses de obra">Obra ${k}</div>`).join('');
+  el('et-note').innerHTML = `Rayado: meses ahorrando para la etapa; color: meses de obra. Total: unos <b>${Math.round(yrs*2)/2} años</b> desde que se tiene el lote, frente a los 16 años típicos de la autoconstrucción en Lima (GRADE).` + (has2 ? '' : ` <b>Tu plano no tiene 2.º piso</b>: las etapas 3 y 4 suponen un 2.º piso del mismo tamaño con 2 dormitorios y baño. Elige dormitorios arriba en la pestaña Diseño para calcularlas con tu plano.`) + ` La pestaña Diseño calcula la casa a S/ ${nf(r.v.cm2)}/m², un precio de constructora con gastos generales; aquí se suma partida por partida.`;
+  box.innerHTML = [1,2,3,4].map(k=>{ const s = E[k];
+    return `<section class="card et-card"><div class="et-h"><h2>Etapa ${k} · ${ET_N[k]}</h2><span class="et-c">${soles(s.cost)}</span><span class="hint">${s.sav} meses de ahorro · unos ${f1(s.ob)} meses de obra · ${f1(s.A)} m²${(k>2 && !has2)?' supuestos':''}</span><button type="button" data-pjgo="${k}">Ver en planta y 3D</button></div>
+      <p class="hint" style="margin:6px 0 0">${s.why}</p>
+      <div class="et-cols"><div><h3>Qué incluye</h3><ul>${s.inc.map(x=>`<li>${x}</li>`).join('')}</ul>${s.no.length?`<h3 style="margin-top:8px">Qué queda para después</h3><ul>${s.no.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}</div>
+      <div style="min-width:0"><h3>Costo estimado por partida</h3><div class="ca-wrap"><table class="ca et-t"><tbody>${s.it.map(([n,c])=>`<tr><td>${n}</td><td class="n">${soles(c)}</td></tr>`).join('')}<tr class="tot"><td>Total etapa ${k}</td><td class="n">${soles(s.cost)}</td></tr></tbody></table></div></div></div></section>`; }).join('');
+  box.querySelectorAll('[data-pjgo]').forEach(b=> b.addEventListener('click', ()=>{ setProj(true, +b.dataset.pjgo); showTab('3d'); }));
+  const lo = x => soles(Math.round(x/500)*500);
+  el('et-opts').innerHTML = [
+    ['Departamento independiente arriba', `El 2.º piso se separa con una <b>escalera propia al frente</b>, en el retiro (el RNE lo permite en ampliaciones de vivienda, A.010 art. 8.3 l), una cocineta y medidores de luz y agua aparte. Sirve para alquilar o para un hijo que forma familia.`, `${lo(8000)} a ${lo(12000)}`, 'La casa pasa a ser <b>bifamiliar</b>: licencia de ampliación en la municipalidad (Ley 29090) y, para venderlo o hipotecarlo por separado, reglamento interno e independización en SUNARP.'],
+    ['Tienda o bodega al frente', `La sala del 1.er piso se abre a la calle con una <b>puerta enrollable</b> y la sala pasa al fondo o arriba. Es la ampliación más rápida de pagar.`, `${lo(4000)} a ${lo(8000)}`, 'La zonificación del lote tiene que permitir comercio vecinal; <b>licencia de funcionamiento</b> municipal (Ley 28976) e inspección de seguridad (ITSE).'],
+    ['3.er piso', `Otro piso como la etapa 3 más la 4, para más dormitorios o un segundo departamento.`, `${lo((E[3].cost + E[4].cost)*0.95)} a ${lo((E[3].cost + E[4].cost)*1.15)}`, 'La altura máxima la fijan los parámetros urbanísticos de la municipalidad (A.010 art. 10). Los cimientos y los muros de la etapa 1 tienen que calcularse para 3 pisos (E.070); <b>este verificador hoy comprueba hasta 2 pisos</b>.']
+  ].map(([t,d,c,n])=>`<div><h3>${t}</h3><p>${d}</p><p><b>Costo aproximado:</b> ${c}</p><p class="hint">${n}</p></div>`).join('');
+  el('et-how').innerHTML = [
+    'Los materiales del casco (etapas 1 y 3) son los de la pestaña <b>Materiales</b>, con tus precios. La mano de obra del casco se toma como el 75 % de esos materiales (maestro y peón, unos 3 a 4 meses para el 1.er piso).',
+    `Instalaciones: S/ ${nf(ET_R.bano)} por baño con aparatos básicos, S/ ${nf(ET_R.coc)} cocina y lavandería, S/ ${ET_R.elec} por m² de instalación eléctrica. Puerta de calle S/ ${nf(ET_R.pcalle)} y ventanas S/ ${ET_R.carp} por m² techado. Piso pulido S/ ${ET_R.pulido}/m².`,
+    `Acabados, con mano de obra: tarrajeo S/ ${ET_R.tarr}/m² y pintura S/ ${ET_R.pint}/m² (muros por 1.6 caras más el cielo raso), cerámico S/ ${ET_R.cer}/m², enchape S/ ${ET_R.ench}/m² (${ET_R.enchB} m² por baño y ${ET_R.enchC} en la cocina), puerta interior S/ ${ET_R.puerta}, mueble de cocina S/ ${nf(ET_R.mcoc)}, terma S/ ${ET_R.terma}.`,
+    `Fachada S/ ${ET_R.fach}/m² (frente por la altura de los dos pisos y el parapeto), azotea S/ ${ET_R.azot}/m² y parapetos o barandas S/ ${ET_R.parap} por metro.`,
+    'Meses de ahorro = costo de la etapa ÷ ahorro mensual. Meses de obra: el 1.er piso a unos 14 m² por mes de casco y 32 m² por mes de acabados; el 2.º piso a 16 y 25 m² por mes.',
+    'Son precios de referencia de Lima en 2026 para un anteproyecto. El presupuesto definitivo sale de los planos firmados y de la cotización del maestro.'
+  ].map(x=>`<li>${x}</li>`).join('');
+}
+function setProj(on, st){
+  pj = {on, st: st || pj.st};
+  try { localStorage.setItem('vvm-proy', JSON.stringify(pj)); } catch(e){}
+  if(lastR){ applyProj(lastR); if(!el('tab-3d').hidden && d3) try { build3D(lastR); } catch(e){ console.error('3D', e); } }
+}
+function applyProj(r){
+  const on = pj.on, st = pj.st, has2 = r.gross2 > 0;
+  el('pj-on').checked = on; el('pj-bar').classList.toggle('off', !on);
+  document.querySelectorAll('#pj-seg button').forEach(b=>{ const k = +b.dataset.pj; b.classList.toggle('on', on && k===st); b.setAttribute('aria-pressed', on && k===st); });
+  const b1 = el('svgbox'), b2 = el('svgbox2'), c1 = el('pj-cap1'), c2 = el('pj-cap2');
+  b1.classList.toggle('pj-casco', on && st===1);
+  b2.classList.toggle('pj-casco', on && st===3);
+  b2.classList.toggle('pj-fut', on && st<3);
+  const cap = (n, t) => { n.hidden = !t; n.textContent = t || ''; };
+  if(!on){ cap(c1); cap(c2); el('pj-txt').textContent = 'Actívala para ver la casa como queda al final de cada etapa, en la planta y en el 3D.'; return; }
+  cap(c1, st===1 ? 'Etapa 1 · casco: ladrillo sin tarrajeo, piso pulido; ya se puede vivir' : 'Terminado en la etapa 2 (acabados)');
+  cap(c2, !has2 ? '' : st<3 ? 'Todavía no existe: se construye en la etapa 3' : st===3 ? 'Etapa 3 · casco del 2.º piso, sin acabados' : 'Terminado en la etapa 4');
+  el('pj-txt').innerHTML = `<b>Etapa ${st} · ${ET_N[st]}.</b> ` + (st===5 ? 'La casa terminada con los fierros listos para crecer. Las opciones están en la pestaña Etapas.' : (!has2 && st>=3 ? 'Tu plano no tiene 2.º piso: elige dormitorios arriba en Diseño para verlo.' : 'Detalle y costo en la pestaña Etapas.'));
+}
+el('pj-on').addEventListener('change', ()=> setProj(el('pj-on').checked));
+document.querySelectorAll('#pj-seg button').forEach(b=> b.addEventListener('click', ()=> setProj(true, +b.dataset.pj)));
+el('et-ahorro').addEventListener('change', ()=>{ const x = parseFloat(el('et-ahorro').value); if(isFinite(x) && x >= 100){ etAhorro = x; try { localStorage.setItem('vvm-ahorro', String(x)); } catch(e){} } if(lastR) etapas(lastR); });
+// 3D: material de cada caja según la etapa (casco = ladrillo visto y piso de cemento)
+function pjBox(b, H2, r){
+  if(!pj.on) return b;
+  const st = pj.st, upper = b.z0 >= H2 - 0.01;
+  // antes de la etapa 3, si el plano tiene 2.º piso, el techo queda libre: sin parapetos de azotea ni escalera
+  if(st < 3 && r && r.gross2 > 0 && ((upper && b.m !== 'slab') || b.m === 'stair')) return null;
+  const casco = st===1 || ((st===2 || st===3) && upper);
+  if(!casco) return b;
+  const m = b.m==='wall' || b.m==='tab' ? 'brick' : b.m==='floor' || b.m==='wet' ? 'cem' : b.m;
+  return m===b.m ? b : Object.assign({}, b, {m});
+}
+// fierros de empalme que asoman sobre las columnas: la casa queda lista para crecer
+function pjRebar(r, built2, H2){
+  if(!pj.on) return [];
+  const st = pj.st; if(!(st <= 2 || st === 5)) return [];
+  const z = st===5 && built2 ? H2 + H + (r.hL || 0.20) : H2, out = [], d = 0.045, s = 0.008;
+  (r.cols||[]).forEach(([x,y])=> [[-d,-d],[d,-d],[-d,d],[d,d]].forEach(([a,b])=> out.push({x0:x+a-s, x1:x+a+s, y0:y+b-s, y1:y+b+s, z0:z, z1:z+0.75, m:'rebar', e:false})));
+  return out;
+}
 
 // ---------- Diseño Pro: planta con ejes y cotas, cortes que se desplazan y elevaciones ----------
 let proFurn = (()=>{ try { return localStorage.getItem('vvm-pro-muebles') === '1'; } catch(e){ return false; } })(), proFloor = 1, proCut = {y:null, x:null}, proGeo = null, proRAF = 0;
@@ -2674,6 +2873,7 @@ function render(){
   draw(r); draw2(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
   try { materiales(r); } catch(e){ console.error('materiales', e); }
+  try { etapas(r); applyProj(r); } catch(e){ console.error('etapas', e); }
   lastR = r; try { proRender(r); } catch(e){ console.error('diseño pro', e); }
   if(!el('tab-3d').hidden && d3) { try { build3D(r); } catch(e){ console.error('3D', e); } }
   el('ap-row').hidden = v.sis !== 'portante';
@@ -2872,12 +3072,12 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; if(k==='3d') open3D(); ['dis','pro','3d','are','mat','reg','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','mat','eta','reg','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d').addEventListener('click', ()=>showTab('3d'));
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne'));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
 const APP_VERSION = '2026-11-14j';
 el('ver').textContent = 'Versión ' + APP_VERSION;
