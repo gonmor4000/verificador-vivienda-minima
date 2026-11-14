@@ -82,6 +82,9 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 a.rne{color:inherit;text-decoration:underline dotted;text-underline-offset:2px}
 a.rne:hover{color:var(--brick);text-decoration-style:solid}
 .rules .src a.rne{color:var(--brick)}
+.rne-t td:first-child{white-space:nowrap;font-weight:600}
+.rne-t td{vertical-align:top;text-align:left}
+.rne-t a.rne{color:var(--brick)}
 .pro-two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:18px;align-items:end}
 @media (max-width:900px){.pro-two{grid-template-columns:minmax(0,1fr)}}
 .pro-plan svg{max-width:900px;display:block;margin:0 auto}
@@ -186,6 +189,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <button type="button" role="tab" id="tab-btn-are" aria-selected="false">Cuadro de áreas</button>
     <button type="button" role="tab" id="tab-btn-mat" aria-selected="false">Materiales</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
+    <button type="button" role="tab" id="tab-btn-rne" aria-selected="false">RNE</button>
     <button type="button" role="tab" id="tab-btn-cam" aria-selected="false">Cambios</button>
   </nav>
 
@@ -337,11 +341,65 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     </ol>
   </section>
 
+  <section id="tab-rne" class="card rules" hidden aria-label="Artículos del RNE">
+    <h2>Artículos del RNE que respeta el verificador</h2>
+    <p class="hint" style="margin-top:0">Cada fila es un artículo del Reglamento Nacional de Edificaciones vigente que la herramienta aplica al generar la casa o comprueba en sus verificaciones. Haz clic en la cita para abrir ese artículo en el <a href="rne.html" target="_blank" rel="noopener" class="rne-home">RNE consultable</a>, con su texto completo y la página del RNE ilustrado. Normas usadas: A.010 (RM 191-2021), A.020 (RM 188-2021) y A.120 (RM 075-2023).</p>
+
+    <h3>A.020 Vivienda</h3>
+    <div class="ca-wrap"><table class="ca rne-t">
+      <thead><tr><th>Artículo</th><th>Qué dice la norma</th><th>Cómo lo aplica el verificador</th></tr></thead>
+      <tbody>
+        <tr><td>A.020 art. 8.1 c</td><td>La vivienda progresiva parte de un módulo básico ampliable de 25 m² como mínimo.</td><td>Comprueba el área techada mínima (usa 35 m², el valor del anexo de vivienda de interés social, más exigente).</td></tr>
+        <tr><td>A.020 art. 9.1</td><td>Altura libre mínima de 2.30 m entre piso terminado y cielo raso.</td><td>Los muros miden 2.40 m (24 hiladas), por encima del mínimo.</td></tr>
+        <tr><td>A.020 art. 10</td><td>Las medidas de los ambientes salen del mobiliario y de la circulación, sin m² fijos.</td><td>Dibuja los muebles y fija medidas libres mínimas por antropometría (dormitorio 2.60 × 2.70, sala-comedor 2.70 × 3.60, cocina 1.50 × 1.80, baño 1.30 × 1.80).</td></tr>
+        <tr><td>A.020 art. 11.4 a</td><td>Pozo de luz de vivienda unifamiliar: 2.00 m libres frente a dormitorio, sala o comedor; 1.80 m frente a la cocina.</td><td>Verifica el patio de luz de la casa larga y solo genera pozos de 2.25 m entre ejes o más.</td></tr>
+        <tr><td>A.020 art. 12.2</td><td>Puertas de 0.90 m en el ingreso, 0.80 m en dormitorios, estar y cocina, 0.70 m en baños; alto 2.10 m.</td><td>Usa 1.00 (ingreso), 0.80 (dormitorios y patio) y 0.70 (baño), todas de 2.10 m. Las puertas nunca barren un mueble.</td></tr>
+        <tr><td>A.020 art. 12.4</td><td>Ventanas que iluminen al menos el 10 % y ventilen el 5 % del área del ambiente.</td><td>Calcula el vano de cada ambiente habitable y avisa si no llega.</td></tr>
+        <tr><td>A.020 art. 12.5 c</td><td>Alféizar de 1.00 m como mínimo, o vidrio fijo o baranda debajo.</td><td>Ventanas con alféizar a 0.90 m y los 10 cm inferiores fijos.</td></tr>
+        <tr><td>A.020 art. 13</td><td>Pasajes interiores de 0.90 m de ancho libre.</td><td>Verifica pasajes y halls de 0.90 m como mínimo.</td></tr>
+        <tr><td>A.020 art. 15.1</td><td>Escalera interior de 0.90 m (caracol con paso de 0.25 m a 0.50 m del eje) y pasamanos a 1.00 m.</td><td>Las cuatro escaleras (un tramo, L, U, caracol de 1.60 m) tienen 0.90 m de ancho y pasamanos a 1.00 m.</td></tr>
+        <tr><td>A.020 art. 18.4</td><td>Azotea con baranda de 1.10 m y muro de 2.10 m hacia los vecinos.</td><td>Dibuja en 3D, cortes y metrado parapetos de 2.10 m hacia el vecino y baranda de 1.10 m.</td></tr>
+        <tr><td>A.020 art. 19.3</td><td>Cercos entre patios o terrazas de viviendas vecinas de 2.10 m.</td><td>Muros de la terraza del 2.º piso hacia el vecino de 2.10 m.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>A.010 Condiciones generales de diseño</h3>
+    <div class="ca-wrap"><table class="ca rne-t">
+      <thead><tr><th>Artículo</th><th>Qué dice la norma</th><th>Cómo lo aplica el verificador</th></tr></thead>
+      <tbody>
+        <tr><td>A.010 art. 9.1 a</td><td>Cómo se mide el área techada.</td><td>El cuadro de áreas mide a eje de medianeras; los patios de luz no cuentan.</td></tr>
+        <tr><td>A.010 art. 13</td><td>Volado de hasta 0.50 m sobre el retiro frontal, a 2.30 m de altura como mínimo.</td><td>La opción «volado» saca 0.50 m el 2.º piso sobre el retiro.</td></tr>
+        <tr><td>A.010 art. 18</td><td>Altura libre de 2.30 m y vigas a 2.10 m como mínimo.</td><td>Muros de 2.40 m; los cortes de Diseño Pro muestran las alturas.</td></tr>
+        <tr><td>A.010 art. 19.1</td><td>Vanos de puertas de 2.10 m de alto como mínimo.</td><td>Todas las puertas tienen 2.10 m de alto.</td></tr>
+        <tr><td>A.010 art. 20 b</td><td>Pasajes: 0.90 m entre muros al interior de viviendas (cuadro 02).</td><td>Junto con A.020 art. 13: pasajes de 0.90 m.</td></tr>
+        <tr><td>A.010 art. 23.2</td><td>Escaleras: paso de 0.25 m, contrapaso de 0.18 m como máximo y 17 pasos como máximo entre descansos.</td><td>Calcula número de pasos y descansos de cada tipo de escalera y avisa si un tramo pasa de 17.</td></tr>
+        <tr><td>A.010 art. 35</td><td>Barandas o antepechos de 1.00 m como mínimo en terrazas, escaleras y aberturas a más de 1.00 m del suelo.</td><td>Baranda de 1.00 m en terrazas hacia la calle y el patio.</td></tr>
+        <tr><td>A.010 art. 38.1</td><td>Ventilación natural: todo ambiente tiene al menos un vano que deja entrar aire del exterior.</td><td>Junto con A.020 art. 12.4: cada ambiente tiene ventana a la calle, al patio o al patio de luz.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>A.120 Accesibilidad</h3>
+    <div class="ca-wrap"><table class="ca rne-t">
+      <thead><tr><th>Artículo</th><th>Qué dice la norma</th><th>Cómo lo aplica el verificador</th></tr></thead>
+      <tbody>
+        <tr><td>A.120 art. 2</td><td>Ámbito: edificaciones de uso público y áreas comunes de vivienda.</td><td>Dentro de la casa la accesibilidad es una opción, no una obligación.</td></tr>
+        <tr><td>A.120 art. 28</td><td>En vivienda, la accesibilidad se exige en las áreas comunes.</td><td>Con «Hacer la vivienda accesible (opcional)» genera puertas de 0.90 m y giro de 1.50 m en baño y dormitorio.</td></tr>
+      </tbody>
+    </table></div>
+
+    <h3>Lo que el RNE A no decide</h3>
+    <ul>
+      <li>La altura máxima y el número de pisos los fijan los <b>parámetros urbanísticos</b> de la municipalidad (A.010 art. 10). La A.020 no limita pisos en la vivienda unifamiliar.</li>
+      <li>La estructura (densidad de muros, columnas de confinamiento, cimientos) sigue la <b>E.070</b> y el manual de construcción: ver la pestaña Reglas.</li>
+    </ul>
+  </section>
+
   <section id="tab-cam" class="card rules" hidden aria-label="Cambios">
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Tablas del RNE consultable</b> rearmadas como tablas de verdad (filas, columnas y celdas unidas): las 51 de la A.010, A.020, A.030, A.040 y A.070, entre ellas pozos de luz, anchos de puertas y pasajes, estacionamientos y protección contra incendios. Quedan como texto el cuadro 27 de la A.070 y las tablas de la A.130.</span></li>
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Nueva pestaña <b>RNE</b>: lista los artículos de la A.010, A.020 y A.120 que respeta el verificador, con lo que dice cada uno y cómo lo aplica la herramienta. Cada cita abre ese artículo en el RNE consultable.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevo <b>RNE consultable</b> (rne.html): las normas A.010 a A.130 con índice por capítulo, artículo y numeral, buscador y cruce con el <b>RNE ilustrado</b> (página del PDF y aviso cuando el ilustrado es de la versión 2006). Cada cita del RNE en la herramienta (Reglas, verificaciones, cuadro de áreas) es ahora un <b>enlace</b> que abre ese artículo o numeral.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Reglas revisadas con el RNE vigente</b> (A.010 RM 191-2021, A.020 RM 188-2021 y A.120 RM 075-2023): el patio de luz de la casa larga deja <b>2.00 m libres</b> frente a la ventana del dormitorio (A.020 art. 11.4 a; antes se aceptaba 1.00); parapetos y muros de terraza hacia el vecino de <b>2.10 m</b> (A.020 art. 18.4 y 19.3; antes 1.80); la escalera verifica 17 pasos como máximo por tramo (A.010 art. 23.2 a) y pasamanos a 1.00 m (A.020 art. 15.1 c); ventanas, puertas y pasajes citan la A.020 (art. 12.2, 12.4, 12.5 c y 13); la vivienda accesible pasa a ser opcional (la A.120 de 2023 solo la exige en áreas comunes, art. 28).</span></li>
       <li><time datetime="2026-11-13">13 nov 2026</time><span>Nueva pestaña <b>Diseño Pro</b>: planta de arquitectura con ejes, grilla, cotas entre ejes y totales, cotas libres de cada ambiente y vanos (1.er y 2.º piso); <b>cortes A-A y B-B que se mueven arrastrando su línea</b> sobre la planta; y <b>elevaciones</b> principal y posterior. La planta de la pestaña Diseño queda más simple, sin líneas de corte.</span></li>
@@ -2713,14 +2771,14 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; if(k==='3d') open3D(); ['dis','pro','3d','are','mat','reg','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; if(k==='3d') open3D(); ['dis','pro','3d','are','mat','reg','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d').addEventListener('click', ()=>showTab('3d'));
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro'));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14a';
+const APP_VERSION = '2026-11-14c';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
