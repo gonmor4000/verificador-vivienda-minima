@@ -266,6 +266,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
       <label class="v3-chk"><input type="checkbox" id="v3-techo"> Quitar techos</label>
       <label class="v3-chk"><input type="checkbox" id="v3-p1"> Solo el 1.er piso</label>
       <button type="button" id="v3-fly" aria-pressed="false">Modo dron</button>
+      <button type="button" id="v3-dae" title="Baja el modelo que ves en formato COLLADA (.dae): en SketchUp, Archivo > Importar">Exportar a SketchUp (.dae)</button><span class="hint" id="v3-dae-msg" aria-live="polite"></span>
       <div class="seg" role="group" aria-label="Etapa que se ve en el 3D" id="v3-et"><button type="button" data-v3et="0">Sin etapas</button><button type="button" data-v3et="1">Etapa 1</button><button type="button" data-v3et="2">Etapa 2</button><button type="button" data-v3et="3">Etapa 3</button><button type="button" data-v3et="4">Etapa 4</button><button type="button" data-v3et="5">Etapa 5</button></div>
     </div>
     <div style="position:relative"><div id="v3-etlbl" class="v3-etlbl"></div>
@@ -528,6 +529,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Botón <b>Exportar a SketchUp (.dae)</b> en la pestaña 3D: baja el modelo tal como se ve (con la etapa, sin techos o solo el 1.er piso si los marcaste) en formato COLLADA, en metros. En SketchUp: Archivo &gt; Importar.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Escalera de caracol metálica</b>, como las de taller: pasos trapezoidales de plancha soldados a un tubo central, baranda helicoidal con un parante por paso, separada 0.15 m del muro y con un descanso metálico de llegada con baranda. En la planta los pasos se dibujan como trapecios; en Materiales ya no se cuenta concreto para ella (se cotiza aparte con el taller).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Dos preguntas nuevas en el tablón de <b>Preguntas de normativa</b>: quién decide el área libre mínima de un lote y cuál es el tamaño mínimo y típico de un lote en Lima.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Terreno en los planos</b>: la planta de Diseño Pro dibuja ahora el lote completo (límite, vereda, retiro frontal, patio y la línea del retiro posterior mínimo) con la cadena de cotas del fondo (retiro, construido, patio) y el fondo y el frente totales del lote. La planta de Diseño lleva también las cotas totales del terreno: frente abajo y fondo a la derecha.</span></li>
@@ -3546,13 +3548,31 @@ el('ndt').addEventListener('change', ()=>{
   regen();
 });
 const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','mat','eta','reg','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+// Exportar el 3D a SketchUp: COLLADA 1.4.1 en metros, con lo que se ve en el visor (etapa, techos, 1.er piso)
+el('v3-dae').addEventListener('click', async ()=>{
+  const msg = el('v3-dae-msg');
+  try {
+    if(!d3){ open3D(); await new Promise(r=>setTimeout(r, 1200)); }
+    if(!d3 || !window.THREE){ msg.textContent = 'El visor 3D todavía no cargó: abre la pestaña 3D y vuelve a intentar.'; return; }
+    if(!THREE.ColladaExporter){ msg.textContent = 'Preparando…';
+      await new Promise((res, rej)=>{ const sc = document.createElement('script'); sc.src = 'https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/exporters/ColladaExporter.js'; sc.onload = res; sc.onerror = rej; document.head.appendChild(sc); }); }
+    const exp = new THREE.ColladaExporter();
+    exp.parse(d3.grp, out=>{
+      const dae = out.data.replace('<up_axis>', '<unit name="meter" meter="1"/><up_axis>');
+      const v = lastR ? lastR.v : {lote:0, fondo:0};
+      const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([dae], {type:'model/vnd.collada+xml'}));
+      a.download = `vivienda-${f2(v.lote)}x${f2(v.fondo)}.dae`; document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href), 4000);
+      msg.textContent = 'Listo. En SketchUp: Archivo > Importar > COLLADA (.dae). Medidas en metros.';
+    }, {author:'Verificador de vivienda mínima', version:'1.4.1'});
+  } catch(e){ console.error('exportar dae', e); msg.textContent = 'No se pudo exportar: revisa la conexión a internet (el exportador se carga la primera vez).'; }
+});
 el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d').addEventListener('click', ()=>showTab('3d'));
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14r';
+const APP_VERSION = '2026-11-14s';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
