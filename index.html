@@ -405,6 +405,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Dos tiradores verdes más en la planta de Diseño, para mover <b>muros interiores</b> sin cambiar el bloque: el del muro entre el <b>dormitorio 1 y el 2</b> (eje 2) y el del muro entre la <b>sala y la cocina-baño</b> (eje 3); cada crujía se reparte por su cuenta. Solo en las plantas de dos crujías (sin tres franjas ni casa larga).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Mover el bloque construido</b> sobre la planta de Diseño con tres tiradores verdes: el del eje B cambia el ancho de la crujía de dormitorios, el del eje D el de la crujía social y húmeda, y el del muro posterior el fondo construido (en módulos de 25 cm, con vista previa mientras arrastras). En <b>Diseño Pro</b>: casilla <b>Mostrar muebles</b>, y cada ventana lleva su código (V-1, V-2…), ancho × alto y alféizar, con un <b>cuadro de vanos</b> de ventanas y puertas debajo de la planta.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Nueva página <b>Referentes</b> (referentes.html, enlace arriba a la derecha): los 26 proyectos de <b>PREVI Lima</b> y otros referentes peruanos (concursos Construye para Crecer, Villa El Salvador, Sumaq Wasi, estudios) con filtros por tipo, estado, sistema constructivo y año; cada ficha trae autores, sistema, idea de crecimiento, esquema propio de la idea, evolución en m² cuando hay datos y enlaces a los <b>planos en su fuente original</b>.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevo <b>verificador de vivienda multifamiliar</b> (enlace arriba a la derecha): con la zonificación de certificados de parámetros reales (Lima ATN I y II, Arequipa), el lote y el programa arma el edificio con núcleo de escalera de 1.20 m y ascensor, pozos de luz calculados por la A.020 art. 11.4 b, departamentos amueblados y estacionamientos; tiene corte, 3D, cuadro de áreas, artículos del RNE para multifamiliar y un cotejo de esta casa unifamiliar con esos certificados.</span></li>
@@ -1253,13 +1254,17 @@ function draw(r){
   g += `<g class="hdl" data-k="lote"><title>Arrastra para cambiar el frente</title><rect x="${XL(L)-6}" y="${YL(hy)-22}" width="12" height="44" rx="5"/></g>`;
   g += `<g class="hdl v" data-k="fondo"><title>Arrastra para cambiar el fondo</title><rect x="${XL(hx)-22}" y="${YL(F)-6}" width="44" height="12" rx="5"/></g>`;
   // tiradores del bloque construido: eje B (ancho de la crujía de dormitorios), eje D (ancho de la crujía social) y fondo construido
-  houseGeo = {X0: X(0), Y0: Y(0), s, a: v.a, W, D, r};
+  houseGeo = {X0: X(0), Y0: Y(0), s, a: v.a, W, D, r, y2, w};
   g += `<rect id="casa-ghost" x="${X(0)}" y="${Y(D)}" width="${W*s}" height="${D*s}" fill="none" stroke="var(--brick)" stroke-width="1.5" stroke-dasharray="6 4" visibility="hidden"/>`;
   g += `<line id="casa-ghost-b" x1="${X(v.a)}" x2="${X(v.a)}" y1="${Y(D)}" y2="${Y(0)}" stroke="var(--brick)" stroke-width="1.5" stroke-dasharray="6 4" visibility="hidden"/>`;
   g += `<text id="casa-lbl" x="${X(0)}" y="${Y(D)-8}" font-size="11" font-weight="600" fill="var(--brick)" visibility="hidden"></text>`;
   const hb = Y(0) + 16;
   g += `<g class="hdl casa" data-h="B"><title>Arrastra el eje B: ancho de la crujía de dormitorios</title><rect x="${X(v.a)-6}" y="${hb-14}" width="12" height="28" rx="5"/></g>`;
   g += `<g class="hdl casa" data-h="D"><title>Arrastra el eje D: ancho de la crujía social y húmeda</title><rect x="${X(W)-6}" y="${hb-14}" width="12" height="28" rx="5"/></g>`;
+  if(r.typ !== 'T3' && r.typ !== 'T3L'){
+    g += `<g class="hdl casa v" data-h="Y2"><title>Arrastra el muro entre el dormitorio 1 y el 2 (eje 2)</title><rect x="${X(v.a*0.28)-18}" y="${Y(y2)-6}" width="36" height="12" rx="5"/></g>`;
+    g += `<g class="hdl casa v" data-h="WC"><title>Arrastra el muro entre la sala y la cocina-baño (eje 3)</title><rect x="${X(v.a + (W-v.a)*0.72)-18}" y="${Y(D-w)-6}" width="36" height="12" rx="5"/></g>`;
+  }
   g += `<g class="hdl casa v" data-h="F"><title>Arrastra para cambiar el fondo construido</title><rect x="${X(v.a/2)-18}" y="${Y(D)-6}" width="36" height="12" rx="5"/></g>`;
   el('svgbox').innerHTML = `<svg viewBox="0 0 ${vw+20} ${vh+20}" role="img" aria-label="Planta de la vivienda con ${f1(r.gross)} m² techados">${g}</svg>`;
   bindHandles(); bindHouseHandles();
@@ -1947,6 +1952,8 @@ function setCota(k, x, r){
   else if(k==='y3') up.d = r.yb + x;
   else if(k==='pp'){ up.pp = x; up.d = r.D + (x - r.pp); }
   else if(k==='d3') up.d = r.yd + x;
+  else if(k==='y2only') up.y2 = x;
+  else if(k==='wonly') up.w = x;
   else return;
   for(const key in up){
     const e = el(key), val = Math.round(up[key]*100)/100; up[key] = val;
@@ -2005,7 +2012,7 @@ function bindHouseHandles(){
     const ghost = el('casa-ghost'), gb = el('casa-ghost-b'), lbl = el('casa-lbl');
     const toSvg = e => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); };
     const snap = x => Math.round(x/M)*M;
-    let A = G.a, W = G.W, D = G.D;
+    let A = G.a, W = G.W, D = G.D, Y2 = G.y2, WC = G.w;
     const bW = G.W - G.a, minB = (r.typ==='T3' ? r.P : r.c) + 1.50;
     [ghost, gb, lbl].forEach(e=>e.setAttribute('visibility', 'visible'));
     h.classList.add('drag'); dragging = true; h.setPointerCapture(ev.pointerId);
@@ -2013,12 +2020,15 @@ function bindHouseHandles(){
       ghost.setAttribute('width', W*G.s); ghost.setAttribute('y', G.Y0 - D*G.s); ghost.setAttribute('height', D*G.s);
       gb.setAttribute('x1', G.X0 + A*G.s); gb.setAttribute('x2', G.X0 + A*G.s); gb.setAttribute('y1', G.Y0 - D*G.s);
       lbl.setAttribute('y', G.Y0 - D*G.s - 8);
-      lbl.textContent = `Crujía A–B ${f2(A)} · B–D ${f2(W-A)} · fondo ${f2(D)} m · suelta para aplicar`;
+      lbl.textContent = k==='Y2' ? `Dormitorio 1: ${f2(Y2)} · dormitorio 2: ${f2(G.D-Y2)} m entre ejes · suelta para aplicar` : k==='WC' ? `Sala-comedor: ${f2(G.D-WC)} · cocina y baño: ${f2(WC)} m entre ejes · suelta para aplicar` : `Crujía A–B ${f2(A)} · B–D ${f2(W-A)} · fondo ${f2(D)} m · suelta para aplicar`;
+      if(k==='Y2' || k==='WC'){ const yy = k==='Y2' ? Y2 : G.D - WC; gb.setAttribute('x1', G.X0 + (k==='Y2' ? 0 : A)*G.s); gb.setAttribute('x2', G.X0 + (k==='Y2' ? A : W)*G.s); gb.setAttribute('y1', G.Y0 - yy*G.s); gb.setAttribute('y2', G.Y0 - yy*G.s); ghost.setAttribute('visibility', 'hidden'); }
     };
     const move = e => {
       const p = toSvg(e), x = (p.x - G.X0)/G.s, y = (G.Y0 - p.y)/G.s;
       if(k==='B'){ A = Math.min(6, Math.max(2.00, snap(x))); W = A + bW; hr.setAttribute('x', G.X0 + A*G.s - 6); }
       else if(k==='D'){ W = Math.max(A + minB, Math.min(A + 8, snap(x))); hr.setAttribute('x', G.X0 + W*G.s - 6); }
+      else if(k==='Y2'){ Y2 = Math.min(G.D - 2.50, Math.max(2.50, snap(y))); hr.setAttribute('y', G.Y0 - Y2*G.s - 6); }
+      else if(k==='WC'){ WC = Math.min(G.D - 3.00, Math.max(1.50, snap(G.D - y))); hr.setAttribute('y', G.Y0 - (G.D - WC)*G.s - 6); }
       else { D = Math.min(25, Math.max(4.00, snap(y))); hr.setAttribute('y', G.Y0 - D*G.s - 6); }
       paint();
     };
@@ -2028,9 +2038,11 @@ function bindHouseHandles(){
       dragging = false; h.classList.remove('drag');
       if(k==='B' && Math.abs(A - G.a) > 1e-6) setCota('a', A, r);
       else if(k==='D' && Math.abs(W - G.W) > 1e-6){ const nb = W - A; if(r.typ==='T3') setCota('b3', nb - r.P, r); else setCota('bm', nb - r.c, r); }
+      else if(k==='Y2' && Math.abs(Y2 - G.y2) > 1e-6) setCota('y2only', Y2, r);
+      else if(k==='WC' && Math.abs(WC - G.w) > 1e-6) setCota('wonly', WC, r);
       else if(k==='F' && Math.abs(D - G.D) > 1e-6){ if(r.typ==='T3L') setCota('d3', D - r.yd, r); else if(r.typ==='T3') setCota('y3', D - r.yb, r); else setCota('ym', D - r.y2 - r.w, r); }
       else { [ghost, gb, lbl].forEach(e=>e.setAttribute('visibility', 'hidden')); return; }
-      const msg = el('gen-msg'); msg.innerHTML = msg.innerHTML.replace(/Cota cambiada a [\d.]+ m(<\/b>) \([^)]*\)/, (x, bb)=> (k==='F' ? `Fondo construido: ${f2(D)} m` : `Crujías: A–B ${f2(A)} m, B–D ${f2(W-A)} m`) + bb);
+      const msg = el('gen-msg'); msg.innerHTML = msg.innerHTML.replace(/Cota cambiada a [\d.]+ m(<\/b>) \([^)]*\)/, (x, bb)=> (k==='Y2' ? `Muro entre dormitorios movido: dormitorio 1 de ${f2(Y2)} m y dormitorio 2 de ${f2(G.D-Y2)} m entre ejes` : k==='WC' ? `Muro de la cocina movido: sala-comedor de ${f2(G.D-WC)} m y cocina-baño de ${f2(WC)} m entre ejes` : k==='F' ? `Fondo construido: ${f2(D)} m` : `Crujías: A–B ${f2(A)} m, B–D ${f2(W-A)} m`) + bb);
     };
     h.addEventListener('pointermove', move); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
   }));
@@ -2863,7 +2875,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14f';
+const APP_VERSION = '2026-11-14g';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
