@@ -319,3 +319,158 @@ T[('A130', 'Tabla 02: Área de Almacenes')] = dict(
        'Papel de reciclaje|2 000', 'Plásticos|900', 'Cajas y paletas vacías (madera)|1 000', 'Llantas|1 000', 'Patio de contenedores|10 000'],
     n=['El área mínima que requiere protección incluye el área de almacenamiento y la circulación interior.'],
     end='Artículo')
+
+# ---- revisadas contra los PDF oficiales (rne/oficial/) ----
+T[('A070', 'Cuadro N° 21')] = dict(
+    h=['Clasificación|Estacionamientos|<', '^|Para personal administrativo|Para público'],
+    r=['Tienda independiente|1 est. cada 15 personas|1 est. cada 15 personas',
+       '#Locales de expendio de comidas y bebidas',
+       'Restaurante, cafetería (área de mesas)|1 est. cada 20 pers.|1 est. cada 20 pers.',
+       'Comida rápida, o al paso (área de mesas, área de atención)|^|^',
+       'Locales de expendio de combustibles y/o de energía eléctrica|En función de los servicios complementarios que contiene|<',
+       'Locales bancarios y de intermediación financiera|1 est. cada 15 pers.|1 est. cada 10 pers.',
+       '#Locales de entretenimiento y/o recreo',
+       'Parques de diversión y/o recreo, salas de juegos (electrónicos, video, bowling, de mesa, entre otros)|1 est. cada 25 pers.|1 est. cada 25 pers.',
+       '#Locales de servicios personales',
+       'Spa, baños turcos, sauna, baños de vapor, barbería, salones de belleza|1 est. cada 15 pers.|1 est. cada 10 pers.',
+       'Gimnasios, fisicoculturismo|^|^',
+       'Tienda por departamentos|1 est. cada 25 pers.|1 est. cada 25 pers.',
+       '#Tienda de autoservicio',
+       'Supermercado|1 est. cada 20 pers.|1 est. cada 20 pers.', 'Tienda de mejoramiento del hogar|^|^', 'Otras tiendas de autoservicio|^|^',
+       '#Mercado de abastos',
+       'Mercado de abastos mayorista|1 est. cada 10 pers.|1 est. cada 10 pers.', 'Mercado de abastos minorista|^|^',
+       'Galería comercial|1 est. cada 25 pers.|1 est. cada 20 pers.',
+       'Centro comercial|En función a la sumatoria total de los cálculos resultantes de estacionamientos de los establecimientos que lo conforman|<',
+       'Galería ferial|1 est. cada 25 pers.|1 est. cada 20 pers.'],
+    end='b) Este a su vez')
+T[('A070', 'Cuadro N° 22')] = dict(
+    h=['Tipo de comercio|Población a servir|Costa|<|Sierra|Selva', '^|^|Lima|Otras ciudades|^|^'],
+    r=['Comercio interdistrital y metropolitano (CM)|Más de 300,000 hab.|1.0|0.8|0.8|0.7',
+       'Comercio distrital (CZ)|100,00 – 300,000 hab.|^|0.7|0.7|0.6',
+       'Comercio zonal o sectorial (CZ)|30,00 – 100,000 hab.|0.9|0.6|0.6|0.5',
+       'Comercio local y vecinal (CV)|Hasta 30,000 hab.|0.6|0.4|0.4|0.3'])
+_res2 = ['Tienda independiente|0.003', '#Locales de expendio de comidas y bebidas', 'Restaurante, cafetería|0.015', 'Comida rápida, o al paso|0.030',
+         'Locales de expendio de combustibles y/o de energía eléctrica|0.0001', 'Locales bancarios y de intermediación financiera|0.003',
+         '#Locales de entretenimiento y/o recreo', 'Parques de diversión y/o recreo, salas de juegos (electrónicos, video, bowling, de mesa, entre otros)|0.003',
+         '#Locales de servicios personales', 'Spa, baños turcos, sauna, baños de vapor, barbería, salones de belleza|0.003', 'Gimnasios, fisicoculturismo|^',
+         'Tienda por departamentos|0.003', '#Tienda de autoservicio', 'Supermercado|0.003', 'Tienda de mejoramiento del hogar|^', 'Otras tiendas de autoservicio|^',
+         '#Locales de servicios para vehículos', 'Local de estacionamiento de vehículos|0.003', 'Local de venta, mantenimiento y/o limpieza de vehículos|^',
+         '#Mercado de abastos', 'Mercado de abastos mayorista|0.015', 'Mercado de abastos minorista|0.020', 'Galería comercial|0.003',
+         'Centros comerciales|En base a la área de venta de los establecimientos que la conforman', 'Galería ferial|0.003']
+T[('A070', 'Cuadro N° 26')] = dict(T[('A070', 'Cuadro N° 26')],
+    r=[x if x.startswith('#') or not re.search(r'\|[0-9.]+$', x) else x + ' m³ por m² de área de venta' for x in _res2])
+
+S, N = '✓', 'X'
+def _r(*cells): return '|'.join(cells)
+_c27 = [
+ _r('Tienda independiente (14)', '<', 'Área techada hasta 100 m²', S, S, N, N, N),
+ _r('^', '^', 'Área techada mayor a 100 m² hasta 750 m²', S, S, N, N, S + ' (1)'),
+ _r('^', '^', 'Área techada mayor a 750 m² hasta 1500 m²', S, S, S + ' (2)', N, S),
+ _r('^', '^', 'Planta techada de área mayor a 1500 m²', S, S, S, S, S),
+ _r('Locales de expendio de comidas y bebidas', 'Restaurante, cafetería, local de comida rápida, local de venta de comidas al paso', 'Área total construida hasta 75 m²', S, S, N, N, N),
+ _r('^', '^', 'Área total construida mayor a 75 m² hasta 300 m²', S + ' (6)', S, N, N, S + ' (5)'),
+ _r('^', '^', 'Área total construida mayor a 300 m²', S, S, N, N, S),
+ _r('Locales de expendio de combustibles y/o energía eléctrica', 'Establecimiento de venta de combustibles (estación de servicio, grifo, gasocentro) y/o de energía eléctrica para vehículos', '<',
+    'Los requisitos de seguridad que se requieren son en función de los servicios complementarios que contiene.', '<', '<', '<', '<'),
+ _r('Locales bancarios y de intermediación financiera', '<', 'Área techada hasta 100 m²', S, S, N, N, N),
+ _r('^', '^', 'Área techada mayor a 100 m² hasta 750 m²', S, S, N, N, S + ' (1)'),
+ _r('^', '^', 'Área techada mayor a 750 m² hasta 1,500 m²', S, S, S + ' (2)', N, S),
+ _r('^', '^', 'Planta techada de área mayor a 1,500 m²', S, S, S, S, S),
+ _r('Locales de recreación y entretenimiento', 'Locales de diversiones y/o recreo', 'Área techada hasta 100 m²', S, S, N, N, N),
+ _r('^', '^', 'Área mayor a 100 m² hasta 750 m²', S, S, S + ' (2) (8)', N, S),
+ _r('^', '^', 'Área mayor a 750 m²', S, S, S, S, S),
+ _r('Locales de servicios personales', 'Spa, baños turcos, sauna, baños de vapor, barbería, salones de belleza', 'Área techada hasta 100 m²', S, S, N, N, N),
+ _r('^', '^', 'Área mayor a 100 m² hasta 750 m²', S, S, S + ' (2)', N, S),
+ _r('^', '^', 'Área mayor a 750 m²', S, S, S, S, S),
+ _r('^', 'Gimnasios, fisicoculturismo', 'Área techada hasta 100 m²', S, S, N, N, N),
+ _r('^', '^', 'Área mayor a 100 m² hasta 750 m²', S, S, S + ' (2)', N, S),
+ _r('^', '^', 'Área mayor a 750 m²', S, S, S, S, S),
+ _r('Tienda por departamentos', '<', '<', S, S, S, S, S),
+ _r('Tienda de autoservicio', 'Supermercado', 'De un (1) solo nivel y hasta 1,000 m² de área de venta', S, S, N, N, S),
+ _r('^', '^', 'De un (1) solo nivel y área de venta mayor a 1,000 m² hasta 2,000 m²', S, S, S + ' (2)', N, S),
+ _r('^', '^', 'De un (1) solo nivel mayor a 2,000 m² de área de venta', S, S, S, S, S),
+ _r('^', '^', 'Entre uno (1) y tres (3) niveles, con área de venta hasta 1,000 m² por piso', S, S, N, N, S),
+ _r('^', '^', 'De más de tres (3) niveles y área de venta hasta 1000 m² por piso', S, S, N, S, S),
+ _r('^', '^', 'De más de un (1) nivel y área de venta mayor a 1,000 m² por piso', S, S, S, S, S),
+ _r('^', 'Tienda de mejoramiento del hogar', '<', S, S, S, S, S),
+ _r('^', 'Otras tiendas de autoservicio', '<', '', '', '', '', ''),
+ _r('Mercados de abasto', 'Mercado de abastos mayorista (3)', 'Con techo común', S, S, S, S, S),
+ _r('^', '^', 'Sin techo común (puestos independientes)', S, S, N, S, S),
+ _r('^', 'Mercado de abastos minorista', 'Con techo común', S, S, N, S, S),
+ _r('^', '^', 'Sin techo común (puestos independientes)', S, S, N, N, S + ' (15)'),
+ _r('Galería comercial (7) (12)', '<', 'De un (1) solo nivel hasta 500 m² de área techada', S, S, N, N, S),
+ _r('^', '^', 'De un (1) solo nivel y área techada mayor a 500 m² y hasta 1000 m²', S, S, N, S, S),
+ _r('^', '^', 'De un (1) solo nivel y área techada mayor a 1000 m²', S, S, S + ' (2)', S, S),
+ _r('^', '^', 'De dos (2) a tres (3) niveles, con área techada total hasta 1000 m²', S, S, N, N, S),
+ _r('^', '^', 'De dos (2) a tres (3) niveles, con área techada total mayor a 1000 m²', S, S, N, S, S),
+ _r('^', '^', 'De cuatro (4) a más niveles', S, S, S, S, S),
+ _r('Centro comercial (13)', '<', 'De área hasta 500 m² por piso y hasta tres (3) niveles (3)', S, S, N, N, S),
+ _r('^', '^', 'De área hasta 500 m² por piso y más de tres (3) niveles', S, S, N, S, S),
+ _r('^', '^', 'De área mayor a 500 m² y hasta 1500 m² por piso y hasta tres (3) niveles (3)', S, S, N, S, S),
+ _r('^', '^', 'De área mayor a 1500 m² por piso (4)', S, S, S, S, S),
+ _r('Galería ferial', '<', '<', S + ' (9)', S, N, N, N),
+]
+T[('A070', 'Cuadro N° 27')] = dict(
+    h=['Clasificación|Servicio|Características|Señalización e iluminación de emergencia|Extintores portátiles|Sistema de rociadores (10)|Sistema de gabinetes contra incendios|Detección y alarma de incendios centralizado (11)'],
+    r=_c27,
+    n=['✓ requiere · X no requiere. Los números entre paréntesis remiten a las notas:',
+       '(1) A partir de 250 m² de área.',
+       '(2) Cuando los requerimientos de agua (caudal y presión) del sistema de rociadores puedan ser abastecidos por el servicio de agua de la localidad, estos pueden conectarse directamente con la red pública, siempre y cuando exista una compañía de bomberos en la localidad.',
+       '(3) Es requisito obligatorio contar con hidrantes que provean un caudal total mínimo de 750 gpm (caudales sumados).',
+       '(4) Son requeridos hidrantes de la red pública con un caudal suficiente para el máximo riesgo, de acuerdo con la fórmula ISO.',
+       '(5) Únicamente estaciones manuales y alarma de incendios.',
+       '(6) Cuando las rutas de evacuación así lo exijan.',
+       '(7) Para construcciones de conjunto de tiendas aplica los mismos requerimientos de protección contra incendio.',
+       '(8) Únicamente aquellos ubicados bajo el nivel del piso.',
+       '(9) Iluminación de emergencia solo requerido si hay atención al público sin iluminación natural.',
+       '(10) Las áreas comerciales mayores a 250 m² ubicadas bajo el nivel del piso, deben contar con un sistema automático de rociadores. (2)',
+       '(11) Los sistemas de detección y alarma deben reportar a un lugar con personal entrenado las 24 horas, o reportar vía telefónica a un punto que cumpla con estos requisitos.',
+       '(12) Las tiendas de hasta tres (3) niveles colindantes con otras tiendas y/u otros predios, agrupadas formando 24.00 m lineales de frente, deben contar con muros laterales y posteriores resistentes al fuego no menor a una (1) hora y dos (2) horas para tiendas de cuatro (4) a más niveles. No se requiere compartimentación resistente al fuego en el frente de las tiendas.',
+       '(13) En centros comerciales bajo un mismo techo estructural, la distancia máxima de recorrido es de 45.00 m a una salida de evacuación o de la edificación cuando no se cuenta con un sistema de rociadores, y de 60.00 m cuando la edificación cuenta con rociadores. Puede tener una distancia máxima de recorrido de 60.00 m adicionales, tomados desde la puerta de salida de la tienda hasta la salida más cercana de la edificación siempre que cuente con todos los siguientes componentes: a) rociadores instalados en el 100% del centro comercial, incluyendo áreas comunes de circulación techadas; b) sistema de administración de humos; c) compartimentación resistente al fuego no menor de 1 hora entre locales, para centros comerciales de hasta tres (3) pisos y de dos (2) horas de cuatro (4) pisos a más.',
+       '(14) Las tiendas ubicadas al interior de centros comerciales y galerías comerciales deben cumplir los requisitos de resistencia al fuego en relación al local donde se ubican.',
+       'La nota (15) aparece en el cuadro pero no figura en la lista de notas de la separata.'],
+    end='Artículo')
+
+_rf_h = ['Uso de la edificación|Sistema de rociadores|Tiempo de resistencia al fuego mínimo en minutos para:|<|<|<|<|<',
+         '^|^|Sótanos: profundidad del sótano más bajo (NPT)|<|Pisos superiores: altura del piso superior sobre el nivel de descarga de los ocupantes|<|<|<',
+         '^|^|> 10 m|≤ 10 m|≤ 5 m|≤ 21 m|≤ 60 m|> 60 m']
+_rf_n = ['NP: no permitido.', '(2) Mayores a 3,7 metros de altura de carga de combustible.']
+T[('A130', 'Tabla 01: Tiempo mínimo')] = dict(
+    title='Tabla 01: Tiempo mínimo permitido de resistencia al fuego para los elementos estructurales: pórticos, muros, arcos, losas',
+    h=_rf_h,
+    r=['#Almacenes (2)', 'Bajo riesgo (3)|NO|120|90|60|90|120|NP', '^|SI|120|90|60|90|90|120',
+       'Moderado riesgo (3)|NO|180|120|90|120|180|NP', '^|SI|120|90|60|90|120|180', 'Alto riesgo (3)|NO|NP|NP|120|180|NP|NP',
+       'Líquidos inflamables y combustibles (3)|NO|NP|NP|120|180|NP|NP', '^|SI|NP|NP|90|120|180|NP'],
+    n=_rf_n + ['(3) Clasificación de riesgos establecidos en norma A-010 edición 2009, Artículo 25.'],
+    end='El proceso de ensayo')
+T[('A130', 'Tabla 06')] = dict(
+    title='Tabla 06: Tiempo mínimo permitido de resistencia al fuego para los elementos estructurales: pórticos, muros, arcos, losas',
+    h=_rf_h,
+    r=['#Almacenes (2)', 'Bajo riesgo (3)|NO|120|90|60|90|120|NP', '^|SI|120|90|60|90|90|120',
+       'Moderado riesgo (3)|NO|180|120|90|120|180|NP', '^|SI|120|90|60|90|120|180', 'Alto riesgo (3)|NO|NP|NP|120|180|NP|NP',
+       'Líquidos inflamables y combustibles (3)|NO|NP|NP|180|180|NP|NP', '^|SI|NP|NP|120|120|180|NP'],
+    n=_rf_n + ['(3) Clasificación de riesgos establecidos en norma A-130 edición 2009, Artículo 25.'],
+    end='El proceso de ensayo')
+_alm_h = ['Tipo de mercancía|Área de almacenamiento (m²)|Sistema de rociadores|Sistema de agua (gabinetes)|Sistema de detección de incendios / alarma|Extintores portátiles|Señalización']
+def _alm(rows):
+    out = []
+    for clase, a1, r1, a2, r2 in rows:
+        out += [f'{clase}|{a1}|{r1}', f'^|{a2}|{r2}']
+    return out
+T[('A130', 'Tabla 03')] = dict(
+    title='Tabla 03: Requerimiento mínimo de protección contra incendios para almacenes techados, de altura menor a 3,70 m y que constituye el principal o único uso de ocupación',
+    h=_alm_h,
+    r=_alm([('Clase I', '0-2500', 'NO|NO|SI|SI|SI', '> 2501', 'NO|SI|SI|SI|SI'), ('Clase II', '0-2500', 'NO|NO|SI|SI|SI', '> 2501', 'NO|SI|SI|SI|SI'),
+            ('Clase III', '0-1500', 'NO|SI|SI|SI|SI', '> 1501', 'SI|SI|SI|SI|SI'), ('Clase IV', '0-1000', 'NO|SI|SI|SI|SI', '> 1001', 'SI|SI|SI|SI|SI')]),
+    end='Nota: Para almacenamientos')
+T[('A130', 'Tabla 04:')] = dict(
+    title='Tabla 04: Requerimiento mínimo de protección contra incendios para almacenes techados, de altura mayor a 3,70 m y menor a 7,60 m',
+    h=_alm_h,
+    r=_alm([('Clase I', '0-2500', 'NO|NO|SI|SI|SI', '> 2501', 'NO|SI|SI|SI|SI'), ('Clase II', '0-2500', 'NO|NO|SI|SI|SI', '> 2501', 'SI|SI|SI|SI|SI'),
+            ('Clase III', '0-1500', 'NO|SI|SI|SI|SI', '> 1501', 'SI|SI|SI|SI|SI'), ('Clase IV', '0-1000', 'NO|SI|SI|SI|SI', '> 1001', 'SI|SI|SI|SI|SI')]),
+    end='1.5')
+T[('A130', 'Tabla 05')] = dict(
+    title='Tabla 05: Requerimiento mínimo de protección contra incendios para almacenes techados de altura mayor a 7,60 m',
+    h=_alm_h,
+    r=['Clase I|1500|SI|SI|SI|SI|SI', 'Clase II|1000|SI|SI|SI|SI|SI', 'Clase III|1000|SI|SI|SI|SI|SI', 'Clase IV|500|SI|SI|SI|SI|SI'],
+    end='Artículo')

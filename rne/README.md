@@ -18,7 +18,8 @@ El verificador (`index.html`) convierte solo cada cita «A.0x0 art. N…» en un
 - `rne-data.js`: texto de las normas (generado, no editar a mano).
 - `ilustrado-data.js`: índice del RNE ilustrado (página de cada artículo) y cruce con los artículos vigentes.
 - `RNE_ilustrado.pdf`: RNE ilustrado (edición 2012; A.010 y A.020 de 2006 y parte de la A.030).
-- `herramientas/`: `RNE.txt` (texto de las separatas de El Peruano), `parse.py` y `ilu.py`.
+- `oficial/A010.pdf` … `A130.pdf`: PDF oficiales de cada norma; `oficial-data.js` dice en qué página empieza cada artículo (si falta uno, la página usa la del artículo anterior).
+- `herramientas/`: `RNE.txt` (texto de las separatas de El Peruano), `parse.py`, `tablas.py` (tablas rearmadas a mano), `ilu.py` y `oficial.py`.
 
 ## Versiones
 
@@ -30,5 +31,6 @@ Las demás están como vienen en el archivo (texto del D.S. 011-2006). El ilustr
 ```
 python3 rne/herramientas/parse.py rne/herramientas/RNE.txt rne/rne-data.js
 python3 rne/herramientas/ilu.py rne/RNE_ilustrado.pdf rne/ilustrado-data.js   # necesita pdftotext
+python3 rne/herramientas/oficial.py   # página de cada artículo en rne/oficial/*.pdf → rne/oficial-data.js
 ```
 El cruce artículo vigente → artículo del ilustrado está escrito a mano en `ilu.py` (MAP y EXTRA).

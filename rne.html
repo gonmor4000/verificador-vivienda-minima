@@ -86,6 +86,8 @@ h3.cap.sub{font-size:12.5px;margin-top:22px}
 .ilu{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 2px;align-items:center}
 .ilu a{font-size:12.5px;text-decoration:none;border-radius:10px;padding:1px 9px;background:var(--warn-soft);color:var(--warn)}
 .ilu a:hover{text-decoration:underline}
+.ahead a.of{font-size:12px;text-decoration:none;border:1px solid var(--line);border-radius:10px;padding:0 8px;color:var(--muted);margin-left:auto}
+.ahead a.of:hover{color:var(--brick);border-color:var(--brick)}
 .ilu em{font-size:12px;color:var(--muted);font-style:normal}
 .art p{margin:7px 0;max-width:80ch}
 .art p.num,.art p.lit{position:relative;padding:2px 6px;margin-left:-6px;border-radius:5px}
@@ -164,7 +166,7 @@ h3.cap.sub{font-size:12.5px;margin-top:22px}
   </aside>
   <main id="main"></main>
   <section class="pane" id="pane" hidden aria-label="RNE ilustrado">
-    <div class="ph"><div><b>RNE ilustrado</b> <span id="panep"></span><div class="w">Edición 2012, texto de 2006: compara con el vigente.</div></div>
+    <div class="ph"><div><b id="panet">RNE ilustrado</b> <span id="panep"></span><div class="w" id="panew">Edición 2012, texto de 2006: compara con el vigente.</div></div>
       <div style="display:flex;gap:6px"><a id="paneopen" target="_blank" rel="noopener" class="link" style="padding:3px 7px">Abrir aparte</a><button type="button" id="paneclose">Cerrar</button></div></div>
     <iframe id="pdf" title="RNE ilustrado"></iframe>
   </section>
@@ -172,6 +174,7 @@ h3.cap.sub{font-size:12.5px;margin-top:22px}
 
 <script src="rne/rne-data.js"></script>
 <script src="rne/ilustrado-data.js"></script>
+<script src="rne/oficial-data.js"></script>
 <script>
 (function(){
 const N = window.RNE_NORMAS, I = window.RNE_ILU;
@@ -179,7 +182,18 @@ const byId = {}; N.forEach(n => byId[n.id] = n);
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
-const PDF = 'rne/' + I.pdf;
+const PDF = 'rne/' + I.pdf, OF = window.RNE_OFICIAL || {};
+// página del artículo en el PDF oficial (si falta, la del artículo anterior encontrado)
+function ofPage(norm, n){
+  const o = OF[norm]; if(!o) return null;
+  const k = parseInt(n, 10); if(!k) return null;
+  for(let i = k; i > 0; i--) if(o.art[i]) return o.art[i];
+  return 1;
+}
+function ofLink(norm, n){
+  const o = OF[norm], p = ofPage(norm, n); if(!p) return '';
+  return `<a class="of" href="rne/${o.pdf}#page=${p}" data-of="${norm}" data-page="${p}" target="_blank" rel="noopener" title="Ver en el PDF oficial de la norma (página ${p})">PDF oficial p. ${p}</a>`;
+}
 let curNorm = null;
 
 // Temas frecuentes para vivienda unifamiliar (enlaces a numerales)
@@ -210,7 +224,7 @@ function table(title, t){
   const parse = rows => rows.map(r => r.startsWith('#') ? {grp: r.slice(1)} : r.split('|'));
   const H = parse(t.h || []), R = parse(t.r);
   const ncol = Math.max(1, ...H.concat(R).filter(r => Array.isArray(r)).map(r => r.length));
-  const isNum = c => /^(-|[\d.,]+\s*(%|m²?|m³)?|\d+ c\/\d+|\d+L,.*|[\d.,]+ m (\(\*+\))?.*)$/.test(c.trim()) && c.length < 24;
+  const isNum = c => /^(✓( \(\d+\))*|X|SI|NO|NP|> ?[\d.,]+|[\d]+-[\d]+|-|[\d.,]+\s*(%|m²?|m³)?|\d+ c\/\d+|\d+L,.*|[\d.,]+ m (\(\*+\))?.*)$/.test(c.trim()) && c.length < 24;
   function grid(rows, tag){
     const cells = rows.map(r => Array.isArray(r) ? Array.from({length: ncol}, (_, i) => ({t: r[i] ?? '', rs:1, cs:1})) : r);
     const owner = rows.map(() => []);
@@ -246,6 +260,7 @@ function renderNorm(id){
   const iluN = I.normas[id];
   let h = `<div class="nhead" id="${n.id}"><h2><small>${n.code}</small>${esc(n.title)}</h2><div class="badges">`;
   h += n.vigente ? `<span class="badge ok">Versión: ${esc(n.version)}</span>` : `<span class="badge">Versión del archivo: ${esc(n.version)}</span>`;
+  if(OF[id]) h += `<a class="badge" href="rne/${OF[id].pdf}" data-of="${id}" data-page="1" target="_blank" rel="noopener">PDF oficial (${OF[id].pages} pp.)</a>`;
   if(iluN) h += `<a class="badge warn" href="${PDF}#page=${iluN.p[0]}" data-page="${iluN.p[0]}">Ilustrado pp. ${iluN.p[0]}–${iluN.p[1]}: ${esc(iluN.ed)}</a>`;
   else h += `<span class="badge">Sin RNE ilustrado</span>`;
   h += `</div>`;
@@ -261,7 +276,7 @@ function renderNorm(id){
     if(s.t === 'intro' && !s.b.length) continue;
     if(s.t === 'intro' && s.b.length <= 1 && (!s.b[0] || s.b[0][2].length < 140)) continue;
     const title = s.t === 'art' ? (s.title || (s.b[0] ? s.b[0][2].split(/\s+/).slice(0,9).join(' ') + '…' : '')) : s.title;
-    h += `<article class="art" id="${s.id}"><div class="ahead"><h4>${artTitle(s)}</h4><a class="link" href="#${s.id}" title="Enlace a este artículo">#</a></div>${iluChips(s)}${s.b.map(block).join('')}</article>`;
+    h += `<article class="art" id="${s.id}"><div class="ahead"><h4>${artTitle(s)}</h4><a class="link" href="#${s.id}" title="Enlace a este artículo">#</a>${s.t==='art' ? ofLink(id, s.n) : ''}</div>${iluChips(s)}${s.b.map(block).join('')}</article>`;
     toc += `<li><a href="#${s.id}" data-s="${s.id}">${s.t==='art'?`<span class="n">${s.n}</span>`:''}${esc(title)}</a></li>`;
   }
   $('#main').innerHTML = h;
@@ -337,12 +352,14 @@ document.addEventListener('click', e => {
     if(navigator.clipboard) navigator.clipboard.writeText(url).then(() => { lab.classList.add('copied'); setTimeout(() => lab.classList.remove('copied'), 1600); }).catch(()=>{});
   }
   const pg = e.target.closest('a[data-page]');
-  if(pg && innerWidth > 900){ e.preventDefault(); openPdf(+pg.dataset.page); }
+  if(pg && innerWidth > 900){ e.preventDefault(); openPdf(+pg.dataset.page, pg.dataset.of); }
 });
 
 // ---------- panel del ilustrado ----------
-function openPdf(p){
-  const url = PDF + '#page=' + p;
+function openPdf(p, of){
+  const url = (of ? 'rne/' + OF[of].pdf : PDF) + '#page=' + p;
+  $('#panet').textContent = of ? 'PDF oficial ' + byId[of].code : 'RNE ilustrado';
+  $('#panew').textContent = of ? 'Texto oficial publicado (separata de la norma).' : 'Edición 2012, texto de 2006: compara con el vigente.';
   $('#pane').hidden = false; $('#app').classList.add('ilu-open');
   $('#panep').textContent = '· p. ' + p; $('#paneopen').href = url;
   const f = $('#pdf'); f.src = 'about:blank'; setTimeout(() => f.src = url, 30);
