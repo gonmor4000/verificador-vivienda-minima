@@ -182,6 +182,11 @@ const byId = {}; N.forEach(n => byId[n.id] = n);
 const $ = s => document.querySelector(s);
 const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+// proyectos de modificación publicados y aún no aprobados (revisado el 14 nov 2026)
+const PEND = {
+  A020: ['Proyecto de cambio en consulta (RM 214-2025), aún no aprobado', 'https://www.gob.pe/institucion/vivienda/normas-legales/7086219-214-2025-vivienda'],
+  A130: ['Proyecto de cambio en consulta (RM 264-2026), aún no aprobado', 'https://www.gob.pe/institucion/vivienda/normas-legales/8394201-264-2026-vivienda']
+};
 const PDF = 'rne/' + I.pdf, OF = window.RNE_OFICIAL || {};
 // página del artículo en el PDF oficial (si falta, la del artículo anterior encontrado)
 function ofPage(norm, n){
@@ -260,6 +265,7 @@ function renderNorm(id){
   const iluN = I.normas[id];
   let h = `<div class="nhead" id="${n.id}"><h2><small>${n.code}</small>${esc(n.title)}</h2><div class="badges">`;
   h += n.vigente ? `<span class="badge ok">Versión: ${esc(n.version)}</span>` : `<span class="badge">Versión del archivo: ${esc(n.version)}</span>`;
+  if(PEND[id]) h += `<a class="badge warn" href="${PEND[id][1]}" target="_blank" rel="noopener" title="Revisado el 14 nov 2026: sigue vigente la versión mostrada">${esc(PEND[id][0])}</a>`;
   if(OF[id]) h += `<a class="badge" href="rne/${OF[id].pdf}" data-of="${id}" data-page="1" target="_blank" rel="noopener">PDF oficial (${OF[id].pages} pp.)</a>`;
   if(iluN) h += `<a class="badge warn" href="${PDF}#page=${iluN.p[0]}" data-page="${iluN.p[0]}">Ilustrado pp. ${iluN.p[0]}–${iluN.p[1]}: ${esc(iluN.ed)}</a>`;
   else h += `<span class="badge">Sin RNE ilustrado</span>`;
