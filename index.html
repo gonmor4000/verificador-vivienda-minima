@@ -350,7 +350,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
 
   <section id="tab-rne" class="card rules" hidden aria-label="Artículos del RNE">
     <h2>Artículos del RNE que respeta el verificador</h2>
-    <p class="hint" style="margin-top:0">Cada fila es un artículo del Reglamento Nacional de Edificaciones vigente que la herramienta aplica al generar la casa o comprueba en sus verificaciones. Haz clic en la cita para abrir ese artículo en el <a href="rne.html" target="_blank" rel="noopener" class="rne-home">RNE consultable</a>, con su texto completo y la página del RNE ilustrado. Normas usadas: A.010 (RM 191-2021), A.020 (RM 188-2021) y A.120 (RM 075-2023).</p>
+    <p class="hint" style="margin-top:0">Cada fila es un artículo del Reglamento Nacional de Edificaciones vigente que la herramienta aplica al generar la casa o comprueba en sus verificaciones. Haz clic en la cita para abrir ese artículo en el <a href="rne.html" target="_blank" rel="noopener" class="rne-home">RNE consultable</a>, con su texto completo y la página del RNE ilustrado. Las dudas de normativa que ya salieron están en el tablón de <a href="preguntas.html" target="_blank" rel="noopener" class="preg-home">Preguntas</a>. Normas usadas: A.010 (RM 191-2021), A.020 (RM 188-2021) y A.120 (RM 075-2023).</p>
 
     <h3>A.020 Vivienda</h3>
     <div class="ca-wrap"><table class="ca rne-t">
@@ -406,6 +406,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Planta escalonada</b>: cada crujía tiene su propio fondo. El tirador verde del muro posterior del ala de dormitorios la acorta o alarga por su cuenta (control «Crujía de dormitorios más corta»), y el del fondo de la sala-cocina mueve solo esa crujía. Detrás del dormitorio 2 queda un patio que ilumina su ventana. Lo siguen el 2.º piso, el 3D, los cortes y ejes de Diseño Pro, el cuadro de áreas y el metrado. Solo en plantas de dos crujías.</span></li>
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevo tablón de <b>Preguntas de normativa</b> (preguntas.html): las dudas técnicas que ya salieron (escalera en los retiros, pisos, PMR, anchos de escalera, bifamiliar, vigencia, EM.110), cada una con su respuesta y el artículo enlazado. Enlazado desde la pestaña RNE y el RNE consultable.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: botones <b>«Ver plano original»</b> en las fichas de PREVI que abren el PDF de la fuente en la página exacta del plano: láminas del concurso de los 13 equipos internacionales y plantas de 1978 y 2003 de las casas Zamora, Arnao y Frías.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: <b>plantas interiores de 9 proyectos PREVI</b>, medidas con la escala de los planos publicados. Se suman Atelier 5, Correa, Svenssons y la propuesta española (tipos P y G), y la <b>evolución real de tres casas de 1978 a 2003</b>, piso por piso: Stirling (casa Zamora), Morales-Montagne (casa Arnao) y Miró Quesada-Williams-Núñez (casa Frías). Corregido qué crecimiento en m² corresponde a cada casa (Arnao: de 61 a 172 m²; Frías: de 92 a 191 m²).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: <b>plantas interiores</b> redibujadas con sus ambientes (sala, comedor, cocina, baño, dormitorios, patio, escalera) de la casa de <b>Kikutake, Maki y Kurokawa</b> (1.er y 2.º piso, desde el plano acotado), de <b>Stirling</b> (etapa inicial, casa final y casa desarrollada) y de <b>Herbert Ohl</b>. Cada una cita su fuente y se marca «aproximada» cuando no hay cotas. Nuevo filtro «Con planta interior».</span></li>
@@ -2910,7 +2911,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14h';
+const APP_VERSION = '2026-11-14i';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
@@ -2957,6 +2958,7 @@ load(presets.base); el('p-base').classList.add('on'); render(); if(el('tam').val
       const frag = document.createDocumentFragment(); while(span.firstChild) frag.appendChild(span.firstChild); t.parentNode.replaceChild(frag, t); }
   }
   document.querySelectorAll('a.rne-home').forEach(x => x.href = RNE_URL);
+  document.querySelectorAll('a.preg-home').forEach(x => x.href = RNE_URL.replace('rne.html', 'preguntas.html'));
   link(document.body);
   let pend = new Set(), raf = 0;
   const obs = new MutationObserver(ms => { for(const m of ms) if(m.target.nodeType === 1 && !m.target.closest('svg')) pend.add(m.target);
