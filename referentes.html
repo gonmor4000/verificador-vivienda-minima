@@ -1,0 +1,556 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referentes de vivienda</title>
+<meta name="description" content="Catálogo consultable de referentes de vivienda progresiva en el Perú: los 26 proyectos de PREVI Lima y otros proyectos, concursos, programas y estudios peruanos, con fichas, esquemas propios y enlaces a los planos en sus fuentes.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#f9faf9; --ink:#1d2320; --muted:#5d6762; --line:#cfd5d1;
+  --brick:#a94a26; --brick-soft:rgba(169,74,38,.10);
+  --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --warn:#a46a0c; --warn-soft:rgba(164,106,12,.13);
+  --patio:#d9e7dc; --grow:rgba(169,74,38,.16); --shop:#efe2c4; --built:#c9cfcb;
+  --f-body:"Archivo",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15);
+  --patio:#23392b; --grow:rgba(224,128,90,.20); --shop:#3d3520; --built:#3a423e; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15);
+  --patio:#23392b; --grow:rgba(224,128,90,.20); --shop:#3d3520; --built:#3a423e; color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
+a{color:var(--brick)}
+button,select,input{font:inherit;color:var(--ink)}
+button{font-weight:500;border:1px solid var(--line);background:var(--panel);border-radius:6px;padding:6px 11px;cursor:pointer}
+button:hover{border-color:var(--brick)}
+button:focus-visible,input:focus-visible,a:focus-visible,select:focus-visible{outline:2px solid var(--brick);outline-offset:2px}
+.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px;padding:16px 16px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
+.top h1{font-size:22px;margin:0;letter-spacing:-.01em}
+.top p{margin:2px 0 0;color:var(--muted);font-size:13.5px;max-width:88ch}
+.top nav{display:flex;gap:8px;flex-wrap:wrap}
+.top nav a{font-size:13.5px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:6px 11px;color:var(--ink);background:var(--bg)}
+.top nav a:hover{border-color:var(--brick)}
+.app{display:grid;grid-template-columns:280px minmax(0,1fr);gap:0}
+aside{border-right:1px solid var(--line);background:var(--panel);padding:14px 14px 40px;position:sticky;top:0;height:100vh;overflow:auto}
+aside h2{font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:16px 0 6px;font-weight:600}
+.search{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font-size:13px;padding:4px 9px;border-radius:999px}
+.chip[aria-pressed="true"]{background:var(--brick);border-color:var(--brick);color:#fff}
+aside select{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:var(--bg)}
+.hint{color:var(--muted);font-size:13px}
+main{padding:16px 16px 60px;min-width:0}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:12px}
+.bar .count{color:var(--muted);font-size:13.5px}
+.note{background:var(--warn-soft);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font-size:13.5px;margin-bottom:14px}
+.grp-title{font-size:17px;margin:22px 0 4px}
+.grp-sub{color:var(--muted);font-size:13.5px;margin:0 0 10px;max-width:90ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:0;display:flex;flex-direction:column;text-align:left;cursor:pointer;overflow:hidden;font-weight:400}
+.card:hover{border-color:var(--brick)}
+.card .fig{background:var(--bg);border-bottom:1px solid var(--line);height:150px;display:flex;align-items:center;justify-content:center}
+.card .fig svg{width:100%;height:100%}
+.card .body{padding:10px 12px 12px;display:flex;flex-direction:column;gap:4px}
+.card .cod{font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.card h3{margin:0;font-size:15.5px;line-height:1.3}
+.card .who{font-size:13px;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tag{font-size:11.5px;border:1px solid var(--line);border-radius:4px;padding:1px 6px;color:var(--muted);background:var(--bg)}
+.tag.win{border-color:var(--ok);color:var(--ok);background:var(--ok-soft)}
+.tag.no{border-color:var(--warn);color:var(--warn);background:var(--warn-soft)}
+.placeholder{font-size:12.5px;color:var(--muted);text-align:center;padding:10px;line-height:1.4}
+.placeholder b{display:block;font-size:13px;color:var(--ink);font-weight:600}
+/* ficha */
+dialog{border:1px solid var(--line);border-radius:12px;padding:0;width:min(980px,calc(100vw - 24px));max-height:calc(100vh - 24px);background:var(--panel);color:var(--ink)}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.f-head{display:flex;justify-content:space-between;gap:10px;align-items:start;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--panel);z-index:1}
+.f-head h2{margin:0;font-size:20px;line-height:1.25}
+.f-head .who{color:var(--muted);font-size:14px}
+.f-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);gap:18px;padding:16px}
+.f-body h3{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:14px 0 6px}
+.f-body h3:first-child{margin-top:0}
+.f-body p{margin:0 0 8px}
+.fig-big{background:var(--bg);border:1px solid var(--line);border-radius:8px}
+.fig-big svg{width:100%;height:320px;display:block}
+.cap{font-size:12px;color:var(--muted);margin-top:4px}
+table.dat{border-collapse:collapse;width:100%;font-size:14px}
+table.dat td{border-top:1px solid var(--line);padding:5px 6px;vertical-align:top}
+table.dat td:first-child{color:var(--muted);width:38%}
+.links{display:flex;flex-direction:column;gap:6px}
+.links a{display:block;border:1px solid var(--line);border-radius:6px;padding:7px 10px;text-decoration:none;background:var(--bg);font-size:14px}
+.links a:hover{border-color:var(--brick)}
+.links a small{display:block;color:var(--muted);font-size:12px}
+.links a.main{border-color:var(--brick);background:var(--brick-soft);font-weight:600}
+.tomar{background:var(--ok-soft);border-left:3px solid var(--ok);padding:8px 10px;border-radius:0 6px 6px 0;font-size:14px}
+.evo svg{width:100%;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-top:6px}
+.legend i{display:inline-block;width:12px;height:12px;border:1px solid var(--line);vertical-align:-2px;margin-right:4px}
+#biblio li{margin-bottom:6px}
+.fbtn{display:none;margin-top:8px;width:100%}
+.empty{padding:30px;text-align:center;color:var(--muted)}
+@media (max-width:820px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  aside{position:static;height:auto;border-right:0;border-bottom:1px solid var(--line)}
+  .f-body{grid-template-columns:minmax(0,1fr)}
+  .fbtn{display:block}
+  .filtros{display:none}
+  .filtros.open{display:block}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>Referentes de vivienda progresiva en el Perú</h1>
+    <p>Los 26 proyectos de PREVI Lima (1969) y otros proyectos, concursos, programas y estudios peruanos. Cada ficha da autores, sistema, idea de crecimiento, datos conocidos y <b>dónde ver los planos</b> en su fuente original.</p>
+  </div>
+  <nav><a href="./">← Verificador</a><a href="rne.html">RNE consultable</a><a href="#biblio">Fuentes de planos</a></nav>
+</header>
+<div class="app">
+  <aside>
+    <input id="q" class="search" type="search" placeholder="Buscar: Stirling, patio, albañilería…" autocomplete="off" aria-label="Buscar referentes">
+    <button type="button" id="fbtn" class="fbtn" aria-expanded="false">Mostrar filtros</button>
+    <div id="filtros" class="filtros">
+    <h2>Tipo</h2>
+    <div class="chips" id="f-grp"></div>
+    <h2>Estado</h2>
+    <div class="chips" id="f-est"></div>
+    <h2>Sistema constructivo</h2>
+    <select id="f-fam" aria-label="Sistema constructivo"></select>
+    <h2>Mostrar solo</h2>
+    <div class="chips">
+      <button type="button" class="chip" id="f-win" aria-pressed="false">Premiados</button>
+      <button type="button" class="chip" id="f-evo" aria-pressed="false">Con evolución en m²</button>
+      <button type="button" class="chip" id="f-esq" aria-pressed="false">Con esquema</button>
+    </div>
+    <h2>Orden</h2>
+    <select id="f-ord" aria-label="Orden">
+      <option value="grp">Por tipo</option>
+      <option value="anio">Por año</option>
+      <option value="aut">Por autor (A-Z)</option>
+    </select>
+    <p class="hint" style="margin-top:16px">Los esquemas son <b>redibujos libres de la idea</b> hechos para esta página a partir de las descripciones publicadas: no son los planos originales ni están a escala. Los planos reales están en las fuentes de cada ficha.</p>
+    <button type="button" id="reset" style="margin-top:6px">Quitar filtros</button>
+    </div>
+  </aside>
+  <main>
+    <div class="bar"><span class="count" id="count"></span></div>
+    <div class="note">Los planos de PREVI tienen derechos de autor, así que esta página no los copia: cada ficha enlaza a la fuente que los publica y a una búsqueda de imágenes ya preparada. La fuente más completa, con las plantas originales y su estado 30 años después, es el libro <i>¡El tiempo construye!</i> (Gustavo Gili, 2008). Ver <a href="#biblio">fuentes de planos</a>.</div>
+    <div id="list"></div>
+    <section id="biblio">
+      <h2 class="grp-title">Dónde están los planos</h2>
+      <p class="grp-sub">Las publicaciones que reúnen plantas, cortes y elevaciones de PREVI, de la más útil a la menos. Las que no están en línea suelen estar en las bibliotecas de la PUCP, la UNI o la ENSA.</p>
+      <ul id="bib-list"></ul>
+    </section>
+  </main>
+</div>
+<dialog id="ficha" aria-labelledby="f-title"></dialog>
+
+<script>
+// ---------- Fuentes ----------
+const SRC = {
+  tiempo: {t:'García-Huidobro, F., Torres Torriti, D. y Tugas, N. (2008). ¡El tiempo construye! El Proyecto Experimental de Vivienda (PREVI) de Lima: génesis y desenlace. Barcelona: Gustavo Gili.', u:'https://www.google.com/search?q=%22El+tiempo+construye%22+PREVI+Gustavo+Gili', planos:true, nota:'Plantas originales redibujadas de los 26 proyectos y levantamiento de las casas transformadas. La mejor fuente de planos.'},
+  ad70: {t:'Architectural Design (abril de 1970), vol. 40: número dedicado a PREVI, con las propuestas del concurso.', u:'https://www.google.com/search?q=%22Architectural+Design%22+1970+PREVI+Lima', planos:true, nota:'Láminas del concurso de los 13 equipos internacionales.'},
+  land: {t:'Land, P. (2015). The Experimental Housing Project (PREVI), Lima: Design and Technology in a New Neighborhood. Bogotá: Universidad de los Andes.', u:'https://www.google.com/search?q=Peter+Land+%22Experimental+Housing+Project+%28PREVI%29%22+2015', planos:true, nota:'Del director del proyecto: plantas, sistemas constructivos y obra de cada equipo.'},
+  apapers: {t:'Digital Architectural Papers: «PREVI Lima», con la lista de los 26 equipos y su código.', u:'https://www.architecturalpapers.ch/indexe39c.html?ID=91', planos:true, nota:'En línea. Lista completa de equipos, imágenes del concurso y fotos de 1978 y 2003.'},
+  torres: {t:'Torres, D. «PREVI Lima y la experiencia del tiempo». Hábitat Inquieto, año 3, n.º 4. Facultad de Arquitectura y Urbanismo, PUCP.', u:'https://revistas.pucp.edu.pe/index.php/arquitectura/article/download/22291/21559', planos:true, nota:'En línea (PDF). Casas concretas con sus etapas de crecimiento en m² y fechas.'},
+  lucas: {t:'Lucas, P., Salas, J. y Barrionuevo, R. (2012). «Cuarenta años del PREVI-Lima: algunas enseñanzas para la industrialización de la vivienda de bajo coste en Latinoamérica». Informes de la Construcción, 64(525), 51-62.', u:'https://informesdelaconstruccion.revistas.csic.es/index.php/informesdelaconstruccion/article/download/1714/1976/2415', planos:true, nota:'En línea (PDF, acceso abierto). Sistema constructivo de cada equipo y fotos del estado original y actual.'},
+  gutierrez: {t:'Gutiérrez Mozo, M. E. y Pérez del Hoyo, R. (2015). «PREVI: la tipología entre la fluidez de la vida y el rigor de la edificación». Cuadernos de Vivienda y Urbanismo, 8(16), 186-205.', u:'https://core.ac.uk/download/32326674.pdf', planos:true, nota:'En línea (PDF). Análisis tipológico con dibujos de Atelier 5, los japoneses, Correa y Svenssons.'},
+  yi: {t:'Yi, E.-S. (2014). «PREVI: The Metabolists\' First, Last and Only Project». Docomomo Journal 50, 59-63.', u:'https://docomomojournal.com/index.php/journal/article/download/203/281/286', planos:true, nota:'En línea (PDF). Etapas de crecimiento de la casa de Kikutake, Maki y Kurokawa con sus m².'},
+  upm: {t:'Trabajo de fin de grado (UPM, Madrid) sobre la propuesta española de Íñiguez de Onzoño y Vázquez de Castro en PREVI.', u:'https://oa.upm.es/89660/7/TFG_H_G_H.pdf', planos:true, nota:'En línea (PDF). Plantas de los tipos P y G, la matriz de 220 variantes y el bloque Tabibloc.'},
+  socks: {t:'Socks Studio: «PREVI, Lima: James Stirling\'s housing project».', u:'https://socks-studio.com/?p=51792', planos:true, nota:'En línea. Láminas del concurso de Stirling (plantas de agrupación y de la casa en L).'},
+  correaF: {t:'Charles Correa Foundation: «PREVI Housing».', u:'https://charlescorreafoundation.org/2022/03/13/previ-housing/', planos:true, nota:'En línea. Dibujos originales del archivo de Correa.'},
+  domus: {t:'McGuirk, J. (2011). «PREVI: the metabolist utopia». Domus.', u:'https://domusweb.it/en/architecture/2011/04/21/previ-the-metabolist-utopia.amp.html', nota:'Historia del proyecto y estado de varias casas.'},
+  salas: {t:'Salas, J. y Lucas, P. (2012). «The validity of PREVI, Lima, Peru, forty years on». Open House International, 37(1), 6-15.', u:'https://www.emerald.com/insight/content/doi/10.1108/OHI-01-2012-B0002/full/html', nota:'De pago. Balance de la tecnología a 40 años.'},
+  archdaily26: {t:'Nayak, A. (2026). «PREVI Lima and the politics of resident authorship in social housing». ArchDaily.', u:'https://www.archdaily.com/1042148/previ-lima-and-the-politics-of-resident-authorship-in-social-housing', nota:'Fotos actuales del barrio.'},
+  pp2: {t:'Arrieta Palomino, Á., Calizaya Valencia, L. y Rouillon Acosta, M. (2023). «Deconstruyendo una utopía. Intenciones y repercusiones del proyecto de regeneración urbana integral PREVI-PP2 en la zona monumental de Barranco». Devenir, 10(20), UNI.', u:'https://revistas.uni.edu.pe/index.php/devenir/article/download/1463/2287/14973', planos:true},
+  romero: {t:'Romero Sotelo, M. (1994). «Organización vecinal y diseño urbano: Villa El Salvador». Ciudad y Territorio, CyTET.', u:'https://recyt.fecyt.es/index.php/CyTET/article/view/83929', planos:true},
+  ves_usil: {t:'Fondo Editorial USIL: libro sobre Villa El Salvador (2019).', u:'https://fondoeditorial.usil.edu.pe/wp-content/uploads/LIBRO-VILLA-SALVADOR-cc2019PORATDA.pdf', planos:true},
+  iquitos: {t:'ArchDaily (2018): «Architects propose 120 incremental social houses for Iquitos, Peru».', u:'https://www.archdaily.com/889897/architects-propose-120-incremental-social-houses-for-iquitos-peru', planos:true},
+  cpc21: {t:'Andina (2021): «Construye para Crecer: 189 equipos clasificaron a la etapa final del concurso».', u:'https://andina.pe/agencia/noticia-construye-para-crecer-189-equipos-clasificaron-a-etapa-final-del-concurso-845723.aspx'},
+  cpc21b: {t:'Andina (2021): «Fondo MiVivienda ofrece S/ 90,000 para arquitectos que diseñen viviendas de interés social».', u:'https://andina.pe/ingles/noticia-fondo-mivivienda-ofrece-s-90000-para-arquitectos-disenen-viviendas-interes-social-842157.aspx'},
+  cpc24: {t:'UTP (2024): «Estudiantes ganaron concurso de arquitectura del Ministerio de Vivienda, Construcción y Saneamiento».', u:'https://utp.edu.pe/noticias/estudiantes-ganaron-concurso-de-arquitectura-del-ministerio-de-vivienda-construccion-y-saneamiento'},
+  sumaq: {t:'Andina: «MVCS construyó cerca de 14,700 Sumaq Wasi en primer año de gobierno».', u:'https://andina.pe/agencia/noticia-mvcs-construyo-cerca-14700-sumaq-wasi-primer-ano-gobierno-903744.aspx'},
+  sumaq2: {t:'Andina: «Sumaq Wasi: implementarán tecnología para aumentar temperatura en viviendas bioclimáticas».', u:'https://andina.pe/agencia/noticia-sumaq-wasi-implementaran-tecnologia-para-aumentar-temperatura-viviendas-bioclimaticas-821484.aspx'},
+  vipro: {t:'Swisscontact y Fundación Hilti (2023): folleto del Proyecto Vivienda Progresiva.', u:'https://www.swisscontact.org/_Resources/Persistent/1/6/b/5/16b5b2deb248cb963907bce4a7fe1c436eec3a8d/Brochure%20VIPRO%202023%20final.pdf'},
+  construya: {t:'Swisscontact: «Construyendo viviendas más seguras».', u:'https://www.swisscontact.org/_Resources/Persistent/5/2/5/e/525ec29e454ad5fcc0153b9b6a8c83943aa7d3b6/ConstruyendoViviendasMasSeguras_DIGITAL%20%281%29.pdf', planos:true},
+  grade: {t:'GRADE para la Asociación de Desarrolladores Inmobiliarios (2024): estudio sobre la autoconstrucción en el Perú urbano.', u:'https://grade.org.pe/wp-content/uploads/GRADEADI_AUTOCONSTRUCCION.pdf'},
+  habitat: {t:'Hábitat para la Humanidad: «Impacto de la producción de vivienda progresiva en el Perú urbano».', u:'https://www.habitat.org/sites/default/files/documents/Impacto%20de%20la%20produccio%CC%81n%20de%20vivienda%20progresiva%20en%20el%20Peru%CC%81%20urbano.pdf'},
+  monroy: {t:'ArchDaily: «Quinta Monroy / ELEMENTAL».', u:'https://www.archdaily.com/10775/quinta-monroy-elemental', planos:true}
+};
+const BIB_ORDER = ['tiempo','land','ad70','torres','lucas','gutierrez','yi','apapers','upm','socks','correaF'];
+
+// ---------- Grupos ----------
+const GRP = {
+  'pi': {n:'PREVI · internacionales', sub:'PREVI PP1, Lima, 1969-1974. Trece equipos invitados por concurso cerrado. Bases: casas de patio de 1 o 2 pisos, crecederas hasta 3, de 60 a 120 m² en lotes de 80 a 150 m², unas 20 casas por equipo, barrio peatonal. Se construyeron 467 casas de 24 proyectos (Ohl y Takahashi no se construyeron).'},
+  'pp': {n:'PREVI · peruanos', sub:'Trece equipos peruanos elegidos por concurso abierto, con el mismo programa. Premiados: Mazzarri-Llanos; Chaparro-Ramírez-Smirnoff-Wyszkowski; Crousse-Páez-Pérez León. El código (P5, P6…) es el del concurso.'},
+  'po': {n:'PREVI · otros proyectos piloto', sub:'PREVI no fue solo el barrio experimental (PP1): tuvo otros proyectos piloto.'},
+  'co': {n:'Concursos', sub:'Concursos peruanos de vivienda social y progresiva.'},
+  'pr': {n:'Planes y programas', sub:'Planes urbanos y programas públicos o privados que definen lote, módulo o casa progresiva.'},
+  'es': {n:'Estudios y tesis', sub:'Investigación peruana sobre autoconstrucción y crecimiento de la vivienda.'},
+  'ex': {n:'Fuera del Perú, nacidos de PREVI', sub:'Referentes extranjeros que continúan directamente la idea de PREVI.'}
+};
+const EST = {c:'Construido', n:'No construido', p:'Propuesta / concurso', e:'Programa en curso', d:'Estudio'};
+const FAM = {pes:'Prefabricación pesada o semipesada', lig:'Prefabricación ligera / racionalización', alb:'Albañilería racionalizada (armada o confinada)', ins:'Concreto vaciado en obra', tra:'Materiales locales / tradicional', mix:'Varios / no aplica'};
+
+// ---------- Esquemas propios (redibujo libre, no a escala salvo que se indique) ----------
+// tipos: c construido inicial, g crecimiento previsto, p patio, s comercio o servicio, l lote
+const ESQ = {
+  stirling: {w:10,h:10, caption:'Casa en L de un piso alrededor de un patio con cuatro columnas que reciben el 2.º piso. Agrupaciones de 4 casas y grupos de 16 a 20 alrededor de un patio común.',
+    s:[['l',0,0,10,10],['c',0,0,10,4,'casa en L (1 piso)'],['c',0,4,4,6,''],['p',4,4,6,6,'patio'],['dot',4.4,4.4],['dot',9.6,4.4],['dot',4.4,9.6],['dot',9.6,9.6],['txt',7,8.6,'4 columnas: 2.º piso']]},
+  kmk: {w:6,h:20, dims:true, caption:'Lote largo y angosto (módulos de 6 × 16 y 6 × 20). Hacia la calle, tienda o cuarto de alquiler; patio central que separa usos e ilumina; la familia hacia el pasaje peatonal. Crece hacia arriba con escalera prevista.',
+    s:[['l',0,0,6,20],['s',0,0,6,5,'tienda / alquiler'],['c',0,5,6,4,'estar'],['p',0,9,6,4,'patio'],['c',0,13,6,7,'familia'],['txt',3,-0.6,'calle'],['txt',3,20.9,'pasaje peatonal'],['up',5.2,16]]},
+  correa: {w:6,h:16, dims:true, caption:'Unidades de 3 m de ancho que se ensanchan a 6 m en el centro y encajan unas con otras. El muro común en zigzag aloja escaleras y baños y da rigidez sísmica. Acceso de auto por un extremo y porche hacia el eje peatonal por el otro.',
+    s:[['poly',[[0,0],[3,0],[3,5],[6,5],[6,11],[3,11],[3,16],[0,16]],'c'],['p',0.4,6,2.2,4,'patio'],['zig',3,5,11],['txt',1.5,-0.6,'auto'],['txt',1.5,16.9,'porche']]},
+  atelier5: {w:10,h:9, corte:true, caption:'Corte: la familia vive en el nivel intermedio y la casa crece hacia arriba y hacia abajo. Patios de transición con la calle, terrazas alternadas y usos comerciales en planta baja.',
+    s:[['g',1,0,8,2.6,'crece abajo: comercio, taller'],['c',1,2.6,8,2.8,'familia (inicial)'],['g',1,5.4,8,2.6,'crece arriba'],['up',9.4,6.6],['dn',9.4,1.3],['txt',5,8.8,'corte esquemático']]},
+  vaneyck: {w:10,h:10, caption:'La cocina en el centro de la planta y muros en diagonal que cierran los patios para desalentar ampliaciones desordenadas; cuerpos geométricos que reciben volúmenes anexos.',
+    s:[['l',0,0,10,10],['poly',[[2,0],[8,0],[10,3],[10,7],[7,10],[3,10],[0,7],[0,3]],'c'],['s',4,4,2,2,'cocina'],['p',0,0,2,3,''],['p',8,7,2,3,''],['txt',5,2,'casa'],['txt',5,8.2,'patios en diagonal']]},
+  espana: {w:15,h:9, caption:'Tipos P (105 m²) y G (132 m²) de un piso con la planta baja completa: dormitorios hacia el patio principal; cocina y baño hacia un patio de servicio. Casas en L pareadas en espejo; crecimiento de dos pisos con escalera de caracol en lugar de un dormitorio de 3 × 3.',
+    s:[['l',0,0,7.5,9],['l',7.5,0,7.5,9],['c',0,0,7.5,3,'casa en L'],['c',0,3,3,6,''],['p',3,3,4.5,6,'patio'],['s',0,7.2,1.8,1.8,''],['c',7.5,0,7.5,3,'espejo'],['c',12,3,3,6,''],['p',7.5,3,4.5,6,'patio'],['s',13.2,7.2,1.8,1.8,''],['txt',1.2,6.4,'serv.']]},
+  svenssons: {w:12,h:8, caption:'Casas agrupadas en vecindarios con patios que absorben el crecimiento hacia arriba sin quitar mucha luz ni ventilación. Paneles de concreto pretensado de hasta tres pisos y torres de instalaciones con baño y cocina prefijados.',
+    s:[['c',0,0,4,8,'casa'],['p',4,0,2,8,'patio'],['c',6,0,4,8,'casa'],['p',10,0,2,8,'patio'],['s',3,3,1,2,''],['s',9,3,1,2,''],['up',2,1.5],['up',8,1.5],['txt',6,8.8,'instalaciones en torre']]},
+  morales: {w:8,h:16, caption:'Casa de patio con paneles prefabricados de concreto armado que sirven de encofrado perdido en muros y losas. Para Torres es una de las más flexibles ante cambios no previstos: la casa Arnao pasó de 92 m² (1978) a 191 m² (1997).',
+    s:[['l',0,0,8,16],['c',0,0,8,6,'estar · cocina'],['p',0,6,4,5,'patio'],['c',4,6,4,5,''],['c',0,11,8,5,'dormitorios'],['up',7,13]]},
+  miro: {w:10,h:14, caption:'Lote irregular con dos patios en extremos opuestos y frentes a una plaza y a un pasaje peatonal.',
+    s:[['poly',[[0,0],[10,0],[10,14],[3,14],[0,10]],'l'],['p',0,0,4,3.5,'patio 1'],['c',4,0,6,3.5,''],['c',0,3.5,10,7,'casa'],['p',6,10.5,4,3.5,'patio 2'],['c',3,10.5,3,3.5,''],['txt',5,-0.6,'plaza'],['txt',7,14.9,'pasaje']]},
+  iquitos: {w:12,h:12, caption:'Núcleo sólido con estar, cocina, baño e instalaciones; las demás habitaciones se agregan en madera. La circulación en cruz deja crecer la casa por sus cuatro lados y el techo limita la altura del conjunto.',
+    s:[['l',0,0,12,12],['c',4,4,4,4,'núcleo'],['g',4,0,4,4,'madera'],['g',0,4,4,4,'madera'],['g',8,4,4,4,'madera'],['g',4,8,4,4,'madera'],['cross',6,6]]},
+  monroy: {w:6,h:9, corte:true, caption:'«Media casa buena»: el Estado construye la mitad difícil (estructura, baño, cocina, escalera, techo) y la familia llena el vacío del lado. Corte esquemático.',
+    s:[['c',0,0,3,3,'casa'],['g',3,0,3,3,'vacío'],['c',0,3,3,3,'dúplex'],['g',3,3,3,3,'vacío'],['c',0,6,3,3,''],['g',3,6,3,3,'vacío']]},
+  ves: {w:7,h:20, dims:true, caption:'Lote tipo de la vivienda progresiva que se suele citar para Villa El Salvador (7 × 20 m). La casa empieza con un cuarto y crece por etapas hacia el fondo y hacia arriba. Medida a comprobar en Romero (1994).',
+    s:[['l',0,0,7,20],['c',0,0,7,5,'1.ª etapa'],['g',0,5,7,9,'crecimiento'],['p',0,14,7,6,'patio / huerto'],['txt',3.5,-0.6,'calle']]}
+};
+
+// ---------- Catálogo ----------
+// evo: etapas reales en m² (año, m²)
+const R = [
+ // --- PREVI internacionales ---
+ {id:'i1', g:'pi', cod:'I1', t:'Casas en L con patio', a:'James Stirling', pais:'Reino Unido', y:1969, est:'c', fam:'pes', esq:'stirling',
+  sist:'Grandes paneles tipo sándwich prefabricados en obra; muros perimetrales, pilares del patio y losas prefabricados para las ampliaciones.',
+  idea:'Casa en L de un piso para cuatro personas; cuatro columnas definen un patio central y quedan listas para recibir el 2.º piso. Grupos de 4 casas; de 16 a 20 alrededor de un patio común; el grupo mayor de 400.',
+  crece:'Hacia arriba sobre la L, con el patio como reserva. McGuirk vio una de ellas convertida en un colegio de cuatro pisos.',
+  evo:{nota:'Caso 2 de Torres: por su programa (tienda, oficina, cuna) parece la casa Zamora de Stirling; la atribución es nuestra.', p:[['1978',81],['s/f',91],['1984',214],['1992',240]]},
+  q:'PREVI Lima James Stirling plan housing', f:['socks','lucas','torres','domus','tiempo'],
+  tomar:'Las columnas puestas desde el principio para el piso que vendrá: es lo que tu etapa 1 llama «columnas con acero de empalme». Aquí se ve que funciona.'},
+ {id:'i2', g:'pi', cod:'I2', t:'Vecindarios sobre un túnel peatonal', a:'Knud Svenssons', pais:'Dinamarca', y:1969, est:'c', fam:'lig', esq:'svenssons',
+  sist:'Concreto vaciado en obra con encofrados metálicos modulares (Lucas et al.); Gutiérrez y Pérez describen paneles de concreto pretensado de hasta tres pisos.',
+  idea:'Habitaciones en superficie agrupadas en vecindarios; baños y cocinas prefijados junto a torres de instalaciones.',
+  crece:'Hacia arriba a costa de los patios, que lo absorben sin perder mucha luz ni ventilación. Con el tiempo, escaleras y servicios invaden partes de la casa pero la habitabilidad se mantiene.',
+  q:'PREVI Lima Knud Svenssons plan', f:['gutierrez','lucas','tiempo'],
+  tomar:'Agrupar baño y cocina contra una sola «torre» de instalaciones abarata tubería y deja libre el resto de la planta para crecer.'},
+ {id:'i3', g:'pi', cod:'I3', t:'Propuesta colombiana', a:'Esguerra, Sáenz, Samper y Urdaneta', pais:'Colombia', y:1969, est:'c', fam:'alb',
+  sist:'Albañilería armada y techos aligerados de concreto.',
+  idea:'Germán Samper llevó después estas ideas a sus agrupaciones de vivienda en Bogotá (La Fragua, Sidauto).',
+  crece:'Sin datos de evolución en las fuentes en línea; ver ¡El tiempo construye!',
+  q:'PREVI Lima Samper Esguerra Saenz Urdaneta plan', f:['lucas','apapers','tiempo'],
+  tomar:'Es la propuesta más cercana a cómo se construye hoy en el Perú: ladrillo y aligerado. Buena para comparar con tu casa.'},
+ {id:'i4', g:'pi', cod:'I4', t:'Casa que crece arriba y abajo', a:'Atelier 5', pais:'Suiza', y:1969, est:'c', fam:'lig', win:true, esq:'atelier5',
+  sist:'Paneles ligeros prefabricados al pie de obra que hacen de encofrado perdido; los mismos elementos sirven para muros y techos, sin maquinaria pesada.',
+  idea:'Bandas de casas; la familia vive en el piso intermedio. Patios de transición con la calle, usos comerciales y terrazas alternadas en el piso alto.',
+  crece:'En proporción de 9 a 4, hacia arriba y hacia abajo para no invadir la calle. Los patios terminaron usados como comercio.',
+  q:'PREVI Lima Atelier 5 plan section', f:['gutierrez','lucas','tiempo'],
+  tomar:'Prever desde el inicio dónde irá la tienda: en Lima casi todas las casas de PREVI acabaron con negocio en el 1.er piso.'},
+ {id:'i5', g:'pi', cod:'I5', t:'Propuesta finlandesa', a:'Toivo Korhonen', pais:'Finlandia', y:1969, est:'c', fam:'alb',
+  sist:'Albañilería armada de bloques de concreto.', idea:'Por documentar con ¡El tiempo construye!', crece:'Lucas et al. la cuentan entre las casas transformadas.',
+  q:'PREVI Lima Toivo Korhonen plan', f:['lucas','apapers','tiempo']},
+ {id:'i6', g:'pi', cod:'I6', t:'Marcos de concreto de 6 toneladas', a:'Herbert Ohl', pais:'Alemania', y:1969, est:'n', fam:'pes', win:true,
+  sist:'Grandes marcos de concreto armado de 7.20 × 3 × 1.20 m (unas 6 t cada uno), prefabricados en moldes de acero en una planta junto a la obra; escalera de caracol prefabricada.',
+  idea:'Industrialización pesada. Fue uno de los tres premiados internacionales.',
+  crece:'No se construyó: resultó demasiado complejo técnica y materialmente.',
+  q:'PREVI Lima Herbert Ohl prefabricated', f:['lucas','apapers','domus'],
+  tomar:'La lección contraria: un sistema que el maestro de obra no puede repetir ni modificar no sobrevive. Por eso tu verificador usa ladrillo y módulo de 25 cm.'},
+ {id:'i7', g:'pi', cod:'I7', t:'Casas angostas que se ensanchan', a:'Charles Correa', pais:'India', y:1969, est:'c', fam:'alb', esq:'correa',
+  sist:'Albañilería armada de bloques de concreto.',
+  idea:'Alta densidad y baja altura. Unidades de 3 m que se ensanchan a 6 m en el centro, orientadas NNO-SSE; muro común en zigzag con escaleras y baños. Hasta 10 personas por casa, abuelos incluidos.',
+  crece:'Por subdivisión y por adición en altura. Con los años, alguna casa «deviene hostal».',
+  q:'PREVI Lima Charles Correa plan', f:['correaF','gutierrez','lucas','tiempo'],
+  tomar:'Frentes de 3 m que se abren a 6: una pista para tus lotes angostos de 5.50 m, donde las dos crujías no entran.'},
+ {id:'i8', g:'pi', cod:'I8', t:'La casa puente entre calle y pasaje', a:'Kikutake, Maki y Kurokawa', pais:'Japón', y:1969, est:'c', fam:'alb', win:true, esq:'kmk',
+  sist:'Albañilería armada con bloques de concreto (bloque PREVI), vigas y columnas convencionales y viguetas en T invertida con bloques; unidades industrializadas para cocina, baño y almacenaje.',
+  idea:'El único proyecto construido de los metabolistas. Lote largo y angosto (módulos de 6 × 16 y 6 × 20) con gran patio central: comercio y alquiler hacia la calle, familia hacia el pasaje.',
+  crece:'Muchas casas llegaron a unas tres veces lo inicial, con tres o cuatro pisos y tiendas o restaurantes en planta baja.',
+  datos:[['Área inicial','97 m²'],['Ampliación prevista','unos 124 m²']],
+  evo:{nota:'Etapas de la figura de Yi (2014), sin años.', p:[['inicial',97],['dormitorios',124],['tienda',138],['1.er piso',208],['2.º piso',309],['azotea',344]]},
+  q:'PREVI Lima Kikutake Maki Kurokawa plan', f:['yi','gutierrez','lucas','tiempo'],
+  tomar:'Es el caso más parecido al de tu lote de 6 m de frente: patio central, tienda adelante y escalera prevista. Su evolución (97 → 344 m²) es una buena referencia para tus 5 etapas.'},
+ {id:'i9', g:'pi', cod:'I9', t:'Tabibloc y 220 variantes', a:'Íñiguez de Onzoño y Vázquez de Castro', pais:'España', y:1969, est:'c', fam:'lig', esq:'espana',
+  sist:'Tabibloc: bloque de concreto vibroprensado de 40 × 20 × 20 cm con triple cámara y machihembrado, para muros portantes, dinteles y losas con viguetas; 18 variantes de bloque. Tabiques interiores de albañilería tradicional.',
+  idea:'Tipos P (lote de 105 m²) y G (132 m²), dormitorios al patio principal y servicios a un patio de servicio. En proyecto, 7 tipos de piso alto que combinados daban hasta 220 casas distintas; se construyeron 19.',
+  crece:'Construido simplificado: casas en L pareadas en lotes casi cuadrados (planta baja completa) y casas de dos pisos en lotes largos (planta baja más medio piso alto).',
+  datos:[['Lote P','105 m²'],['Lote G','132 m²'],['Dormitorios','3 × 3, 3 × 4.5 y 3 × 6 m'],['Casas construidas','19']],
+  q:'PREVI Lima Vazquez de Castro Iñiguez de Onzoño plan', f:['upm','lucas','tiempo'],
+  tomar:'Una matriz de variantes a partir de pocos tipos es exactamente lo que hace tu generador. Merece una lámina comparando sus 220 con tus combinaciones.'},
+ {id:'i10', g:'pi', cod:'I10', t:'Forma abierta', a:'Oskar Hansen y Svein Hatløy', pais:'Polonia', y:1969, est:'c', fam:'pes',
+  sist:'Prefabricación semipesada.', idea:'Teoría de la «forma abierta» de Hansen: una estructura que los habitantes completan. Por documentar.',
+  crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Oskar Hansen Hatloy', f:['lucas','apapers','tiempo']},
+ {id:'i11', g:'pi', cod:'I11', t:'Cocina al centro y patios en diagonal', a:'Aldo van Eyck', pais:'Países Bajos', y:1969, est:'c', fam:'alb', esq:'vaneyck',
+  sist:'Muros de albañilería armada con bloques de concreto modulados; techo de módulos huecos de concreto (patente SKALJA-VITESA).',
+  idea:'Cuerpos geométricos que reciben volúmenes anexos; cocina en el centro; muros en diagonal en los patios para desalentar ampliaciones.',
+  crece:'Lucas et al. muestran su estado original y el actual: se transformó igual.',
+  q:'PREVI Lima Aldo van Eyck plan', f:['lucas','domus','apapers','tiempo'],
+  tomar:'Intentar impedir el crecimiento con la geometría no funcionó: mejor diseñar por dónde crecerá.'},
+ {id:'i12', g:'pi', cod:'I12', t:'Casas de patio', a:'Candilis, Josic y Woods', pais:'Francia', y:1969, est:'c', fam:'alb',
+  sist:'Albañilería armada y viguetas prefabricadas en las losas.', idea:'Los autores venían de la «Cité horizontale» de Casablanca: casas de patio en trama densa. Por documentar.',
+  crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Candilis Josic Woods plan', f:['lucas','apapers','tiempo']},
+ {id:'i13', g:'pi', cod:'I13', t:'Casa generada por patrones', a:'Christopher Alexander', pais:'Estados Unidos', y:1969, est:'c', fam:'lig',
+  sist:'Paneles y viguetas prefabricados en obra.', idea:'Casas diseñadas a partir de un lenguaje de patrones, antecedente directo de «A Pattern Language» (1977). Pocos cuartos cerrados: espacios separados con cortinas.',
+  crece:'Sin datos de evolución en las fuentes en línea.',
+  q:'PREVI Lima Christopher Alexander houses generated by patterns', f:['domus','lucas','tiempo'],
+  tomar:'Los patrones de Alexander son reglas de diseño explícitas, como las de tu pestaña Reglas: es el antecedente más directo de tu verificador.'},
+ // --- PREVI peruanos ---
+ {id:'p5', g:'pp', cod:'P5', t:'Paneles huecos modulados', a:'Miguel Alvariño', y:1969, est:'c', fam:'pes',
+  sist:'Muros y techos de grandes paneles huecos modulados.', idea:'Por documentar.', crece:'Lucas et al. la cuentan entre las transformadas.',
+  q:'PREVI Lima Alvariño vivienda planta', f:['lucas','apapers','tiempo']},
+ {id:'p6', g:'pp', cod:'P6', t:'Bloque armado y techo Domozed', a:'Ernesto Paredes', y:1969, est:'c', fam:'lig',
+  sist:'Albañilería armada de bloques de concreto; techo semiprefabricado ligero «Domozed», un 40 % más barato que el aligerado convencional.',
+  idea:'Por documentar.', crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Ernesto Paredes vivienda planta', f:['lucas','apapers','tiempo'],
+  tomar:'El techo es la partida cara de cada etapa: un techo más barato que el aligerado cambia el costo de tu etapa 1.'},
+ {id:'p7', g:'pp', cod:'P7', t:'Dos patios en lote irregular', a:'Miró Quesada, Williams y Núñez', y:1969, est:'c', fam:'ins', esq:'miro',
+  sist:'Concreto vaciado en obra en muros y techos (racionalización, no prefabricación).',
+  idea:'Casa Frías: dos patios en extremos opuestos de un lote irregular, con frentes a una plaza y a un pasaje.',
+  crece:'Lucas et al. la muestran en su estado original y transformada.',
+  q:'PREVI Lima Miro Quesada Williams Nuñez vivienda', f:['torres','lucas','tiempo']},
+ {id:'p9', g:'pp', cod:'P9', t:'Propuesta Gunther-Seminario', a:'Juan Gunther y Fernando Seminario', y:1969, est:'c', fam:'pes',
+  sist:'Lucas et al. agrupan a Gunther con Mazzarri-Llanos en la prefabricación pesada tridimensional.', idea:'Por documentar.', crece:'Lucas et al. la cuentan entre las transformadas.',
+  q:'PREVI Lima Gunther Seminario vivienda', f:['lucas','apapers','tiempo']},
+ {id:'p12', g:'pp', cod:'P12', t:'Casa de patio con encofrado perdido', a:'Carlos Morales y Emilio Montagne', y:1969, est:'c', fam:'lig', esq:'morales',
+  sist:'Módulos ligeros de poco espesor como encofrado perdido para muros vaciados en obra; techo de losa canal nervada (Torres: paneles prefabricados de concreto armado en losas y muros).',
+  idea:'Casa de patio. Para Torres, junto con la de Stirling, la más flexible ante transformaciones no previstas.',
+  crece:'Casa Arnao, seis etapas en veinte años.',
+  evo:{nota:'Casa Arnao (caso 11 de Torres).', p:[['1978',92],['1989',113],['1992',138],['1992',173],['1995',173],['1997',191]]},
+  q:'PREVI Lima Morales Montagne vivienda', f:['torres','lucas','tiempo'],
+  tomar:'Su evolución año por año es el mejor dato peruano real para calibrar tu proyección en el tiempo.'},
+ {id:'p16', g:'pp', cod:'P16', t:'Paneles en T invertida', a:'Juan Reiser', y:1969, est:'c', fam:'pes',
+  sist:'Paneles en T invertida y losa vaciada en obra en el techo.', idea:'Por documentar.', crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Juan Reiser vivienda', f:['lucas','apapers','tiempo']},
+ {id:'p18', g:'pp', cod:'P18', t:'Primera albañilería armada del Perú', a:'Eduardo Orrego', y:1969, est:'c', fam:'alb',
+  sist:'Albañilería armada: su primera aplicación en el Perú fue en PREVI.', idea:'Por documentar.', crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Eduardo Orrego vivienda', f:['lucas','apapers','tiempo']},
+ {id:'p20', g:'pp', cod:'P20', t:'Albañilería confinada y aligerado', a:'Luis Vier y Zanelli', y:1969, est:'c', fam:'alb',
+  sist:'Albañilería confinada en muros; losa aligerada en entrepiso y techo.', idea:'Es el sistema que hoy domina la autoconstrucción peruana.', crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Vier Zanelli vivienda', f:['lucas','apapers','tiempo'],
+  tomar:'El mismo sistema de tu verificador (albañilería confinada + aligerado): el pariente directo de tu casa en PREVI.'},
+ {id:'p21', g:'pp', cod:'P21', t:'Propuesta Vella-Bentín-Quiñones-Takahashi', a:'Vella, Bentín, Quiñones y Takahashi', y:1969, est:'n', fam:'mix',
+  sist:'Sin datos.', idea:'Por documentar.', crece:'Según la nota editorial de Docomomo no se construyó (costo y técnica); Lucas et al. citan un P21 entre las transformadas. Fuentes en conflicto.',
+  q:'PREVI Lima Vella Bentin Quiñones Takahashi', f:['yi','apapers','tiempo']},
+ {id:'p22', g:'pp', cod:'P22', t:'Prefabricación tridimensional', a:'Elsa Mazzarri y Manuel Llanos', y:1969, est:'c', fam:'pes', win:true,
+  sist:'Prefabricación pesada tridimensional.', idea:'Uno de los tres premiados peruanos.', crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Mazzarri Llanos vivienda', f:['lucas','torres','tiempo']},
+ {id:'p24', g:'pp', cod:'P24', t:'Techos en U invertida', a:'Cooper, García Bryce, Graña y Nicolini', y:1969, est:'c', fam:'alb',
+  sist:'Albañilería confinada de bloques de concreto; techos semiprefabricados delgados en U invertida.', idea:'Por documentar.', crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Cooper Garcia Bryce Graña Nicolini vivienda', f:['lucas','apapers','tiempo']},
+ {id:'p25', g:'pp', cod:'P25', t:'Propuesta Chaparro-Ramírez-Smirnoff-Wyszkowski', a:'Chaparro, Ramírez, Smirnoff y Wyszkowski', y:1969, est:'c', fam:'ins', win:true,
+  sist:'Concreto vaciado en obra en muros y techos.', idea:'Uno de los tres premiados peruanos.', crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Chaparro Ramirez Smirnoff vivienda', f:['lucas','torres','tiempo']},
+ {id:'p26', g:'pp', cod:'P26', t:'Propuesta Crousse-Páez-Pérez León', a:'Jacques Crousse, Jorge Páez y Ricardo Pérez León', y:1969, est:'c', fam:'ins', win:true,
+  sist:'Concreto vaciado en obra en muros y techos.', idea:'Uno de los tres premiados peruanos.', crece:'Sin datos en las fuentes en línea.',
+  q:'PREVI Lima Crousse Paez Perez Leon vivienda', f:['lucas','torres','tiempo']},
+ // --- PREVI otros pilotos ---
+ {id:'pp2', g:'po', cod:'PP2', t:'Renovación y rehabilitación en Barranco', a:'PREVI con apoyo de Naciones Unidas', y:1969, est:'c', fam:'mix',
+  sist:'Rehabilitación de casas existentes y vivienda nueva.', idea:'Cuatro manzanas tugurizadas de la zona monumental de Barranco (urb. Fundo Tejadita): rehabilitar 129 casas con redes, renovar con vivienda nueva y restaurar dos edificios.',
+  crece:'Entre 1969 y 1976 solo se hicieron 26 de las 150 casas previstas, por falta de apoyo político y de desembolsos.',
+  datos:[['Casas previstas','150'],['Casas hechas','26']],
+  q:'PREVI PP2 Barranco rehabilitacion', f:['pp2'],
+  tomar:'Útil para la idea de densificar el lote existente en vez de solo hacer casas nuevas.'},
+ // --- Concursos ---
+ {id:'cpc17', g:'co', cod:'2017', t:'120 viviendas incrementales en Belén, Iquitos', a:'Rafael Arana Parodi, Carlos Suasnabar, Amed Aguilar y Santiago Nieto', y:2017, est:'p', fam:'tra', win:true, esq:'iquitos',
+  sist:'Núcleo sólido (estar, cocina, baño e instalaciones) y crecimiento en estructura de madera.',
+  idea:'V Concurso Nacional de Vivienda Social «Construye para Crecer 2017» (MVCS y Fondo MiVivienda): 1.er puesto profesional y mención a la mejor propuesta ecosostenible. Terreno de unos 37 000 m².',
+  crece:'Circulación en cruz que deja crecer por los cuatro lados; el techo limita la altura. Módulos de un piso unifamiliar y de dos pisos uni o multifamiliar.',
+  datos:[['Viviendas','120'],['Terreno','unos 37 000 m²']],
+  q:'Construye para Crecer 2017 Iquitos Belén vivienda incremental', f:['iquitos'],
+  tomar:'El núcleo húmedo fijo y el resto ligero es la estrategia más clara para la selva; para la costa, tu núcleo sería el baño-cocina de la etapa 1.'},
+ {id:'cpc21', g:'co', cod:'2021', t:'Construye para Crecer 2021: Villa Panamericana', a:'MVCS y Fondo MiVivienda (organizadores)', y:2021, est:'p', fam:'mix',
+  sist:'Libre; con requisitos de MiVivienda Verde.',
+  idea:'IX edición. Conjunto multifamiliar en Villa Panamericana, Villa El Salvador. 987 equipos inscritos, 189 en la etapa final. Premios: S/ 40 000 al mejor diseño integral y S/ 25 000 a innovación y a diseño sostenible. Jurado: Ana Elvira Vélez, Ignacio Borrego, Priscille de Coninck, José Antonio Vallarino y Juan José Alcázar.',
+  crece:'Los prototipos alimentan el Banco de Proyectos de Vivienda Social del Fondo MiVivienda, que se dona a las municipalidades.',
+  datos:[['Inscritos','987 equipos'],['Finalistas','189']],
+  q:'Construye para Crecer 2021 ganadores Villa Panamericana', f:['cpc21','cpc21b'],
+  tomar:'El Banco de Proyectos que se dona a municipalidades es un canal natural para tu verificador: planos tipo verificados.'},
+ {id:'cpc24', g:'co', cod:'2024', t:'Construye para Crecer 2024: prototipo de Olmos', a:'Equipo UTP: Daniel Cataño (docente) y estudiantes', y:2024, est:'p', fam:'tra', win:true,
+  sist:'Materiales locales de Olmos (Lambayeque): barro y madera de algarrobo.',
+  idea:'1.er puesto en la categoría Profesional-Empresa. Reinterpreta la ramada, elemento tradicional del norte peruano. La edición pedía modelos unifamiliares y multifamiliares.',
+  crece:'Sin datos en la nota de prensa.',
+  q:'Construye para Crecer 2024 ganador UTP Olmos ramada', f:['cpc24']},
+ // --- Planes y programas ---
+ {id:'ves', g:'pr', cod:'1971', t:'Villa El Salvador', a:'Plan urbano de Miguel Romero Sotelo', y:1971, est:'c', fam:'tra', esq:'ves',
+  sist:'Autoconstrucción sobre lotes con trama de grupos residenciales.',
+  idea:'Ciudad autogestionada en el arenal del sur de Lima, organizada en grupos residenciales con su parque y servicios: la organización vecinal da forma al diseño urbano.',
+  crece:'Las casas empezaron como esteras y crecieron en ladrillo durante décadas.',
+  datos:[['Lote tipo citado','7 × 20 m = 140 m² (verificar)']],
+  q:'Villa El Salvador plan urbano grupo residencial lote planta', f:['romero','ves_usil'],
+  tomar:'El lote de 140 m² es más grande que tus 6 × 15: permite ver qué pasa con tu generador en lotes de la periferia de los 70.'},
+ {id:'sumaq', g:'pr', cod:'2020-', t:'Sumaq Wasi: vivienda bioclimática altoandina', a:'MVCS · Programa Nacional de Vivienda Rural', y:2020, est:'e', fam:'tra',
+  sist:'Módulo rural con estrategias bioclimáticas contra las heladas.',
+  idea:'Casas para familias de zonas altoandinas expuestas a heladas y friaje. Miles construidas por año en Puno, Cusco, Apurímac y otras regiones.',
+  crece:'Módulo cerrado, sin crecimiento previsto en las notas oficiales.',
+  datos:[['Construidas','unas 14 700 en un año (Andina)']],
+  q:'Sumaq Wasi vivienda bioclimatica plano MVCS', f:['sumaq','sumaq2'],
+  tomar:'La versión rural de tu idea: un módulo repetido miles de veces (tu analogía del traje). Comparar su área y costo con tu casa base.'},
+ {id:'vipro', g:'pr', cod:'2023', t:'Proyecto Vivienda Progresiva', a:'Fundación Hilti y Swisscontact', y:2023, est:'e', fam:'mix',
+  sist:'Soluciones (tecnologías, productos y servicios) contra los errores frecuentes de la autoconstrucción.',
+  idea:'Pilotos de 2 a 5 soluciones con familias, ventanilla única, financiamiento, trabajo con proveedores y capacitación. Caso en el A.H. Elsa Carrera, Villa María del Triunfo.',
+  crece:'Fase inicial de enero de 2023 a junio de 2024.',
+  q:'Swisscontact vivienda progresiva Perú Hilti', f:['vipro','construya'],
+  tomar:'Posible socio: buscan exactamente herramientas que reduzcan errores de autoconstrucción.'},
+ // --- Estudios ---
+ {id:'torres', g:'es', cod:'PUCP', t:'PREVI Lima y la experiencia del tiempo', a:'Diego Torres (PUCP)', y:2008, est:'d', fam:'mix',
+  sist:'—', idea:'Artículo sin fecha, de la época del libro ¡El tiempo construye! (2008), del que Torres es coautor. Levantamiento de casas concretas de PREVI con sus etapas y m². Cuatro fases: instalación, densificación, consolidación y diversificación.',
+  crece:'Base de tu propuesta de 5 etapas.', q:'Torres PREVI Lima experiencia del tiempo', f:['torres','tiempo']},
+ {id:'grade', g:'es', cod:'2024', t:'La autoconstrucción en el Perú urbano', a:'GRADE para la ADI', y:2024, est:'d', fam:'mix',
+  sist:'—', idea:'71 % de la vivienda urbana es autoconstruida; la familia gasta unos S/ 146 000 en 22 etapas a lo largo de 16 años.',
+  crece:'Datos para calibrar las etapas y su costo.', q:'GRADE autoconstruccion Peru ADI', f:['grade','habitat']},
+ // --- Fuera del Perú ---
+ {id:'monroy', g:'ex', cod:'2003', t:'Quinta Monroy, Iquique (Chile)', a:'ELEMENTAL (Alejandro Aravena)', y:2003, est:'c', fam:'alb', esq:'monroy',
+  sist:'Albañilería y concreto; la familia completa con lo que puede.',
+  idea:'«Media casa buena»: el Estado paga la mitad difícil y la familia hace la otra. McGuirk la presenta como heredera directa de PREVI.',
+  crece:'Las familias llenaron los vacíos en pocos años.', q:'Quinta Monroy Elemental plan section', f:['monroy','domus'],
+  tomar:'Tu etapa 1 «casco habitable» es la misma idea; la diferencia es que tu casa crece en el mismo lote, no en un vacío lateral.'}
+];
+
+// ---------- utilidades ----------
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const norm = s => String(s).normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const gimg = q => 'https://www.google.com/search?tbm=isch&q=' + encodeURIComponent(q);
+
+function drawEsq(key, big){
+  const E = ESQ[key]; if(!E) return '';
+  const pad = 1.6, W = E.w + pad*2, H = E.h + pad*2;
+  const fill = {c:'var(--built)', g:'var(--grow)', p:'var(--patio)', s:'var(--shop)', l:'none'};
+  const fs = Math.max(W,H) / (big ? 26 : 17);
+  let o = `<svg viewBox="${-pad} ${-pad} ${W} ${H}" role="img" aria-label="Esquema: ${esc(E.caption)}" preserveAspectRatio="xMidYMid meet">`;
+  const sw = Math.max(W,H)/220;
+  const T = (x,y,t) => t ? `<text x="${x}" y="${y}" font-size="${fs}" text-anchor="middle" dominant-baseline="middle" fill="var(--ink)" font-family="Archivo,sans-serif">${esc(t)}</text>` : '';
+  for(const s of E.s){
+    const k = s[0];
+    if(k in fill){ const [_,x,y,w,h,lab] = s;
+      o += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${fill[k]}" stroke="${k==='l'?'var(--muted)':'var(--ink)'}" stroke-width="${k==='l'?sw:sw*1.4}" ${k==='l'||k==='g'?`stroke-dasharray="${sw*4} ${sw*3}"`:''}/>`;
+      if(lab) o += T(x+w/2, y+h/2, lab);
+    } else if(k==='poly'){ const pts = s[1].map(p=>p.join(',')).join(' ');
+      o += `<polygon points="${pts}" fill="${fill[s[2]]}" stroke="var(--ink)" stroke-width="${sw*1.4}" ${s[2]==='l'?`stroke-dasharray="${sw*4} ${sw*3}"`:''}/>`;
+    } else if(k==='dot'){ o += `<rect x="${s[1]-.25}" y="${s[2]-.25}" width=".5" height=".5" fill="var(--ink)"/>`;
+    } else if(k==='txt'){ o += T(s[1], s[2], s[3]);
+    } else if(k==='up' || k==='dn'){ const d = k==='up' ? -1 : 1, x=s[1], y=s[2], L=1.2;
+      o += `<path d="M${x} ${y-d*L/2} L${x} ${y+d*L/2} M${x-.45} ${y+d*L/2-d*.5} L${x} ${y+d*L/2} L${x+.45} ${y+d*L/2-d*.5}" stroke="var(--brick)" stroke-width="${sw*2}" fill="none"/>`;
+    } else if(k==='zig'){ const x=s[1]; let d=`M${x} ${s[2]}`; for(let y=s[2]; y<s[3]; y+=1) d += ` L${x+(((y-s[2])%2)?-.35:.35)} ${y+.5} L${x} ${y+1}`;
+      o += `<path d="${d}" stroke="var(--brick)" stroke-width="${sw*2}" fill="none"/>`;
+    } else if(k==='cross'){ const x=s[1], y=s[2];
+      o += `<path d="M${x-5.5} ${y} H${x+5.5} M${x} ${y-5.5} V${y+5.5}" stroke="var(--brick)" stroke-width="${sw*2}" stroke-dasharray="${sw*5} ${sw*3}" fill="none"/>`;
+    }
+  }
+  return o + '</svg>';
+}
+
+function drawEvo(evo){
+  const p = evo.p, W = 420, H = 170, l = 36, b = 30, t = 14, r = 8;
+  const max = Math.ceil(Math.max(...p.map(x=>x[1]))/50)*50;
+  const bw = (W-l-r)/p.length;
+  let o = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolución del área: ${p.map(x=>x[0]+' '+x[1]+' m²').join(', ')}">`;
+  for(let v=0; v<=max; v+=max/2){ const y = H-b-(v/max)*(H-b-t);
+    o += `<line x1="${l}" x2="${W-r}" y1="${y}" y2="${y}" stroke="var(--line)"/><text x="${l-4}" y="${y}" font-size="10" text-anchor="end" dominant-baseline="middle" fill="var(--muted)" font-family="IBM Plex Mono,monospace">${v}</text>`; }
+  p.forEach(([lab,v],i)=>{ const h=(v/max)*(H-b-t), x=l+i*bw+bw*.18, w=bw*.64, y=H-b-h;
+    o += `<rect x="${x}" y="${y}" width="${w}" height="${h}" rx="2" fill="var(--brick)" opacity="${.45+.55*(i+1)/p.length}"/>`;
+    o += `<text x="${x+w/2}" y="${y-4}" font-size="10.5" text-anchor="middle" fill="var(--ink)" font-family="IBM Plex Mono,monospace">${v}</text>`;
+    o += `<text x="${x+w/2}" y="${H-b+13}" font-size="10" text-anchor="middle" fill="var(--muted)" font-family="Archivo,sans-serif">${esc(lab)}</text>`; });
+  o += `<text x="${l}" y="${H-3}" font-size="10" fill="var(--muted)" font-family="Archivo,sans-serif">m² construidos por etapa</text>`;
+  return o + '</svg>';
+}
+
+// ---------- filtros ----------
+$('#fbtn').addEventListener('click', e=>{ const o = $('#filtros').classList.toggle('open'); e.currentTarget.setAttribute('aria-expanded', o); e.currentTarget.textContent = o ? 'Ocultar filtros' : 'Mostrar filtros'; });
+const st = {q:'', grp:new Set(), est:new Set(), fam:'', win:false, evo:false, esq:false, ord:'grp'};
+function chips(box, map, set){
+  box.innerHTML = Object.entries(map).map(([k,v])=>`<button type="button" class="chip" data-k="${k}" aria-pressed="false">${esc(v.n||v)}</button>`).join('');
+  box.addEventListener('click', e=>{ const b = e.target.closest('button'); if(!b) return; const k=b.dataset.k;
+    set.has(k) ? set.delete(k) : set.add(k); b.setAttribute('aria-pressed', set.has(k)); render(); });
+}
+chips($('#f-grp'), GRP, st.grp); chips($('#f-est'), EST, st.est);
+$('#f-fam').innerHTML = '<option value="">Todos</option>' + Object.entries(FAM).map(([k,v])=>`<option value="${k}">${esc(v)}</option>`).join('');
+$('#f-fam').addEventListener('change', e=>{ st.fam = e.target.value; render(); });
+$('#f-ord').addEventListener('change', e=>{ st.ord = e.target.value; render(); });
+$('#q').addEventListener('input', e=>{ st.q = norm(e.target.value.trim()); render(); });
+for(const k of ['win','evo','esq']) $('#f-'+k).addEventListener('click', e=>{ st[k] = !st[k]; e.currentTarget.setAttribute('aria-pressed', st[k]); render(); });
+$('#reset').addEventListener('click', ()=>{ st.q=''; st.grp.clear(); st.est.clear(); st.fam=''; st.win=st.evo=st.esq=false; st.ord='grp';
+  $('#q').value=''; $('#f-fam').value=''; $('#f-ord').value='grp'; document.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed','false')); render(); });
+
+function match(r){
+  if(st.grp.size && !st.grp.has(r.g)) return false;
+  if(st.est.size && !st.est.has(r.est)) return false;
+  if(st.fam && r.fam !== st.fam) return false;
+  if(st.win && !r.win) return false;
+  if(st.evo && !r.evo) return false;
+  if(st.esq && !r.esq) return false;
+  if(st.q){ const hay = norm([r.cod,r.t,r.a,r.pais,r.y,r.sist,r.idea,r.crece,GRP[r.g].n,FAM[r.fam],EST[r.est],r.tomar||''].join(' ')); if(!st.q.split(/\s+/).every(w=>hay.includes(w))) return false; }
+  return true;
+}
+function card(r){
+  const fig = r.esq ? drawEsq(r.esq,false) : `<div class="placeholder"><b>${esc(FAM[r.fam]||'')}</b>Planos en las fuentes de la ficha</div>`;
+  const tags = [`<span class="tag">${esc(r.pais || 'Perú')}</span>`, `<span class="tag ${r.est==='n'?'no':''}">${esc(EST[r.est])}</span>`];
+  if(r.win) tags.push('<span class="tag win">Premiado</span>');
+  if(r.evo) tags.push('<span class="tag">Evolución en m²</span>');
+  return `<button type="button" class="card" data-id="${r.id}"><div class="fig">${fig}</div><div class="body"><span class="cod">${esc(r.cod)} · ${r.y}</span><h3>${esc(r.t)}</h3><span class="who">${esc(r.a)}</span><div class="tags">${tags.join('')}</div></div></button>`;
+}
+function render(){
+  const list = R.filter(match);
+  $('#count').textContent = `${list.length} de ${R.length} referentes`;
+  let html = '';
+  if(!list.length) html = '<p class="empty">Ningún referente con estos filtros.</p>';
+  else if(st.ord === 'grp'){
+    for(const g of Object.keys(GRP)){ const L = list.filter(r=>r.g===g); if(!L.length) continue;
+      html += `<h2 class="grp-title">${esc(GRP[g].n)} <span class="hint">(${L.length})</span></h2><p class="grp-sub">${esc(GRP[g].sub)}</p><div class="grid">${L.map(card).join('')}</div>`; }
+  } else {
+    const L = [...list].sort(st.ord==='anio' ? (a,b)=>a.y-b.y || a.cod.localeCompare(b.cod) : (a,b)=>a.a.localeCompare(b.a,'es'));
+    html = `<div class="grid">${L.map(card).join('')}</div>`;
+  }
+  $('#list').innerHTML = html;
+}
+$('#list').addEventListener('click', e=>{ const c = e.target.closest('.card'); if(c) openF(c.dataset.id); });
+
+// ---------- ficha ----------
+const dlg = $('#ficha');
+function openF(id){
+  const r = R.find(x=>x.id===id); if(!r) return;
+  const rows = [['Grupo', GRP[r.g].n], ['Código', r.cod], ['Año', r.y], ['Autores', r.a], ['País', r.pais||'Perú'], ['Estado', EST[r.est] + (r.win?' · premiado':'')], ['Sistema', r.sist]].concat(r.datos||[]);
+  const links = [`<a class="main" href="${gimg(r.q)}" target="_blank" rel="noopener">Ver planos e imágenes (búsqueda ya preparada) ↗<small>Google Imágenes: «${esc(r.q)}»</small></a>`]
+    .concat(r.f.map(k=>SRC[k] ? `<a href="${SRC[k].u}" target="_blank" rel="noopener">${esc(SRC[k].t)} ↗${SRC[k].nota?`<small>${esc(SRC[k].nota)}</small>`:''}</a>` : ''));
+  const E = r.esq && ESQ[r.esq];
+  dlg.innerHTML = `<div class="f-head"><div><span class="hint" style="font-family:var(--f-mono)">${esc(r.cod)} · ${esc(GRP[r.g].n)}</span><h2 id="f-title">${esc(r.t)}</h2><span class="who">${esc(r.a)}</span></div><button type="button" id="f-close" aria-label="Cerrar">Cerrar ✕</button></div>
+  <div class="f-body"><div>
+    ${E ? `<h3>Esquema de la idea</h3><div class="fig-big">${drawEsq(r.esq,true)}</div><p class="cap">${esc(E.caption)} Redibujo libre${E.dims?' (medidas de la fuente)':', sin escala'}; no es el plano original.</p>
+      <div class="legend"><span><i style="background:var(--built)"></i>construido</span><span><i style="background:var(--patio)"></i>patio</span><span><i style="background:var(--shop)"></i>comercio / servicio</span><span><i style="background:var(--grow)"></i>crecimiento</span></div>` : ''}
+    ${r.evo ? `<h3>Evolución en el tiempo</h3><div class="evo">${drawEvo(r.evo)}</div><p class="cap">${esc(r.evo.nota)}</p>` : ''}
+    <h3>Dónde ver los planos</h3><div class="links">${links.join('')}</div>
+  </div><div>
+    <h3>Ficha</h3><table class="dat">${rows.map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table>
+    <h3>Idea</h3><p>${esc(r.idea)}</p>
+    <h3>Crecimiento</h3><p>${esc(r.crece)}</p>
+    ${r.tomar ? `<h3>Qué tomar para tu casa</h3><p class="tomar">${esc(r.tomar)}</p>` : ''}
+  </div></div>`;
+  $('#f-close').addEventListener('click', ()=>dlg.close());
+  if(!dlg.open) dlg.showModal();
+  dlg.scrollTop = 0;
+  try { history.replaceState(null,'','#'+id); } catch(e){}
+}
+dlg.addEventListener('click', e=>{ if(e.target === dlg) dlg.close(); });
+dlg.addEventListener('close', ()=>{ try { history.replaceState(null,'',location.pathname + location.search); } catch(e){} });
+
+// ---------- bibliografía ----------
+$('#bib-list').innerHTML = BIB_ORDER.map(k=>`<li><a href="${SRC[k].u}" target="_blank" rel="noopener">${esc(SRC[k].t)}</a>${SRC[k].nota?` <span class="hint">${esc(SRC[k].nota)}</span>`:''}</li>`).join('');
+
+render();
+const h = location.hash.slice(1); if(h && R.some(r=>r.id===h)) openF(h);
+</script>
+</body>
+</html>
