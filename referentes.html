@@ -12,18 +12,19 @@
   --brick:#a94a26; --brick-soft:rgba(169,74,38,.10);
   --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --warn:#a46a0c; --warn-soft:rgba(164,106,12,.13);
   --patio:#d9e7dc; --grow:rgba(169,74,38,.16); --shop:#efe2c4; --built:#c9cfcb;
+  --r-sala:#e9dcc8; --r-dorm:#d6e0ea; --r-coc:#f1d2c2; --r-ban:#cfe6e6; --r-esc:#d8d2e6; --r-lav:#e4e4d0;
   --f-body:"Archivo",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
   --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
   --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15);
-  --patio:#23392b; --grow:rgba(224,128,90,.20); --shop:#3d3520; --built:#3a423e; color-scheme:dark}}
+  --patio:#23392b; --grow:rgba(224,128,90,.20); --shop:#3d3520; --built:#3a423e; --r-sala:#3d3527; --r-dorm:#26323d; --r-coc:#45302a; --r-ban:#23393a; --r-esc:#332d42; --r-lav:#37372a; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
   --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
   --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15);
-  --patio:#23392b; --grow:rgba(224,128,90,.20); --shop:#3d3520; --built:#3a423e; color-scheme:dark}
+  --patio:#23392b; --grow:rgba(224,128,90,.20); --shop:#3d3520; --built:#3a423e; --r-sala:#3d3527; --r-dorm:#26323d; --r-coc:#45302a; --r-ban:#23393a; --r-esc:#332d42; --r-lav:#37372a; color-scheme:dark}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.55}
 a{color:var(--brick)}
@@ -90,6 +91,14 @@ table.dat td:first-child{color:var(--muted);width:38%}
 .links a.main{border-color:var(--brick);background:var(--brick-soft);font-weight:600}
 .tomar{background:var(--ok-soft);border-left:3px solid var(--ok);padding:8px 10px;border-radius:0 6px 6px 0;font-size:14px}
 .evo svg{width:100%;height:auto}
+.plantas{display:flex;flex-wrap:wrap;gap:10px}
+.plantas figure{margin:0;flex:1 1 200px;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:6px}
+.plantas svg{width:100%;height:auto;max-height:420px;display:block}
+.plantas figcaption{font-size:12px;color:var(--muted);text-align:center}
+.aprox{display:inline-block;font-size:11.5px;border:1px solid var(--warn);color:var(--warn);background:var(--warn-soft);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:1px}
+.seg2{display:flex;gap:4px;margin:0 0 8px}
+.seg2 button{font-size:12.5px;padding:3px 9px}
+.seg2 button[aria-pressed="true"]{background:var(--brick);border-color:var(--brick);color:#fff}
 .legend{display:flex;flex-wrap:wrap;gap:10px;font-size:12px;color:var(--muted);margin-top:6px}
 .legend i{display:inline-block;width:12px;height:12px;border:1px solid var(--line);vertical-align:-2px;margin-right:4px}
 #biblio li{margin-bottom:6px}
@@ -129,6 +138,7 @@ table.dat td:first-child{color:var(--muted);width:38%}
       <button type="button" class="chip" id="f-win" aria-pressed="false">Premiados</button>
       <button type="button" class="chip" id="f-evo" aria-pressed="false">Con evolución en m²</button>
       <button type="button" class="chip" id="f-esq" aria-pressed="false">Con esquema</button>
+      <button type="button" class="chip" id="f-pla" aria-pressed="false">Con planta interior</button>
     </div>
     <h2>Orden</h2>
     <select id="f-ord" aria-label="Orden">
@@ -453,6 +463,50 @@ function drawEsq(key, big){
   return o + '</svg>';
 }
 
+
+// ---------- Plantas interiores (redibujo propio a partir de los dibujos publicados) ----------
+// PLANTA[id] = {fuente:'clave de SRC', nota:'…', aprox:true, niveles:[{n:'1.er piso', w, h, r:[[tipo,x,y,w,h,'rótulo'],…]}]}
+// tipos: sala, com, coc, ban, dorm, patio, tienda, esc, lav, circ, est (estudio/taller), vacio
+const RT = {sala:['var(--r-sala)','Sala / estar'], com:['var(--r-sala)','Comedor'], coc:['var(--r-coc)','Cocina'], ban:['var(--r-ban)','Baño'], dorm:['var(--r-dorm)','Dormitorio'],
+  patio:['var(--patio)','Patio'], tienda:['var(--shop)','Tienda / taller'], est:['var(--shop)','Estudio / taller'], esc:['var(--r-esc)','Escalera'], lav:['var(--r-lav)','Lavandería / servicio'], circ:['var(--bg)','Circulación'], vacio:['var(--grow)','Ampliación prevista']};
+const PLANTA = {
+ i8: {fuente:'yi', cita:'Yi (2014), Docomomo Journal 50', aprox:false, medidas:true, nota:'Tipo A-2, plano acotado a escala 1/50 publicado por Yi (2014). Lote de 16.40 × 6.00 m (10 módulos de 1.60 m): una franja de cuartos de 3.80 m hacia el patio y una franja de 2.20 m con ingreso, baño, escalera, comedor y cocina. Las divisiones internas de esa franja son aproximadas (± 0.20 m). El 2.º piso se levanta solo sobre la franja de 2.20 m; lo demás queda como azotea para crecer. Este tipo A-2 no tiene tienda: la tienda adelante del esquema de la idea corresponde a la descripción general del proyecto y a cómo crecieron las casas.',
+  niveles:[
+   {n:'1.er piso (casa inicial)', w:16.4, h:6.0, r:[['dorm',0,0,3.45,3.8,'Cuarto 1'],['patio',3.45,0,6.2,3.8,'Patio'],['dorm',9.65,0,3.35,3.8,'Cuarto 2'],['dorm',13.0,0,3.4,3.8,'Cuarto 3'],['circ',0,3.8,1.85,2.2,'Ingreso'],['circ',1.85,3.8,6.1,0.85,'Hall'],['ban',1.85,4.65,3.1,1.35,'Baño'],['esc',4.95,4.65,3.0,1.35],['com',7.95,3.8,3.25,2.2,'Comedor'],['coc',11.2,3.8,3.3,2.2,'Cocina'],['lav',14.5,3.8,1.9,2.2,'Servicio']]},
+   {n:'2.º piso y azotea', w:16.4, h:6.0, r:[['vacio',0,0,3.45,3.8,'Azotea'],['vacio',3.45,0,6.2,3.8,'Vacío sobre patio'],['vacio',9.65,0,6.75,3.8,'Terraza (para crecer)'],['vacio',0,3.8,1.65,2.2,''],['circ',1.65,3.8,3.3,2.2,'Hall'],['esc',4.95,3.8,3.0,2.2],['dorm',7.95,3.8,6.55,2.2,'Cuarto 4'],['vacio',14.5,3.8,1.9,2.2,'']]}
+  ]},
+ i1: {fuente:'socks', cita:'las láminas del concurso publicadas en Socks Studio', aprox:true, medidas:true, nota:'Las dos primeras plantas salen del diagrama de crecimiento de Stirling (dormitorio B, cocina K, comedor D, estar L), que no tiene escala: se dimensionaron con un lote de unos 12 m, así que solo las proporciones son fiables. La tercera es una casa del grupo de cuatro de la lámina amueblada, con medidas estimadas por el mobiliario (± 0.50 m). En la variante «tienda + dormitorios arriba», la crujía izquierda pasa a ser tienda y los dormitorios suben.',
+  niveles:[
+   {n:'Etapa inicial (4 personas)', w:12.0, h:12.0, r:[['dorm',0,0,3.7,3.0],['esc',3.7,0,1.0,3.0],['dorm',4.7,0,3.4,3.0],['ban',8.1,0,1.4,3.0,'Baño'],['coc',8.4,4.1,3.6,1.9],['com',8.4,6.0,3.6,3.4],['sala',8.4,9.4,3.6,2.6,'Estar'],['vacio',0,3.0,8.4,9.0,'Patio y ampliación']]},
+   {n:'Final, casa de un piso', w:11.9, h:12.1, r:[['dorm',0,0,3.4,3.0],['esc',3.4,0,1.0,3.0],['dorm',4.4,0,4.1,3.0],['ban',8.5,0,1.5,3.0,'Baño'],['dorm',0,3.4,2.8,2.2],['dorm',0,5.6,2.8,2.2],['patio',2.8,3.4,5.6,4.4],['coc',8.4,3.4,3.5,2.2],['com',8.4,5.6,3.5,6.5],['sala',0,7.8,8.4,4.3,'Estar']]},
+   {n:'Casa desarrollada (lámina amueblada)', w:11.9, h:11.7, r:[['dorm',0,0,2.7,2.7],['esc',0,2.7,2.7,1.05],['dorm',0,3.75,2.7,4.25,'Dorm. principal'],['ban',0,8.0,2.7,1.2,'Baño'],['patio',0,9.2,3.6,2.5,'Patio servicio'],['circ',2.7,0,0.95,9.2,''],['dorm',3.7,0,2.1,2.7,'Dorm. + WC'],['vacio',5.8,0,6.1,3.75,'Ampliación'],['patio',3.7,3.75,4.3,4.3],['sala',8.0,3.75,3.6,4.3,'Estar'],['coc',3.6,8.1,1.8,3.6],['com',5.4,8.1,6.2,3.6]]}
+  ]},
+ i6: {fuente:'lucas', cita:'Lucas, Salas y Barrionuevo (2012), fig. 7', aprox:true, medidas:true, nota:'Figura 7 de Lucas, Salas y Barrionuevo (2012). Seguro: 9.60 × 7.20 m en 8 marcos de 1.20 m; los marcos están desfasados y la huella llega a unos 8.40 m de fondo. Posiciones de los dormitorios, la cocina y el WC aproximadas (± 0.30 m); dos zonas no tienen rótulo en el original y se dejan sin nombre. Proyecto no construido.',
+  niveles:[
+   {n:'Planta única', w:9.6, h:8.4, r:[['dorm',0,1.3,2.4,5.9,'Dorm. 1'],['dorm',2.4,2.2,2.4,2.4,'Dorm. 2'],['circ',2.4,4.6,2.4,1.1,'Paso'],['dorm',2.4,5.7,2.4,2.4,'Dorm. 3'],['coc',4.8,0,2.4,3.3],['ban',4.8,3.3,2.4,1.4,'WC'],['circ',4.8,4.7,2.4,2.5,'sin rótulo'],['circ',7.2,1.3,2.4,6.0,'sin rótulo (¿estar?)']]}
+  ]}
+};
+function drawPlanta(L){
+  const pad = 0.9, W = L.w + pad*2, H = L.h + pad*2, sw = Math.max(W,H)/150, fs = Math.max(W,H)/34;
+  let o = `<svg viewBox="${-pad} ${-pad} ${W} ${H}" role="img" aria-label="Planta interior ${esc(L.n)}: ${L.r.map(r=>r[5]||RT[r[0]][1]).join(', ')}">`;
+  o += `<rect x="0" y="0" width="${L.w}" height="${L.h}" fill="none" stroke="var(--muted)" stroke-width="${sw*.6}" stroke-dasharray="${sw*3} ${sw*2}"/>`;
+  for(const [t,x,y,w,h,lab] of L.r){ const isP = t==='patio'||t==='vacio';
+    o += `<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${RT[t][0]}" stroke="var(--ink)" stroke-width="${isP?sw*.7:sw*1.6}" ${t==='vacio'?`stroke-dasharray="${sw*3} ${sw*2}"`:''}/>`;
+    if(t==='esc'){ const n = Math.max(3, Math.round(Math.max(w,h)/0.28)); for(let i=1;i<n;i++){ o += w>h ? `<line x1="${x+i*w/n}" x2="${x+i*w/n}" y1="${y}" y2="${y+h}" stroke="var(--ink)" stroke-width="${sw*.4}"/>` : `<line y1="${y+i*h/n}" y2="${y+i*h/n}" x1="${x}" x2="${x+w}" stroke="var(--ink)" stroke-width="${sw*.4}"/>`; } }
+    const lab2 = lab===undefined ? RT[t][1] : lab; if(lab2 && t!=='esc'){ const f = Math.min(fs, w/ (lab2.length*0.55), h/1.6);
+      o += `<text x="${x+w/2}" y="${y+h/2}" font-size="${f}" text-anchor="middle" dominant-baseline="middle" fill="var(--ink)" font-family="Archivo,sans-serif">${esc(lab2)}</text>`; } }
+  for(const [k,x,y,t] of (L.txt||[])) o += `<text x="${x}" y="${y}" font-size="${fs*.9}" text-anchor="middle" dominant-baseline="middle" fill="var(--muted)" font-family="Archivo,sans-serif">${esc(t)}</text>`;
+  return o + '</svg>';
+}
+function plantaHTML(id){
+  const P = PLANTA[id]; if(!P) return '';
+  const used = new Set(P.niveles.flatMap(L=>L.r.map(r=>r[0])));
+  return `<h3>Planta interior${P.aprox?'<span class="aprox">aproximada</span>':''}</h3>
+  <div class="plantas">${P.niveles.map(L=>`<figure${L.w/L.h>1.8?' style="flex-basis:100%"':''}>${drawPlanta(L)}<figcaption>${esc(L.n)}${L.w&&P.medidas?` · ${L.w} × ${L.h} m`:''}</figcaption></figure>`).join('')}</div>
+  <div class="legend">${[...used].map(t=>`<span><i style="background:${RT[t][0]}"></i>${esc(RT[t][1])}</span>`).join('')}</div>
+  <p class="cap">${esc(P.nota)} Redibujo propio de la distribución, a partir de ${esc(P.cita)}; no es el plano original.</p>`;
+}
+
 function drawEvo(evo){
   const p = evo.p, W = 420, H = 170, l = 36, b = 30, t = 14, r = 8;
   const max = Math.ceil(Math.max(...p.map(x=>x[1]))/50)*50;
@@ -470,7 +524,7 @@ function drawEvo(evo){
 
 // ---------- filtros ----------
 $('#fbtn').addEventListener('click', e=>{ const o = $('#filtros').classList.toggle('open'); e.currentTarget.setAttribute('aria-expanded', o); e.currentTarget.textContent = o ? 'Ocultar filtros' : 'Mostrar filtros'; });
-const st = {q:'', grp:new Set(), est:new Set(), fam:'', win:false, evo:false, esq:false, ord:'grp'};
+const st = {q:'', grp:new Set(), est:new Set(), fam:'', win:false, evo:false, esq:false, pla:false, ord:'grp'};
 function chips(box, map, set){
   box.innerHTML = Object.entries(map).map(([k,v])=>`<button type="button" class="chip" data-k="${k}" aria-pressed="false">${esc(v.n||v)}</button>`).join('');
   box.addEventListener('click', e=>{ const b = e.target.closest('button'); if(!b) return; const k=b.dataset.k;
@@ -481,8 +535,8 @@ $('#f-fam').innerHTML = '<option value="">Todos</option>' + Object.entries(FAM).
 $('#f-fam').addEventListener('change', e=>{ st.fam = e.target.value; render(); });
 $('#f-ord').addEventListener('change', e=>{ st.ord = e.target.value; render(); });
 $('#q').addEventListener('input', e=>{ st.q = norm(e.target.value.trim()); render(); });
-for(const k of ['win','evo','esq']) $('#f-'+k).addEventListener('click', e=>{ st[k] = !st[k]; e.currentTarget.setAttribute('aria-pressed', st[k]); render(); });
-$('#reset').addEventListener('click', ()=>{ st.q=''; st.grp.clear(); st.est.clear(); st.fam=''; st.win=st.evo=st.esq=false; st.ord='grp';
+for(const k of ['win','evo','esq','pla']) $('#f-'+k).addEventListener('click', e=>{ st[k] = !st[k]; e.currentTarget.setAttribute('aria-pressed', st[k]); render(); });
+$('#reset').addEventListener('click', ()=>{ st.q=''; st.grp.clear(); st.est.clear(); st.fam=''; st.win=st.evo=st.esq=st.pla=false; st.ord='grp';
   $('#q').value=''; $('#f-fam').value=''; $('#f-ord').value='grp'; document.querySelectorAll('.chip').forEach(b=>b.setAttribute('aria-pressed','false')); render(); });
 
 function match(r){
@@ -492,14 +546,16 @@ function match(r){
   if(st.win && !r.win) return false;
   if(st.evo && !r.evo) return false;
   if(st.esq && !r.esq) return false;
+  if(st.pla && !PLANTA[r.id]) return false;
   if(st.q){ const hay = norm([r.cod,r.t,r.a,r.pais,r.y,r.sist,r.idea,r.crece,GRP[r.g].n,FAM[r.fam],EST[r.est],r.tomar||''].join(' ')); if(!st.q.split(/\s+/).every(w=>hay.includes(w))) return false; }
   return true;
 }
 function card(r){
-  const fig = r.esq ? drawEsq(r.esq,false) : `<div class="placeholder"><b>${esc(FAM[r.fam]||'')}</b>Planos en las fuentes de la ficha</div>`;
+  const fig = PLANTA[r.id] ? drawPlanta(PLANTA[r.id].niveles[0]) : r.esq ? drawEsq(r.esq,false) : `<div class="placeholder"><b>${esc(FAM[r.fam]||'')}</b>Planos en las fuentes de la ficha</div>`;
   const tags = [`<span class="tag">${esc(r.pais || 'Perú')}</span>`, `<span class="tag ${r.est==='n'?'no':''}">${esc(EST[r.est])}</span>`];
   if(r.win) tags.push('<span class="tag win">Premiado</span>');
   if(r.evo) tags.push('<span class="tag">Evolución en m²</span>');
+  if(PLANTA[r.id]) tags.push('<span class="tag win">Planta interior</span>');
   return `<button type="button" class="card" data-id="${r.id}"><div class="fig">${fig}</div><div class="body"><span class="cod">${esc(r.cod)} · ${r.y}</span><h3>${esc(r.t)}</h3><span class="who">${esc(r.a)}</span><div class="tags">${tags.join('')}</div></div></button>`;
 }
 function render(){
@@ -528,6 +584,7 @@ function openF(id){
   const E = r.esq && ESQ[r.esq];
   dlg.innerHTML = `<div class="f-head"><div><span class="hint" style="font-family:var(--f-mono)">${esc(r.cod)} · ${esc(GRP[r.g].n)}</span><h2 id="f-title">${esc(r.t)}</h2><span class="who">${esc(r.a)}</span></div><button type="button" id="f-close" aria-label="Cerrar">Cerrar ✕</button></div>
   <div class="f-body"><div>
+    ${plantaHTML(r.id)}
     ${E ? `<h3>Esquema de la idea</h3><div class="fig-big">${drawEsq(r.esq,true)}</div><p class="cap">${esc(E.caption)} Redibujo libre${E.dims?' (medidas de la fuente)':', sin escala'}; no es el plano original.</p>
       <div class="legend"><span><i style="background:var(--built)"></i>construido</span><span><i style="background:var(--patio)"></i>patio</span><span><i style="background:var(--shop)"></i>comercio / servicio</span><span><i style="background:var(--grow)"></i>crecimiento</span></div>` : ''}
     ${r.evo ? `<h3>Evolución en el tiempo</h3><div class="evo">${drawEvo(r.evo)}</div><p class="cap">${esc(r.evo.nota)}</p>` : ''}
