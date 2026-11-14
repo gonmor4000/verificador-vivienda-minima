@@ -79,6 +79,17 @@ mark{background:rgba(224,168,62,.35);color:inherit;border-radius:2px}
 const C = (txt, anchor) => `<a class="cit" href="rne.html#${anchor}">${txt}</a>`;
 // v: 'si' | 'no' | 'dep' (depende)
 const Q = [
+{ id:'area-libre', fecha:'2026-11-14', tags:['Lote','Parámetros'],
+  q:'¿Quién decide el área libre mínima de un lote?',
+  v:'dep', vt:'La municipalidad, no el RNE',
+  a:`<p>La fija la <b>municipalidad provincial</b> en su plan urbano y reglamento de zonificación (en Lima, las ordenanzas de la Municipalidad Metropolitana por área de tratamiento: 1015, 1076 y 1099-MML), y la <b>municipalidad distrital</b> la aplica a cada lote en el <b>certificado de parámetros urbanísticos y edificatorios</b> (Ley 29090), que es el documento que manda.</p>
+  <p>El RNE no da un porcentaje para vivienda: define qué es área libre, la que no tiene proyección de área techada (${C('A.010 art. 9.3','A010-art-9.3')}), y obliga a dejar patios y pozos con medidas mínimas para iluminar y ventilar (A.020 art. 11.4), que a veces piden más que el porcentaje municipal.</p>
+  <p>Valores encontrados en ordenanzas y certificados: densidad media (RDM) unifamiliar <b>30 %</b> en Lima (Ate; Comas, SMP, Los Olivos, Barranco, Surquillo) y en Arequipa; multifamiliar 30 a 35 %; Mi Vivienda 30 % (25 % en esquina).</p>` },
+{ id:'lote-tipico', fecha:'2026-11-14', tags:['Lote','Parámetros'],
+  q:'¿Cuál es el tamaño mínimo y el típico de un lote de vivienda en Lima?',
+  v:'dep', vt:'Mínimo 90 o 120 m² según la zona · típico 120 a 160 m²',
+  a:`<p><b>Mínimo legal</b> en densidad media (RDM), unifamiliar: <b>90 m² con 6 m de frente</b> en el Área de Tratamiento I (por ejemplo Ate, Ord. 1099-MML) y <b>120 m² con 6 m</b> en el Área de Tratamiento II (Comas, SMP, Independencia, Los Olivos, Barranco, Surquillo; Ord. 1015 y 1076-MML). Lo fija la zonificación, no el RNE, y lo confirma el certificado de parámetros de cada lote.</p>
+  <p><b>Tamaños habituales</b> (por verificar con fuentes): 7 × 20 = 140 m² en Villa El Salvador y lotizaciones populares; 8 × 20 = 160 m² en urbanizaciones populares; 10 × 20 = 200 m² en urbanizaciones de clase media. El verificador los ofrece en «Lote típico».</p>` },
 { id:'escalera-retiros', fecha:'2026-11-14', tags:['Escalera','Retiros'],
   q:'¿La escalera puede ir en el retiro frontal? ¿Y en el posterior?',
   v:'dep', vt:'Frontal solo en casos puntuales · posterior no',
