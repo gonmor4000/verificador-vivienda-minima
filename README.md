@@ -7,6 +7,7 @@ Herramienta de estudio que genera y verifica la planta de una vivienda mínima d
 - Pestaña **Reglas**: las reglas implícitas que usa el generador. Cada cita del RNE es un enlace al RNE consultable.
 - **Vivienda multifamiliar** (`multifamiliar.html`): con la zonificación del certificado de parámetros (ejemplos reales de Lima y Arequipa), el lote y el programa, arma el edificio (núcleo, pozos de luz, departamentos, estacionamientos) y lo verifica contra el certificado y el RNE.
 - **RNE consultable** (`rne.html`): normas A.010 a A.130 con índice, buscador, un enlace estable por artículo y numeral (p. ej. `rne.html#A020-art-11.4-a`) y cruce con el RNE ilustrado. Detalles en `rne/README.md`.
+- **Referentes** (`referentes.html`): catálogo de los 26 proyectos de PREVI Lima y otros referentes peruanos de vivienda progresiva, con filtros, fichas, esquemas propios y enlaces a los planos en sus fuentes (no se copian planos con derechos).
 
 Herramienta de estudio, no un cálculo estructural.
 
