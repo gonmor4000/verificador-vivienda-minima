@@ -528,6 +528,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Selector de <b>lote típico</b> en Terreno: 6 × 15 y 6 × 20 (mínimos de densidad media en Lima según el área de tratamiento), 7 × 20 (lotización popular), 8 × 20 y 10 × 20 (el lote angosto de 5.50 m sigue en su botón). Pone frente y fondo y la planta se regenera.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Escalera automática</b>: ahora prueba primero la de <b>caracol</b> de 1.60 m en el patio posterior (ocupa menos patio), y si no entra, un tramo, en U o en L. Pestaña <b>Etapas</b> en dos columnas: las etapas 1 a 4 de a dos, con su tabla de costos, y las opciones de la etapa 5 también de a dos.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevas pestañas <b>Relaciones</b> y <b>Diagrama de bolas</b>. Relaciones: superficie mínima, óptima y máxima de cada ambiente con su fuente: el mínimo sale del mueble y la circulación, el óptimo del nivel elegido y el máximo del nivel amplio de la tabla de referencia del Cuadro de áreas, que ahora es una sola para las dos pestañas (la sala-comedor en un solo espacio pide la suma de sala y comedor menos un 15 %, porque comparten la circulación), proporciones aceptables entre superficies (principal/secundario, principal/sala-comedor, cocina/sala-comedor, baños/dormitorios), porcentaje de las zonas privada, social y de servicio, y una matriz de relaciones entre ambientes (directa, cercana, indiferente, evitar). Todo se compara con el plano actual. Diagrama de bolas: cada ambiente del plano es una bola de área proporcional a su superficie, unida a los demás por sus puertas reales (con su ancho) o con línea doble si están abiertos entre sí sin muro (como la cocina y la sala-comedor), por piso, coloreada por zona.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Pestaña <b>Etapas</b> ordenada en vertical: línea de tiempo con una fila por etapa (ahorro y obra sobre los mismos años) y cada etapa en una columna (qué incluye, qué queda para después y su tabla de costos completa, que antes se cortaba). En el <b>3D</b>, botones de etapa (sin etapas, 1 a 5) en la barra del visor y un rótulo en la vista que dice qué etapa estás viendo.</span></li>
@@ -577,6 +578,14 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
   <div class="grid">
     <section class="card" aria-label="Parámetros">
       <h2>Terreno</h2>
+      <div class="ctl"><label for="lotpre">Lote típico</label><select id="lotpre">
+        <option value="">Medidas propias</option>
+        <option value="6x15">6 × 15 · 90 m² · mínimo Lima (Ate)</option>
+        <option value="6x20">6 × 20 · 120 m² · mínimo Lima (Comas, SMP)</option>
+        <option value="7x20">7 × 20 · 140 m² · Villa El Salvador</option>
+        <option value="8x20">8 × 20 · 160 m² · urbanización popular</option>
+        <option value="10x20">10 × 20 · 200 m² · clase media</option>
+      </select><span class="hint">Pone frente y fondo; después los puedes cambiar. Los mínimos de densidad media en Lima son 6 × 15 en el Área de Tratamiento I y 6 × 20 en la II: salen de las ordenanzas 1015, 1076 y 1099-MML; los demás son tamaños habituales, por verificar.</span></div>
       <div class="ctl"><div class="inline">
         <div><label for="lote" class="hint">Frente (m)</label><input type="number" id="lote" min="4" max="12" step="0.05"></div>
         <div><label for="fondo" class="hint">Fondo (m)</label><input type="number" id="fondo" min="8" max="40" step="0.05"></div>
@@ -673,6 +682,7 @@ const nf = x => Math.round(x).toLocaleString('es-PE');
 function load(p){
   ids.forEach(k=>{ const e = el(k); if(e.type==='checkbox') e.checked = p[k]; else e.value = p[k] ?? (k==='ddr' ? 0 : e.value); });
   document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on'));
+  if(el('lotpre')) syncLotPre();
 }
 function read(){
   const v = {};
@@ -3469,6 +3479,9 @@ const regen = () => {
 };
 ids.forEach(k=> el(k).addEventListener('input', ()=>{ document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on')); if(autoKeys.includes(k)) regen(); else render(); }));
 ids.forEach(k=> el(k).addEventListener('change', ()=>{ if(autoKeys.includes(k)) regen(); else render(); }));
+el('lotpre').addEventListener('change', ()=>{ const v = el('lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('lote').value = f; el('fondo').value = d; document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on')); regen(); });
+function syncLotPre(){ const k = `${+parseFloat(el('lote').value)}x${+parseFloat(el('fondo').value)}`; el('lotpre').value = [...el('lotpre').options].some(o=>o.value===k) ? k : ''; }
+['lote','fondo'].forEach(k=> ['input','change'].forEach(ev=> el(k).addEventListener(ev, syncLotPre)));
 [['p-base','base'],['p-pmr','pmr'],['p-chica','chica']].forEach(([id,p])=> el(id).addEventListener('click', ()=>{ load(presets[p]); el(id).classList.add('on'); render(); }));
 // Total de dormitorios: se reparte entre pisos (abajo hasta 3; arriba uno encima de cada dormitorio de abajo)
 let wantTotal = null;
@@ -3492,7 +3505,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14o';
+const APP_VERSION = '2026-11-14p';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
