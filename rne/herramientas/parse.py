@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 """Convierte el RNE.txt (texto de las separatas de El Peruano) en rne-data.js."""
-import json, re, sys
+import json, re, sys, os
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import tablas
+SKIPPED_ENDS = []
 
 SRC, OUT = sys.argv[1], sys.argv[2]
 L = open(SRC, encoding='utf-8').read().split('\n')
@@ -142,6 +145,7 @@ def blocks(sec, nid, uid):
     ctx_num = None
     rows = None
     buf = None
+    skip = None
     def flush():
         nonlocal buf
         if buf is not None:
@@ -151,6 +155,11 @@ def blocks(sec, nid, uid):
             flush(); buf = ['p', None, s]; continue
         st = fix(s)
         if not st: continue
+        if skip:
+            if tablas.fold(st).startswith(tablas.fold(skip)):
+                SKIPPED_ENDS.append(skip); skip = None
+            else:
+                continue
         mnum = RE_NUM.match(st)
         is_num = mnum and sec['t'] == 'art' and int(mnum.group(1)) == sec['n']
         mlit = RE_LIT.match(st)
@@ -166,7 +175,11 @@ def blocks(sec, nid, uid):
             flush(); out.append(['sub', None, nice(st)]); continue
         if RE_CUADRO.match(st):
             flush(); rows = []
-            out.append(['tab', None, st, rows]); continue
+            spec = tablas.find(nid, st)
+            out.append(['tab', None, st, rows, spec])
+            if spec and spec.get('end'):
+                skip = spec['end']; rows = None
+            continue
         if RE_GRAF.match(st) and len(st) < 120:
             flush(); out.append(['fig', None, st]); continue
         if is_num:
@@ -198,7 +211,22 @@ def blocks(sec, nid, uid):
     res = []
     for b in out:
         if b[0] == 'tab':
-            res.append(['tab', None, b[2], '\n'.join(b[3])])
+            spec = b[4]
+            title = b[2]
+            mnum_ = re.search(r'N[°º]\s*(\d+)', title)
+            if not spec and nid == 'A070' and mnum_ and 7 <= int(mnum_.group(1)) <= 20:
+                spec = tablas.sanitarios(b[3])
+            if not spec and nid == 'A020' and 'Nº 10' in title:
+                spec = tablas.pozos(b[3])
+            if spec:
+                struct = {k: spec[k] for k in ('cap', 'h', 'r', 'n') if spec.get(k)}
+                title = spec.get('title', title)
+                text = ' '.join(c for row in spec.get('h', []) + spec['r'] + spec.get('n', []) for c in row.lstrip('#').split('|') if c not in ('^', '<'))
+                res.append(['tab', None, title, text, struct])
+            elif not b[3]:
+                res.append(['p', None, title])
+            else:
+                res.append(['tab', None, title, '\n'.join(b[3])])
         else:
             res.append(b)
     return res
@@ -210,6 +238,7 @@ with open(OUT, 'w', encoding='utf-8') as f:
     json.dump(DATA, f, ensure_ascii=False, separators=(',', ':'))
     f.write(';\n')
 # resumen
+print('fines de tabla encontrados:', len(SKIPPED_ENDS), sorted(set(SKIPPED_ENDS)))
 for n in DATA:
     arts = [s for s in n['secs'] if s['t'] == 'art']
     nums = sum(1 for s in arts for b in s['b'] if b[0] == 'num')

@@ -95,7 +95,22 @@ h3.cap.sub{font-size:12.5px;margin-top:22px}
 .art .lab:hover{text-decoration:underline}
 .art .lab.copied::after{content:" ✓ enlace copiado";font-family:var(--f-body);font-size:11.5px;color:var(--ok)}
 .art p.subh{font-weight:600;margin-top:12px}
-.tab{margin:8px 0;border:1px solid var(--line);border-radius:6px;overflow:auto;max-width:80ch}
+.tab{margin:10px 0;border:1px solid var(--line);border-radius:6px;overflow:auto;max-width:80ch}
+.tab.wide{max-width:none}
+.tab.wide table{min-width:900px}
+.tab.wide td{min-width:44px}
+.tab.wide td:not(.v){min-width:96px}
+.tab table{border-collapse:collapse;width:100%;font-size:13.5px;line-height:1.4}
+.tab th,.tab td{border-top:1px solid var(--line);border-left:1px solid var(--line);padding:5px 9px;text-align:left;vertical-align:top}
+.tab tr>:first-child{border-left:0}
+.tab thead th{background:var(--bg);font-size:12.5px;font-weight:600;color:var(--muted);vertical-align:bottom}
+.tab td.v{font-family:var(--f-mono);font-size:13px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.tab tr.grp td{background:var(--brick-soft);font-weight:600;font-size:13px}
+.tab tbody tr:hover td{background:var(--brick-soft)}
+.tab tbody tr.grp:hover td{background:var(--brick-soft)}
+.tab .cap{font-size:13px;padding:5px 10px;color:var(--muted);border-bottom:1px solid var(--line)}
+.tab .notes{padding:6px 10px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.tab .notes p{margin:2px 0}
 .tab .tt{font-weight:600;font-size:13.5px;padding:6px 10px;border-bottom:1px solid var(--line);background:var(--bg)}
 .tab pre{margin:0;padding:8px 10px;font-family:var(--f-mono);font-size:12.5px;line-height:1.45;white-space:pre-wrap}
 .tab .tn{font-size:11.5px;color:var(--muted);padding:0 10px 6px}
@@ -190,10 +205,32 @@ function iluChips(sec){
     return `<a href="${PDF}#page=${a.p[0]}" data-page="${a.p[0]}" title="Artículo ${o} de la ${nm.replace('A0','A.0')} de 2006: ${esc(a.t)}">${p} · ${nm.replace('A0','A.0')} art. ${o} (2006) ${esc(a.t)}</a>`;
   }).join('') + '</div>';
 }
+// tabla reconstruida: celdas separadas por «|»; «^» une con la de arriba, «<» con la de la izquierda; «#» fila de grupo
+function table(title, t){
+  const parse = rows => rows.map(r => r.startsWith('#') ? {grp: r.slice(1)} : r.split('|'));
+  const H = parse(t.h || []), R = parse(t.r);
+  const ncol = Math.max(1, ...H.concat(R).filter(r => Array.isArray(r)).map(r => r.length));
+  const isNum = c => /^(-|[\d.,]+\s*(%|m²?|m³)?|\d+ c\/\d+|\d+L,.*|[\d.,]+ m (\(\*+\))?.*)$/.test(c.trim()) && c.length < 24;
+  function grid(rows, tag){
+    const cells = rows.map(r => Array.isArray(r) ? Array.from({length: ncol}, (_, i) => ({t: r[i] ?? '', rs:1, cs:1})) : r);
+    const owner = rows.map(() => []);
+    cells.forEach((row, i) => { if(!Array.isArray(row)) return; row.forEach((c, j) => {
+      if(c.t === '^' && i > 0 && owner[i-1][j]){ if(owner[i-1][j].col === j) owner[i-1][j].rs++; owner[i][j] = owner[i-1][j]; c.skip = true; }
+      else if(c.t === '<' && j > 0 && owner[i][j-1]){ if(owner[i][j-1].row === i) owner[i][j-1].cs++; owner[i][j] = owner[i][j-1]; c.skip = true; }
+      else { c.row = i; c.col = j; owner[i][j] = c; }
+    }); });
+    return cells.map(row => !Array.isArray(row) ? `<tr class="grp"><td colspan="${ncol}">${linkify(row.grp)}</td></tr>`
+      : '<tr>' + row.map((c, j) => c.skip ? '' : `<${tag}${c.rs>1?` rowspan="${c.rs}"`:''}${c.cs>1?` colspan="${c.cs}"`:''}${tag==='td' && j>0 && isNum(c.t)?' class="v"':''}>${linkify(c.t)}</${tag}>`).join('') + '</tr>').join('');
+  }
+  return `<div class="tab${ncol > 6 ? ' wide' : ''}"><div class="tt">${linkify(title)}</div>${t.cap ? `<div class="cap">${esc(t.cap)}</div>` : ''}<table>${H.length ? `<thead>${grid(H, 'th')}</thead>` : ''}<tbody>${grid(R, 'td')}</tbody></table>${t.n ? `<div class="notes">${t.n.map(n => `<p>${linkify(n)}</p>`).join('')}</div>` : ''}</div>`;
+}
 function block(b){
   const [k, id, text, x] = b;
   if(k === 'num' || k === 'lit') return `<p class="${k}" id="${id}"><a class="lab" href="#${id}" title="Enlace a este numeral">${esc(x)}</a>${linkify(text)}</p>`;
-  if(k === 'tab'){ const long = x && x.split('\n').length > 14; const pre = x ? `<pre>${esc(x)}</pre>` : ''; return `<div class="tab"><div class="tt">${linkify(text)}</div>${long ? `<details><summary style="cursor:pointer;padding:6px 10px;color:var(--muted);font-size:13px">Ver tabla (${x.split('\n').length} líneas)</summary>${pre}</details>` : pre}<div class="tn">Tabla tal como sale del texto del PDF oficial: si se ve desordenada, revisa la separata.</div></div>`; }
+  if(k === 'tab'){
+    if(b[4]) return table(text, b[4]);
+    const long = x && x.split('\n').length > 14; const pre = x ? `<pre>${esc(x)}</pre>` : '';
+    return `<div class="tab"><div class="tt">${linkify(text)}</div><div class="tn" style="padding-top:6px">Esta tabla es demasiado compleja para rearmarla desde el texto: se muestra tal como sale del PDF. Revisa la separata oficial.</div>${long ? `<details><summary style="cursor:pointer;padding:6px 10px;color:var(--muted);font-size:13px">Ver texto de la tabla (${x.split('\n').length} líneas)</summary>${pre}</details>` : pre}</div>`; }
   if(k === 'fig') return `<p class="fig">${esc(text)} (gráfico no incluido: ver la separata oficial)</p>`;
   if(k === 'sub') return `<p class="subh">${esc(text)}</p>`;
   return `<p>${linkify(text)}</p>`;
