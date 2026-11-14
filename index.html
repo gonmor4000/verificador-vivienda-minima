@@ -69,6 +69,8 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .cota-ed{position:absolute;z-index:5;width:68px;font:12px var(--f-mono);padding:2px 4px;border:1.5px solid var(--brick);border-radius:4px;background:var(--panel);color:var(--ink);text-align:center}
 .hdl{cursor:ew-resize}.hdl.v{cursor:ns-resize}
 .hdl rect{fill:var(--brick);stroke:var(--panel);stroke-width:2}
+.hdl.casa rect{fill:var(--ok)}
+.hdl.casa{cursor:ew-resize}.hdl.casa.v{cursor:ns-resize}
 .hdl:hover rect,.hdl.drag rect{fill:var(--ink)}
 .cortes{grid-column:1/-1}
 .tabs{display:flex;gap:4px;margin:14px 0 12px;border-bottom:1px solid var(--line)}
@@ -242,9 +244,12 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
   <div id="tab-pro" class="areas" hidden aria-label="Diseño Pro">
     <section class="card plan">
       <h2>Planta de arquitectura</h2>
-      <p class="hint" style="margin-top:0">Plano para el expediente: ejes con su grilla, cotas entre ejes y totales, cotas libres de cada ambiente (en rojo), vanos de puertas (P) y ventanas (V). <b>Arrastra las líneas de corte A y B</b> para mover los cortes de abajo.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px"><span class="hint">Piso</span><div class="seg" role="group" aria-label="Piso"><button type="button" data-pp="1">1.er piso</button><button type="button" data-pp="2" id="pro-f2">2.º piso</button></div></div>
+      <p class="hint" style="margin-top:0">Plano para el expediente: ejes con su grilla, cotas entre ejes y totales, cotas libres de cada ambiente (en rojo), vanos de puertas (P) y ventanas (V, con ancho × alto y alféizar) y su cuadro de vanos. <b>Arrastra las líneas de corte A y B</b> para mover los cortes de abajo.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px"><span class="hint">Piso</span><div class="seg" role="group" aria-label="Piso"><button type="button" data-pp="1">1.er piso</button><button type="button" data-pp="2" id="pro-f2">2.º piso</button></div><label class="v3-chk"><input type="checkbox" id="pro-furn"> Mostrar muebles</label></div>
       <div id="pro-plan" class="pro-plan"></div>
+      <h3 style="font-size:14px;margin:14px 0 4px">Cuadro de vanos</h3>
+      <p class="hint" style="margin:0 0 6px">Medidas en metros. En la planta cada ventana lleva su código, ancho × alto y alféizar (a).</p>
+      <div class="ca-wrap" id="pro-vanos"></div>
     </section>
     <section class="card plan">
       <h2>Cortes</h2>
@@ -399,6 +404,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Mover el bloque construido</b> sobre la planta de Diseño con tres tiradores verdes: el del eje B cambia el ancho de la crujía de dormitorios, el del eje D el de la crujía social y húmeda, y el del muro posterior el fondo construido (en módulos de 25 cm, con vista previa mientras arrastras). En <b>Diseño Pro</b>: casilla <b>Mostrar muebles</b>, y cada ventana lleva su código (V-1, V-2…), ancho × alto y alféizar, con un <b>cuadro de vanos</b> de ventanas y puertas debajo de la planta.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevo <b>verificador de vivienda multifamiliar</b> (enlace arriba a la derecha): con la zonificación de certificados de parámetros reales (Lima ATN I y II, Arequipa), el lote y el programa arma el edificio con núcleo de escalera de 1.20 m y ascensor, pozos de luz calculados por la A.020 art. 11.4 b, departamentos amueblados y estacionamientos; tiene corte, 3D, cuadro de áreas, artículos del RNE para multifamiliar y un cotejo de esta casa unifamiliar con esos certificados.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>RNE consultable: revisado en internet que los PDF oficiales son la <b>última versión aprobada</b> de cada norma. La A.020 y la A.130 llevan un aviso de que hay un proyecto de cambio en consulta (RM 214-2025 y RM 264-2026), todavía sin aprobar.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>RNE consultable con los <b>PDF oficiales</b> de la A.010 a la A.130: cada artículo tiene un botón «PDF oficial p. N» que abre la página exacta de la norma publicada. Rearmados como tablas el cuadro 27 de la A.070 (requisitos de seguridad) y las tablas de almacenes de la A.130 (01, 03, 04, 05 y 06); los cuadros 21, 22 y 26 de la A.070 corregidos contra el original.</span></li>
@@ -1244,8 +1250,17 @@ function draw(r){
   const hy = (F + Math.min(F, patioY0))/2, hx = L*0.84;
   g += `<g class="hdl" data-k="lote"><title>Arrastra para cambiar el frente</title><rect x="${XL(L)-6}" y="${YL(hy)-22}" width="12" height="44" rx="5"/></g>`;
   g += `<g class="hdl v" data-k="fondo"><title>Arrastra para cambiar el fondo</title><rect x="${XL(hx)-22}" y="${YL(F)-6}" width="44" height="12" rx="5"/></g>`;
+  // tiradores del bloque construido: eje B (ancho de la crujía de dormitorios), eje D (ancho de la crujía social) y fondo construido
+  houseGeo = {X0: X(0), Y0: Y(0), s, a: v.a, W, D, r};
+  g += `<rect id="casa-ghost" x="${X(0)}" y="${Y(D)}" width="${W*s}" height="${D*s}" fill="none" stroke="var(--brick)" stroke-width="1.5" stroke-dasharray="6 4" visibility="hidden"/>`;
+  g += `<line id="casa-ghost-b" x1="${X(v.a)}" x2="${X(v.a)}" y1="${Y(D)}" y2="${Y(0)}" stroke="var(--brick)" stroke-width="1.5" stroke-dasharray="6 4" visibility="hidden"/>`;
+  g += `<text id="casa-lbl" x="${X(0)}" y="${Y(D)-8}" font-size="11" font-weight="600" fill="var(--brick)" visibility="hidden"></text>`;
+  const hb = Y(0) + 16;
+  g += `<g class="hdl casa" data-h="B"><title>Arrastra el eje B: ancho de la crujía de dormitorios</title><rect x="${X(v.a)-6}" y="${hb-14}" width="12" height="28" rx="5"/></g>`;
+  g += `<g class="hdl casa" data-h="D"><title>Arrastra el eje D: ancho de la crujía social y húmeda</title><rect x="${X(W)-6}" y="${hb-14}" width="12" height="28" rx="5"/></g>`;
+  g += `<g class="hdl casa v" data-h="F"><title>Arrastra para cambiar el fondo construido</title><rect x="${X(v.a/2)-18}" y="${Y(D)-6}" width="36" height="12" rx="5"/></g>`;
   el('svgbox').innerHTML = `<svg viewBox="0 0 ${vw+20} ${vh+20}" role="img" aria-label="Planta de la vivienda con ${f1(r.gross)} m² techados">${g}</svg>`;
-  bindHandles();
+  bindHandles(); bindHouseHandles();
   bindCotas(r);
   el('lg-pmr').hidden = !v.pmr;
 }
@@ -1953,7 +1968,7 @@ function setCota(k, x, r){
 let lotGeo = null, dragging = false;
 function bindHandles(){
   const svg = document.querySelector('#svgbox svg'); if(!svg) return;
-  svg.querySelectorAll('.hdl').forEach(h=> h.addEventListener('pointerdown', ev=>{
+  svg.querySelectorAll('.hdl[data-k]').forEach(h=> h.addEventListener('pointerdown', ev=>{
     ev.preventDefault();
     const k = h.dataset.k, G = lotGeo, rect = el('lot-rect'), lbl = el('lot-lbl'), hr = h.querySelector('rect');
     const toSvg = e => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); };
@@ -1974,6 +1989,46 @@ function bindHandles(){
       dragging = false; h.classList.remove('drag');
       el(k).value = f2(val); document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on'));
       regen();
+    };
+    h.addEventListener('pointermove', move); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
+  }));
+}
+// ---- Mover el bloque construido a mano: eje B, eje D y fondo ----
+let houseGeo = null;
+function bindHouseHandles(){
+  const svg = document.querySelector('#svgbox svg'); if(!svg || !houseGeo) return;
+  svg.querySelectorAll('.hdl.casa').forEach(h=> h.addEventListener('pointerdown', ev=>{
+    ev.preventDefault(); ev.stopPropagation();
+    const G = houseGeo, r = G.r, k = h.dataset.h, hr = h.querySelector('rect');
+    const ghost = el('casa-ghost'), gb = el('casa-ghost-b'), lbl = el('casa-lbl');
+    const toSvg = e => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); };
+    const snap = x => Math.round(x/M)*M;
+    let A = G.a, W = G.W, D = G.D;
+    const bW = G.W - G.a, minB = (r.typ==='T3' ? r.P : r.c) + 1.50;
+    [ghost, gb, lbl].forEach(e=>e.setAttribute('visibility', 'visible'));
+    h.classList.add('drag'); dragging = true; h.setPointerCapture(ev.pointerId);
+    const paint = () => {
+      ghost.setAttribute('width', W*G.s); ghost.setAttribute('y', G.Y0 - D*G.s); ghost.setAttribute('height', D*G.s);
+      gb.setAttribute('x1', G.X0 + A*G.s); gb.setAttribute('x2', G.X0 + A*G.s); gb.setAttribute('y1', G.Y0 - D*G.s);
+      lbl.setAttribute('y', G.Y0 - D*G.s - 8);
+      lbl.textContent = `Crujía A–B ${f2(A)} · B–D ${f2(W-A)} · fondo ${f2(D)} m · suelta para aplicar`;
+    };
+    const move = e => {
+      const p = toSvg(e), x = (p.x - G.X0)/G.s, y = (G.Y0 - p.y)/G.s;
+      if(k==='B'){ A = Math.min(6, Math.max(2.00, snap(x))); W = A + bW; hr.setAttribute('x', G.X0 + A*G.s - 6); }
+      else if(k==='D'){ W = Math.max(A + minB, Math.min(A + 8, snap(x))); hr.setAttribute('x', G.X0 + W*G.s - 6); }
+      else { D = Math.min(25, Math.max(4.00, snap(y))); hr.setAttribute('y', G.Y0 - D*G.s - 6); }
+      paint();
+    };
+    paint();
+    const up = () => {
+      h.removeEventListener('pointermove', move); h.removeEventListener('pointerup', up); h.removeEventListener('pointercancel', up);
+      dragging = false; h.classList.remove('drag');
+      if(k==='B' && Math.abs(A - G.a) > 1e-6) setCota('a', A, r);
+      else if(k==='D' && Math.abs(W - G.W) > 1e-6){ const nb = W - A; if(r.typ==='T3') setCota('b3', nb - r.P, r); else setCota('bm', nb - r.c, r); }
+      else if(k==='F' && Math.abs(D - G.D) > 1e-6){ if(r.typ==='T3L') setCota('d3', D - r.yd, r); else if(r.typ==='T3') setCota('y3', D - r.yb, r); else setCota('ym', D - r.y2 - r.w, r); }
+      else { [ghost, gb, lbl].forEach(e=>e.setAttribute('visibility', 'hidden')); return; }
+      const msg = el('gen-msg'); msg.innerHTML = msg.innerHTML.replace(/Cota cambiada a [\d.]+ m(<\/b>) \([^)]*\)/, (x, bb)=> (k==='F' ? `Fondo construido: ${f2(D)} m` : `Crujías: A–B ${f2(A)} m, B–D ${f2(W-A)} m`) + bb);
     };
     h.addEventListener('pointermove', move); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
   }));
@@ -2362,7 +2417,7 @@ el('mat-copy').addEventListener('click', ()=>{
 });
 
 // ---------- Diseño Pro: planta con ejes y cotas, cortes que se desplazan y elevaciones ----------
-let proFloor = 1, proCut = {y:null, x:null}, proGeo = null, proRAF = 0;
+let proFurn = (()=>{ try { return localStorage.getItem('vvm-pro-muebles') === '1'; } catch(e){ return false; } })(), proFloor = 1, proCut = {y:null, x:null}, proGeo = null, proRAF = 0;
 function axesOf(r){
   const v = r.v, W = r.W, D = r.D, tL = r.typ === 'T3L', t3 = r.typ === 'T3';
   const ax = t3 ? [['A',0],['B',v.a],['C',v.a+r.P],['D',W]] : [['A',0],['B',v.a],['C',W-r.c],['D',W]];
@@ -2391,6 +2446,7 @@ function proDefaults(r){
   if(proCut.x === null || proCut.x > r.W + 0.3){ const xB = r.cb ? r.cb.xB : (r.typ==='T3' ? r.v.a + r.P/2 : r.v.a + (r.W - r.c - r.v.a)/2); proCut.x = Math.round(xB*20)/20; }
   return {yMin: -oy + 0.05, yMax, xMin: -0.30, xMax: r.W + 0.30};
 }
+const WIN_SILL = 0.90, WIN_H = 1.20; // ventanas: alféizar 0.90, dintel 2.10 (igual que el 3D y los cortes)
 function proPlan(r){
   const v = r.v, W = r.W, D = r.D, f2nd = proFloor === 2 && r.gross2 > 0 && r.up;
   const list = f2nd ? G3.f2 : G3.f1, doors = f2nd ? G3.d2 : G3.d1, A = axesOf(r), st = r.stair;
@@ -2410,6 +2466,15 @@ function proPlan(r){
     if(q.sky || q.ter){ g += `<rect x="${X(q.x0+T/2)}" y="${Y(q.y1-T/2)}" width="${(q.x1-q.x0-T)*s}" height="${(q.y1-yy0-T)*s}" fill="var(--ok-soft)"/>`; }
     else if(q.wet) g += `<rect x="${X(q.x0+T/2)}" y="${Y(q.y1-T/2)}" width="${(q.x1-q.x0-T)*s}" height="${(q.y1-yy0-T)*s}" fill="var(--wet)"/>`;
   });
+  // muebles (opcional): los mismos que la pestaña Diseño, sin repetir sus verificaciones
+  if(proFurn){ const rr = Object.assign({}, r, {checks: []});
+    try {
+      if(f2nd) g += furnUp(rr, X, Y, s);
+      else { const co = r.rooms.co; if(co){ const t3 = r.typ === 'T3' || r.typ === 'T3L', mx = t3 ? W-T/2-0.60 : co.x0+T/2;
+        g += `<rect x="${X(mx)}" y="${Y(co.y1-T/2)}" width="${0.60*s}" height="${(co.y1-co.y0-T)*s}" fill="var(--furn)"/>`; }
+        g += furnWet(rr, X, Y, s); }
+    } catch(e){ console.error('muebles pro', e); } }
+  const VAN = {v:[], p:[]};
   // muros cortados (relleno), ventanas y puertas
   list.forEach(w=>{
     const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
@@ -2423,7 +2488,9 @@ function proPlan(r){
       if(a > t0) g += rect(t0, a, w.kind==='light' ? 'var(--muted)' : 'var(--wall)');
       if(k==='win'){ const pa = [w.x1+ux*a, w.y1+uy*a], pb = [w.x1+ux*b, w.y1+uy*b], nx = -uy*t/2, ny = ux*t/2;
         [-1,0,1].forEach(sg=> g += `<line x1="${X(pa[0]+nx*sg)}" y1="${Y(pa[1]+ny*sg)}" x2="${X(pb[0]+nx*sg)}" y2="${Y(pb[1]+ny*sg)}" stroke="var(--wall)" stroke-width="${sg?0.8:1.4}"/>`);
-        g += `<text x="${X((pa[0]+pb[0])/2 + (hor ? 0 : (w.x1 < W/2 ? -0.35 : 0.35)))}" y="${Y((pa[1]+pb[1])/2 + (hor ? (w.y1 < D/2 ? -0.32 : 0.30) : 0))+3}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" fill="var(--wet-line)">V ${f2(b-a)}</text>`; }
+        const wv = Math.round((b-a)*100)/100; VAN.v.push(wv);
+        const tx = X((pa[0]+pb[0])/2 + (hor ? 0 : (w.x1 < W/2 ? -0.55 : 0.55))), ty = Y((pa[1]+pb[1])/2 + (hor ? (w.y1 < D/2 ? 0.33 : 0.36) : 0));
+        g += `<text x="${tx}" y="${ty-1}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" font-weight="700" fill="var(--wet-line)">@@V${wv}@@</text><text x="${tx}" y="${ty+8}" text-anchor="middle" font-family="var(--f-mono)" font-size="7.5" fill="var(--wet-line)">${f2(wv)}×${f2(WIN_H)} a${f2(WIN_SILL)}</text>`; }
       t0 = Math.max(t0, b);
     });
     if(t0 < Lw) g += rect(t0, Lw, w.kind==='light' ? 'var(--muted)' : 'var(--wall)');
@@ -2432,7 +2499,8 @@ function proPlan(r){
     g += `<line x1="${X(hx)}" y1="${Y(hy)}" x2="${X(hx+nx*wd)}" y2="${Y(hy+ny*wd)}" stroke="var(--wall)" stroke-width="1.6"/>`;
     const pts=[]; for(let i=0;i<=12;i++){ const t=i/12*Math.PI/2; pts.push(`${X(hx+wd*(Math.cos(t)*ux+Math.sin(t)*nx))},${Y(hy+wd*(Math.cos(t)*uy+Math.sin(t)*ny))}`); }
     g += `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--muted)" stroke-width=".8"/>`;
-    g += `<text x="${X(hx+ux*wd/2+nx*wd*0.45)}" y="${Y(hy+uy*wd/2+ny*wd*0.45)+3}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" fill="var(--muted)">P ${f2(wd)}</text>`;
+    const dv = Math.round(wd*100)/100; VAN.p.push(dv);
+    g += `<text x="${X(hx+ux*wd/2+nx*wd*0.45)}" y="${Y(hy+uy*wd/2+ny*wd*0.45)+3}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" fill="var(--muted)">@@P${dv}@@</text>`;
   });
   const cs = Math.max(5, 0.25*s*0.95);
   if(v.sis==='portico') r.cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)" stroke="var(--panel)" stroke-width=".8"/>`; });
@@ -2465,7 +2533,16 @@ function proPlan(r){
   g += `<text x="${X(W+1.9)}" y="${sy+8}" text-anchor="end" font-family="var(--f-mono)" font-size="10" fill="var(--muted)">${f2nd ? '2.º piso · NPT ' + f2SignLevel(H + (r.hL||0.20)) : '1.er piso · NPT ±0.00'} · cotas en metros</text>`;
   g += `<g font-family="var(--f-mono)" font-size="9" fill="var(--muted)">${[0,1,2].map(i=>`<rect x="${sx+i*s}" y="${sy-4}" width="${s}" height="4" fill="${i%2?'var(--panel)':'var(--ink)'}" stroke="var(--ink)" stroke-width=".6"/><text x="${sx+i*s}" y="${sy+10}" text-anchor="middle">${i}</text>`).join('')}<text x="${sx+3*s}" y="${sy+10}" text-anchor="middle">3 m</text></g>`;
   proGeo = {X, Y, s, x0, y1, lim};
+  // códigos de vanos (V-1, P-1…) de mayor a menor ancho y cuadro de vanos
+  const codes = (arr, pre) => { const u = [...new Set(arr)].sort((x,y)=>y-x), m = {}; u.forEach((w,i)=> m[w] = `${pre}-${i+1}`); return {u, m}; };
+  const CV = codes(VAN.v, 'V'), CP = codes(VAN.p, 'P');
+  g = g.replace(/@@([VP])([\d.]+)@@/g, (x, k, w)=> (k==='V' ? CV : CP).m[parseFloat(w)] || x);
   el('pro-plan').innerHTML = `<svg viewBox="0 0 ${vw} ${vh}" role="img" aria-label="Planta de arquitectura del ${f2nd?'2.º':'1.er'} piso con ejes y cotas">${g}</svg>`;
+  const cnt = (arr, w) => arr.filter(x=>x===w).length;
+  el('pro-vanos').innerHTML = `<table class="ca"><thead><tr><th>Código</th><th>Tipo</th><th class="n">Ancho</th><th class="n">Alto</th><th class="n">Alféizar</th><th class="n">Cant.</th><th>Observación</th></tr></thead><tbody>`
+    + CV.u.map(w=>`<tr><td><b>${CV.m[w]}</b></td><td>Ventana corrediza</td><td class="n">${f2(w)}</td><td class="n">${f2(WIN_H)}</td><td class="n">${f2(WIN_SILL)}</td><td class="n">${cnt(VAN.v, w)}</td><td>Dintel a ${f2(WIN_SILL+WIN_H)} m; 0.10 m inferiores con vidrio fijo (A.020 art. 12.5 c)</td></tr>`).join('')
+    + CP.u.map(w=>`<tr><td><b>${CP.m[w]}</b></td><td>Puerta batiente</td><td class="n">${f2(w)}</td><td class="n">2.10</td><td class="n">—</td><td class="n">${cnt(VAN.p, w)}</td><td>${w >= 0.90 ? 'Ingreso' : w >= 0.80 ? 'Dormitorios, estar, cocina, patio' : 'Baño'} (A.020 art. 12.2)</td></tr>`).join('')
+    + `</tbody></table>`;
   bindProCuts();
 }
 const f2SignLevel = z => (z > 0 ? '+' : '±') + f2(z);
@@ -2569,6 +2646,7 @@ function proRender(r){
   document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.classList.toggle('on', +b.dataset.pp === proFloor));
   proPlan(r); proCuts(r); proElev(r);
 }
+el('pro-furn').checked = proFurn; el('pro-furn').addEventListener('change', e=>{ proFurn = e.target.checked; try { localStorage.setItem('vvm-pro-muebles', proFurn ? '1' : '0'); } catch(_){} if(lastR) proPlan(lastR); });
 document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.addEventListener('click', ()=>{ if(b.disabled) return; proFloor = +b.dataset.pp; if(lastR) proRender(lastR); }));
 
 function render(){
@@ -2783,7 +2861,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14d';
+const APP_VERSION = '2026-11-14f';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
