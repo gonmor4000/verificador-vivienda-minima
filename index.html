@@ -483,7 +483,8 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
   <div id="tab-rel" class="areas" hidden aria-label="Relaciones">
     <section class="card">
       <h2>Matriz de relaciones y superficies</h2>
-      <p class="hint" style="margin-top:0">La A.020 (2021) no fija m² por ambiente (art. 10): pide que entren los muebles y la circulación. Por eso el <b>mínimo</b> sale del mueble (el mismo que verifica la pestaña Diseño) y el <b>óptimo</b> y el <b>máximo</b> salen de referentes: Neufert, las Normas Técnicas Complementarias de la Ciudad de México (que sí fijan m² por ambiente), el decreto francés de vivienda digna y el cuadro de áreas. El máximo no es norma: es el punto en que, en una vivienda mínima, el área extra le quita más a otro ambiente de lo que aporta. Todo se compara con el plano actual.</p>
+      <p class="hint" style="margin-top:0">La A.020 (2021) no fija m² por ambiente (art. 10): pide que entren los muebles y la circulación. Por eso el <b>mínimo</b> sale del mueble (el mismo que verifica la pestaña Diseño) y el <b>óptimo</b> y el <b>máximo</b> salen de la tabla de referencia del estudio, la misma del Cuadro de áreas: el óptimo es el nivel elegido y el máximo, el nivel amplio. La sala y el comedor en un solo espacio piden un 15 % menos que la suma de los dos, porque comparten la circulación. Los valores de otros países van solo para comparar. Todo se compara con el plano actual.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 12px"><span class="hint">Nivel</span><div class="seg" role="group" aria-label="Nivel"><button type="button" data-niv="eco">Económico</button><button type="button" data-niv="est">Estándar</button><button type="button" data-niv="amp">Amplio</button></div><span class="hint">el mismo del Cuadro de áreas</span></div>
       <div class="kpis" id="rl-kpis"></div>
     </section>
     <section class="card"><h2>Superficie por ambiente</h2><div class="ca-wrap"><table class="ca" id="rl-sup"></table></div>
@@ -522,7 +523,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
-      <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevas pestañas <b>Relaciones</b> y <b>Diagrama de bolas</b>. Relaciones: superficie mínima, óptima y máxima de cada ambiente con su fuente (mueble y antropometría, Neufert, normas de la CDMX, Francia), proporciones aceptables entre superficies (principal/secundario, principal/sala-comedor, cocina/sala-comedor, baños/dormitorios), porcentaje de las zonas privada, social y de servicio, y una matriz de relaciones entre ambientes (directa, cercana, indiferente, evitar). Todo se compara con el plano actual. Diagrama de bolas: cada ambiente del plano es una bola de área proporcional a su superficie, unida a los demás por sus puertas reales (con su ancho), por piso, coloreada por zona.</span></li>
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevas pestañas <b>Relaciones</b> y <b>Diagrama de bolas</b>. Relaciones: superficie mínima, óptima y máxima de cada ambiente con su fuente: el mínimo sale del mueble y la circulación, el óptimo del nivel elegido y el máximo del nivel amplio de la tabla de referencia del Cuadro de áreas, que ahora es una sola para las dos pestañas (la sala-comedor en un solo espacio pide la suma de sala y comedor menos un 15 %, porque comparten la circulación), proporciones aceptables entre superficies (principal/secundario, principal/sala-comedor, cocina/sala-comedor, baños/dormitorios), porcentaje de las zonas privada, social y de servicio, y una matriz de relaciones entre ambientes (directa, cercana, indiferente, evitar). Todo se compara con el plano actual. Diagrama de bolas: cada ambiente del plano es una bola de área proporcional a su superficie, unida a los demás por sus puertas reales (con su ancho), por piso, coloreada por zona.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Pestaña <b>Etapas</b> ordenada en vertical: línea de tiempo con una fila por etapa (ahorro y obra sobre los mismos años) y cada etapa en una columna (qué incluye, qué queda para después y su tabla de costos completa, que antes se cortaba). En el <b>3D</b>, botones de etapa (sin etapas, 1 a 5) en la barra del visor y un rótulo en la vista que dice qué etapa estás viendo.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Escalera automática</b> (nueva opción por defecto): prueba la de un tramo, en U, en L y de caracol y usa la primera que entra en el patio. Si eliges una que no entra, se usa otra que sí y la verificación lo dice. En planta escalonada, el tramo puede bajar por el <b>patio del escalón</b>, pegado al muro del eje B, y casi no ocupa el retiro posterior. Si ninguna entra, la verificación dice cuánto patio pide cada una y las salidas: más patio, un escalón más hondo o la escalera en el retiro frontal (A.010 art. 8.3 l).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: <b>plantas PREVI redibujadas en detalle</b> en 10 proyectos (Frías, Arnao, Stirling, Svenssons, Atelier 5, Ohl, Correa, Kikutake-Maki-Kurokawa y la propuesta española): muros con sus vanos, muebles, números de recinto con su leyenda, patios con su forma real, vacíos marcados con X y escala gráfica de 2 m. Todas las plantas de una ficha a la misma escala. Son redibujos propios revisados contra los planos de las fuentes.</span></li>
@@ -2356,15 +2357,21 @@ function relaciones(r){
   return out;
 }
 // ---------- Relaciones: superficies mínimas, óptimas y máximas, proporciones, zonas y matriz ----------
-const RLS = [ // m² útiles; mín = mueble + circulación (como fmin); fuentes en src
-  {k:'dp', n:'Dormitorio principal', min:7.0, opt:11, max:15, src:'Mín.: 2.60 × 2.70, cama de 1.40 con 0.60 a cada lado. NTC Proyecto Arquitectónico CDMX: 7.0 m². Neufert: 11 a 14 m² para dormitorio doble.'},
-  {k:'ds', n:'Dormitorio secundario', min:7.0, opt:9, max:12, src:'Mín. igual al principal: dos camas de 0.90 o camarote. NTC CDMX: 6.0 m². Francia (decreto 2002-120): pieza principal ≥ 9 m².'},
-  {k:'sc', n:'Sala-comedor', min:10.0, opt:16, max:24, src:'Mín.: sofá y paso (2.70 × 1.60) más mesa de 4 (2.70 × 2.00). NTC CDMX: estancia-comedor 13.6 m².'},
-  {k:'co', n:'Cocina', min:2.7, opt:6, max:9, src:'Mín.: 1.50 × 1.80, mesada de 0.60 y 0.90 libre. NTC CDMX: 3.0 m². Neufert: cocina en línea 5 a 7 m².'},
-  {k:'bc', n:'Baño completo', min:2.3, opt:3.5, max:5, src:'Mín.: 1.30 × 1.80, lavatorio, inodoro y ducha de 0.80. Accesible (opcional, A.120): 1.80 × 2.10.'},
-  {k:'la', n:'Lavandería', min:1.8, opt:3, max:5, src:'Mín.: 1.50 × 1.20, lavadero de 0.60 y 0.90 libre. NTC CDMX: 1.68 m². En VIS puede ir en el patio, sin techar.'},
-  {k:'ci', n:'Circulaciones', min:0, opt:10, max:15, pct:true, src:'% del área útil. Pasajes ≥ 0.90 m (A.020 art. 13, A.010 art. 20). Lo ideal es que la sala reparta y no haga falta pasillo.'}
-];
+const SC_INT = 0.15; // sala y comedor en un solo espacio: comparten la circulación, se descuenta 15 % de la suma
+function rlsRows(v){ // una sola tabla para Cuadro de áreas y Relaciones: mín = mueble (fmin), ópt = nivel elegido, máx = nivel amplio
+  const T_ = 'Referencia del estudio (tabla de Gonzalo), nivel ', N = NIV[nivel].toLowerCase();
+  const row = (k, n, cmp) => { const m = fmin(k, v); return {k, n, min:m.a, opt:Math.max(REFT[k][nivel], m.a), max:Math.max(REFT[k].amp, m.a), src:`Mín.: ${m.t}. Ópt.: ${T_}${N}. Máx.: nivel amplio.${cmp?' Para comparar: '+cmp:''}`}; };
+  const sMin = fmin('sa',v).a + fmin('cm',v).a;
+  return [
+    row('dp','Dormitorio principal','NTC CDMX 7.0 m² (por verificar).'),
+    row('ds','Dormitorio secundario','NTC CDMX 6.0 m²; Francia, pieza principal ≥ 9 m² (por verificar).'),
+    {k:'sc', n:'Sala-comedor (un solo espacio)', min:sMin, opt:Math.max(sMin,(REFT.sa[nivel]+REFT.cm[nivel])*(1-SC_INT)), max:Math.max(sMin,(REFT.sa.amp+REFT.cm.amp)*(1-SC_INT)), src:`Mín.: sofá y paso más mesa de 4 (${f1(fmin('sa',v).a)} + ${f1(fmin('cm',v).a)}). Ópt. y máx.: sala + comedor de la tabla menos ${Math.round(SC_INT*100)} % porque comparten la circulación. NTC CDMX: estancia-comedor 13.6 m² (por verificar).`},
+    row('co','Cocina','NTC CDMX 3.0 m² (por verificar).'),
+    row('bc','Baño completo'),
+    row('la','Lavandería','NTC CDMX 1.68 m² (por verificar). En VIS puede ir en el patio, sin techar.'),
+    {k:'ci', n:'Circulaciones', min:0, opt:CIRC[nivel]*100, max:CIRC.amp*100, pct:true, src:`% del área útil. Ópt.: ${T_}${N}; máx.: nivel amplio. Pasajes ≥ 0.90 m (A.020 art. 13, A.010 art. 20).`}
+  ];
+}
 const RLP = [ // proporciones aceptables [mín, máx] y óptimo
   {k:'pd', t:'Dormitorio principal / secundario', min:1.0, max:1.5, opt:1.2, why:'Por debajo de 1 el principal es más chico; por encima de 1.5 el secundario queda castigado. Se usa el secundario más chico.'},
   {k:'ps', t:'Dormitorio principal / sala-comedor', min:0.45, max:0.90, opt:0.7, why:'El estar nunca debería ser más chico que un dormitorio: es donde se junta toda la familia.'},
@@ -2421,6 +2428,7 @@ function relRender(r){
     ci: [{n:cirA > 0.05 ? 'halls y pasajes' : 'sin pasillo: reparte la sala', a: util ? cirA/util*100 : 0}]
   };
   let h = '<thead><tr><th>Ambiente</th><th class="n">Mínima</th><th class="n">Óptima</th><th class="n">Máxima</th><th class="n">En el plano</th><th>Posición</th><th>De dónde sale</th></tr></thead><tbody>';
+  const RLS = rlsRows(r.v);
   RLS.forEach(x=>{
     const u = x.pct ? ' %' : '', fx = a => x.pct ? Math.round(a) : f1(a);
     const L = vals[x.k] || [];
@@ -2653,7 +2661,7 @@ function cuadro(r){
       if(!pa) planTd = '—';
       else if(pa.inSala) planTd = '<span class="sub" style="text-align:right">en la sala-comedor</span>';
       else if(pa.a == null) planTd = `<span class="sub" style="text-align:right">${pa.txt}</span>`;
-      else if(pa.both){ const sa = rows.find(y=>y.k==='sa'), cm = rows.find(y=>y.k==='cm'); const tgt = {adj: sa.adj+cm.adj, min: sa.min+cm.min}; planTd = `<span class="${cls(pa.a,tgt)}">${f1(pa.a)}</span><span class="sub" style="text-align:right">sala-comedor, frente a ${f1(tgt.adj)}</span>`; }
+      else if(pa.both){ const sa = rows.find(y=>y.k==='sa'), cm = rows.find(y=>y.k==='cm'); const tgt = {adj: Math.max(sa.min+cm.min, (sa.adj+cm.adj)*(1-SC_INT)), min: sa.min+cm.min}; planTd = `<span class="${cls(pa.a,tgt)}">${f1(pa.a)}</span><span class="sub" style="text-align:right">sala-comedor en un espacio, frente a ${f1(tgt.adj)} (suma − ${Math.round(SC_INT*100)} %)</span>`; }
       else planTd = `<span class="${cls(pa.a,x)}">${f1(pa.a)}</span>${pa.lab?`<span class="sub" style="text-align:right">${pa.lab}</span>`:''}`;
       const low = x.ref < x.min - 1e-6;
       html += `<tr><td>${x.n}${(REFT[x.k].n!==x.n || x.nota)?`<span class="sub">${REFT[x.k].n!==x.n?REFT[x.k].n:''}${REFT[x.k].n!==x.n && x.nota?' · ':''}${x.nota}</span>`:''}</td>`+
@@ -2669,7 +2677,7 @@ function cuadro(r){
     html += `<tr class="tot"><td>Total techado ${F.p===1?'1.er':'2.º'} piso<span class="sub">edificable: ${f1(F.avail)} m²</span></td><td class="n">${f1(F.grossMin)}</td><td class="n">${f1(F.grossT)}</td><td class="n"><span class="${st}">${f1(F.gross)}</span></td><td class="n">${planG?f1(planG):'—'}</td><td class="rne">${F.p===1?'VIS: ≥ 35 m² techados y 2 dormitorios (Anexo 1).':'Muros alineados con el 1.er piso (manual, E.070).'}</td></tr>`;
   });
   el('ca-tbl').innerHTML = html + '</tbody>';
-  el('ca-note').innerHTML = `«En el plano» mide el área libre de cada ambiente en la planta generada (pestaña Diseño), que es la <b>mínima</b> que cumple todo. Verde: llega a la superficie ajustada; ámbar: entre el mínimo funcional y la ajustada; rojo: por debajo del mínimo. Superficies en m².`;
+  el('ca-note').innerHTML = `«En el plano» mide el área libre de cada ambiente en la planta generada (pestaña Diseño), que es la <b>mínima</b> que cumple todo. Verde: llega a la superficie ajustada; ámbar: entre el mínimo funcional y la ajustada; rojo: por debajo del mínimo. Si la sala y el comedor están en un solo espacio, se comparan con su suma menos un 15 % (comparten la circulación), igual que en la pestaña Relaciones. Superficies en m².`;
 
   const totT = P.floors.reduce((s,f)=>s+f.grossT,0), totA = P.floors.reduce((s,f)=>s+f.gross,0), totAv = P.floors.reduce((s,f)=>s+f.avail,0), totPlan = r.gross + (r.gross2||0);
   const allFit = P.floors.every(f=>f.fits), allFull = fitsAll(P);
