@@ -530,7 +530,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Botón <b>Exportar a SketchUp (.dae)</b> en la pestaña 3D: baja el modelo tal como se ve (con la etapa, sin techos o solo el 1.er piso si los marcaste) en formato COLLADA, en metros. En SketchUp: Archivo &gt; Importar.</span></li>
-      <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Escalera de caracol metálica</b>, como las de taller: pasos trapezoidales de plancha soldados a un tubo central, baranda helicoidal con un parante por paso, separada 0.15 m del muro y con un descanso metálico de llegada con baranda. En la planta los pasos se dibujan como trapecios; en Materiales ya no se cuenta concreto para ella (se cotiza aparte con el taller).</span></li>
+      <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Escalera de caracol metálica</b>, como las de taller: pasos trapezoidales de plancha soldados a un tubo central, baranda helicoidal con un parante por paso, separada 0.15 m del muro y con un descanso metálico cuadrado que nace del tubo central y llega al muro, con baranda en su lado libre, como el modelo de referencia que mandó Gonzalo. En la planta los pasos se dibujan como trapecios; en Materiales ya no se cuenta concreto para ella (se cotiza aparte con el taller).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Dos preguntas nuevas en el tablón de <b>Preguntas de normativa</b>: quién decide el área libre mínima de un lote y cuál es el tamaño mínimo y típico de un lote en Lima.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Terreno en los planos</b>: la planta de Diseño Pro dibuja ahora el lote completo (límite, vereda, retiro frontal, patio y la línea del retiro posterior mínimo) con la cadena de cotas del fondo (retiro, construido, patio) y el fondo y el frente totales del lote. La planta de Diseño lleva también las cotas totales del terreno: frente abajo y fondo a la derecha.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Selector de <b>lote típico</b> en Terreno: 6 × 15 y 6 × 20 (mínimos de densidad media en Lima según el área de tratamiento), 7 × 20 (lotización popular), 8 × 20 y 10 × 20 (el lote angosto de 5.50 m sigue en su botón). Pone frente y fondo y la planta se regenera.</span></li>
@@ -1481,17 +1481,23 @@ function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2, nt){
     st.need = 0.92 + B + B;
   } else if(type === 'caracol'){
     // diámetro 1.60: pasos de 0.25 en la línea de huella, a 0.50 del eje
-    // metálica, como las de taller: pasos trapezoidales de plancha soldados a un tubo central, baranda helicoidal con un parante por paso,
-    // separada del muro (holgura de 0.15) y un descanso metálico de llegada con baranda (Gonzalo, 14 nov 2026)
-    const R = 0.80, a = 0.25/0.50, n = nR - 1, rin = 0.09, gap = 0.15;
-    let cx, side;
-    if(lx0 - 2*R >= 0.05){ cx = lx0 - R; side = 1; } else if(lx1 + 2*R <= W - 0.05){ cx = lx1 + R; side = -1; } else return null;
-    const cy = y0 + R + gap, aEnd = side > 0 ? 0 : Math.PI, dir = side > 0 ? 1 : -1; // el último paso apunta al descanso
+    // metálica, como las de taller y el modelo de referencia de Gonzalo (14 nov 2026): tubo central, pasos trapezoidales de plancha,
+    // baranda helicoidal con un parante por paso, descanso metálico cuadrado que nace del tubo y llega al muro, y holgura de 0.15 entre la escalera y el muro
+    const R = 0.80, a = 0.25/0.50, n = nR - 1, rin = 0.09, gap = 0.15, LW = 0.90;
+    let cx, dir;
+    if(lx0 - R >= 0.05){ cx = lx0; dir = -1; } else if(lx1 + R <= W - 0.05){ cx = lx1; dir = 1; } else return null;
+    const cy = y0 + gap + R, aEnd = dir < 0 ? 0 : Math.PI; // el último paso llega al borde del descanso (rayo a 0° o a 180°)
     const at = (rr, t) => [cx + rr*Math.cos(t), cy + rr*Math.sin(t)];
     for(let j=0;j<n;j++){
       const t0 = aEnd - dir*(n-j)*a, t1 = t0 + dir*a;
       st.treads.push({poly:[at(rin,t0), at(R,t0), at(R,t1), at(rin,t1)], z:(j+1)*cr, sec:{cx, cy, t0, t1, R}});
     }
+    // descanso: del tubo al muro, del lado contrario a los pasos que llegan
+    st.lands = [];
+    const dx0 = dir < 0 ? cx : cx - LW, dx1 = dir < 0 ? cx + LW : cx;
+    land(dx0, y0, dx1, cy, H2);
+    st.landRail = [[dir < 0 ? dx1 : dx0, y0], [dir < 0 ? dx1 : dx0, cy]];
+    st.lx0 = dx0; st.lx1 = dx1;
     st.metal = true; st.gap = gap;
     for(let i=0;i<=24;i++){ const t = aEnd - dir*n*a*(1 - i/24); st.path.push([cx + 0.5*Math.cos(t), cy + 0.5*Math.sin(t)]); }
     st.maxT = n; st.spiral = {cx, cy, R}; st.need = 0.02 + gap + 2*R + 0.60;
@@ -1586,7 +1592,7 @@ function drawStair(X, Y, s, st, upper){
     g += `<circle cx="${X(P[0][0])}" cy="${Y(P[0][1])}" r="2.5" fill="${col}"/>`;
   }
   const b = st.box, l0 = st.lands[0];
-  g += `<text x="${X((l0.x0+l0.x1)/2)}" y="${Y(l0.y1)-4}" text-anchor="middle" font-size="9.5" fill="${col}">llegada</text>`;
+  g += st.metal ? `<text x="${X((l0.x0+l0.x1)/2)}" y="${(Y(l0.y0)+Y(l0.y1))/2+3}" text-anchor="middle" font-size="9" fill="${col}" paint-order="stroke" stroke="var(--panel)" stroke-width="3">descanso</text>` : `<text x="${X((l0.x0+l0.x1)/2)}" y="${Y(l0.y1)-4}" text-anchor="middle" font-size="9.5" fill="${col}">llegada</text>`;
   const right = b.x1 < (st.W || 99) - 1.6, top = st.labTop, tx = top ? X((b.x0+b.x1)/2) : right ? X(b.x1)+6 : X(b.x0)-6, anc = top ? 'middle' : right ? 'start' : 'end', ty = top ? Y(b.y1) - 22 : Y((b.y0+b.y1)/2);
   g += `<text x="${tx}" y="${ty}" text-anchor="${anc}" font-size="10" fill="${col}">${upper ? 'escalera (baja)' : (st.built ? 'sube al 2.º piso' : 'escalera futura')}</text>`;
   g += `<text x="${tx}" y="${ty+13}" text-anchor="${anc}" font-size="10" fill="${col}">${ESC_N[st.type]} · ${st.nR} × ${f2(st.cr)}</text>`;
@@ -2054,9 +2060,9 @@ function houseBoxes(r, o){
       const T_ = st.treads.map(t=>{ const {cx, cy, t0, t1, R} = t.sec, am = (t0+t1)/2; return [cx + (R-0.04)*Math.cos(am), cy + (R-0.04)*Math.sin(am), t.z + 0.90]; });
       for(let i=0;i<T_.length-1;i++) out.push({seg:[T_[i], T_[i+1]], r:0.022, m:'rail', esc:true, x0:T_[i][0], x1:T_[i][0], y0:T_[i][1], y1:T_[i][1], z0:0, z1:0});
       const sp = st.spiral; out.push({seg:[[sp.cx,sp.cy,0],[sp.cx,sp.cy,st.H2+0.90]], r:0.055, m:'rail', esc:true, x0:sp.cx, x1:sp.cx, y0:sp.cy, y1:sp.cy, z0:0, z1:0});
-      const l = st.lands[0], zt = l.z + 0.90, sideX = sp.cx < l.x0 ? l.x1 : l.x0;
+      const l = st.lands[0], zt = l.z + 0.90;
       out.push({x0:l.x0, x1:l.x1, y0:l.y0, y1:l.y1, z0:l.z - 0.05, z1:l.z, m:'rail', e:true, esc:true});
-      const rails = [[[l.x0,l.y1],[l.x1,l.y1]], [[sideX,l.y0],[sideX,l.y1]]];
+      const rails = [st.landRail];
       rails.forEach(([[ax,ay],[bx,by]])=>{ out.push({seg:[[ax,ay,zt],[bx,by,zt]], r:0.02, m:'rail', esc:true, x0:ax, x1:ax, y0:ay, y1:ay, z0:0, z1:0});
         const L = Math.hypot(bx-ax, by-ay), k = Math.max(1, Math.round(L/0.12)); for(let i=0;i<=k;i++){ const x = ax+(bx-ax)*i/k, y = ay+(by-ay)*i/k; out.push({seg:[[x,y,l.z],[x,y,zt]], r:0.008, m:'rail', esc:true, x0:x, x1:x, y0:y, y1:y, z0:0, z1:0}); } });
     } else
@@ -3572,7 +3578,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14s';
+const APP_VERSION = '2026-11-14t';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
