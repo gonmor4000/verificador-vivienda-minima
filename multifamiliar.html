@@ -1,0 +1,1026 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Verificador multifamiliar</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Misma mesa de trabajo que el verificador unifamiliar: parámetros | plano | verificaciones */
+:root{
+  --bg:#eef0ee; --panel:#f9faf9; --ink:#1d2320; --muted:#5d6762; --line:#cfd5d1;
+  --brick:#a94a26; --brick-soft:rgba(169,74,38,.10);
+  --wet:rgba(52,118,168,.13); --wet-line:#3476a8; --green:rgba(76,140,80,.16); --green-line:#4c8c50;
+  --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --warn:#a46a0c; --warn-soft:rgba(164,106,12,.13); --bad:#b3261e; --bad-soft:rgba(179,38,30,.12);
+  --wall:#2b302d; --furn:#c9cfcb; --core:rgba(169,74,38,.08);
+  --f-display:"Archivo",system-ui,sans-serif; --f-body:"Archivo",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
+  --wet:rgba(110,170,220,.16); --wet-line:#7fb3de; --green:rgba(120,190,120,.14); --green-line:#86c08a;
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15); --bad:#f08077; --bad-soft:rgba(240,128,119,.15);
+  --wall:#d9ded9; --furn:#3d4541; --core:rgba(224,128,90,.10); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
+  --wet:rgba(110,170,220,.16); --wet-line:#7fb3de; --green:rgba(120,190,120,.14); --green-line:#86c08a;
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15); --bad:#f08077; --bad-soft:rgba(240,128,119,.15);
+  --wall:#d9ded9; --furn:#3d4541; --core:rgba(224,128,90,.10); color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.45;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 32px}
+.wrap{max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:12px}
+h1{font-family:var(--f-display);font-weight:700;font-size:26px;letter-spacing:-.01em;margin:0;text-wrap:balance}
+.sub{color:var(--muted);margin:4px 0 0;max-width:72ch}
+.nav{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px}
+.nav a{color:var(--brick);font-weight:600}
+button{font:inherit;font-weight:500;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:6px;padding:7px 12px;cursor:pointer}
+button:hover{border-color:var(--brick)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--brick);outline-offset:2px}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1px;background:var(--line);border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.kpi{background:var(--panel);padding:10px 14px;min-width:0}
+.kpi .k{font-size:11.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.kpi .v{font-family:var(--f-mono);font-size:20px;font-variant-numeric:tabular-nums;margin-top:2px}
+.kpi .v small{font-size:12px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:300px minmax(0,1fr) 340px;gap:16px;align-items:start}
+@media (max-width:1100px){.grid{grid-template-columns:300px minmax(0,1fr)}.checks{grid-column:1/-1}}
+@media (max-width:720px){.grid{grid-template-columns:minmax(0,1fr)}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:14px 16px;min-width:0}
+.card h2{font-family:var(--f-display);font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0 0 10px}
+.ctl{display:flex;flex-direction:column;gap:4px;padding:8px 0;border-top:1px solid var(--line)}
+.ctl:first-of-type{border-top:0}
+.ctl .row{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ctl label{font-weight:500}
+.hint{font-size:12px;color:var(--muted)}
+.ctl output{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+input[type=range]{width:100%;accent-color:var(--brick)}
+select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:4px 6px;width:100%}
+select{font-family:var(--f-body)}
+.inline{display:flex;gap:8px}
+.inline > *{flex:1;min-width:0}
+.inline label{font-size:12px;color:var(--muted);font-weight:500;display:block;margin-bottom:2px}
+.chk{display:flex;gap:8px;align-items:flex-start;padding:6px 0}
+.chk input{margin-top:3px;accent-color:var(--brick)}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;margin:6px 0 0;border-bottom:1px solid var(--line)}
+.tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 14px;font-weight:600;color:var(--muted)}
+.tabs button.on{color:var(--ink);border-bottom-color:var(--brick)}
+[hidden]{display:none!important}
+.plan svg{width:100%;height:auto;display:block}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:6px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:none;padding:6px 14px;font-weight:600;color:var(--muted)}
+.seg button.on{background:var(--brick);color:#fff}
+.bar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted);margin-top:8px}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.sw{width:14px;height:10px;border-radius:2px;display:inline-block}
+.checks ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.checks li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 10px;padding:8px 10px;border-radius:6px;background:var(--bg)}
+.pill{font-family:var(--f-mono);font-size:11px;font-weight:500;padding:2px 7px;border-radius:999px;align-self:start;text-transform:uppercase;letter-spacing:.04em}
+.pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.warn{background:var(--warn-soft);color:var(--warn)} .pill.bad{background:var(--bad-soft);color:var(--bad)}
+.checks .t{font-weight:600}
+.checks .d{grid-column:2;font-size:12.5px;color:var(--muted)}
+.checks .d b{font-family:var(--f-mono);font-weight:500;color:var(--ink)}
+.group{font-size:11.5px;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:12px 0 4px}
+.group:first-child{margin-top:0}
+.areas{display:flex;flex-direction:column;gap:14px}
+.ca-wrap{overflow-x:auto}
+.ca{width:100%;border-collapse:collapse;font-size:12.5px;min-width:640px}
+.ca th{font-weight:600;text-align:left;color:var(--muted);font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:bottom}
+.ca td{padding:6px 8px;border-top:1px solid var(--line);vertical-align:top}
+.ca td.n,.ca th.n{text-align:right}
+.ca td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.ca tr.tot td{font-weight:600;border-top:1.5px solid var(--ink)}
+.ca tr.sel td{background:var(--brick-soft)}
+.ca .ok{color:var(--ok)} .ca .warn{color:var(--warn)} .ca .bad{color:var(--bad)}
+.rules{max-width:900px}
+.rules h3{font-family:var(--f-display);font-size:15px;margin:20px 0 6px}
+.rules ol,.rules ul{margin:0;padding-left:22px}
+.rules li{margin:6px 0;line-height:1.5}
+.src{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);border-radius:10px;padding:0 7px;margin-left:4px;white-space:nowrap}
+a.rne{color:inherit;text-decoration:underline dotted;text-underline-offset:2px}
+a.rne:hover{color:var(--brick);text-decoration-style:solid}
+.src a.rne,.rne-t a.rne{color:var(--brick)}
+.rne-t td:first-child{white-space:nowrap;font-weight:600}
+.foot{font-size:12px;color:var(--muted);max-width:90ch}
+.foot a,.card a{color:var(--brick)}
+.box3d{position:relative;width:100%;height:600px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--bg);touch-action:none;cursor:grab}
+.box3d:active{cursor:grabbing}
+.box3d canvas{display:block;width:100%!important;height:100%!important}
+@media (max-width:720px){.box3d{height:420px}}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.two{grid-template-columns:minmax(0,1fr)}}
+.log{list-style:none;margin:0;padding:0}
+.log li{display:grid;grid-template-columns:110px minmax(0,1fr);gap:4px 14px;padding:10px 0;border-top:1px solid var(--line);line-height:1.5}
+.log li:first-child{border-top:0}
+.log time{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);white-space:nowrap}
+@media (max-width:720px){.log li{grid-template-columns:minmax(0,1fr)}}
+.tagx{font-size:11px;font-family:var(--f-mono);color:var(--muted)}
+.note{font-size:12.5px;background:var(--bg);border-radius:6px;padding:8px 10px;margin:8px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <h1>Verificador de vivienda multifamiliar</h1>
+      <p class="sub">Elige la zonificación del certificado de parámetros, el lote y el programa: la herramienta arma el edificio (núcleo de escalera y ascensor, pozos de luz, departamentos y estacionamientos) y lo verifica contra los parámetros municipales y el RNE vigente.</p>
+    </div>
+    <div class="nav"><a href="index.html">← Vivienda unifamiliar</a><span class="hint">·</span><a href="rne.html" class="rne-home" target="_blank" rel="noopener">RNE consultable ↗</a><span class="hint" id="ver"></span></div>
+  </header>
+
+  <div class="kpis" id="kpis"></div>
+
+  <nav class="tabs" role="tablist" aria-label="Secciones">
+    <button type="button" role="tab" data-tab="dis" class="on" aria-selected="true">Diseño</button>
+    <button type="button" role="tab" data-tab="cor" aria-selected="false">Corte y 3D</button>
+    <button type="button" role="tab" data-tab="are" aria-selected="false">Cuadro de áreas</button>
+    <button type="button" role="tab" data-tab="par" aria-selected="false">Parámetros reales</button>
+    <button type="button" role="tab" data-tab="reg" aria-selected="false">RNE</button>
+    <button type="button" role="tab" data-tab="cam" aria-selected="false">Cambios</button>
+  </nav>
+
+  <div id="tab-dis" class="grid">
+    <section class="card" aria-label="Parámetros">
+      <h2>Certificado de parámetros</h2>
+      <div class="ctl">
+        <label for="zona">Zonificación (ejemplo real)</label>
+        <select id="zona"></select>
+        <span class="hint" id="zona-src"></span>
+      </div>
+      <div class="ctl">
+        <label class="chk" style="padding:0"><input type="checkbox" id="av"> <span>Frente a parque o avenida de más de 20 m</span></label>
+        <div class="inline" id="via-box"><div><label for="via">Ancho de vía a (m)</label><input type="number" id="via" min="6" max="60" step="0.5" value="12"></div><div><label>Altura 1.5 (a + r)</label><output id="via-h">—</output></div></div>
+      </div>
+      <div class="ctl">
+        <div class="inline">
+          <div><label for="pmax">Pisos máx.</label><input type="number" id="pmax" min="1" max="30" step="1"></div>
+          <div><label for="al">Área libre %</label><input type="number" id="al" min="0" max="80" step="1"></div>
+        </div>
+        <div class="inline">
+          <div><label for="ce">Coef. edif.</label><input type="number" id="ce" min="0" max="20" step="0.05" title="0 = el certificado no lo fija"></div>
+          <div><label for="den">Densidad hab/ha</label><input type="number" id="den" min="0" max="20000" step="50" title="0 = el certificado no la fija"></div>
+        </div>
+        <div class="inline">
+          <div><label for="est">1 estac. cada … viv.</label><input type="number" id="est" min="0" max="10" step="0.5" title="0 = sin exigencia"></div>
+          <div><label for="dm3">Depto 3 dorm. ≥ m²</label><input type="number" id="dm3" min="0" max="200" step="1"></div>
+        </div>
+        <span class="hint">Valores del certificado elegido; puedes cambiarlos con los de tu propio certificado. 0 = no lo fija.</span>
+      </div>
+      <h2 style="margin-top:14px">Lote</h2>
+      <div class="ctl">
+        <div class="inline">
+          <div><label for="fr">Frente (m)</label><input type="number" id="fr" min="5" max="40" step="0.25"></div>
+          <div><label for="fo">Fondo (m)</label><input type="number" id="fo" min="10" max="60" step="0.25"></div>
+          <div><label for="rf">Retiro (m)</label><input type="number" id="rf" min="0" max="10" step="0.25"></div>
+        </div>
+      </div>
+      <h2 style="margin-top:14px">Edificio</h2>
+      <div class="ctl">
+        <div class="row"><label for="np">Pisos</label><output id="np-o"></output></div>
+        <input type="range" id="np" min="1" max="20" step="1">
+        <span class="hint" id="np-h"></span>
+      </div>
+      <div class="ctl">
+        <div class="row"><label for="hp">Altura de piso a piso</label><output id="hp-o"></output></div>
+        <input type="range" id="hp" min="2.50" max="3.00" step="0.05">
+        <span class="hint">Altura libre de 2.30 m como mínimo (A.020 art. 9.1) más la losa. Cada piso cuenta como 3.00 m como máximo cuando la altura se da en pisos (A.010 art. 10.1 a).</span>
+      </div>
+      <div class="ctl">
+        <div class="inline">
+          <div><label for="dpp">Deptos por piso</label><select id="dpp"><option value="auto">Lo que entre</option><option value="1">1</option><option value="2">2</option><option value="4">4</option></select></div>
+          <div><label for="nd">Dormitorios</label><select id="nd"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></div>
+        </div>
+      </div>
+      <div class="ctl">
+        <label for="park">Estacionamientos</label>
+        <select id="park"><option value="frente">En el retiro y el frente del 1.er piso</option><option value="no">Fuera del lote (excepción A.010 art. 52)</option></select>
+      </div>
+      <div class="ctl">
+        <label class="chk" style="padding:0"><input type="checkbox" id="comp" checked> <span>Compensar pozos de luz (hasta 20 % menos de ancho si el área se cumple, A.020 art. 11.4 b, nota iii)</span></label>
+      </div>
+    </section>
+
+    <section class="card plan" aria-label="Planta">
+      <div class="bar"><span class="hint">Planta</span><div class="seg" role="group" aria-label="Piso"><button type="button" data-fl="t" class="on">Piso típico</button><button type="button" data-fl="1">1.er piso</button></div><span class="hint" id="plan-cap"></span></div>
+      <div id="plan"></div>
+      <div class="legend">
+        <span><i class="sw" style="background:var(--green);outline:1px solid var(--green-line)"></i>Retiro, pozo y patio (área libre)</span>
+        <span><i class="sw" style="background:var(--core);outline:1px solid var(--brick)"></i>Áreas comunes</span>
+        <span><i class="sw" style="background:var(--wet);outline:1px solid var(--wet-line)"></i>Baños</span>
+        <span><i class="sw" style="background:var(--furn)"></i>Muebles</span>
+      </div>
+      <p class="hint" id="plan-note" style="margin:8px 0 0"></p>
+    </section>
+
+    <section class="card checks" aria-label="Verificaciones">
+      <h2>Verificaciones</h2>
+      <div id="checks"></div>
+    </section>
+  </div>
+
+  <div id="tab-cor" class="areas" hidden>
+    <section class="card plan">
+      <h2>Corte longitudinal por el pozo de luz</h2>
+      <p class="hint" style="margin-top:0">Corte de la calle al fondo del lote, por el pozo de luz. La línea roja discontinua es la altura máxima del certificado; la azotea, los parapetos y la sala de máquinas no cuentan en la altura (A.010 art. 10.1 e, A.020 art. 18.1).</p>
+      <div id="corte"></div>
+    </section>
+    <section class="card">
+      <h2>Vista 3D</h2>
+      <div class="bar"><div class="seg" role="group" aria-label="Vista"><button type="button" data-v3="calle" class="on">Calle</button><button type="button" data-v3="fondo">Fondo</button><button type="button" data-v3="arriba">Arriba</button></div><span class="hint">Arrastra para girar, rueda o pellizca para acercar.</span></div>
+      <div id="box3d" class="box3d"><p class="hint" id="v3-msg" style="padding:16px">Cargando el visor 3D…</p></div>
+    </section>
+  </div>
+
+  <div id="tab-are" class="areas" hidden>
+    <section class="card"><h2>Cuadro de áreas por piso</h2><div class="ca-wrap"><table class="ca" id="ca-pisos"></table></div></section>
+    <section class="card"><h2>Departamentos</h2><div class="ca-wrap"><table class="ca" id="ca-deptos"></table></div>
+      <p class="hint" style="margin:8px 0 0">Áreas a eje de muros (A.010 art. 9.1 a). El área techada de los departamentos se compara con los 40 m² de la A.020 art. 8.1 b y, si el certificado lo pide, con el mínimo para 3 dormitorios.</p></section>
+    <section class="card"><h2>Dotaciones y seguridad</h2><div class="ca-wrap"><table class="ca" id="ca-dot"></table></div></section>
+  </div>
+
+  <div id="tab-par" class="areas" hidden>
+    <section class="card rules" style="max-width:none">
+      <h2>Certificados y ordenanzas reales</h2>
+      <p class="hint" style="margin-top:0">El número de pisos, el área libre, el lote mínimo y los estacionamientos no los fija el RNE sino el <b>certificado de parámetros urbanísticos y edificatorios</b> de cada municipalidad, que sale del plan urbano (A.010 art. 4 y 10). Estos son los cuadros reales con los que se arman los ejemplos de la herramienta, buscados en internet el 14 nov 2026. La fila resaltada es la que corresponde al lote actual. Antes de proyectar, pide el certificado de tu lote: cuesta unos S/ 30 y vale 36 meses.</p>
+      <div id="par-tbl"></div>
+    </section>
+    <section class="card rules" style="max-width:none">
+      <h2>Cotejo con la vivienda unifamiliar</h2>
+      <p class="hint" style="margin-top:0">La propuesta base del <a href="index.html">verificador unifamiliar</a> (lote de 6.00 × 15.00 m = 90 m², 48.8 m² techados en un piso, ampliable a dos) frente a los mismos certificados, en su fila de vivienda unifamiliar.</p>
+      <div class="ca-wrap"><table class="ca" id="uni-tbl"></table></div>
+      <p class="note" id="uni-note"></p>
+    </section>
+  </div>
+
+  <section id="tab-reg" class="card rules" hidden>
+    <h2>Artículos del RNE que aplica el verificador multifamiliar</h2>
+    <p class="hint" style="margin-top:0">Normas vigentes: A.010 (RM 191-2021), A.020 (RM 188-2021), A.120 (RM 075-2023) y A.130. Cada cita abre el artículo en el RNE consultable.</p>
+    <div class="ca-wrap"><table class="ca rne-t">
+      <thead><tr><th>Artículo</th><th>Qué dice la norma</th><th>Cómo lo aplica el verificador</th></tr></thead>
+      <tbody>
+        <tr><td>A.010 art. 10.1 a</td><td>La altura máxima la fija el certificado; si se da en pisos, cada piso cuenta como 3.00 m como máximo.</td><td>Los pisos del certificado son el tope del control «Pisos»; la altura de piso a piso va de 2.50 a 3.00 m.</td></tr>
+        <tr><td>A.010 art. 10.1 c</td><td>La altura se mide desde el punto más alto de la vereda.</td><td>Altura de edificación = pisos × altura de piso; el corte la compara con el tope.</td></tr>
+        <tr><td>A.010 art. 9.3</td><td>El área libre incluye los ductos pero no el del ascensor.</td><td>Área libre = retiro + pozos de luz + patio posterior, en el piso típico.</td></tr>
+        <tr><td>A.010 art. 8.3 d</td><td>En el retiro frontal se permiten estacionamientos sin techo o con techo ligero.</td><td>Los estacionamientos ocupan el retiro y el frente del 1.er piso.</td></tr>
+        <tr><td>A.010 art. 52</td><td>Excepciones a los estacionamientos dentro del lote (lote menor al normativo, densificación, etc.).</td><td>Opción «Fuera del lote»: avisa que hay que adquirirlos a menos de 300 m.</td></tr>
+        <tr><td>A.010 art. 53.1 a</td><td>Ingreso vehicular de 3.00 m hasta 40 vehículos.</td><td>Cada columna de estacionamientos tiene su ingreso desde la calle.</td></tr>
+        <tr><td>A.010 art. 54.1 a</td><td>Cajón de 2.50 × 5.00 m (2.70 si es uno solo, 2.40 si son tres o más); en tándem, 9.50 m de largo.</td><td>Cuenta columnas de 2.50 m y, si el fondo da 9.50 m, dos autos en fila.</td></tr>
+        <tr><td>A.010 art. 23.2</td><td>Paso de 0.25 m, contrapaso de 0.18 m como máximo y 17 pasos por tramo.</td><td>Escalera en U de dos tramos: número de contrapasos y largo del núcleo.</td></tr>
+        <tr><td>A.020 art. 7</td><td>Densidad: 2 personas por depto de 1 dormitorio, 3 de 2 y 4 de 3.</td><td>Calcula habitantes y los compara con la densidad del certificado.</td></tr>
+        <tr><td>A.020 art. 8.1 b</td><td>Departamento: 40 m² techados como mínimo.</td><td>Verifica el área de cada departamento.</td></tr>
+        <tr><td>A.020 art. 11.4 b</td><td>Pozo de luz multifamiliar según la altura y los lados propios: 30 % (1-2 lados) o 35 % (3-4 lados) de la altura en los primeros 18 m, mínimo 2.10 m; el otro lado, la mitad.</td><td>Calcula el pozo central (3 lados) y el patio posterior (1 lado) por tramos de 18 m, como el cuadro 10 del anexo.</td></tr>
+        <tr><td>A.020 art. 12.2</td><td>Puerta de ingreso al edificio de 1.20 m; de cada departamento 0.90 m; dormitorios 0.80; baños 0.70.</td><td>Dibuja esas puertas; ninguna barre un mueble.</td></tr>
+        <tr><td>A.020 art. 13</td><td>Pasajes: 0.90 m en el depto; 1.20 m en áreas comunes.</td><td>Pasillo de 0.90 m en los departamentos; hall común de 1.20 m o más.</td></tr>
+        <tr><td>A.020 art. 15.2 b</td><td>Escalera común integrada de 1.20 m entre muros.</td><td>Escalera en U con dos tramos de 1.20 m (2.40 m de ancho).</td></tr>
+        <tr><td>A.020 art. 16</td><td>Ascensor obligatorio cuando el acceso al 5.º piso o más queda a más de 12.00 m del ingreso.</td><td>Pone ascensor si el último piso con acceso común queda a más de 12.00 m.</td></tr>
+        <tr><td>A.020 art. 19.4</td><td>Muros entre departamentos y hacia el hall con resistencia al fuego de 60 min.</td><td>Se indica en la lista de seguridad.</td></tr>
+        <tr><td>A.020 art. 21.3</td><td>Si la norma local no fija estacionamientos: 1 cada 3 viviendas y 1 bicicleta cada 3.</td><td>Se usa con «Solo RNE».</td></tr>
+        <tr><td>A.020 art. 26.2</td><td>Residuos: 4 litros por habitante al día.</td><td>Calcula el volumen del cuarto de basura.</td></tr>
+        <tr><td>A.020 art. 27.2</td><td>Cuadro 9 de protección contra incendios según la altura.</td><td>Hasta 15 m escalera integrada (recorrido ≤ 56 m); más de 15 m, escalera protegida y red contra incendio.</td></tr>
+        <tr><td>A.120 art. 8 a</td><td>Ascensor residencial: cabina de 1.00 × 1.25 m, puerta de 0.80 m y giro de 1.50 m delante.</td><td>Hueco de 1.60 × 1.75 m y hall de 1.50 m frente al ascensor.</td></tr>
+        <tr><td>A.120 art. 28 a</td><td>Vestíbulo de ingreso accesible; las circulaciones comunes también si hay ascensor.</td><td>Ingreso a nivel o con rampa; hall de 1.50 m con ascensor.</td></tr>
+        <tr><td>A.120 art. 6</td><td>Rampas: 10 % hasta 0.30 m de desnivel, 8 % hasta 0.72 m; 1.00 m de ancho.</td><td>Rampa del ingreso si el 1.er piso está sobre la vereda.</td></tr>
+        <tr><td>A.020 art. 11.3</td><td>Baños, halls, depósitos y similares pueden tener luz artificial y ventilación por ducto.</td><td>Baños e ingreso de cada departamento van hacia el núcleo, sin ventana.</td></tr>
+        <tr><td>A.020 art. 18.3</td><td>Azotea: se puede techar hasta el 50 %, retirado 2.50 m de la fachada; baranda de 1.10 m y 2.10 m hacia los vecinos (18.4).</td><td>Parapetos de 1.10 m a la calle y al patio y de 2.10 m en las medianeras (corte y 3D).</td></tr>
+        <tr><td>A.020 art. 24.3</td><td>Montantes de agua, luz y telecomunicaciones en ductos registrables, sin mezclar agua y electricidad.</td><td>Se indica en la lista de dotaciones.</td></tr>
+        <tr><td>A.020 art. 25.2</td><td>Medidores de luz y gas en áreas comunes.</td><td>Se indica en la lista de dotaciones.</td></tr>
+        <tr><td>A.010 art. 9.1 a</td><td>Área techada a la cara exterior y a eje de muros entre unidades; la escalera cuenta.</td><td>Cuadro de áreas por piso y coeficiente de edificación.</td></tr>
+        <tr><td>A.010 art. 10.2</td><td>Altura por colindancia: junto a un edificio más alto se puede subir hasta el promedio.</td><td>No se calcula: se avisa en la pestaña de parámetros.</td></tr>
+        <tr><td>A.010 art. 13 a</td><td>Volados de 0.50 m sobre el retiro (0.80 m en balcones sin techo).</td><td>No se usan: el edificio queda detrás del retiro.</td></tr>
+        <tr><td>A.010 art. 20 c</td><td>Recorrido de evacuación hasta un lugar seguro.</td><td>Junto con el cuadro 9 de la A.020: recorrido estimado de la puerta más alejada a la calle.</td></tr>
+        <tr><td>A.130 art. 39</td><td>Señalización de evacuación en las áreas comunes de los edificios de vivienda.</td><td>Lista de seguridad.</td></tr>
+        <tr><td>A.130 art. 66</td><td>Multifamiliar de más de 5 niveles: red de agua contra incendio, extintores, detección y alarma (art. 67: montante seca hasta 10 niveles; art. 69: red presurizada de 10 a 20).</td><td>Lista de seguridad según los pisos.</td></tr>
+        <tr><td>A.130 art. 163</td><td>Extintores en toda edificación salvo la unifamiliar.</td><td>Extintores en áreas comunes.</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Cómo decide el generador</h3>
+    <ol>
+      <li>El edificio va entre medianeras: <b>bloque delantero</b> (mira a la calle), <b>banda central</b> con el núcleo (escalera, hall y ascensor) y el pozo de luz a su lado, <b>bloque posterior</b> (mira al patio del fondo) y el patio posterior. <span class="src">Diseño</span></li>
+      <li>Prueba 4, 2 y 1 departamentos por piso y se queda con la opción que da más departamentos sin errores. <span class="src">Diseño</span></li>
+      <li>Sala-comedor-cocina y dormitorio principal van a la fachada; los demás dormitorios, a la fachada o al pozo; baños e ingreso, hacia el núcleo, con ventilación por ducto (A.020 art. 11.3). <span class="src">A.020 art. 11</span></li>
+      <li>Si falta área libre, el patio posterior crece hasta cumplirla. <span class="src">Diseño</span></li>
+      <li>La altura del pozo se mide desde 1.00 m sobre el piso del 1.er nivel hasta lo alto del parapeto (nota iv): pisos × altura + 0.10 m. <span class="src">A.020 art. 11.4 b</span></li>
+    </ol>
+  </section>
+
+  <section id="tab-cam" class="card rules" hidden>
+    <h2>Cambios</h2>
+    <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Primera versión del <b>verificador multifamiliar</b>: zonificación con certificados reales (Lima ATN I y II, Arequipa), edificio con núcleo, pozos de luz calculados por la A.020, departamentos amueblados, estacionamientos, corte, vista 3D, cuadro de áreas y cotejo con la vivienda unifamiliar.</span></li>
+    </ul>
+  </section>
+
+  <p class="foot">Herramienta de estudio de anteproyecto: no reemplaza el certificado de parámetros del lote ni el proyecto firmado por un arquitecto colegiado. Estructura, instalaciones y evacuación definitivas según E.030, E.060, A.130 y las especialidades.</p>
+</div>
+
+<script>
+(function(){
+const el = id => document.getElementById(id);
+const f2 = x => (Math.round(x*100)/100).toFixed(2);
+const f1 = x => (Math.round(x*10)/10).toFixed(1);
+const r05 = x => Math.round(x*20)/20;
+const fl05 = x => Math.floor(x*20+1e-6)/20;
+const ce05 = x => Math.ceil(x*20-1e-6)/20;
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const APP_VERSION = '2026-11-14m';
+el('ver').textContent = 'Versión ' + APP_VERSION;
+
+// ---------- Certificados de parámetros reales (buscados el 14 nov 2026) ----------
+// rows: lote mínimo m², frente mínimo m, pisos (y pisos frente a parque/avenida > 20 m), área libre %, viviendas por estacionamiento
+const ZONAS = [
+  {id:'atn2-rdm', name:'Lima ATN II · RDM (Surquillo, Barranco, Comas, Los Olivos, SMP)', zona:'RDM', ord:'Ord. 1076-MML (8 oct 2007), que reemplaza el cuadro de la Ord. 1015-MML para el Área de Tratamiento Normativo II',
+    dist:'Surquillo, Barranco, parte de Surco (Ord. 1076) · Comas, San Martín de Porres, Independencia, Los Olivos, parte del Rímac (Ord. 1015)',
+    url:'https://www.ipdu.pe/ordenanzasyplanos/barranco/barranco-ordenanza.pdf', url2:'https://cdn.www.gob.pe/uploads/document/file/5696523/5057989-ordenanza-n-1015-mml.pdf',
+    rows:[{lote:120,fr:6,p:3,pa:3,al:30,est:1.5},{lote:150,fr:8,p:4,pa:5,al:35,est:1.5},{lote:200,fr:10,p:5,pa:6,al:35,est:1.5},{lote:300,fr:10,p:6,pa:7,al:35,est:1.5}],
+    ce:0, den:0, dm3:75, uni:{lote:120, fr:6, p:3, al:30, nota:'Nota b: la vivienda unifamiliar se puede hacer en todo lote residencial de más de 90 m².'},
+    notas:'Nota a: 75 m² como mínimo para departamentos de 3 dormitorios. Nota d: el distrito puede proponer otra dotación de estacionamientos.', def:{fr:10, fo:25, rf:3}},
+  {id:'atn2-rda', name:'Lima ATN II · RDA (Surquillo, Barranco)', zona:'RDA', ord:'Ord. 1076-MML (8 oct 2007), cuadro N.º 01 del Área de Tratamiento Normativo II',
+    dist:'Surquillo, Barranco, parte de Surco', url:'https://www.ipdu.pe/ordenanzasyplanos/barranco/barranco-ordenanza.pdf',
+    rows:[{lote:300,fr:10,p:8,pa:8,al:35,est:1.5},{lote:450,fr:10,p:10,pa:15,al:40,est:1.5,ar:true}],
+    ce:0, den:0, dm3:75, uni:null, notas:'En lotes de 450 m² la altura es 1.5 (a + r): ancho de la vía más los retiros. Frente a avenidas de más de 20 m; frente a parques hasta 15 pisos y en vías locales hasta 10.', def:{fr:15, fo:30, rf:3}},
+  {id:'atn1-rdm', name:'Lima ATN I · RDM (Ate, certificado modelo)', zona:'RDM', ord:'Certificado de parámetros RDM de la Municipalidad de Ate (Ord. 1099-MML y 1015-MML, Área de Tratamiento Normativo I)',
+    dist:'Ate y otros distritos del Área de Tratamiento Normativo I', url:'https://www.muniate.gob.pe/ate/files/licenciaEdificacion/PARAMETROS/TRATAMIENTO_NORMATIVOI/CERTIFICADO%20DE%20PARAMETROS%20URBANISTICOS-%20RDM%20(RESIDENCIAL%20DE%20DENSIDAD%20MEDIA)%20ATN%20I.pdf',
+    rows:[{lote:120,fr:6,p:3,pa:4,al:30,est:2,ce:1.95},{lote:150,fr:8,p:4,pa:5,al:35,est:2,ce:2.6}],
+    ce:0, den:1300, dm3:75, uni:{lote:90, fr:6, p:3, al:30, nota:'Nota 5.4: vivienda unifamiliar en cualquier lote de más de 90 m².'},
+    notas:'Densidad neta 1 300 hab/ha. Programa Mi Vivienda: 30 % de área libre (25 % en esquina) y 1 estacionamiento cada 3 viviendas.', def:{fr:8, fo:20, rf:3}},
+  {id:'aqp-rdm1', name:'Arequipa · RDM-1 (J. L. Bustamante y Rivero)', zona:'RDM-1', ord:'Certificado de parámetros RDM-1 de la Municipalidad de José Luis Bustamante y Rivero (Plan de Desarrollo Metropolitano de Arequipa 2016-2025)',
+    dist:'José Luis Bustamante y Rivero, Arequipa', url:'https://www.munibustamante.gob.pe/archivos/1457644063.pdf',
+    rows:[{lote:150,fr:8,p:4,pa:4,al:35,est:2,ce:2.8}],
+    ce:2.8, den:1300, dm3:0, uni:{lote:90, fr:8, p:3, al:30, ce:2.1, nota:'En áreas urbanas consolidadas valen como normativos los lotes existentes.'},
+    notas:'Densidad neta de 166 a 1 300 hab/ha. Retiros «según normatividad de retiros».', def:{fr:8, fo:20, rf:3}},
+  {id:'rne', name:'Solo RNE (sin certificado)', zona:'—', ord:'Solo las normas del RNE: A.020 art. 21.3 para estacionamientos; sin tope municipal', dist:'—', url:'',
+    rows:[{lote:0,fr:0,p:5,pa:5,al:30,est:3}], ce:0, den:0, dm3:0, uni:null, notas:'Valores de ejemplo: cámbialos por los de tu certificado.', def:{fr:10, fo:25, rf:3}}
+];
+const zsel = el('zona');
+ZONAS.forEach(z=>{ const o = document.createElement('option'); o.value = z.id; o.textContent = z.name; zsel.appendChild(o); });
+
+// fila del cuadro que corresponde al lote (la mayor cuyo lote y frente mínimos se cumplen)
+function zoneRow(z, W, D){
+  const A = W*D; let row = null;
+  z.rows.forEach(r=>{ if(A >= r.lote - 1e-6 && W >= r.fr - 1e-6) row = r; });
+  return row;
+}
+let userEdited = new Set();
+function applyZone(keepLot){
+  const z = ZONAS.find(x=>x.id===zsel.value);
+  if(!keepLot){ el('fr').value = z.def.fr; el('fo').value = z.def.fo; el('rf').value = z.def.rf; }
+  userEdited.clear();
+  fillZone(true);
+}
+// llena los parámetros con la fila del certificado que toca al lote (salvo los que cambió el usuario)
+function fillZone(setPisos){
+  const z = ZONAS.find(x=>x.id===zsel.value);
+  const W = +el('fr').value||0, D = +el('fo').value||0;
+  const row = zoneRow(z, W, D) || z.rows[0];
+  const av = el('av').checked;
+  const hp = +el('hp').value || 2.70;
+  let pm = av ? row.pa : row.p;
+  if(row.ar){ const a = +el('via').value||0, r = +el('rf').value||0; const H = 1.5*(a + 2*r); el('via-h').textContent = f2(H) + ' m'; pm = Math.min(av ? row.pa : row.p, Math.max(1, Math.floor(H/hp + 1e-6))); }
+  el('via-box').hidden = !row.ar;
+  const set = (id, v) => { if(!userEdited.has(id)) el(id).value = v; };
+  set('pmax', pm); set('al', row.al); set('est', row.est); set('ce', row.ce || z.ce || 0); set('den', z.den || 0); set('dm3', z.dm3 || 0);
+  if(setPisos) el('np').value = Math.min(20, +el('pmax').value || pm);
+  el('zona-src').innerHTML = z.url ? `${esc(z.ord)}. <a href="${z.url}" target="_blank" rel="noopener">Fuente ↗</a>` : esc(z.ord);
+}
+
+// ---------- RNE: pozo de luz multifamiliar (A.020 art. 11.4 b, cuadro 04 y anexo) ----------
+// tramos de 18 m; t: 'A' (dormitorio, sala, comedor) o 'B' (cocina); lados: lados del pozo con edificación propia
+function pozoReq(H, lados, t){
+  const P = lados >= 3 ? (t==='A' ? [.35,.25,.15,.15] : [.30,.16,.13,.13]) : (t==='A' ? [.30,.15,.10,.10] : [.25,.13,.10,.10]);
+  let d = 0, h = H;
+  for(let i=0;i<4 && h>0;i++){ const s = Math.min(18, h); d += s*P[i]; h -= s; }
+  if(h > 0) d += h*0.10; // nota viii: más de 72 m, 0.10 m por metro
+  return Math.max(2.10, d); // nota vi
+}
+
+// ---------- Generador ----------
+const STEP = 0.25, RISE = 0.18, HALL = 1.20, WALL = 0.15;
+function read(){
+  const v = {
+    zona: ZONAS.find(x=>x.id===zsel.value), av: el('av').checked, via: +el('via').value||0,
+    pmax: Math.max(1, +el('pmax').value||1), al: +el('al').value||0, ce: +el('ce').value||0, den: +el('den').value||0, est: +el('est').value||0, dm3: +el('dm3').value||0,
+    W: Math.max(5, +el('fr').value||10), D: Math.max(10, +el('fo').value||20), r: Math.max(0, +el('rf').value||0),
+    N: +el('np').value||5, h: +el('hp').value||2.70, dpp: el('dpp').value, nd: +el('nd').value||2, park: el('park').value, comp: el('comp').checked
+  };
+  v.row = zoneRow(v.zona, v.W, v.D);
+  return v;
+}
+// núcleo: escalera en U de dos tramos de 1.20 m (A.020 art. 15.2 b), hall y ascensor
+function core(v, cols){
+  const nR = Math.ceil(v.h/RISE - 1e-9), rise = v.h/nR;
+  const perFl = Math.ceil(nR/2), run = (perFl-1)*STEP;
+  const stairW = 2*1.20 + 0.10, stairL = run + 2*1.20;
+  const H = v.N*v.h, hTop = (v.N-1)*v.h;
+  const elev = hTop > 12 + 1e-6; // A.020 art. 16
+  const prot = hTop > 15 + 1e-6;  // A.020 cuadro 9: más de 15 m
+  const hw = cols===2 ? 2.40 : (elev ? 1.50 : HALL);
+  const vest = prot ? 1.50 : 0;
+  const Wc = stairW + vest + hw + (elev ? 1.60 : 0) + WALL;
+  const Lc = ce05(Math.max(stairL, elev ? 1.75 + 1.50 : 0) + WALL);
+  return {nR, rise, perFl, run, stairW, stairL, elev, prot, hw, vest, Wc: ce05(Wc), Lc, H, hTop};
+}
+
+// reparte los ambientes de un departamento. Coordenadas locales: u a lo ancho, t desde la fachada (0) hacia el núcleo (d)
+function layDept(w, d, litIn, door, nd, fachadaLit){
+  const rooms = [], notes = [];
+  const tC = 0.90;
+  let tI = Math.min(3.00, Math.max(2.00, d - tC - 3.00)), tO = d - tC - tI;
+  if(tO < 2.70){ return {ok:false, rooms:[], nfit:0, why:`fondo de ${f2(d)} m: no entran una franja a la fachada (2.70), el pasillo (0.90) y otra hacia el núcleo (2.00)`}; }
+  const tCi = tO, tIi = tO + tC; // inicio del pasillo y de la franja interior
+  // franja interior: ingreso + baños + dormitorios con ventana al pozo
+  const du0 = Math.max(0, Math.min(w-1.20, door - 0.60)), du1 = du0 + 1.20;
+  let free = [[0,du0],[du1,w]].filter(s=> s[1]-s[0] > 0.05);
+  const litOv = (a,b) => litIn.reduce((s,[x0,x1])=> s + Math.max(0, Math.min(b,x1) - Math.max(a,x0)), 0);
+  const take = (a,b) => { free = free.flatMap(([x0,x1])=> b<=x0||a>=x1 ? [[x0,x1]] : [[x0,a],[b,x1]].filter(s=>s[1]-s[0]>0.05)); };
+  const findSpot = (wd, wantLit) => {
+    let best = null;
+    for(const [x0,x1] of free){ if(x1-x0 < wd-1e-6) continue;
+      const cands = [x0, x1-wd]; litIn.forEach(([a,b])=>{ cands.push(a, b-wd); });
+      for(const c of cands){ if(c < x0-1e-6 || c+wd > x1+1e-6) continue; const l = litOv(c, c+wd);
+        const sc = wantLit ? l : -l; if(wantLit && l < 0.90) continue; if(!best || sc > best.sc) best = {u:c, sc, l}; } }
+    return best;
+  };
+  const nb = nd >= 3 ? 2 : 1;
+  // dormitorios: el principal (3.00) va a la fachada; los demás prefieren el pozo si hay ventana posible
+  const outerDorms = [], innerDorms = [];
+  const wantD = []; for(let i=0;i<nd;i++) wantD.push(i===0 ? 3.00 : 2.75);
+  const canIn = tI >= 2.60;
+  for(let i=1;i<nd;i++){
+    const s = canIn ? findSpot(wantD[i], true) : null;
+    if(s){ innerDorms.push({i, u:s.u, w:wantD[i]}); take(s.u, s.u+wantD[i]); }
+  }
+  // baños hacia el núcleo (sin ventana: ducto, A.020 art. 11.3)
+  const baths = [];
+  for(let b=0;b<nb;b++){ const s = findSpot(1.60, false); if(s){ baths.push({u:s.u, w:1.60}); take(s.u, s.u+1.60); } }
+  // franja de fachada: sala-comedor-cocina + dormitorios que faltan
+  const outerNeed = [0]; for(let i=1;i<nd;i++) if(!innerDorms.find(x=>x.i===i)) outerNeed.push(i);
+  let ow = 0; const placedOuter = [];
+  for(const i of outerNeed){ if(w - ow - wantD[i] >= 3.60 - 1e-6){ placedOuter.push(i); ow += wantD[i]; } }
+  const wE = w - ow;
+  // la sala-comedor-cocina queda del lado del ingreso
+  const eccLeft = door < w/2;
+  let u = eccLeft ? wE : 0;
+  if(eccLeft){ rooms.push({k:'ecc', u0:0, u1:wE, t0:0, t1:tO}); placedOuter.forEach(i=>{ rooms.push({k:'dorm', i, u0:u, u1:u+wantD[i], t0:0, t1:tO, lit:'f'}); u += wantD[i]; }); }
+  else { placedOuter.slice().reverse().forEach(i=>{ rooms.push({k:'dorm', i, u0:u, u1:u+wantD[i], t0:0, t1:tO, lit:'f'}); u += wantD[i]; }); rooms.push({k:'ecc', u0:u, u1:w, t0:0, t1:tO}); }
+  innerDorms.forEach(x=> rooms.push({k:'dorm', i:x.i, u0:x.u, u1:x.u+x.w, t0:tIi, t1:d, lit:'p'}));
+  baths.forEach((b,j)=> rooms.push({k:'bano', i:j, u0:b.u, u1:b.u+b.w, t0:tIi, t1:d}));
+  rooms.push({k:'ing', u0:du0, u1:du1, t0:tIi, t1:d});
+  // lo que sobra en la franja interior: depósito, lavandería o se suma al vecino
+  free.forEach(([a,b])=>{
+    if(b-a >= 2.60 && litOv(a,b) >= 0.90 && tI >= 2.60){ rooms.push({k:'est', u0:a, u1:b, t0:tIi, t1:d, lit:'p'}); }
+    else if(b-a >= 1.00){ const lav = !rooms.some(r=>r.k==='lav');
+      if(lav && b-a > 2.80){ const nearDoor = Math.abs(a - du1) < 0.01; const [la,lb] = nearDoor ? [a, a+1.60] : [b-1.60, b]; rooms.push({k:'lav', u0:la, u1:lb, t0:tIi, t1:d}); rooms.push({k:'dep', u0: nearDoor ? lb : a, u1: nearDoor ? b : la, t0:tIi, t1:d}); }
+      else rooms.push({k: lav ? 'lav' : 'dep', u0:a, u1:b, t0:tIi, t1:d}); }
+    else { const nb2 = rooms.find(r=> r.t0===tIi && (Math.abs(r.u1-a)<1e-6 || Math.abs(r.u0-b)<1e-6) && r.k!=='ing');
+      if(nb2){ if(Math.abs(nb2.u1-a)<1e-6) nb2.u1 = b; else nb2.u0 = a; } else rooms.push({k:'dep', u0:a, u1:b, t0:tIi, t1:d}); }
+  });
+  rooms.push({k:'pas', u0:0, u1:w, t0:tCi, t1:tIi});
+  const nfit = 1 + placedOuter.filter(i=>i>0).length + innerDorms.length;
+  rooms.forEach(r=>{ r.a = (r.u1-r.u0)*(r.t1-r.t0); });
+  return {ok:true, rooms, nfit: Math.min(nd, nfit), nb: baths.length, tO, tI, tC, w, d};
+}
+
+function build(v, rows, cols){
+  const c = core(v, cols);
+  const W = v.W, D = v.D, r = v.r;
+  const Hp = v.N*v.h + 0.10; // nota iv: desde 1.00 m sobre el piso hasta el parapeto (1.10)
+  const fac = v.comp ? 0.80 : 1;
+  const reqC = pozoReq(Hp, 3, 'A'), reqR = pozoReq(Hp, 1, 'A');
+  const Pc = Math.max(2.10, ce05(reqC*fac)), PrLuz = Math.max(2.10, ce05(reqR*fac));
+  // núcleo: a la izquierda (1 columna) o al centro (2 columnas); el pozo ocupa el resto de la banda
+  let cx0, cx1, pozos;
+  if(cols===1){ cx0 = 0; cx1 = c.Wc; pozos = [[cx1, W]]; }
+  else { const hc = W/2; cx0 = r05(hc - c.hw/2 - c.vest - c.stairW); cx1 = cx0 + c.Wc; pozos = [[0, cx0],[cx1, W]]; }
+  const pw = Math.min(...pozos.map(p=>p[1]-p[0]));
+  const pwReq = Math.max(2.10, ce05(0.5*reqC*fac));
+  const pozoOk = pw >= pwReq - 1e-6 && (pw*Pc >= reqC*0.5*reqC - 1e-6 || !v.comp);
+  const B = Math.max(Pc, c.Lc);
+  const Da = D - r;
+  let Df, Dr, Pr, y1, y2, y3;
+  const lotA = W*D, alReq = v.al/100*lotA;
+  const pozoA = pozoOk ? pozos.reduce((s,p)=>s + (p[1]-p[0])*B, 0) : 0;
+  if(rows===2){
+    Pr = PrLuz;
+    const need = alReq - (r*W + pozoA + Pr*W); if(need > 0) Pr = ce05(Pr + need/W);
+    const rest = Da - B - Pr; Df = fl05(rest/2); Dr = fl05(rest - Df);
+  } else {
+    // un solo bloque delantero: el núcleo y el pozo detrás, abiertos al patio del fondo
+    const restMin = Da - c.Lc;
+    let need = alReq - r*W - (W - c.Wc)*c.Lc; // el pozo junto al núcleo se abre al patio
+    Df = fl05(Math.min(restMin - 2.10, need > 0 ? restMin - need/W : restMin - 2.10));
+    Df = Math.min(Df, 9); Dr = 0; Pr = Da - Df - c.Lc;
+  }
+  y1 = r + Df; y2 = y1 + (rows===2 ? B : c.Lc); y3 = y2 + Dr;
+  const bandD = y2 - y1;
+  const g = {v, c, rows, cols, W, D, r, Df, Dr, B: bandD, Pc, PrLuz, Pr, reqC, reqR, Hp, pozos, pozoOk, pwReq, cx0, cx1, y1, y2, y3, depts: []};
+  // departamentos del piso típico
+  const hall0 = cx0 + c.stairW + c.vest, hall1 = hall0 + c.hw;
+  const colsX = cols===1 ? [[0, W]] : [[0, (hall0+hall1)/2],[(hall0+hall1)/2, W]];
+  const mk = (x0, x1, front) => {
+    const w = x1 - x0, d = front ? Df : Dr;
+    const lit = pozoOk ? pozos.map(([a,b])=>[Math.max(a,x0)-x0, Math.min(b,x1)-x0]).filter(s=>s[1]-s[0]>0.3) : [];
+    const doorX = Math.max(x0 + 0.6, Math.min(x1 - 0.6, cols===1 ? (hall0+hall1)/2 : (x0 < hall0 ? (hall0 + (hall0+hall1)/2)/2 : ((hall0+hall1)/2 + hall1)/2))) - x0;
+    const L = d >= 5 ? layDept(w, d, lit, doorX, v.nd, true) : {ok:false, rooms:[], nfit:0, why:`fondo de ${f2(d)} m`};
+    return {x0, x1, y0: front ? r : y2, y1: front ? y1 : y3, front, w, d, area: w*d, L, doorX};
+  };
+  colsX.forEach(([a,b])=> g.depts.push(mk(a, b, true)));
+  if(rows===2) colsX.forEach(([a,b])=> g.depts.push(mk(a, b, false)));
+  // 1.er piso: pasaje de ingreso desde la calle hasta el hall, estacionamientos al frente
+  const ing0 = cols===1 ? hall0 : (hall0+hall1)/2 - 0.75, ing1 = cols===1 ? Math.max(hall1, hall0 + 1.50) : ing0 + 1.50;
+  g.ing = [ing0, ing1];
+  g.park = parking(g);
+  return g;
+}
+
+function parking(g){
+  const v = g.v, W = g.W;
+  if(v.park === 'no') return {n:0, cols:[], tandem:false, lose:[]};
+  const depth = g.r + g.Df;
+  if(depth < 5.00) return {n:0, cols:[], tandem:false, lose:[], why:'retiro + bloque delantero de menos de 5.00 m'};
+  const tandem = depth >= 9.50; // A.010 art. 54.1 e
+  // bandas libres a los lados del pasaje de ingreso
+  const sides = [[0, g.ing[0]], [g.ing[1], W]];
+  const cols = [];
+  sides.forEach(([a,b])=>{ const L = b - a; let n = Math.floor((L + 1e-6)/2.50); if(n===0 && L >= 2.40) n = 1; for(let i=0;i<n;i++){ const wd = Math.min(2.70, L/n); cols.push([a + i*wd, a + (i+1)*wd]); } });
+  const n = cols.length * (tandem ? 2 : 1);
+  return {n, cols, tandem, len: tandem ? 9.50 : 5.00};
+}
+
+function evaluate(g){
+  const v = g.v, c = g.c, W = g.W, D = g.D, lotA = W*D, out = [];
+  const add = (grp, t, s, d) => out.push({grp, t, s, d});
+  // unidades por piso
+  const perFloor = g.depts.filter(d=>d.L.ok).length;
+  const frontN = g.depts.filter(d=>d.front && d.L.ok).length;
+  const fl1 = v.park === 'frente' && g.park.n > 0 ? perFloor - frontN : perFloor;
+  const units = fl1 + perFloor*(v.N-1);
+  g.units = units; g.fl1 = fl1; g.perFloor = perFloor;
+  const deptOk = g.depts.filter(d=>d.L.ok);
+  const nfit = deptOk.length ? Math.min(...deptOk.map(d=>d.L.nfit)) : 0;
+  const pers = {1:2, 2:3, 3:4}[Math.min(3, Math.max(1, nfit || v.nd))];
+  g.hab = units*pers; g.pers = pers;
+  // áreas techadas: bloques + núcleo, por piso (A.010 art. 9.1)
+  const coreA = g.c.Wc*g.B;
+  const deptA = deptOk.reduce((s,d)=>s+d.area, 0);
+  const typA = deptA + coreA;
+  const fl1A = typA - (v.park==='frente' && g.park.n>0 ? g.depts.filter(d=>d.front&&d.L.ok).reduce((s,d)=>s+d.area,0) - (g.ing[1]-g.ing[0])*g.Df : 0);
+  g.typA = typA; g.fl1A = fl1A; g.totA = fl1A + typA*(v.N-1) + (c.elev ? 0 : 0) + c.Wc*Math.min(g.B, c.Lc)*0.5; // azotea: llegada de la escalera
+  g.coreA = coreA;
+  const alA = g.r*W + (g.pozoOk ? g.pozos.reduce((s,p)=>s+(p[1]-p[0])*g.B,0) : 0) + g.Pr*W + (g.rows===1 ? 0 : 0);
+  const alA1 = g.rows===1 ? g.r*W + (W - c.Wc)*g.B + g.Pr*W : alA;
+  g.alA = g.rows===1 ? alA1 : alA; g.alP = g.alA/lotA*100;
+
+  const Gm = 'Parámetros municipales', Gr = 'Edificio (RNE)', Gd = 'Departamentos', Gp = 'Estacionamientos';
+  // lote y frente
+  if(v.row){ add(Gm,'Lote y frente', 'ok', `Lote de <b>${f1(lotA)} m²</b> y frente de <b>${f2(W)} m</b>: corresponde la fila de lote ≥ ${v.row.lote} m² y frente ≥ ${v.row.fr} m del certificado.`); }
+  else { const r0 = v.zona.rows[0]; add(Gm,'Lote y frente', 'bad', `El lote (${f1(lotA)} m², frente ${f2(W)} m) es menor que el lote normativo para multifamiliar (${r0.lote} m², frente ${r0.fr} m). Solo vale si el lote existe así (lote consolidado) y con la altura que permita la municipalidad.`); }
+  // pisos
+  const pm = v.pmax;
+  if(v.N > pm) add(Gm,'Altura', 'bad', `<b>${v.N} pisos</b> superan los <b>${pm}</b> del certificado (${f2(pm*Math.min(3, v.h))} m como máximo con pisos de ${f2(Math.min(3,v.h))} m, A.010 art. 10.1 a).`);
+  else add(Gm,'Altura', 'ok', `<b>${v.N} pisos</b> de ${f2(v.h)} m = <b>${f2(v.N*v.h)} m</b>, dentro del tope de ${pm} pisos del certificado (A.010 art. 10.1 a). La azotea no cuenta (A.020 art. 18.1).`);
+  // área libre
+  add(Gm,'Área libre', g.alP >= v.al - 0.05 ? 'ok' : 'bad', `<b>${f1(g.alP)} %</b> (${f1(g.alA)} m²: retiro, pozo${g.pozos.length>1?'s':''} y patio posterior) frente al <b>${v.al} %</b> del certificado, medido en el piso típico (A.010 art. 9.3 y 9.4).`);
+  // coeficiente
+  const ceR = g.totA/lotA; g.ceR = ceR;
+  if(v.ce > 0) add(Gm,'Coeficiente de edificación', ceR <= v.ce + 0.005 ? 'ok' : 'bad', `Área techada <b>${f1(g.totA)} m²</b> / lote = <b>${f2(ceR)}</b> frente al máximo de <b>${f2(v.ce)}</b>${ceR > v.ce ? `: sobran ${f1(g.totA - v.ce*lotA)} m²; baja pisos o deja un piso retirado` : ''}.`);
+  else add(Gm,'Coeficiente de edificación', 'ok', `El certificado no lo fija: el edificio da <b>${f2(ceR)}</b> (${f1(g.totA)} m² techados / ${f1(lotA)} m² de lote).`);
+  // densidad
+  const denR = g.hab/lotA*10000; g.denR = denR;
+  if(v.den > 0){ const maxU = Math.floor(v.den*lotA/10000/pers + 1e-6); g.maxU = maxU;
+    add(Gm,'Densidad', denR <= v.den + 0.5 ? 'ok' : 'bad', `${units} departamentos × ${pers} personas (A.020 art. 7) = <b>${g.hab} hab</b> → <b>${Math.round(denR)} hab/ha</b> frente a ${v.den}. Con este lote caben <b>${maxU}</b> departamentos de ${nfit||v.nd} dormitorio${(nfit||v.nd)>1?'s':''}${denR > v.den ? ': baja pisos o haz departamentos más grandes' : ''}.`); }
+  // RNE edificio
+  add(Gr,'Escalera común', 'ok', `En U, dos tramos de <b>1.20 m</b> (A.020 art. 15.2 b); ${c.nR} contrapasos de ${f2(c.rise)} m y pasos de 0.25 m por piso (A.010 art. 23.2), ${c.perFl} por tramo. Núcleo de ${f2(c.Wc)} × ${f2(c.Lc)} m.`);
+  if(c.elev) add(Gr,'Ascensor', 'ok', `Obligatorio: el último piso queda a <b>${f2(c.hTop)} m</b> del ingreso, más de 12.00 m (A.020 art. 16). Cabina de 1.00 × 1.25 m, puerta de 0.80 y hall de 1.50 m delante (A.120 art. 8 a y e).`);
+  else add(Gr,'Ascensor', 'ok', `No obligatorio: el último piso queda a ${f2(c.hTop)} m, 12.00 m o menos (A.020 art. 16). Conviene dejar el hueco previsto.`);
+  add(Gr,'Hall común', 'ok', `Hall de <b>${f2(c.hw)} m</b>: 1.20 m como mínimo en áreas comunes (A.020 art. 13)${c.elev ? ' y 1.50 m de giro frente al ascensor (A.120 art. 8 e)' : ''}.`);
+  // pozo
+  if(g.rows===2 || g.pozoOk){
+    const pw = Math.min(...g.pozos.map(p=>p[1]-p[0]));
+    add(Gr,'Pozo de luz central', g.pozoOk && g.B >= g.Pc - 1e-6 ? 'ok' : 'bad', g.pozoOk ? `Altura del pozo <b>${f2(g.Hp)} m</b> (nota iv), 3 lados propios: hacen falta <b>${f2(g.reqC)} m</b> frente a las ventanas${v.comp?` (${f2(g.Pc)} m con la compensación de la nota iii)`:''} y ${f2(g.pwReq)} m del otro lado. Tiene ${f2(g.B)} × ${f2(pw)} m (A.020 art. 11.4 b, cuadro 04).` : `El núcleo deja solo ${f2(pw)} m al pozo y hacen falta ${f2(g.pwReq)} m (la mitad del lado perpendicular, mínimo 2.10 m, A.020 art. 11.4 b, notas ii y vi): las ventanas interiores no tienen pozo.`);
+  }
+  if(g.rows===2) add(Gr,'Patio posterior', g.Pr >= g.PrLuz - 1e-6 ? 'ok' : 'bad', `<b>${f2(g.Pr)} m</b> de fondo; el patio que ilumina el departamento posterior es un pozo de 1 lado propio: ${f2(g.reqR)} m${v.comp?` (${f2(g.PrLuz)} con la compensación)`:''}, mínimo 2.10 m (A.020 art. 11.4 b).`);
+  // evacuación
+  const recH = g.B + g.Df + g.r; const recV = (v.N-1)*(2*c.run + 2*1.20 + 1.20);
+  const rec = recH + recV; g.rec = rec;
+  if(!c.prot) add(Gr,'Evacuación', rec <= 56 ? 'ok' : 'bad', `Hasta 15 m de altura vale la escalera integrada: recorrido desde la puerta más alejada hasta la calle de <b>${f1(rec)} m</b>, máximo 56 m sin rociadores (A.020 art. 27.2, cuadro 9, nota 11).`);
+  else add(Gr,'Evacuación', g.B <= 34 ? 'warn' : 'bad', `Más de 15 m (${f2(c.hTop)} m al último piso): <b>escalera protegida</b> con vestíbulo previo ventilado (o abierta), detectores y central de alarma, extintores y red de agua contra incendio (A.020 art. 27.2, cuadro 9). El vestíbulo de 1.50 m ya está en el núcleo; la red y la bomba van al proyecto de seguridad (A.130).`);
+  add(Gr,'Ingreso', 'ok', `Puerta de <b>1.20 m</b> al edificio (A.020 art. 12.2) y pasaje de ${f2(g.ing[1]-g.ing[0])} m hasta el hall; vestíbulo a nivel de la vereda o con rampa de 10 % como máximo (A.120 art. 28 a y art. 6 b).`);
+  // departamentos
+  const minA = Math.min(...deptOk.map(d=>d.area));
+  if(!deptOk.length) add(Gd,'Departamentos', 'bad', `No entra ningún departamento: ${g.depts[0] && g.depts[0].L.why || 'el lote es muy chico'}.`);
+  else {
+    add(Gd,'Área mínima', minA >= 40 - 0.05 ? 'ok' : 'bad', `El más chico tiene <b>${f1(minA)} m²</b> techados; mínimo 40 m² (A.020 art. 8.1 b).`);
+    if(v.dm3 > 0 && v.nd >= 3) add(Gd,'Área para 3 dormitorios', minA >= v.dm3 - 0.05 ? 'ok' : 'bad', `El certificado pide <b>${v.dm3} m²</b> para departamentos de 3 dormitorios; el más chico tiene ${f1(minA)} m².`);
+    const short = deptOk.filter(d=>d.L.nfit < v.nd);
+    add(Gd,'Dormitorios', short.length ? 'bad' : 'ok', short.length ? `Pediste ${v.nd}; en ${short.length} departamento${short.length>1?'s':''} entran solo <b>${Math.min(...short.map(d=>d.L.nfit))}</b> con ventana a la fachada o al pozo.` : `Los <b>${v.nd}</b> dormitorios de cada departamento tienen ventana a la fachada, al patio o al pozo de luz (A.020 art. 11.1 y 11.4).`);
+    add(Gd,'Medidas y muebles', 'ok', `Dormitorio principal de 3.00 m con cama de 1.40, secundarios de 2.75 m con cama de 0.90; sala-comedor-cocina de 3.60 m o más; baño de 1.60 m con inodoro, lavatorio y ducha (A.020 art. 10 y 23.1). Las puertas no barren muebles.`);
+    add(Gd,'Puertas', 'ok', `Ingreso a cada departamento de 0.90 m, dormitorios de 0.80 y baños de 0.70, todas de 2.10 m de alto (A.020 art. 12.2).`);
+    add(Gd,'Baños', 'ok', `Sin ventana: ventilación por ducto hacia la azotea, como permite la A.020 art. 11.3.`);
+  }
+  // estacionamientos
+  const req = v.est > 0 ? Math.ceil(units / v.est - 1e-9) : 0; g.estReq = req;
+  if(v.park === 'no') add(Gp,'Estacionamientos', req ? 'warn' : 'ok', req ? `Hacen falta <b>${req}</b> (1 cada ${v.est} viviendas). Sin estacionar en el lote solo se puede con una excepción de la A.010 art. 52 (lote menor al normativo, densificación, árbol, vía peatonal…) y comprándolos a menos de 300 m.` : 'El certificado no exige estacionamientos.');
+  else add(Gp,'Estacionamientos', g.park.n >= req ? 'ok' : 'bad', `<b>${g.park.n}</b> en el retiro y el frente del 1.er piso${g.park.tandem ? ' (en tándem de 9.50 m, A.010 art. 54.1 e)' : ''}, cajones de 2.50 × 5.00 m (A.010 art. 54.1 a); hacen falta <b>${req}</b> (1 cada ${v.est} viviendas)${g.park.n < req ? '. Faltan ' + (req - g.park.n) + ': semisótano, menos departamentos o excepción de la A.010 art. 52' : ''}.`);
+  if(v.park !== 'no' && g.park.n) add(Gp,'Ingreso vehicular', 'ok', `Cada columna de autos entra desde la calle; con menos de 40 vehículos basta un acceso de 3.00 m (A.010 art. 53.1 a). En el retiro van sin techo o con techo ligero (A.010 art. 8.3 d).`);
+  g.checks = out;
+  g.score = units*100 - out.filter(x=>x.s==='bad').length*1000 - out.filter(x=>x.s==='warn').length*5 + (deptOk.length ? minA/100 : 0);
+  return g;
+}
+
+function generate(v){
+  const opts = v.dpp === 'auto' ? [[2,2],[2,1],[1,2],[1,1]] : v.dpp === '4' ? [[2,2]] : v.dpp === '2' ? [[2,1],[1,2]] : [[1,1]];
+  let best = null;
+  for(const [rows, cols] of opts){
+    if(cols===2 && v.W < 12) continue;
+    const g = evaluate(build(v, rows, cols));
+    if(!g.depts.some(d=>d.L.ok)) { if(!best) best = g; continue; }
+    if(!best || g.score > best.score) best = g;
+  }
+  if(!best) best = evaluate(build(v, 1, 1));
+  // sugerencia: fondo necesario para 2 filas
+  if(best.rows===1 && v.dpp !== '1'){
+    const c = best.c, need = v.r + 2*5.70 + Math.max(best.Pc, c.Lc) + best.PrLuz;
+    best.hint2 = `Para un departamento delante y otro detrás haría falta un fondo de unos <b>${f2(need)} m</b> (dos bloques de 5.70 m, banda central de ${f2(Math.max(best.Pc, c.Lc))} m y patio de ${f2(best.PrLuz)} m).`;
+  }
+  return best;
+}
+
+// ---------- Dibujo de la planta ----------
+const NAMES = {est:'Estudio', ecc:'Sala-comedor-cocina', dorm:'Dorm.', bano:'Baño', ing:'Ingreso', lav:'Lavandería', dep:'Depósito', pas:''};
+function planSVG(g, floor1){
+  const W = g.W, D = g.D, c = g.c, S = Math.min(560/W, 860/D, 40), pad = 46;
+  const X = x => pad + x*S, Y = y => pad + y*S;
+  const o = [];
+  const R = (x0,y0,x1,y1,st) => o.push(`<rect x="${X(Math.min(x0,x1)).toFixed(1)}" y="${Y(Math.min(y0,y1)).toFixed(1)}" width="${(Math.abs(x1-x0)*S).toFixed(1)}" height="${(Math.abs(y1-y0)*S).toFixed(1)}" ${st}/>`);
+  const Tx = (x,y,t,st='') => o.push(`<text x="${X(x).toFixed(1)}" y="${Y(y).toFixed(1)}" ${st}>${t}</text>`);
+  const Ln = (x0,y0,x1,y1,st) => o.push(`<line x1="${X(x0).toFixed(1)}" y1="${Y(y0).toFixed(1)}" x2="${X(x1).toFixed(1)}" y2="${Y(y1).toFixed(1)}" ${st}/>`);
+  const fs = Math.max(9, Math.min(12, S*0.32));
+  const tst = `font-size="${fs}" font-family="Archivo,system-ui,sans-serif" fill="currentColor" text-anchor="middle" stroke="var(--panel)" stroke-width="3" paint-order="stroke"`;
+  const green = 'fill="var(--green)" stroke="none"';
+  // lote, vereda, área libre
+  R(0, -0.9, W, 0, 'fill="var(--bg)" stroke="var(--line)"'); Tx(W/2, -0.3, 'vereda / calle', tst + ' fill-opacity=".6"');
+  R(0, 0, W, g.r, green);
+  if(g.rows===2){ g.pozos.forEach(([a,b])=> R(a, g.y1, b, g.y2, green)); R(0, g.y3, W, D, green); }
+  else { R(c.Wc, g.y1, W, g.y2, green); R(0, g.y2, W, D, green); }
+  // núcleo
+  const hall0 = g.cx0 + c.stairW + c.vest, hall1 = hall0 + c.hw;
+  R(g.cx0, g.y1, g.cx1, g.y1 + c.Lc, 'fill="var(--core)" stroke="var(--wall)" stroke-width="2"');
+  // escalera en U
+  const sx0 = g.cx0, sy0 = g.y1, sL = c.stairL;
+  R(sx0, sy0, sx0 + c.stairW, sy0 + sL, 'fill="none" stroke="var(--wall)" stroke-width="1"');
+  for(let i=0;i<c.perFl;i++){ const y = sy0 + 1.20 + i*STEP; Ln(sx0, y, sx0 + 1.20, y, 'stroke="var(--wall)" stroke-width=".6"'); Ln(sx0 + 1.30, y, sx0 + 2.50, y, 'stroke="var(--wall)" stroke-width=".6"'); }
+  Ln(sx0 + 1.25, sy0 + 1.20, sx0 + 1.25, sy0 + sL - 1.20, 'stroke="var(--wall)" stroke-width="1.2"');
+  o.push(`<path d="M${X(sx0+0.6)},${Y(sy0+sL-1.3)} L${X(sx0+0.6)},${Y(sy0+1.3)} M${X(sx0+0.6)-3},${Y(sy0+1.3)+5} L${X(sx0+0.6)},${Y(sy0+1.3)} L${X(sx0+0.6)+3},${Y(sy0+1.3)+5}" stroke="var(--brick)" fill="none" stroke-width="1.2"/>`);
+  Tx(sx0 + c.stairW/2, sy0 + sL/2 + 0.15, 'Esc.', tst);
+  if(c.vest){ R(sx0 + c.stairW, g.y1, hall0, g.y1 + c.Lc, 'fill="none" stroke="var(--wall)" stroke-width="1"'); Tx((sx0 + c.stairW + hall0)/2, g.y1 + c.Lc/2, 'Vest.', tst + ` font-size="${fs*0.8}"`); }
+  Tx((hall0+hall1)/2, g.y1 + c.Lc/2 + 0.6, 'Hall', tst);
+  if(c.elev){ const ex0 = hall1, ex1 = hall1 + 1.60; R(ex0, g.y1 + c.Lc/2 - 0.875, ex1, g.y1 + c.Lc/2 + 0.875, 'fill="none" stroke="var(--wall)" stroke-width="1.2"');
+    Ln(ex0, g.y1 + c.Lc/2 - 0.875, ex1, g.y1 + c.Lc/2 + 0.875, 'stroke="var(--wall)" stroke-width=".6"'); Ln(ex1, g.y1 + c.Lc/2 - 0.875, ex0, g.y1 + c.Lc/2 + 0.875, 'stroke="var(--wall)" stroke-width=".6"'); Tx((ex0+ex1)/2, g.y1 + c.Lc/2 - 1.0, 'Asc.', tst + ` font-size="${fs*0.85}"`); }
+  // departamentos
+  const park1 = floor1 && g.v.park === 'frente' && g.park.n > 0;
+  g.depts.forEach((d, k)=>{
+    if(!d.L.ok){ R(d.x0, d.y0, d.x1, d.y1, 'fill="var(--bad-soft)" stroke="var(--bad)" stroke-dasharray="4 3"'); Tx((d.x0+d.x1)/2, (d.y0+d.y1)/2, 'no entra', tst); return; }
+    if(park1 && d.front) return;
+    drawDept(d, k, floor1 && d.front);
+  });
+  // 1.er piso: pasaje de ingreso y estacionamientos
+  if(floor1){
+    R(g.ing[0], 0, g.ing[1], g.y1, 'fill="var(--core)" stroke="var(--brick)" stroke-width="1"');
+    Tx((g.ing[0]+g.ing[1])/2, g.r + 1.2, 'Ingreso', tst + ` transform="rotate(-90 ${X((g.ing[0]+g.ing[1])/2)} ${Y(g.r+1.2)})"`);
+    o.push(`<line x1="${X(g.ing[0]+0.15)}" y1="${Y(0)}" x2="${X(g.ing[1]-0.15)}" y2="${Y(0)}" stroke="var(--brick)" stroke-width="4"/>`);
+    if(park1){
+      const L = g.park.len; R(0, 0, W, g.y1, 'fill="none" stroke="var(--line)" stroke-dasharray="3 3"');
+      g.park.cols.forEach(([a,b])=>{
+        for(let j=0;j<(g.park.tandem?2:1);j++){ const y0 = j*4.75 + 0.1, y1 = y0 + 4.50;
+          R(a + 0.1, y0, b - 0.1, Math.min(y1, g.y1-0.1), 'fill="none" stroke="var(--muted)" stroke-width="1"');
+          o.push(`<rect x="${X(a + 0.35)}" y="${Y(y0 + 0.4)}" width="${((b-a)-0.7)*S}" height="${3.8*S}" rx="${0.4*S}" fill="var(--furn)" />`);
+        }
+        Tx((a+b)/2, g.y1 - 0.4, 'E', tst);
+      });
+    }
+  }
+  // muros: perímetro de bloques
+  const wallR = (x0,y0,x1,y1) => R(x0,y0,x1,y1,'fill="none" stroke="var(--wall)" stroke-width="2.4"');
+  g.depts.forEach(d=>{ if(d.L.ok && !(park1 && d.front)) wallR(d.x0, d.y0, d.x1, d.y1); });
+  // lote y cotas
+  R(0, 0, W, D, 'fill="none" stroke="var(--ink)" stroke-width="1" stroke-dasharray="8 4"');
+  const dim = (x, y0, y1, label) => { Ln(x, y0, x, y1, 'stroke="var(--muted)" stroke-width=".8"'); Ln(x-0.15, y0, x+0.15, y0, 'stroke="var(--muted)"'); Ln(x-0.15, y1, x+0.15, y1, 'stroke="var(--muted)"');
+    if(y1-y0 > 0.8) o.push(`<text x="${X(x)-4}" y="${Y((y0+y1)/2)}" font-size="${fs*0.9}" font-family="IBM Plex Mono,monospace" fill="var(--muted)" text-anchor="middle" transform="rotate(-90 ${X(x)-4} ${Y((y0+y1)/2)})">${label}</text>`); };
+  const xd = W + 0.5;
+  dim(xd, 0, g.r, f2(g.r)); dim(xd, g.r, g.y1, f2(g.Df)); dim(xd, g.y1, g.y2, f2(g.y2-g.y1)); if(g.rows===2){ dim(xd, g.y2, g.y3, f2(g.Dr)); } dim(xd, g.y3, D, f2(D-g.y3));
+  dim(W + 1.4, 0, D, 'fondo ' + f2(D));
+  Ln(0, D + 0.6, W, D + 0.6, 'stroke="var(--muted)" stroke-width=".8"'); Tx(W/2, D + 1.2, 'frente ' + f2(W), `font-size="${fs*0.9}" font-family="IBM Plex Mono,monospace" fill="var(--muted)" text-anchor="middle"`);
+  // etiquetas de área libre
+  Tx(W/2 + (park1 ? 0 : 0), g.r/2 + 0.15, park1 ? '' : 'Retiro ' + f2(g.r), tst + ' fill-opacity=".7"');
+  if(g.rows===2 && g.pozoOk){ g.pozos.forEach(([a,b])=>{ if(b-a>1.4) Tx((a+b)/2, (g.y1+g.y2)/2, 'Pozo', tst + ' fill-opacity=".75"'); if(b-a>1.4) Tx((a+b)/2, (g.y1+g.y2)/2 + 0.45, `${f2(g.y2-g.y1)} × ${f2(b-a)}`, tst + ` font-size="${fs*0.8}" fill-opacity=".7"`); }); }
+  Tx(W/2, (g.y3 + D)/2 + 0.15, g.rows===2 ? 'Patio posterior ' + f2(D-g.y3) : 'Patio / jardín ' + f2(D-g.y2), tst + ' fill-opacity=".7"');
+
+  function drawDept(d, k, cut){
+    const L = d.L, front = d.front;
+    const PX = (u,t) => [d.x0 + u, front ? d.y0 + t : d.y1 - t];
+    const RR = (u0,t0,u1,t1,st) => { const [a,b] = PX(u0,t0), [cc,dd] = PX(u1,t1); R(a,b,cc,dd,st); };
+    const ing = cut ? [g.ing[0]-d.x0, g.ing[1]-d.x0] : null;
+    L.rooms.forEach(rm=>{
+      const st = rm.k==='bano' ? 'fill="var(--wet)" stroke="var(--wall)" stroke-width="1"' : rm.k==='pas' || rm.k==='ing' ? 'fill="none" stroke="none"' : 'fill="none" stroke="var(--wall)" stroke-width="1"';
+      RR(rm.u0, rm.t0, rm.u1, rm.t1, st);
+      furnish(rm, PX, RR, front);
+    });
+    L.rooms.forEach(rm=>{
+      const lx = rm.k==='dorm' ? (rm.u0 + Math.max(0.9, (rm.u1-rm.u0) - (rm.i===0?1.5:1.0))/1 *0.5 + 0.1) : (rm.u0+rm.u1)/2;
+      const [cx, cy] = PX(rm.k==='dorm' ? rm.u0 + 0.95 : lx, (rm.t0+rm.t1)/2);
+      const nm = rm.k==='dorm' ? 'Dorm. ' + (rm.i+1) : NAMES[rm.k];
+      if(nm && (rm.u1-rm.u0) > 1.0) { Tx(cx, cy - 0.05, nm, tst + (rm.u1-rm.u0 < 2 ? ` font-size="${fs*0.78}"` : '')); if(rm.k!=='ing') Tx(cx, cy + fs/S*1.0, f1(rm.a) + ' m²', tst + ` font-size="${fs*0.78}" fill-opacity=".75"`); }
+    });
+    // puerta del departamento (0.90) desde el hall
+    const [dx, dy] = PX(d.doorX, d.d);
+    o.push(`<line x1="${X(dx-0.45)}" y1="${Y(dy)}" x2="${X(dx+0.45)}" y2="${Y(dy)}" stroke="var(--panel)" stroke-width="3.5"/>`);
+    const sgn = front ? -1 : 1;
+    o.push(`<path d="M${X(dx-0.45)},${Y(dy)} L${X(dx-0.45)},${Y(dy + sgn*0.9)} A${0.9*S},${0.9*S} 0 0 ${front?1:0} ${X(dx+0.45)},${Y(dy)}" fill="none" stroke="var(--brick)" stroke-width="1"/>`);
+    // ventanas a la fachada
+    L.rooms.filter(rm=>rm.t0===0 && (rm.k==='ecc' || rm.k==='dorm')).forEach(rm=>{ const ww = Math.min(rm.u1-rm.u0-0.6, rm.k==='ecc' ? 2.4 : 1.5); const uc = (rm.u0+rm.u1)/2; const [a,b] = PX(uc-ww/2, 0), [cc] = PX(uc+ww/2, 0);
+      o.push(`<line x1="${X(a)}" y1="${Y(b)}" x2="${X(cc)}" y2="${Y(b)}" stroke="var(--wet-line)" stroke-width="4"/>`); });
+    // ventanas al pozo
+    L.rooms.filter(rm=>rm.lit==='p').forEach(rm=>{ const pz = g.pozos.map(([a,b])=>[a-d.x0,b-d.x0]); let best = null; pz.forEach(([a,b])=>{ const s = Math.max(a, rm.u0+0.2), e = Math.min(b, rm.u1-0.2); if(e-s > 0.5 && (!best || e-s > best[1]-best[0])) best = [s,e]; });
+      if(best){ const ww = Math.min(1.2, best[1]-best[0]); const uc = (best[0]+best[1])/2; const [a,b] = PX(uc-ww/2, d.d), [cc] = PX(uc+ww/2, d.d); o.push(`<line x1="${X(a)}" y1="${Y(b)}" x2="${X(cc)}" y2="${Y(b)}" stroke="var(--wet-line)" stroke-width="4"/>`); } });
+    // etiqueta
+    const [lx, ly] = PX(0.25, L.tO + 0.45);
+    o.push(`<text x="${X(lx)}" y="${Y(ly)}" font-size="${fs*0.85}" font-family="IBM Plex Mono,monospace" fill="var(--brick)">D${k+1} · ${f1(d.area)} m²</text>`);
+  }
+  function furnish(rm, PX, RR, front){
+    const F = 'fill="var(--furn)" stroke="none"';
+    const doorArc = (u, t, rad, dir) => { // hoja en el muro t (lado pasillo), abre hacia la habitación (dir = +1 hacia t creciente)
+      const [x0,y0] = PX(u, t), [x1,y1] = PX(u+rad, t), [x2,y2] = PX(u, t + dir*rad);
+      o.push(`<line x1="${X(x0)}" y1="${Y(y0)}" x2="${X(x1)}" y2="${Y(y1)}" stroke="var(--panel)" stroke-width="3"/>`);
+      o.push(`<path d="M${X(x2)},${Y(y2)} L${X(x0)},${Y(y0)} M${X(x1)},${Y(y1)} A${rad*S},${rad*S} 0 0 ${(dir>0)===front?1:0} ${X(x2)},${Y(y2)}" fill="none" stroke="var(--brick)" stroke-width=".9"/>`); };
+    if(rm.k==='dorm'){
+      const outer = rm.t0===0, tw = outer ? rm.t1 : rm.t0; // muro del pasillo
+      const dir = outer ? -1 : 1;
+      doorArc(rm.u0 + 0.10, tw, 0.80, dir);
+      const bw = rm.i===0 ? 1.40 : 0.90, bl = 1.90;
+      const tFar = outer ? 0.05 : rm.t1 - 0.05;
+      const tb0 = outer ? tFar : tFar - bl, tb1 = outer ? tFar + bl : tFar;
+      RR(rm.u1 - 0.10 - bw, tb0, rm.u1 - 0.10, tb1, F);
+      const tp = outer ? tb0 + 0.05 : tb1 - 0.35; RR(rm.u1 - 0.10 - bw + 0.08, tp, rm.u1 - 0.18, tp + 0.30, 'fill="var(--panel)" stroke="none" opacity=".7"');
+    }
+    if(rm.k==='bano'){
+      const tw = rm.t0; doorArc(rm.u0 + 0.10, tw, 0.70, 1);
+      RR(rm.u1 - 0.55, tw + 0.05, rm.u1 - 0.05, tw + 0.48, F); // lavatorio
+      o.push((()=>{ const [cx,cy] = PX(rm.u1 - 0.32, tw + 0.85); return `<ellipse cx="${X(cx)}" cy="${Y(cy)}" rx="${0.20*S}" ry="${0.28*S}" fill="var(--furn)"/>`; })());
+      RR(rm.u0 + 0.05, rm.t1 - 0.85, rm.u1 - 0.05, rm.t1 - 0.05, 'fill="none" stroke="var(--wet-line)" stroke-width=".9"'); // ducha
+    }
+    if(rm.k==='ecc'){
+      const w = rm.u1 - rm.u0, tw = rm.t1;
+      // cocina: mesada de 0.60 contra el muro lateral, en el extremo del pasillo
+      const ku = rm.u0 < 0.01 ? rm.u0 + 0.05 : rm.u1 - 0.65;
+      RR(ku, tw - Math.min(2.40, rm.t1 - 0.6), ku + 0.60, tw - 0.05, F);
+      // comedor y sofá
+      const mu = (rm.u0 + rm.u1)/2;
+      RR(mu - 0.45, tw - 1.90, mu + 0.45, tw - 1.10, F);
+      RR(rm.u0 < 0.01 ? rm.u1 - 0.95 : rm.u0 + 0.10, 0.35, rm.u0 < 0.01 ? rm.u1 - 0.10 : rm.u0 + 0.95, Math.min(2.20, rm.t1 - 0.8), F);
+    }
+    if(rm.k==='lav'){ RR(rm.u0 + 0.10, rm.t1 - 0.65, rm.u0 + 0.70, rm.t1 - 0.05, F); }
+  }
+  const vbW = W*S + pad*2 + 1.6*S, vbH = (D + 1.6)*S + pad*2;
+  return `<svg viewBox="0 ${-0.9*S} ${vbW.toFixed(0)} ${(vbH + 0.9*S).toFixed(0)}" role="img" aria-label="Planta del edificio" style="color:var(--ink)">${o.join('')}</svg>`;
+}
+
+// ---------- Corte ----------
+function corteSVG(g){
+  const v = g.v, c = g.c, D = g.D, N = v.N, h = v.h;
+  const Htot = N*h, Hmax = v.pmax*Math.min(3, h);
+  const top = Math.max(Htot + 3.2, Hmax + 1);
+  const S = Math.min(700/(D + 4), 520/top), pad = 30;
+  const X = y => pad + (y + 2)*S, Z = z => pad + (top - z)*S;
+  const o = [];
+  const R = (y0,z0,y1,z1,st) => o.push(`<rect x="${X(y0).toFixed(1)}" y="${Z(z1).toFixed(1)}" width="${((y1-y0)*S).toFixed(1)}" height="${((z1-z0)*S).toFixed(1)}" ${st}/>`);
+  const T = (y,z,t,st='') => o.push(`<text x="${X(y).toFixed(1)}" y="${Z(z).toFixed(1)}" font-size="11" font-family="Archivo,sans-serif" fill="currentColor" ${st}>${t}</text>`);
+  const L = (y0,z0,y1,z1,st) => o.push(`<line x1="${X(y0)}" y1="${Z(z0)}" x2="${X(y1)}" y2="${Z(z1)}" ${st}/>`);
+  R(-2, -0.6, D + 2, 0, 'fill="var(--line)"');
+  R(0, 0, g.r, 0.05, 'fill="var(--green-line)"'); R(g.y3, 0, D, 0.05, 'fill="var(--green-line)"');
+  const blocks = g.rows===2 ? [[g.r, g.y1],[g.y2, g.y3]] : [[g.r, g.y1]];
+  const park1 = v.park === 'frente' && g.park.n > 0;
+  for(let k=0;k<N;k++){
+    blocks.forEach(([a,b], j)=>{
+      const z0 = k*h;
+      if(k===0 && j===0 && park1){ R(a, z0, b, z0 + h - 0.20, 'fill="none" stroke="var(--muted)" stroke-dasharray="3 3"'); T((a+b)/2 - 0.8, z0 + 0.9, 'Estac.', 'font-size="10" fill-opacity=".7"'); }
+      else { R(a, z0, b, z0 + h - 0.20, 'fill="var(--panel)" stroke="var(--wall)" stroke-width="1"'); }
+      R(a, z0 + h - 0.20, b, z0 + h, 'fill="var(--wall)"');
+      // ventanas
+      const wy = j===0 ? a : b - 0.12; R(wy, z0 + 1.0, wy + 0.12, z0 + 2.10, 'fill="var(--wet-line)"');
+      if(g.rows===2){ const wy2 = j===0 ? b - 0.12 : a; R(wy2, z0 + 1.0, wy2 + 0.12, z0 + 2.10, 'fill="var(--wet-line)"'); }
+    });
+    T(-1.9, k*h + h/2, `P${k+1}`, 'font-size="10" fill-opacity=".7"');
+  }
+  // parapetos de azotea (1.10 hacia calle y patio)
+  blocks.forEach(([a,b])=>{ R(a, Htot, a + 0.15, Htot + 1.10, 'fill="var(--wall)"'); R(b - 0.15, Htot, b, Htot + 1.10, 'fill="var(--wall)"'); });
+  // núcleo detrás del pozo (en vista)
+  R(g.y1, Htot, g.y1 + c.Lc, Htot + 2.40, 'fill="var(--core)" stroke="var(--brick)" stroke-width=".8" stroke-dasharray="4 2"');
+  T(g.y1 + 0.2, Htot + 2.75, c.elev ? 'Núcleo y máquinas (en vista)' : 'Llegada a la azotea (en vista)', 'font-size="10"');
+  // altura y tope
+  L(-1.2, 0, -1.2, Htot, 'stroke="var(--ink)" stroke-width=".8"'); T(-1.15, Htot + 0.3, `${f2(Htot)} m`, 'font-family="IBM Plex Mono,monospace"');
+  L(-2, Hmax, D + 2, Hmax, 'stroke="var(--bad)" stroke-width="1.2" stroke-dasharray="7 4"');
+  T(-1.9, Hmax + (Math.abs(Hmax-Htot) < 0.6 ? 3.4 : 0.3), `Tope del certificado: ${v.pmax} pisos (${f2(Hmax)} m)`, 'fill="var(--bad)"');
+  if(g.rows===2) { T(g.y1 + 0.2, Htot/2, `Pozo ${f2(g.y2-g.y1)} m`, 'font-size="10"'); T(g.y1 + 0.2, Htot/2 - 0.6, `(pide ${f2(g.Pc)})`, 'font-size="10" fill-opacity=".7"'); L(g.y1, 1.0, g.y1, g.Hp + 1.0, 'stroke="var(--green-line)" stroke-dasharray="2 3"'); }
+  T(g.r/2 - 0.8, -0.35, 'retiro', 'font-size="10" fill-opacity=".7"');
+  T(Math.max(-1.8, -1.8), -0.35, 'calle', 'font-size="10" fill-opacity=".7"');
+  return `<svg viewBox="0 0 ${((D+4)*S + pad*2).toFixed(0)} ${((top+0.8)*S + pad*2).toFixed(0)}" style="width:100%;height:auto;color:var(--ink)">${o.join('')}</svg>`;
+}
+
+// ---------- 3D (three.js r128, el mismo visor que la vivienda unifamiliar) ----------
+let d3 = null, threeP = null, lastG = null;
+function loadThree(){
+  if(window.THREE) return Promise.resolve();
+  if(!threeP) threeP = new Promise((res, rej)=>{ const s = document.createElement('script'); s.src = 'https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js'; s.onload = res; s.onerror = rej; document.head.appendChild(s); });
+  return threeP;
+}
+function open3D(){ loadThree().then(()=>{ if(!d3) init3D(); if(lastG) build3D(lastG); }).catch(()=>{ const m = el('v3-msg'); if(m) m.textContent = 'No se pudo cargar el visor 3D (three.js). Revisa la conexión.'; }); }
+function init3D(){
+  const box = el('box3d'); box.innerHTML = '';
+  const R = new THREE.WebGLRenderer({antialias:true, preserveDrawingBuffer:true}); R.setPixelRatio(Math.min(2, window.devicePixelRatio||1)); box.appendChild(R.domElement);
+  const scene = new THREE.Scene(); scene.background = new THREE.Color(0xeef0ee); const cam = new THREE.PerspectiveCamera(35, 1, 0.1, 600);
+  scene.add(new THREE.HemisphereLight(0xffffff, 0x6f675b, 0.65)); scene.add(new THREE.AmbientLight(0xffffff, 0.2));
+  const sun = new THREE.DirectionalLight(0xffffff, 0.5); sun.position.set(-20, 40, 30); scene.add(sun);
+  const grp = new THREE.Group(); scene.add(grp);
+  d3 = {R, scene, cam, grp, th:Math.PI-0.6, ph:1.05, dist:50, tgt:new THREE.Vector3(), box};
+  const size = () => { const w = box.clientWidth||600, h = box.clientHeight||400; R.setSize(w, h, false); cam.aspect = w/h; cam.updateProjectionMatrix(); paint3D(); };
+  if(window.ResizeObserver) new ResizeObserver(size).observe(box); else window.addEventListener('resize', size);
+  const pts = new Map(); let pinch0 = 0;
+  R.domElement.addEventListener('pointerdown', e=>{ R.domElement.setPointerCapture(e.pointerId); pts.set(e.pointerId,[e.clientX,e.clientY]); if(pts.size===2){ const [a,b]=[...pts.values()]; pinch0 = Math.hypot(a[0]-b[0],a[1]-b[1]); } });
+  R.domElement.addEventListener('pointermove', e=>{ if(!pts.has(e.pointerId)) return; const [px,py] = pts.get(e.pointerId); pts.set(e.pointerId,[e.clientX,e.clientY]);
+    if(pts.size===2){ const [a,b]=[...pts.values()], dd = Math.hypot(a[0]-b[0],a[1]-b[1]); if(pinch0) d3.dist = Math.min(220, Math.max(8, d3.dist*pinch0/dd)); pinch0 = dd; }
+    else { d3.th -= (e.clientX-px)*0.008; d3.ph = Math.min(1.52, Math.max(0.12, d3.ph - (e.clientY-py)*0.008)); } paint3D(); });
+  const up = e=>{ pts.delete(e.pointerId); pinch0 = 0; }; R.domElement.addEventListener('pointerup', up); R.domElement.addEventListener('pointercancel', up);
+  R.domElement.addEventListener('wheel', e=>{ e.preventDefault(); d3.dist = Math.min(220, Math.max(8, d3.dist*(1 + e.deltaY*0.001))); paint3D(); }, {passive:false});
+  size();
+}
+function paint3D(){ if(!d3) return; const {cam,tgt,th,ph,dist} = d3; cam.position.set(tgt.x + dist*Math.sin(ph)*Math.sin(th), tgt.y + dist*Math.cos(ph), tgt.z + dist*Math.sin(ph)*Math.cos(th)); cam.lookAt(tgt); d3.R.render(d3.scene, cam); }
+function view3D(k){ if(!d3) return; if(k==='calle'){ d3.th=Math.PI-0.6; d3.ph=1.05; } if(k==='fondo'){ d3.th=0.6; d3.ph=1.0; } if(k==='arriba'){ d3.th=0.0001; d3.ph=0.12; } paint3D(); }
+function build3D(g){
+  if(!d3) return;
+  const grp = d3.grp; while(grp.children.length){ const m = grp.children.pop(); m.geometry && m.geometry.dispose(); }
+  const v = g.v, c = g.c, W = g.W, D = g.D, h = v.h, N = v.N;
+  const mat = {}; const M = (col, op=1) => mat[col+'_'+op] || (mat[col+'_'+op] = new THREE.MeshLambertMaterial({color:col, transparent: op<1, opacity: op}));
+  // x = ancho, z = hacia el fondo (desde la calle), y = altura; centrado en el lote
+  const box = (x0,x1,y0,y1,z0,z1,col,op) => { if(x1-x0<=0.001||y1-y0<=0.001||z1-z0<=0.001) return; const m = new THREE.Mesh(new THREE.BoxGeometry(x1-x0, z1-z0, y1-y0), M(col,op)); m.position.set((x0+x1)/2 - W/2, (z0+z1)/2, (y0+y1)/2 - D/2); grp.add(m); };
+  box(-6, W+6, -3, D+3, -0.12, 0, 0xcfcac0);
+  box(0, W, 0, g.r, 0, 0.03, 0xb9d3b2); box(0, W, g.y3, D, 0, 0.03, 0xb9d3b2);
+  box(-6, W+6, -3, -0.01, 0, 0.15, 0xdcd7cd);
+  // vecinos (medianeras) en volumen tenue
+  box(-6, -0.02, 2, D, 0, 3*2.7, 0xd8d4cc, 0.5); box(W+0.02, W+6, 3, D, 0, 4*2.7, 0xd8d4cc, 0.5);
+  const blocks = g.rows===2 ? [[g.r, g.y1],[g.y2, g.y3]] : [[g.r, g.y1]];
+  const park1 = v.park === 'frente' && g.park.n > 0;
+  for(let k=0;k<N;k++){
+    const z0 = k*h;
+    blocks.forEach(([a,b], j)=>{
+      if(k===0 && j===0 && park1){ [[0,0.25],[W-0.25,W]].forEach(([x0,x1])=>{ box(x0,x1,a,a+0.25,z0,z0+h-0.2,0xa9a49c); box(x0,x1,b-0.25,b,z0,z0+h-0.2,0xa9a49c); });
+        g.park.cols.forEach(([x0,x1])=>{ for(let t=0;t<(g.park.tandem?2:1);t++){ box(x0+0.35, x1-0.35, t*4.75+0.5, t*4.75+4.3, 0.15, 1.45, 0x7f8b96); } }); }
+      else {
+        box(0, W, a, b, z0, z0 + h - 0.2, 0xe9e2d6);
+        // franjas de ventanas en fachadas
+        g.depts.filter(d=>d.front===(j===0) && d.L.ok).forEach(d=> d.L.rooms.filter(rm=>rm.t0===0 && (rm.k==='ecc'||rm.k==='dorm')).forEach(rm=>{
+          const ww = Math.min(rm.u1-rm.u0-0.6, rm.k==='ecc'?2.4:1.5), uc = d.x0 + (rm.u0+rm.u1)/2; const yf = j===0 ? a - 0.04 : b + 0.04;
+          box(uc-ww/2, uc+ww/2, Math.min(yf, yf+0.06), Math.max(yf, yf+0.06), z0+0.95, z0+2.10, 0x9fc3d6); }));
+      }
+      box(0, W, a, b, z0 + h - 0.2, z0 + h, 0xa9a49c);
+    });
+  }
+  const Ht = N*h;
+  blocks.forEach(([a,b])=>{ box(0, W, a, a+0.12, Ht, Ht+1.10, 0xa9a49c); box(0, W, b-0.12, b, Ht, Ht+1.10, 0xa9a49c); box(0, 0.12, a, b, Ht, Ht+2.10, 0xa9a49c); box(W-0.12, W, a, b, Ht, Ht+2.10, 0xa9a49c); });
+  box(g.cx0, g.cx1, g.y1, g.y1 + c.Lc, 0, Ht + 2.6, 0xc47a55);
+  // ingreso
+  box(g.ing[0], g.ing[1], g.r - 0.05, g.r, 0, 2.4, 0x6b4a3a);
+  d3.tgt.set(0, Ht*0.45, 0); d3.dist = Math.max(30, Math.hypot(W, D, Ht)*1.6);
+  paint3D();
+}
+
+// ---------- Cuadros ----------
+function tables(g){
+  const v = g.v, c = g.c, lotA = g.W*g.D;
+  const rows = [];
+  rows.push(`<thead><tr><th>Piso</th><th class="n">Deptos</th><th class="n">Deptos m²</th><th class="n">Común m²</th><th class="n">Techado m²</th><th>Uso</th></tr></thead><tbody>`);
+  const deptA = g.depts.filter(d=>d.L.ok).reduce((s,d)=>s+d.area,0);
+  const front = g.depts.filter(d=>d.front&&d.L.ok).reduce((s,d)=>s+d.area,0);
+  const park1 = v.park==='frente' && g.park.n>0;
+  rows.push(`<tr><td>1.er piso</td><td class="n">${g.fl1}</td><td class="n">${f1(park1 ? deptA - front : deptA)}</td><td class="n">${f1(g.coreA + (g.ing[1]-g.ing[0])*g.Df)}</td><td class="n">${f1(g.fl1A)}</td><td>${park1 ? `Ingreso, ${g.park.n} estacionamientos al frente${g.fl1 ? ' y departamento' + (g.fl1>1?'s':'') + ' posterior' + (g.fl1>1?'es':'') : ''}` : 'Ingreso y departamentos'}</td></tr>`);
+  if(v.N > 1) rows.push(`<tr><td>Pisos 2 a ${v.N}</td><td class="n">${g.perFloor} × ${v.N-1}</td><td class="n">${f1(deptA)}</td><td class="n">${f1(g.coreA)}</td><td class="n">${f1(g.typA)} × ${v.N-1}</td><td>Piso típico</td></tr>`);
+  rows.push(`<tr class="tot"><td>Total</td><td class="n">${g.units}</td><td></td><td></td><td class="n">${f1(g.totA)}</td><td>Coef. de edificación ${f2(g.ceR)}${v.ce ? ' (máx. ' + f2(v.ce) + ')' : ''} · área libre ${f1(g.alP)} %</td></tr></tbody>`);
+  el('ca-pisos').innerHTML = rows.join('');
+  const dr = [`<thead><tr><th>Depto</th><th>Ubicación</th><th class="n">Área m²</th><th class="n">Dorm.</th><th class="n">Baños</th><th>Ambientes</th></tr></thead><tbody>`];
+  g.depts.forEach((d,k)=>{ if(!d.L.ok){ dr.push(`<tr><td>D${k+1}</td><td>${d.front?'Delantero':'Posterior'}</td><td class="n bad">—</td><td></td><td></td><td class="bad">No entra: ${esc(d.L.why||'')}</td></tr>`); return; }
+    const amb = d.L.rooms.filter(r=>r.k!=='pas'&&r.k!=='ing').map(r=> (r.k==='dorm' ? 'Dorm. ' + (r.i+1) : NAMES[r.k]) + ' ' + f1(r.a)).join(' · ');
+    const okA = d.area >= 40 && (!(v.dm3 && v.nd>=3) || d.area >= v.dm3);
+    dr.push(`<tr><td>D${k+1}</td><td>${d.front?'Delantero, a la calle':'Posterior, al patio'}${g.cols===2 ? (d.x0<0.01?' izquierdo':' derecho') : ''}</td><td class="n ${okA?'ok':'bad'}">${f1(d.area)}</td><td class="n">${d.L.nfit}</td><td class="n">${d.L.nb}</td><td>${amb}</td></tr>`); });
+  dr.push('</tbody>'); el('ca-deptos').innerHTML = dr.join('');
+  const bic = Math.ceil(g.units/3), res = g.hab*0.004*1000;
+  const prot = c.prot;
+  const dot = [`<thead><tr><th>Concepto</th><th class="n">Valor</th><th>Norma</th></tr></thead><tbody>`,
+    `<tr><td>Habitantes (densidad)</td><td class="n">${g.hab}</td><td>${g.pers} personas por departamento (A.020 art. 7) · ${Math.round(g.denR)} hab/ha${v.den?` (máx. ${v.den})`:''}</td></tr>`,
+    `<tr><td>Estacionamientos</td><td class="n">${g.park.n} / ${g.estReq}</td><td>Dados / exigidos (1 cada ${v.est || '—'} viviendas, certificado; A.020 art. 21)</td></tr>`,
+    `<tr><td>Bicicletas</td><td class="n">${bic}</td><td>1 cada 3 viviendas si la norma local no fija otra cosa (A.020 art. 21.3 c)</td></tr>`,
+    `<tr><td>Cuarto de basura</td><td class="n">${Math.ceil(res)} L/día</td><td>4 litros por habitante al día, con espacio para separar reciclables (A.020 art. 26)</td></tr>`,
+    `<tr><td>Ascensor</td><td class="n">${c.elev?'Sí':'No'}</td><td>Último piso a ${f2(c.hTop)} m del ingreso (A.020 art. 16)</td></tr>`,
+    `<tr><td>Escalera</td><td class="n">${prot?'Protegida':'Integrada'}</td><td>${prot?'Más de 15 m: con vestíbulo previo ventilado o abierta':'Hasta 15 m: integrada, recorrido ≤ 56 m (' + f1(g.rec) + ' m)'} (A.020 art. 27.2, cuadro 9)</td></tr>`,
+    `<tr><td>Contra incendio</td><td colspan="2">Señalética e iluminación de emergencia en escalera y áreas comunes; ${prot ? 'detectores conectados a central de alarma, extintores en cada salida, red de agua contra incendio con válvula siamesa' : 'detector de humo en el pasillo de cada departamento y extintores en áreas comunes'} (A.020 art. 27.2, cuadro 9). Muros entre departamentos y hacia el hall con 60 min de resistencia al fuego (A.020 art. 19.4).</td></tr>`,
+    `<tr><td>Medidores</td><td colspan="2">Agua y luz por departamento; los de luz y gas pueden ir en áreas comunes o en el retiro (A.020 art. 25, A.010 art. 8.3 g).</td></tr>`,
+    '</tbody>'];
+  el('ca-dot').innerHTML = dot.join('');
+}
+function parTables(v){
+  const W = v.W, D = v.D;
+  const out = [];
+  ZONAS.filter(z=>z.url).forEach(z=>{
+    const row = zoneRow(z, W, D);
+    out.push(`<h3>${esc(z.name)}</h3><p class="hint" style="margin:0 0 6px">${esc(z.ord)}. Distritos: ${esc(z.dist)}. <a href="${z.url}" target="_blank" rel="noopener">Ver documento ↗</a>${z.url2 ? ` · <a href="${z.url2}" target="_blank" rel="noopener">Ord. 1015-MML ↗</a>` : ''}</p>`);
+    out.push(`<div class="ca-wrap"><table class="ca"><thead><tr><th>Uso</th><th class="n">Lote mín. m²</th><th class="n">Frente mín. m</th><th class="n">Pisos</th><th class="n">Frente a parque/av.</th><th class="n">Área libre</th><th class="n">Estac.</th><th class="n">Coef.</th></tr></thead><tbody>`);
+    if(z.uni) out.push(`<tr><td>Unifamiliar</td><td class="n">${z.uni.lote}</td><td class="n">${z.uni.fr}</td><td class="n">${z.uni.p}</td><td class="n">—</td><td class="n">${z.uni.al} %</td><td class="n">—</td><td class="n">${z.uni.ce||'—'}</td></tr>`);
+    z.rows.forEach(r=> out.push(`<tr class="${r===row && v.zona.id===z.id ? 'sel' : ''}"><td>Multifamiliar</td><td class="n">${r.lote}</td><td class="n">${r.fr}</td><td class="n">${r.ar ? '1.5 (a+r)' : r.p}</td><td class="n">${r.ar ? 'hasta ' + r.pa : r.pa}</td><td class="n">${r.al} %</td><td class="n">1 c/${r.est} viv</td><td class="n">${r.ce||'—'}</td></tr>`));
+    out.push(`</tbody></table></div><p class="hint" style="margin:6px 0 0">${esc(z.notas)}${z.den ? ' Densidad neta ' + z.den + ' hab/ha.' : ''}</p>`);
+  });
+  out.push(`<p class="note">Miraflores (Ord. 920-MML, según la presentación de la municipalidad al Congreso en 2024): RDM con lote de 300 m², frente de 10 m, 5 a 8 pisos y 35 % de área libre; RDA con lote de 600 m², frente de 15 m, 11 a 12 pisos y 40 %. El texto de esa fuente se lee mal, por eso no está como ejemplo. <a href="https://www.congreso.gob.pe/Docs/comisiones2024/Vivienda/files/presentaciones/5_so_m.d._de_miraflores.pdf" target="_blank" rel="noopener">Fuente ↗</a></p>`);
+  el('par-tbl').innerHTML = out.join('');
+  // cotejo unifamiliar: lote 6 × 15, 48.8 m² en un piso (2 pisos al ampliar)
+  const U = {lote:90, fr:6, p:2, t1:48.8};
+  const ur = [`<thead><tr><th>Certificado</th><th>Lote (90 m²)</th><th>Frente (6.00 m)</th><th>Pisos (1, ampliable a 2)</th><th>Área libre (${f1((U.lote-U.t1)/U.lote*100)} %)</th><th>Coef. (${f2(U.t1*2/U.lote)} con 2 pisos)</th></tr></thead><tbody>`];
+  ZONAS.filter(z=>z.uni).forEach(z=>{ const u = z.uni, al = (U.lote-U.t1)/U.lote*100;
+    const c1 = U.lote >= u.lote ? '<span class="ok">cumple</span>' : `<span class="warn">menor que ${u.lote} m²</span>`;
+    const c2 = U.fr >= u.fr ? '<span class="ok">cumple</span>' : `<span class="warn">menor que ${u.fr} m</span>`;
+    ur.push(`<tr><td>${esc(z.name.split('·')[0])} ${esc(z.zona)}</td><td>${c1}</td><td>${c2}</td><td><span class="ok">cumple</span> (máx. ${u.p})</td><td>${al >= u.al ? '<span class="ok">cumple</span>' : '<span class="bad">no cumple</span>'} (mín. ${u.al} %)</td><td>${u.ce ? (U.t1*2/U.lote <= u.ce ? `<span class="ok">cumple</span> (máx. ${u.ce})` : '<span class="bad">no</span>') : '—'}</td></tr>`); });
+  ur.push('</tbody>'); el('uni-tbl').innerHTML = ur.join('');
+  el('uni-note').innerHTML = `La casa de 6.00 × 15.00 m cumple altura, área libre y coeficiente en los tres certificados, porque es chica para el lote. Lo que choca es el <b>lote normativo</b>: en Lima ATN I (Ate) el lote de 90 m² es justo el mínimo; en Lima ATN II (Surquillo, Comas) el mínimo es 120 m², aunque la nota b permite la unifamiliar en lotes de más de 90 m²; en Arequipa el frente mínimo es 8.00 m, salvo en lotes ya existentes de áreas consolidadas. Es decir: el lote de 6 × 15 que usa el estudio vale para lotes existentes, no para lotizar uno nuevo. ${esc(ZONAS[0].uni.nota)}`;
+}
+
+// ---------- Render ----------
+let floorView = 't';
+function render(){
+  const v = read();
+  const pm = v.pmax;
+  el('np').max = Math.max(20, pm); el('np-o').textContent = v.N + (v.N===1 ? ' piso' : ' pisos');
+  el('np-h').innerHTML = `Tope del certificado: <b>${pm}</b> pisos (${f2(pm*Math.min(3,v.h))} m). El control llega a 20 para ver qué pasa más arriba: el pozo de luz crece con la altura y se come los departamentos.`;
+  el('hp-o').textContent = f2(v.h) + ' m';
+  const g = generate(v); lastG = g;
+  el('plan').innerHTML = planSVG(g, floorView === '1');
+  el('plan-cap').textContent = floorView === '1' ? 'Ingreso, estacionamientos y departamentos del 1.er piso' : `Pisos ${v.N>1?'2 a '+v.N:'1'}: ${g.perFloor} departamento${g.perFloor>1?'s':''} por piso`;
+  el('plan-note').innerHTML = g.hint2 || '';
+  // verificaciones
+  const grp = {}; g.checks.forEach(x=>{ (grp[x.grp] = grp[x.grp] || []).push(x); });
+  el('checks').innerHTML = Object.entries(grp).map(([k, xs])=> `<div class="group">${k}</div><ul>${xs.map(x=>`<li><span class="pill ${x.s}">${x.s==='ok'?'cumple':x.s==='warn'?'aviso':'no'}</span><span class="t">${x.t}</span><span class="d">${x.d}</span></li>`).join('')}</ul>`).join('');
+  const nOk = g.checks.filter(x=>x.s==='ok').length, nW = g.checks.filter(x=>x.s==='warn').length, nB = g.checks.filter(x=>x.s==='bad').length;
+  const K = (k, val) => `<div class="kpi"><div class="k">${k}</div><div class="v">${val}</div></div>`;
+  el('kpis').innerHTML = K('Departamentos', `${g.units} <small>${g.perFloor}/piso · ${g.depts.filter(d=>d.L.ok).length ? Math.min(...g.depts.filter(d=>d.L.ok).map(d=>d.L.nfit)) : 0} dorm.</small>`) + K('Altura', `${v.N} <small>pisos · ${f2(v.N*v.h)} m</small>`) + K('Área techada', `${Math.round(g.totA)} <small>m² · coef. ${f2(g.ceR)}</small>`) + K('Área libre', `${f1(g.alP)} <small>% (mín. ${v.al})</small>`) + K('Estacionamientos', `${g.park.n} <small>de ${g.estReq}</small>`) + K('Verificaciones', `<small style="color:var(--ok)">${nOk} cumplen</small> ${nW ? `<small style="color:var(--warn)">${nW} aviso${nW>1?'s':''}</small>` : ''} ${nB ? `<small style="color:var(--bad)">${nB} no</small>` : ''}`);
+  el('corte').innerHTML = corteSVG(g);
+  tables(g); parTables(v);
+  if(d3 && !el('tab-cor').hidden) build3D(g);
+}
+
+// ---------- Eventos ----------
+zsel.addEventListener('change', ()=>{ applyZone(false); render(); });
+['fr','fo','rf','av','via','hp'].forEach(id=> el(id).addEventListener('input', ()=>{ fillZone(id==='av' || id==='fr' || id==='fo' || id==='via' || id==='rf'); render(); }));
+['pmax','al','ce','den','est','dm3'].forEach(id=> el(id).addEventListener('input', ()=>{ userEdited.add(id); if(id==='pmax') el('np').value = Math.min(+el('pmax').value||1, 20); render(); }));
+['np','dpp','nd','park','comp'].forEach(id=> el(id).addEventListener('input', render));
+document.querySelectorAll('[data-fl]').forEach(b=> b.addEventListener('click', ()=>{ floorView = b.dataset.fl; document.querySelectorAll('[data-fl]').forEach(x=>x.classList.toggle('on', x===b)); render(); }));
+document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
+const TABS = ['dis','cor','are','par','reg','cam'];
+function showTab(k){ TABS.forEach(t=>{ el('tab-'+t).hidden = t!==k; }); document.querySelectorAll('[data-tab]').forEach(b=>{ b.classList.toggle('on', b.dataset.tab===k); b.setAttribute('aria-selected', b.dataset.tab===k); }); if(k==='cor') open3D(); try{ history.replaceState(null, '', '#' + k); }catch(e){} }
+document.querySelectorAll('[data-tab]').forEach(b=> b.addEventListener('click', ()=> showTab(b.dataset.tab)));
+el('hp').value = 2.70; zsel.value = 'atn2-rdm'; applyZone(false); render();
+const h0 = (location.hash||'').slice(1); if(TABS.includes(h0)) showTab(h0);
+})();
+
+// Citas del RNE → enlaces a rne.html (igual que en la vivienda unifamiliar)
+(function(){
+  const RNE_URL = (/github\.io$/.test(location.hostname) || location.protocol === 'file:' || location.hostname === 'localhost') ? 'rne.html' : 'https://gonmor4000.github.io/verificador-vivienda-minima/rne.html';
+  const RE = /A\.(0[1-9]0|1[0-3]0)(?:( art\. ?)(\d+(?:\.\d+)*)(?: ([a-df-np-xz])(?![\wáéíóúñ]))?((?:(?: y |, )\d+(?:\.\d+)*(?: [a-df-np-xz](?![\wáéíóúñ]))?)*))?/g;
+  const SUB = /((?: y |, ))(\d+(?:\.\d+)*)(?: ([a-df-np-xz])(?![\wáéíóúñ]))?/g;
+  const href = (n, num, lit) => RNE_URL + '#A' + n + (num ? '-art-' + num + (lit ? '-' + lit : '') : '');
+  const a = (h, t) => `<a class="rne" href="${h}" target="_blank" rel="noopener" title="Ver en el RNE">${t}</a>`;
+  const esc = t => t.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  function conv(text){
+    return esc(text).replace(RE, (m, n, art, num, lit, rest) => {
+      if(!art) return a(href(n), m);
+      let out = a(href(n, num, lit), 'A.' + n + art + num + (lit ? ' ' + lit : ''));
+      if(rest) out += rest.replace(SUB, (mm, sep, num2, lit2) => sep + a(href(n, num2, lit2), num2 + (lit2 ? ' ' + lit2 : '')));
+      return out;
+    });
+  }
+  const SKIP = new Set(['A','SCRIPT','STYLE','TEXTAREA','INPUT','SELECT','OPTION','BUTTON','svg','SVG','CANVAS','TITLE']);
+  function link(root){
+    if(!root || root.nodeType !== 1 || root.closest && root.closest('svg, a, button, textarea')) return;
+    const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {acceptNode(t){
+      for(let e = t.parentNode; e && e !== root.parentNode; e = e.parentNode) if(SKIP.has(e.nodeName) || e.nodeName === 'svg') return NodeFilter.FILTER_REJECT;
+      return /A\.(0[1-9]0|1[0-3]0)/.test(t.nodeValue) ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT; }});
+    const list = []; while(w.nextNode()) list.push(w.currentNode);
+    for(const t of list){ const span = document.createElement('span'); span.innerHTML = conv(t.nodeValue);
+      const frag = document.createDocumentFragment(); while(span.firstChild) frag.appendChild(span.firstChild); t.parentNode.replaceChild(frag, t); }
+  }
+  document.querySelectorAll('a.rne-home').forEach(x => x.href = RNE_URL);
+  link(document.body);
+  let pend = new Set(), raf = 0;
+  const obs = new MutationObserver(ms => { for(const m of ms) if(m.target.nodeType === 1 && !m.target.closest('svg')) pend.add(m.target);
+    if(!raf) raf = requestAnimationFrame(() => { raf = 0; const p = pend; pend = new Set(); obs.disconnect(); p.forEach(link); obs.observe(document.body, {childList:true, subtree:true}); }); });
+  obs.observe(document.body, {childList:true, subtree:true});
+})();
+</script>
+</body>
+</html>

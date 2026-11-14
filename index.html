@@ -175,6 +175,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
       <button type="button" id="p-chica">Lote de 5.50 m</button>
     </div>
     <div class="upd">
+      <a href="multifamiliar.html">Vivienda multifamiliar →</a>
       <span class="ver" id="ver"></span>
       <button type="button" id="upd-btn">Actualizar</button>
       <span id="upd-msg" aria-live="polite"></span>
@@ -398,6 +399,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span>Nuevo <b>verificador de vivienda multifamiliar</b> (enlace arriba a la derecha): con la zonificación de certificados de parámetros reales (Lima ATN I y II, Arequipa), el lote y el programa arma el edificio con núcleo de escalera de 1.20 m y ascensor, pozos de luz calculados por la A.020 art. 11.4 b, departamentos amueblados y estacionamientos; tiene corte, 3D, cuadro de áreas, artículos del RNE para multifamiliar y un cotejo de esta casa unifamiliar con esos certificados.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>RNE consultable: revisado en internet que los PDF oficiales son la <b>última versión aprobada</b> de cada norma. La A.020 y la A.130 llevan un aviso de que hay un proyecto de cambio en consulta (RM 214-2025 y RM 264-2026), todavía sin aprobar.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>RNE consultable con los <b>PDF oficiales</b> de la A.010 a la A.130: cada artículo tiene un botón «PDF oficial p. N» que abre la página exacta de la norma publicada. Rearmados como tablas el cuadro 27 de la A.070 (requisitos de seguridad) y las tablas de almacenes de la A.130 (01, 03, 04, 05 y 06); los cuadros 21, 22 y 26 de la A.070 corregidos contra el original.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>RNE consultable: <b>tablas 1, 2 y 3 de la A.130</b> (protección al fuego en elementos estructurales, pisos y techos, paredes y tabiques, arts. 47 a 49), transcritas de la separata impresa como tablas.</span></li>
@@ -2781,7 +2783,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14c';
+const APP_VERSION = '2026-11-14d';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
