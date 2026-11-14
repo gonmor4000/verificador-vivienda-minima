@@ -528,6 +528,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Escalera de caracol metálica</b>, como las de taller: pasos trapezoidales de plancha soldados a un tubo central, baranda helicoidal con un parante por paso, separada 0.15 m del muro y con un descanso metálico de llegada con baranda. En la planta los pasos se dibujan como trapecios; en Materiales ya no se cuenta concreto para ella (se cotiza aparte con el taller).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Dos preguntas nuevas en el tablón de <b>Preguntas de normativa</b>: quién decide el área libre mínima de un lote y cuál es el tamaño mínimo y típico de un lote en Lima.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Terreno en los planos</b>: la planta de Diseño Pro dibuja ahora el lote completo (límite, vereda, retiro frontal, patio y la línea del retiro posterior mínimo) con la cadena de cotas del fondo (retiro, construido, patio) y el fondo y el frente totales del lote. La planta de Diseño lleva también las cotas totales del terreno: frente abajo y fondo a la derecha.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Selector de <b>lote típico</b> en Terreno: 6 × 15 y 6 × 20 (mínimos de densidad media en Lima según el área de tratamiento), 7 × 20 (lotización popular), 8 × 20 y 10 × 20 (el lote angosto de 5.50 m sigue en su botón). Pone frente y fondo y la planta se regenera.</span></li>
@@ -1478,18 +1479,20 @@ function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2, nt){
     st.need = 0.92 + B + B;
   } else if(type === 'caracol'){
     // diámetro 1.60: pasos de 0.25 en la línea de huella, a 0.50 del eje
-    const R = 0.80, a = 0.25/0.50, n = nR - 1;
+    // metálica, como las de taller: pasos trapezoidales de plancha soldados a un tubo central, baranda helicoidal con un parante por paso,
+    // separada del muro (holgura de 0.15) y un descanso metálico de llegada con baranda (Gonzalo, 14 nov 2026)
+    const R = 0.80, a = 0.25/0.50, n = nR - 1, rin = 0.09, gap = 0.15;
     let cx, side;
     if(lx0 - 2*R >= 0.05){ cx = lx0 - R; side = 1; } else if(lx1 + 2*R <= W - 0.05){ cx = lx1 + R; side = -1; } else return null;
-    const cy = y0 + R, aEnd = side > 0 ? 0 : Math.PI, dir = side > 0 ? 1 : -1; // el último paso apunta al descanso
+    const cy = y0 + R + gap, aEnd = side > 0 ? 0 : Math.PI, dir = side > 0 ? 1 : -1; // el último paso apunta al descanso
+    const at = (rr, t) => [cx + rr*Math.cos(t), cy + rr*Math.sin(t)];
     for(let j=0;j<n;j++){
-      const t0 = aEnd - dir*(n-j)*a, t1 = t0 + dir*a, P = [[cx + 0.08*Math.cos(t0), cy + 0.08*Math.sin(t0)]];
-      for(let i=0;i<=4;i++){ const t = t0 + (t1-t0)*i/4; P.push([cx + R*Math.cos(t), cy + R*Math.sin(t)]); }
-      P.push([cx + 0.08*Math.cos(t1), cy + 0.08*Math.sin(t1)]);
-      st.treads.push({poly:P, z:(j+1)*cr, sec:{cx, cy, t0, t1, R}});
+      const t0 = aEnd - dir*(n-j)*a, t1 = t0 + dir*a;
+      st.treads.push({poly:[at(rin,t0), at(R,t0), at(R,t1), at(rin,t1)], z:(j+1)*cr, sec:{cx, cy, t0, t1, R}});
     }
+    st.metal = true; st.gap = gap;
     for(let i=0;i<=24;i++){ const t = aEnd - dir*n*a*(1 - i/24); st.path.push([cx + 0.5*Math.cos(t), cy + 0.5*Math.sin(t)]); }
-    st.maxT = n; st.spiral = {cx, cy, R}; st.need = 0.02 + 2*R + 0.60;
+    st.maxT = n; st.spiral = {cx, cy, R}; st.need = 0.02 + gap + 2*R + 0.60;
   }
   const xs = [], ys = [];
   st.treads.forEach(t=>t.poly.forEach(([x,y])=>{ xs.push(x); ys.push(y); }));
@@ -2039,14 +2042,25 @@ function houseBoxes(r, o){
     st.treads.forEach(t=>{
       const z1 = t.z, z0 = Math.max(0, t.z - 0.30), xs = t.poly.map(q=>q[0]), ys = t.poly.map(q=>q[1]);
       const bb = {x0:Math.min(...xs), x1:Math.max(...xs), y0:Math.min(...ys), y1:Math.max(...ys)};
-      if(t.sec){ const {cx, cy, t0, t1, R} = t.sec, am = (t0+t1)/2, wid = Math.abs(t1-t0)*R*0.62;
-        out.push(Object.assign({z0: t.z - 0.05, z1, m:'stair', e:true, rot:{cx: cx + Math.cos(am)*(R+0.04)/2, cy: cy + Math.sin(am)*(R+0.04)/2, ang: am, len: R - 0.04, wid}}, bb));
+      if(t.sec){ // paso metálico trapezoidal, parante de la baranda en el borde exterior
+        out.push(Object.assign({z0: t.z - 0.04, z1, m:'rail', e:true, poly:t.poly, esc:true}, bb));
+        const {cx, cy, t0, t1, R} = t.sec, am = (t0+t1)/2, px = cx + (R-0.04)*Math.cos(am), py = cy + (R-0.04)*Math.sin(am);
+        out.push({seg:[[px,py,z1],[px,py,z1+0.90]], r:0.012, m:'rail', esc:true, x0:px, x1:px, y0:py, y1:py, z0:z1, z1:z1+0.9});
       } else B(bb.x0, bb.x1, bb.y0, bb.y1, z0, z1, 'stair');
     });
+    if(st.metal){ // pasamanos helicoidal, tubo central y descanso metálico con baranda en sus lados libres
+      const T_ = st.treads.map(t=>{ const {cx, cy, t0, t1, R} = t.sec, am = (t0+t1)/2; return [cx + (R-0.04)*Math.cos(am), cy + (R-0.04)*Math.sin(am), t.z + 0.90]; });
+      for(let i=0;i<T_.length-1;i++) out.push({seg:[T_[i], T_[i+1]], r:0.022, m:'rail', esc:true, x0:T_[i][0], x1:T_[i][0], y0:T_[i][1], y1:T_[i][1], z0:0, z1:0});
+      const sp = st.spiral; out.push({seg:[[sp.cx,sp.cy,0],[sp.cx,sp.cy,st.H2+0.90]], r:0.055, m:'rail', esc:true, x0:sp.cx, x1:sp.cx, y0:sp.cy, y1:sp.cy, z0:0, z1:0});
+      const l = st.lands[0], zt = l.z + 0.90, sideX = sp.cx < l.x0 ? l.x1 : l.x0;
+      out.push({x0:l.x0, x1:l.x1, y0:l.y0, y1:l.y1, z0:l.z - 0.05, z1:l.z, m:'rail', e:true, esc:true});
+      const rails = [[[l.x0,l.y1],[l.x1,l.y1]], [[sideX,l.y0],[sideX,l.y1]]];
+      rails.forEach(([[ax,ay],[bx,by]])=>{ out.push({seg:[[ax,ay,zt],[bx,by,zt]], r:0.02, m:'rail', esc:true, x0:ax, x1:ax, y0:ay, y1:ay, z0:0, z1:0});
+        const L = Math.hypot(bx-ax, by-ay), k = Math.max(1, Math.round(L/0.12)); for(let i=0;i<=k;i++){ const x = ax+(bx-ax)*i/k, y = ay+(by-ay)*i/k; out.push({seg:[[x,y,l.z],[x,y,zt]], r:0.008, m:'rail', esc:true, x0:x, x1:x, y0:y, y1:y, z0:0, z1:0}); } });
+    } else
     st.lands.forEach(l=>{ B(l.x0, l.x1, l.y0, l.y1, l.z - 0.15, l.z, 'stair');
       const px0 = (l.x0+l.x1)/2 >= (st.lx0+st.lx1)/2 - 1e-6 ? l.x1 - 0.15 : l.x0;
       B(px0, px0 + 0.15, l.y1-0.15, l.y1, 0, l.z-0.15, 'conc'); });
-    if(st.spiral) B(st.spiral.cx-0.06, st.spiral.cx+0.06, st.spiral.cy-0.06, st.spiral.cy+0.06, 0, st.H2 + 0.9, 'rail');
   }
   return out;
 }
@@ -2083,6 +2097,11 @@ function build3D(r){
   const lotLine = new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([[0,0],[L,0],[L,F],[0,F]].map(([x,y])=>new THREE.Vector3(x, 0.005, -y))), new THREE.LineDashedMaterial({color:0x6b655c, dashSize:0.4, gapSize:0.2}));
   lotLine.computeLineDistances(); grp.add(lotLine);
   houseBoxes(r, {built2, noRoof}).map(b=>pjBox(b, H2, r)).filter(Boolean).concat(pjRebar(r, built2, H2)).forEach(b=>{
+    if(b.seg){ const [[ax,ay,az],[bx,by,bz]] = b.seg, A_ = new THREE.Vector3(ox+ax, az, -(oy+ay)), B_ = new THREE.Vector3(ox+bx, bz, -(oy+by)), d = B_.clone().sub(A_), L = d.length(); if(L < 1e-4) return;
+      const me = new THREE.Mesh(new THREE.CylinderGeometry(b.r, b.r, L, 8), M[b.m]); me.position.copy(A_.clone().add(B_).multiplyScalar(0.5)); me.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0), d.normalize()); grp.add(me); return; }
+    if(b.poly){ const sh = new THREE.Shape(); b.poly.forEach(([x,y],i)=> i ? sh.lineTo(x,y) : sh.moveTo(x,y));
+      const g = new THREE.ExtrudeGeometry(sh, {depth: b.z1-b.z0, bevelEnabled:false}), me = new THREE.Mesh(g, M[b.m]); me.rotation.x = -Math.PI/2; me.position.set(ox, b.z0, -oy); grp.add(me);
+      if(b.e){ const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), edgeM); l.rotation.x = -Math.PI/2; l.position.copy(me.position); grp.add(l); } return; }
     if(!b.rot) return box(b.x0, b.x1, b.y0, b.y1, b.z0, b.z1, M[b.m], b.e);
     const g = new THREE.BoxGeometry(b.rot.len, b.z1-b.z0, b.rot.wid), me = new THREE.Mesh(g, M[b.m]);
     me.position.set(ox + b.rot.cx, (b.z0+b.z1)/2, -(oy + b.rot.cy)); me.rotation.y = b.rot.ang; grp.add(me);
@@ -2844,7 +2863,9 @@ function metrado(r){
     P.push({et:2, id:'2.1', n: port ? 'Columnas y tabiques' : 'Muros y columnas', q:muro(wallNet1*s2, bricks1*s2, col1*s2, Math.ceil(nC*s2)), notas:[`${f1(wallNet1*s2)} m² de muro neto`, `${Math.ceil(nC*s2)} columnas`]});
     P.push({et:2, id:'2.2', n:'Vigas y techo', q:t2.o, notas:[`${f1(t2.L)} m de vigas`, `Losa aligerada: ${f1(r.gross2)} m²`]});
     const st = r.stair;
-    if(st){
+    if(st && st.metal){
+      P.push({et:2, id:'2.3', n:'Escalera de caracol metálica', q:{}, notas:[`${st.nR} contrapasos de ${f2(st.cr)} m, pasos de plancha, tubo central, baranda y descanso metálico: la hace un taller de metalmecánica y se cotiza aparte (no lleva concreto)`]});
+    } else if(st){
       const vE = st.vol;
       const o = add({}, concF(vE)); steel(o, 'a38', vE*90);
       P.push({et:2, id:'2.3', n:'Escalera ' + ESC_N[st.type], q:o, notas:[`${st.nR} contrapasos de ${f2(st.cr)} m, ${st.lands.length > 1 ? st.lands.length + ' descansos' : 'con descanso'}: ${f2(vE)} m³`]});
@@ -2911,7 +2932,7 @@ el('mat-copy').addEventListener('click', ()=>{
 
 // ---------- Etapas de crecimiento y proyección de la casa en el tiempo ----------
 // Precios unitarios de referencia (S/, Lima 2026, con mano de obra salvo donde se dice). Supuestos de anteproyecto.
-const ET_R = {mo:0.75, bano:2800, coc:900, elec:70, carp:60, pcalle:1200, pulido:30, tarr:28, pint:10, cer:65, ench:70, enchB:18, enchC:4, puerta:550, mcoc:2000, terma:600, fach:55, azot:45, parap:120};
+const ET_R = {mo:0.75, bano:2800, coc:900, elec:70, carp:60, pcalle:1200, pulido:30, tarr:28, pint:10, cer:65, ench:70, enchB:18, enchC:4, puerta:550, mcoc:2000, terma:600, fach:55, azot:45, parap:120, escM:3500};
 const ET_N = {1:'Casco habitable', 2:'Acabados del 1.er piso', 3:'Casco del 2.º piso', 4:'Acabados del 2.º piso, fachada y azotea', 5:'Diversificación'};
 const ET_S = {1:'Casco', 2:'Acabados', 3:'2.º piso', 4:'Terminada', 5:'Crece'};
 let pj = (()=>{ try { const o = JSON.parse(localStorage.getItem('vvm-proy') || 'null'); if(o && o.st >= 1 && o.st <= 5) return {on:!!o.on, st:o.st}; } catch(e){} return {on:false, st:1}; })();
@@ -2957,6 +2978,7 @@ function etapasCalc(r){
       ...(b2 ? [['Agua y desagüe del baño 2 con aparatos básicos', R.bano*b2]] : []),
       ['Luz empotrada del 2.º piso', R.elec*A2],
       ['Ventanas con vidrio', R.carp*A2],
+      ...(r.stair && r.stair.metal ? [['Escalera de caracol metálica con baranda y descanso (taller, instalada)', R.escM]] : []),
       ['Piso de cemento pulido', R.pulido*u2]],
       inc:[`Escalera ${r.stair ? ESC_N[r.stair.type] : 'de concreto'} (A.010 art. 23: pasos de 0.25, contrapasos de hasta 0.18)`, `Muros, columnas y techo del 2.º piso${nd2 ? `, con ${nd2} dormitorio${nd2>1?'s':''}` : ''}${b2 ? ' y el baño 2' : ''}`, 'Instalaciones empotradas y ventanas', 'Piso de cemento pulido'],
       no:['Tarrajeo, pintura, cerámicos y puertas interiores del 2.º piso', 'Fachada'],
@@ -3009,7 +3031,7 @@ function etapas(r){
   ].map(([t,d,c,n])=>`<div><h3>${t}</h3><p>${d}</p><p><b>Costo aproximado:</b> ${c}</p><p class="hint">${n}</p></div>`).join('');
   el('et-how').innerHTML = [
     'Los materiales del casco (etapas 1 y 3) son los de la pestaña <b>Materiales</b>, con tus precios. La mano de obra del casco se toma como el 75 % de esos materiales (maestro y peón, unos 3 a 4 meses para el 1.er piso).',
-    `Instalaciones: S/ ${nf(ET_R.bano)} por baño con aparatos básicos, S/ ${nf(ET_R.coc)} cocina y lavandería, S/ ${ET_R.elec} por m² de instalación eléctrica. Puerta de calle S/ ${nf(ET_R.pcalle)} y ventanas S/ ${ET_R.carp} por m² techado. Piso pulido S/ ${ET_R.pulido}/m².`,
+    `Instalaciones: S/ ${nf(ET_R.bano)} por baño con aparatos básicos, S/ ${nf(ET_R.coc)} cocina y lavandería, S/ ${ET_R.elec} por m² de instalación eléctrica. Puerta de calle S/ ${nf(ET_R.pcalle)} y ventanas S/ ${ET_R.carp} por m² techado. Piso pulido S/ ${ET_R.pulido}/m². Escalera de caracol metálica de taller, instalada: S/ ${nf(ET_R.escM)} (estimado de referencia, por cotizar).`,
     `Acabados, con mano de obra: tarrajeo S/ ${ET_R.tarr}/m² y pintura S/ ${ET_R.pint}/m² (muros por 1.6 caras más el cielo raso), cerámico S/ ${ET_R.cer}/m², enchape S/ ${ET_R.ench}/m² (${ET_R.enchB} m² por baño y ${ET_R.enchC} en la cocina), puerta interior S/ ${ET_R.puerta}, mueble de cocina S/ ${nf(ET_R.mcoc)}, terma S/ ${ET_R.terma}.`,
     `Fachada S/ ${ET_R.fach}/m² (frente por la altura de los dos pisos y el parapeto), azotea S/ ${ET_R.azot}/m² y parapetos o barandas S/ ${ET_R.parap} por metro.`,
     'Meses de ahorro = costo de la etapa ÷ ahorro mensual. Meses de obra: el 1.er piso a unos 14 m² por mes de casco y 32 m² por mes de acabados; el 2.º piso a 16 y 25 m² por mes.',
@@ -3046,7 +3068,7 @@ function pjBox(b, H2, r){
   if(!pj.on) return b;
   const st = pj.st, upper = b.z0 >= H2 - 0.01;
   // antes de la etapa 3, si el plano tiene 2.º piso, el techo queda libre: sin parapetos de azotea ni escalera
-  if(st < 3 && r && r.gross2 > 0 && ((upper && b.m !== 'slab') || b.m === 'stair')) return null;
+  if(st < 3 && r && r.gross2 > 0 && ((upper && b.m !== 'slab') || b.m === 'stair' || b.esc)) return null;
   const casco = st===1 || ((st===2 || st===3) && upper);
   if(!casco) return b;
   const m = b.m==='wall' || b.m==='tab' ? 'brick' : b.m==='floor' || b.m==='wet' ? 'cem' : b.m;
@@ -3233,7 +3255,7 @@ function bindProCuts(){
 function proSection(r, axis, pos, look, title){
   const v = r.v, W = r.W, D = r.D, e = r.hL || 0.20, H2 = H + e, built2 = r.gross2 > 0 && !!r.up;
   const L = Math.max(v.lote, W + (v.med?0:T)), F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0, v.vd), ox = v.med ? 0 : T/2, oy = v.rf + T/2;
-  const bx = houseBoxes(r, {built2, noRoof:false}).filter(b=> b.m !== 'floor' && b.m !== 'wet');
+  const bx = houseBoxes(r, {built2, noRoof:false}).filter(b=> !b.seg && b.m !== 'floor' && b.m !== 'wet');
   // cimientos bajo los muros del 1.er piso
   G3.f1.forEach(w=>{ if(w.kind !== 'wall') return; const hor = Math.abs(w.y2-w.y1) < 1e-6, a0 = hor ? Math.min(w.x1,w.x2) : Math.min(w.y1,w.y2), a1 = hor ? Math.max(w.x1,w.x2) : Math.max(w.y1,w.y2);
     const an = v.sis==='portante' ? r.cim.an : 0.40, zb = v.sis==='portante' ? -r.cim.za : -0.70;
@@ -3530,7 +3552,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14q';
+const APP_VERSION = '2026-11-14r';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
