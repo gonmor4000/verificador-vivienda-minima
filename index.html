@@ -455,6 +455,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Escalera automática</b> (nueva opción por defecto): prueba la de un tramo, en U, en L y de caracol y usa la primera que entra en el patio. Si eliges una que no entra, se usa otra que sí y la verificación lo dice. En planta escalonada, el tramo puede bajar por el <b>patio del escalón</b>, pegado al muro del eje B, y casi no ocupa el retiro posterior. Si ninguna entra, la verificación dice cuánto patio pide cada una y las salidas: más patio, un escalón más hondo o la escalera en el retiro frontal (A.010 art. 8.3 l).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: <b>plantas PREVI redibujadas en detalle</b> en 10 proyectos (Frías, Arnao, Stirling, Svenssons, Atelier 5, Ohl, Correa, Kikutake-Maki-Kurokawa y la propuesta española): muros con sus vanos, muebles, números de recinto con su leyenda, patios con su forma real, vacíos marcados con X y escala gráfica de 2 m. Todas las plantas de una ficha a la misma escala. Son redibujos propios revisados contra los planos de las fuentes.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Nueva pestaña <b>Etapas</b> y botón <b>«Proyección en el tiempo»</b>. La casa se construye en 5 etapas: 1 casco habitable (estructura, baño y cocina con instalaciones, sin acabados), 2 acabados del 1.er piso, 3 casco del 2.º piso con escalera, 4 acabados del 2.º piso, fachada y azotea, y 5 diversificación (departamento independiente, tienda o 3.er piso, con lo que pide la norma). Cada etapa dice qué incluye, su costo por partida calculado con la casa del plano y los meses de ahorro y de obra. Con el botón, la planta y el 3D muestran la casa al final de cada etapa (ladrillo visto, fierros de empalme, 2.º piso por construir). Materiales usa la misma numeración (casco del 2.º piso = etapa 3).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Planta escalonada</b>: cada crujía tiene su propio fondo. El tirador verde del muro posterior del ala de dormitorios la acorta o alarga por su cuenta (control «Crujía de dormitorios más corta»), y el del fondo de la sala-cocina mueve solo esa crujía. Detrás del dormitorio 2 queda un patio que ilumina su ventana. Lo siguen el 2.º piso, el 3D, los cortes y ejes de Diseño Pro, el cuadro de áreas y el metrado. Solo en plantas de dos crujías.</span></li>
@@ -516,7 +517,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
       <input type="hidden" id="pl" value="uno">
       <div class="chk"><input type="checkbox" id="ter"><label for="ter">Terraza<br><span class="hint">En el 2.º piso sobre el dormitorio 2 o, si no, azotea transitable sobre el techo.</span></label></div>
       <div class="chk"><input type="checkbox" id="vol"><label for="vol">Volado hacia la calle<br><span class="hint">El 2.º piso sale 0.50 m sobre el retiro frontal (A.010 art. 13).</span></label></div>
-      <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
+      <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="auto">Automática: la que entre en el patio</option><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
       <div class="chk"><input type="checkbox" id="pmr"><label for="pmr">Hacer la vivienda accesible (opcional)<br><span class="hint">Giro de 1.50 m en cada ambiente, ba&ntilde;o accesible y puertas de 0.90 m. La A.120 (RM 075-2023) solo lo exige en las áreas comunes de edificios (art. 28); dentro de una casa unifamiliar es una decisión de diseño.</span></label></div>
       <button type="button" id="gen" class="gen">Generar plano para este terreno</button>
       <div class="inline" style="margin-top:8px"><button type="button" id="save-plan">Guardar plano</button><button type="button" id="open-plan">Abrir plano</button></div>
@@ -583,9 +584,9 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
 (function(){
 let T = 0.13; const H = 2.40, M = 0.25;
 const presets = {
-  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'recta'},
-  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'recta'},
-  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'recta'}
+  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto'},
+  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto'},
+  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto'}
 };
 const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc'];
 const el = id => document.getElementById(id);
@@ -601,7 +602,7 @@ function read(){
   const v = {};
   ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
   v.nd = parseInt(el('nd').value,10)||2; v.nd2 = parseInt(el('nd2').value,10)||0; v.pl = el('pl').value; v.pp = parseFloat(el('pp').value)||1.25; v.ty = el('ty').value; v.sis = el('sis').value; v.ap = el('ap').value; v.z = parseFloat(el('z').value); v.s = parseFloat(el('s').value); v.n = parseInt(el('n').value,10);
-  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'recta';
+  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto';
   return v;
 }
 
@@ -1347,7 +1348,7 @@ function draw(r){
 // ---------- 2.º piso: dormitorios sobre los de abajo, muros alineados, escalera con descanso ----------
 // ---------- Escaleras mínimas: un tramo, en L, en U y caracol (A.010 art. 23.2: paso 0.25, contrapaso ≤ 0.18, ≤ 17 pasos por tramo; A.020 art. 15.1: ancho 0.90, caracol con paso de 0.25 a 0.50 del eje) ----------
 const ESC_N = {recta:'de un tramo', L:'en L', U:'en U', caracol:'de caracol'};
-function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2){
+function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2, nt){
   const cr = H2/nR, run = (nR-1)*0.25, B = 0.90;
   const st = {type, nR, cr, H2, run, lx0, lx1, y0, y1, W, treads:[], lands:[], path:[], axis:'x'};
   // tramo recto: arranca en (sx,sy), sube en la dirección (dx,dy); el ancho va hacia (wx,wy)
@@ -1364,6 +1365,10 @@ function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2){
   if(type === 'recta'){
     if(lx0 - run >= 0.05){ flight(lx0-run, y0, 1,0, 0,1, nR, 0); st.need = 1.80; }
     else if(lx1 + run <= W - 0.05){ flight(lx1+run, y0, -1,0, 0,1, nR, 0); st.need = 1.80; }
+    else if(nt && y0 - run >= nt.dd + T/2 + 0.02 && nt.a - T/2 - 0.02 - B >= 0.05){
+      // planta escalonada: el tramo baja por el patio del escalón, pegado al muro del eje B, y gira al descanso
+      const xs = nt.a - T/2 - 0.02 - B; flight(xs, y0 - run, 0,1, 1,0, nR, 0); land(xs, y0, lx0, y1, H2);
+      st.path.push([xs + B/2, (y0+y1)/2], [lx0 + 0.2, (y0+y1)/2]); st.axis = 'n'; st.labTop = true; st.need = 1.80; }
     else { flight(lx0, y1+run, 0,-1, 1,0, nR, 0); st.axis = 'y'; st.need = 0.92 + run + 0.30; }
   } else if(type === 'L'){
     // descanso de esquina junto al de llegada; primer tramo perpendicular al muro, desde el patio
@@ -1436,8 +1441,16 @@ function etapa2(v, rooms, W, D, hL, add, gross){
     const y0 = D + T/2 + 0.02, y1 = y0 + 0.90;
     const patio0 = v.fondo - v.rf - D - T;
     if(lx1 - lx0 >= 0.90 - 1e-6){
-      stair = makeStair(v.esc || 'recta', lx0, lx1, y0, y1, W, patio0, nR, H2);
-      if(!stair && (v.esc||'recta') !== 'recta') { stair = makeStair('recta', lx0, lx1, y0, y1, W, patio0, nR, H2); if(stair) stair.fallback = v.esc; }
+      // la elegida si entra en el patio; si no (o en «automática»), la primera que entre: un tramo, en U, en L, caracol
+      const ntS = rooms.d2 && rooms.d2.x0 < 1e-6 && rooms.d2.y1 < D - 1e-6 ? {a: rooms.d2.x1, dd: rooms.d2.y1} : null;
+      const want = v.esc || 'auto', mk = t => makeStair(t, lx0, lx1, y0, y1, W, patio0, nR, H2, ntS), good = q => q && q.fits && q.maxT <= 17;
+      stair = want !== 'auto' ? mk(want) : null;
+      if(!good(stair)){
+        const alts = ['recta','U','L','caracol'].map(mk).filter(Boolean), ok = alts.filter(good);
+        const pick = ok[0] || (stair ? null : alts.slice().sort((p,q)=>p.need-q.need)[0]) || null;
+        if(pick){ if(want === 'auto') pick.auto = true; else if(pick.type !== want){ pick.fallback = want; pick.wantFits = false; } stair = pick; }
+        else if(stair && want === 'auto') stair.auto = true;
+      } else if(want === 'auto') stair.auto = true;
     }
   }
   if(stair) stair.built = nd2 > 0;
@@ -1449,9 +1462,9 @@ function etapa2(v, rooms, W, D, hL, add, gross){
     gross2 = gross - terA + (v.vol && v.rf >= 0.5 ? W*0.50 : 0);
     const fits = nd2 <= slots.length;
     add(G,'Dormitorios en el 2.º piso', fits ? 'ok':'bad', fits ? `${nd2===1?'El dormitorio va':'Los '+nd2+' dormitorios van'} exactamente encima de los dormitorios de abajo: mismos ejes, muros alineados de piso a piso y la misma losa (manual).${up.free?` Sobre el resto del ala queda ${v.ter?'una terraza':'un estudio'}.`:''}` : `Arriba solo caben <b>${slots.length}</b> dormitorios, uno sobre cada dormitorio de abajo, para que los muros queden alineados.`);
-    { const okE = stair && stair.fits && !stair.fallback && stair.maxT <= 17, tN = stair ? ESC_N[stair.type] : '';
-      const extra = stair ? (stair.type==='caracol' ? ` Caracol de ${f2(2*stair.spiral.R)} m de diámetro con pasos de 0.25 a 0.50 m del eje: la A.020 (art. 15.1 b) admite el caracol en vivienda si el paso tiene 0.25 m a 0.50 m del eje.` : stair.type==='U' ? ' Dos tramos paralelos al muro posterior con un descanso de media vuelta de 0.90 × 1.80 m.' : stair.type==='L' ? ' Un tramo desde el patio hacia el muro posterior, un descanso de esquina de 0.90 × 0.90 m y otro tramo pegado al muro.' : (stair.axis==='y' ? ' Perpendicular al muro posterior porque a lo ancho no entra.' : ' Pegada al muro posterior.')) : '';
-      add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra junto al muro posterior: se dibuja la de un tramo. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23.2), ancho de 0.90 m (A.020 art. 15.1 a), un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso, y pasamanos a 1.00 m en el lado abierto (A.020 art. 15.1 c).${extra}${stair.maxT > 17 ? ` <b>Un tramo tiene ${stair.maxT} pasos: la A.010 (art. 23.2 a) permite 17 como máximo entre descansos.</b>` : ''}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
+    { const okE = stair && stair.fits && stair.maxT <= 17, tN = stair ? ESC_N[stair.type] : '';
+      const extra = stair ? (stair.type==='caracol' ? ` Caracol de ${f2(2*stair.spiral.R)} m de diámetro con pasos de 0.25 a 0.50 m del eje: la A.020 (art. 15.1 b) admite el caracol en vivienda si el paso tiene 0.25 m a 0.50 m del eje.` : stair.type==='U' ? ' Dos tramos paralelos al muro posterior con un descanso de media vuelta de 0.90 × 1.80 m.' : stair.type==='L' ? ' Un tramo desde el patio hacia el muro posterior, un descanso de esquina de 0.90 × 0.90 m y otro tramo pegado al muro.' : (stair.axis==='y' ? ' Perpendicular al muro posterior porque a lo ancho no entra.' : stair.axis==='n' ? ' Baja por el patio del escalón, pegada al muro del eje B, y gira al descanso: así casi no ocupa el retiro posterior.' : ' Pegada al muro posterior.')) : '';
+      add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra en el patio: se usa la ${ESC_N[stair.type]}, que sí entra. ` : stair.auto ? `Elegida sola entre las mínimas (un tramo, en U, en L, caracol): la primera que entra en el patio. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23.2), ancho de 0.90 m (A.020 art. 15.1 a), un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso, y pasamanos a 1.00 m en el lado abierto (A.020 art. 15.1 c).${extra}${stair.maxT > 17 ? ` <b>Un tramo tiene ${stair.maxT} pasos: la A.010 (art. 23.2 a) permite 17 como máximo entre descansos.</b>` : ''}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m. Ninguna de las mínimas entra (de un tramo pegada al muro: 1.80 m de fondo pero ${f2(run + 1.0)} m de muro libre a un lado del descanso; caracol: 2.22 m; en U o en L: 2.72 m). Opciones: un patio más hondo (menos fondo construido), una crujía de dormitorios más corta para que el tramo baje por el escalón (${f2(run + 0.10)} m de escalón), o la escalera en el retiro frontal, que la A.010 (art. 8.3 l) permite cuando es ampliación de vivienda.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
     if(v.n < 2) add(G,'Pisos para el sismo', 'warn', `Con dormitorios en el 2.º piso la densidad de muros se verifica para 2 pisos.`);
     add(G,'Baño 2', 'ok', `Sobre el baño del 1.er piso: mismas montantes y desagües.`);
   }
@@ -3112,7 +3125,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14j';
+const APP_VERSION = '2026-11-14k';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
