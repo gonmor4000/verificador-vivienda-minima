@@ -312,3 +312,10 @@ T[('A130', 'TABLA Nº 3')] = dict(
        'Paneles de yeso prensado||||2'],
     n=['Transcrita de la separata impresa (págs. 141-142).'],
     end='Artículo')
+T[('A130', 'Tabla 02: Área de Almacenes')] = dict(
+    title='Tabla 02: Área de almacenes no techados que requieren protección mediante una red de agua contra incendios',
+    h=['Riesgo / tipo|Área mínima que requiere protección (m²)'],
+    r=['Clase I|5 000', 'Clase II|4 000', 'Clase III|2 500', 'Clase IV|1 000', 'Fardos de algodón|2 500', 'Papel en rollos|2 000',
+       'Papel de reciclaje|2 000', 'Plásticos|900', 'Cajas y paletas vacías (madera)|1 000', 'Llantas|1 000', 'Patio de contenedores|10 000'],
+    n=['El área mínima que requiere protección incluye el área de almacenamiento y la circulación interior.'],
+    end='Artículo')
