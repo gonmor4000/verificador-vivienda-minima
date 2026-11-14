@@ -405,6 +405,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-14">14 nov 2026</time><span><b>Planta escalonada</b>: cada crujía tiene su propio fondo. El tirador verde del muro posterior del ala de dormitorios la acorta o alarga por su cuenta (control «Crujía de dormitorios más corta»), y el del fondo de la sala-cocina mueve solo esa crujía. Detrás del dormitorio 2 queda un patio que ilumina su ventana. Lo siguen el 2.º piso, el 3D, los cortes y ejes de Diseño Pro, el cuadro de áreas y el metrado. Solo en plantas de dos crujías.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: botones <b>«Ver plano original»</b> en las fichas de PREVI que abren el PDF de la fuente en la página exacta del plano: láminas del concurso de los 13 equipos internacionales y plantas de 1978 y 2003 de las casas Zamora, Arnao y Frías.</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: <b>plantas interiores de 9 proyectos PREVI</b>, medidas con la escala de los planos publicados. Se suman Atelier 5, Correa, Svenssons y la propuesta española (tipos P y G), y la <b>evolución real de tres casas de 1978 a 2003</b>, piso por piso: Stirling (casa Zamora), Morales-Montagne (casa Arnao) y Miró Quesada-Williams-Núñez (casa Frías). Corregido qué crecimiento en m² corresponde a cada casa (Arnao: de 61 a 172 m²; Frías: de 92 a 191 m²).</span></li>
       <li><time datetime="2026-11-14">14 nov 2026</time><span>Referentes: <b>plantas interiores</b> redibujadas con sus ambientes (sala, comedor, cocina, baño, dormitorios, patio, escalera) de la casa de <b>Kikutake, Maki y Kurokawa</b> (1.er y 2.º piso, desde el plano acotado), de <b>Stirling</b> (etapa inicial, casa final y casa desarrollada) y de <b>Herbert Ohl</b>. Cada una cita su fuente y se marca «aproximada» cuando no hay cotas. Nuevo filtro «Con planta interior».</span></li>
@@ -475,6 +476,7 @@ a.rne:hover{color:var(--brick);text-decoration-style:solid}
       <div class="ctl"><div class="row"><label for="a">Crujía de dormitorios</label><output id="a-o"></output></div><input type="range" id="a" min="2.25" max="4.00" step="0.25"><span class="hint">Ancho entre ejes A–B</span></div>
       <div class="ctl"><div class="row"><label for="b">Crujía social y húmeda</label><output id="b-o"></output></div><input type="range" id="b" min="2.50" max="5.00" step="0.25"><span class="hint">Ancho entre ejes B–D</span></div>
       <div class="ctl"><div class="row"><label for="d">Fondo construido</label><output id="d-o"></output></div><input type="range" id="d" min="5.00" max="10.00" step="0.25"><span class="hint">Ejes 1–4</span></div>
+      <div class="ctl"><div class="row"><label for="ddr">Crujía de dormitorios más corta</label><output id="ddr-o"></output></div><input type="range" id="ddr" min="0" max="5.00" step="0.25" value="0"><span class="hint">Cuánto se recorta el fondo del ala de dormitorios frente a la sala-cocina (planta escalonada). 0 = las dos crujías llegan al mismo fondo. Solo en plantas de dos crujías.</span></div>
       <div class="ctl"><div class="row"><label for="y2">Fondo del dormitorio 1</label><output id="y2-o"></output></div><input type="range" id="y2" min="2.50" max="4.50" step="0.25"><span class="hint">Ejes 1–2; el resto del ala es el dormitorio 2</span></div>
       <div class="ctl"><div class="row"><label for="w">Fondo del núcleo húmedo</label><output id="w-o"></output></div><input type="range" id="w" min="1.50" max="3.00" step="0.25"><span class="hint">Cocina y baño, ejes 3–4</span></div>
       <div class="ctl"><div class="row"><label for="c">Ancho del baño</label><output id="c-o"></output></div><input type="range" id="c" min="1.25" max="2.50" step="0.25"><span class="hint">Ejes C–D</span></div>
@@ -531,19 +533,19 @@ const presets = {
   pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'recta'},
   chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'recta'}
 };
-const ids = ['a','b','d','y2','w','c','lote','fondo','rf','rp','vd','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc'];
+const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc'];
 const el = id => document.getElementById(id);
 const f2 = x => x.toFixed(2);
 const f1 = x => x.toFixed(1);
 const nf = x => Math.round(x).toLocaleString('es-PE');
 
 function load(p){
-  ids.forEach(k=>{ const e = el(k); if(e.type==='checkbox') e.checked = p[k]; else e.value = p[k]; });
+  ids.forEach(k=>{ const e = el(k); if(e.type==='checkbox') e.checked = p[k]; else e.value = p[k] ?? (k==='ddr' ? 0 : e.value); });
   document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on'));
 }
 function read(){
   const v = {};
-  ['a','b','d','y2','w','c','lote','fondo','rf','rp','vd','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
+  ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
   v.nd = parseInt(el('nd').value,10)||2; v.nd2 = parseInt(el('nd2').value,10)||0; v.pl = el('pl').value; v.pp = parseFloat(el('pp').value)||1.25; v.ty = el('ty').value; v.sis = el('sis').value; v.ap = el('ap').value; v.z = parseFloat(el('z').value); v.s = parseFloat(el('s').value); v.n = parseInt(el('n').value,10);
   v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'recta';
   return v;
@@ -903,17 +905,19 @@ function compute(v){
   const c = Math.min(v.c, v.b - 1.0);
   const w = Math.min(v.w, D - v.y2 - 1.0 > 0 ? D - 2.5 : v.w);
   const y2 = Math.min(v.y2, D - 2.25);
+  // fondo propio de la crujía de dormitorios (A–B): puede quedar más corta que la crujía social (planta escalonada)
+  const dd = Math.max(y2 + 1.00, D - Math.max(0, v.ddr || 0)), nt = D - dd > 1e-6 ? D - dd : 0;
   const door = v.pmr ? 0.90 : null;
   const rooms = {
     d1:{n:'Dormitorio 1', x0:0, y0:0, x1:v.a, y1:y2},
-    d2:{n:'Dormitorio 2', x0:0, y0:y2, x1:v.a, y1:D},
+    d2:{n:'Dormitorio 2', x0:0, y0:y2, x1:v.a, y1:dd},
     sc:{n:'Sala-comedor', x0:v.a, y0:0, x1:W, y1:D-w},
     co:{n:'Cocina', x0:v.a, y0:D-w, x1:W-c, y1:D, wet:true},
     ba:{n:'Baño', x0:W-c, y0:D-w, x1:W, y1:D, wet:true}
   };
-  if(v.nd === 1) rooms.d2 = {n:'Comedor-estudio', x0:0, y0:y2, x1:v.a, y1:D, open:true};
+  if(v.nd === 1) rooms.d2 = {n:'Comedor-estudio', x0:0, y0:y2, x1:v.a, y1:dd, open:true};
   for(const k in rooms){ const r = rooms[k]; r.cw = r.x1-r.x0-T; r.cd = r.y1-r.y0-T; r.area = Math.max(0,r.cw*r.cd); }
-  const gross = (v.med ? W : W + T)*(D+T); // A.010 art. 9.1 a: a eje de muros con otra unidad
+  const gross = (v.med ? W : W + T)*(D+T) - v.a*nt; // A.010 art. 9.1 a: a eje de muros con otra unidad
   const util = Object.values(rooms).reduce((s,r)=>s+r.area,0);
   const checks = [];
   const add = (g,t,st,d) => checks.push({g,t,st,d});
@@ -969,7 +973,7 @@ function compute(v){
   const Z=v.z, U=1, S=v.s, N=Math.max(v.n, v.nd2>0?2:1);
   const req = Z*U*S*N/56;
   const doorFront = 1.00, doorD = v.pmr?1.0:0.9, doorBack = v.pmr?1.0:0.9, doorBa = v.pmr?1.0:0.8;
-  const Ly = 2*D + (v.nd===1 ? (y2 - doorD) + w : (D - 2*doorD));
+  const Ly = 2*D - nt + (v.nd===1 ? (y2 - doorD) + w : (D - 2*doorD));
   const Lx = Math.max(0, W - doorFront - Math.max(0,wD1) - Math.max(0,wSC)) + Math.max(0, W - doorBack - Math.max(0,wD2) - 0.5) + v.a + Math.max(0, c - doorBa);
   const Ap = gross;
   const blando = v.s >= 1.10;
@@ -987,16 +991,18 @@ function compute(v){
     const hasY = Ly*100*T*100, hasX = Lx*100*T*100;
     add(G,'Regla del manual, sentido medianeras', hasY>=reqCm?'ok':'bad', `Σ(L·t) = <b>${nf(hasY)} cm²</b> frente a 120 cm² × ${f1(Ap)} m² × ${N} pisos = ${nf(reqCm)} cm².`);
     add(G,'Regla del manual, sentido fachada', hasX>=reqCm?'ok':(hasX>=reqCm*0.9?'warn':'bad'), `Σ(L·t) = <b>${nf(hasX)} cm²</b> frente a ${nf(reqCm)} cm²${hasX<reqCm?'. Es el sentido débil típico de la casa entre medianeras':''}.`);
-    cols = [[0,0],[v.a,0],[W,0],[0,y2],[v.a,y2],[W,y2],[v.a,D-w],[W-c,D-w],[W,D-w],[0,D],[v.a,D],[W-c,D],[W,D]];
+    cols = [[0,0],[v.a,0],[W,0],[0,y2],[v.a,y2],[W,y2],[v.a,D-w],[W-c,D-w],[W,D-w],[0,dd],[v.a,D],[W-c,D],[W,D]];
+    if(nt && Math.abs(dd-(D-w))>0.05) cols.push([v.a,dd]);
     const lim = Math.min(2*H, 5, v.ap==='soga' ? 3.5 : 5.0);
     // si un muro crece más que la separación máxima, se agrega una columna intermedia fuera de puertas y ventanas
     const dw0 = v.pmr ? 0.90 : 0.80, scw0c = Math.min(W - 0.30 - wSC, v.a + 1.60);
     const chains = [
-      {x:0, pts:[0,y2,D], h:[]},
-      {x:v.a, pts:[0,y2,D-w,D], h: v.nd===1 ? [[y2-0.10-dw0,y2-0.10],[y2,D-w]] : [[y2-0.10-dw0,y2-0.10],[y2+0.10,y2+0.10+dw0]]},
+      {x:0, pts:[0,y2,dd], h:[]},
+      {x:v.a, pts:[...new Set([0,y2,D-w,D].concat(nt ? [dd] : []).map(q=>Math.round(q*100)/100))].sort((p,q)=>p-q), h: v.nd===1 ? [[y2-0.10-dw0,y2-0.10],[y2,D-w]] : [[y2-0.10-dw0,y2-0.10],[y2+0.10,y2+0.10+dw0]]},
       {x:W, pts:[0,y2,D-w,D], h:[]},
       {y:0, pts:[0,v.a,W], h:[[(v.a-wD1)/2,(v.a+wD1)/2],[v.a+0.30,v.a+1.30],[scw0c,scw0c+wSC]]},
-      {y:D, pts:[0,v.a,W-c,W], h:[[(v.a-wD2)/2,(v.a+wD2)/2],[v.a+T/2+0.60,v.a+T/2+0.60+dw0],[W-c/2-0.25,W-c/2+0.25]]}
+      ...(nt ? [{y:dd, pts:[0,v.a], h:[[(v.a-wD2)/2,(v.a+wD2)/2]]}, {y:D, pts:[v.a,W-c,W], h:[[v.a+T/2+0.60,v.a+T/2+0.60+dw0],[W-c/2-0.25,W-c/2+0.25]]}]
+        : [{y:D, pts:[0,v.a,W-c,W], h:[[(v.a-wD2)/2,(v.a+wD2)/2],[v.a+T/2+0.60,v.a+T/2+0.60+dw0],[W-c/2-0.25,W-c/2+0.25]]}])
     ];
     const segs = []; let nExtra = 0;
     chains.forEach(ch=>{
@@ -1027,8 +1033,8 @@ function compute(v){
     add(G,'Cimiento corrido', N<=2 ? 'ok':'warn', `Suelo ${blando?'blando':'normal'}: zanja de <b>${f2(cim.za)} m</b>, cimiento ${f2(cim.an)} × ${f2(cim.al)} m y sobrecimiento de 0.30 m${N>2?'. Para más de 2 pisos el manual pide estudio de suelos y diseño de un ingeniero':''}.`);
   } else {
     const G = 'Columna-viga';
-    cols = [[0,0],[v.a,0],[W,0],[0,y2],[v.a,y2],[W,y2],[0,D],[v.a,D],[W,D]];
-    const L = Math.max(v.a, v.b, y2, D-y2);
+    cols = [[0,0],[v.a,0],[W,0],[0,y2],[v.a,y2],[W,y2],[0,dd],[v.a,D],[W,D]].concat(nt ? [[v.a,dd]] : []);
+    const L = Math.max(v.a, v.b, y2, dd-y2);
     hv = Math.max(0.30, Math.ceil((L/12)/0.05 - 1e-9)*0.05);
     add(G,'Luces entre columnas', L<=5+1e-6?'ok':'bad', `Luz más larga <b>${f2(L)} m</b>; se usan ${cols.length} columnas de 25×25 cm en los cruces de ejes.`);
     add(G,'Vigas', 'ok', `Vigas de <b>25 × ${Math.round(hv*100)} cm</b> (luz/12) en todos los ejes. La viga baja la altura libre bajo ella a ${f2(H+0.20-hv)} m (A.010 pide ≥ 2.10).`);
@@ -1037,7 +1043,7 @@ function compute(v){
     add(G,'Cimentación', 'ok', `Zapatas aisladas de ~1.00 × 1.00 × 0.60 m bajo cada columna, unidas por vigas de cimentación; los tabiques van sobre cimiento corrido ligero.`);
     add(G,'Costo relativo', 'warn', `Más concreto y acero que la albañilería confinada y encofrado de vigas: en 1 o 2 pisos suele salir más cara; se justifica si quieres plantas libres o crecer a 3 pisos.`);
   }
-  const lmax = Math.max(v.a, v.b), lmin = Math.min(y2, D-y2, D-w);
+  const lmax = Math.max(v.a, v.b), lmin = Math.min(y2, dd-y2, D-w);
   add('Estructura','Proporción de los paños de losa', lmax/Math.max(lmin,0.1) <= 3 ? 'ok':'warn', `Paño más alargado ${f2(lmax)} × ${f2(lmin)} m: el largo no pasa 3 veces el ancho (manual).`);
   add('Estructura','Altura de piso a techo', 'ok', `${f2(H)} m de muro + losa: menos de 3.00 m (manual y A.010 art. 10). La losa se repite igual en el 2.º piso.`);
   const nCols = cols.length;
@@ -1045,27 +1051,28 @@ function compute(v){
 
   // Puertas que caben
   const dDoor = v.pmr ? 0.90 : 0.80;
-  const d2DoorFits = (y2 + 0.10 + dDoor) <= (D - w) + 1e-6;
+  const d2DoorFits = (y2 + 0.10 + dDoor) <= Math.min(D - w, dd) + 1e-6;
   if(v.nd >= 2) add('Circulación','Puerta del dormitorio 2', d2DoorFits?'ok':'bad', d2DoorFits ? `Abre a la sala con hoja de <b>${f2(dDoor)} m</b>.` : `No hay ${f2(dDoor)} m de muro libre hacia la sala: baja el fondo del dormitorio 1 o el del núcleo húmedo.`);
   const backFits = rooms.co.cw - 0.60 >= (v.pmr?0.90:0.80) - 1e-6;
   add('Circulación','Salida al patio por la cocina', backFits?'ok':'bad', `Queda <b>${f2(rooms.co.cw-0.60)} m</b> libre junto a la mesada para una puerta de ${v.pmr?'0.90':'0.80'} m.`);
 
+  if(nt) add('Terreno','Planta escalonada', 'ok', `La crujía de dormitorios llega a <b>${f2(dd)} m</b> y la social a ${f2(D)} m: quedan ${f2(nt)} × ${f2(v.a)} m de patio detrás del dormitorio ${v.nd>=2?'2':''}, que ilumina y ventila su ventana posterior.`);
   const E2 = etapa2(v, rooms, W, D, hL, add, gross);
   const gross2 = E2.gross2;
   // Metrados
   const fl = v.nd2 > 0 ? 2 : 1;
-  const wallLen = (3*D + w + 2*W + v.a + c - (v.nd===1 ? (D-w-y2) : 0));
+  const wallLen = (3*D - nt + w + 2*W + v.a + c - (v.nd===1 ? (D-w-y2) : 0));
   const openings = (doorFront*2.10) + 2*(doorD*2.10) + doorBack*2.10 + doorBa*2.10 + Math.max(0,wD1)*1.2 + Math.max(0,wSC)*1.2 + Math.max(0,wD2)*1.2 + 0.2;
   const colArea = nCols*0.25*H;
   const wallNet = Math.max(0, wallLen*H - openings - colArea)*fl;
   const perM2 = v.sis==='portico' ? 36 : (v.ap==='cabeza' ? 71 : 40);
   const bricks = wallNet*perM2*1.03;
-  const losa = W*D*fl;
+  const losa = (W*D - v.a*nt)*fl;
   const bloques = losa*8.33;
   const e = hL || 0.20;
   let conc;
   if(v.sis==='portante'){
-    conc = { col: nCols*T*0.25*H*fl, viga: (3*D + 2*W + v.a + c - (v.nd===1?(D-w-y2):0))*T*e*fl, cim: wallLen*cim.an*(cim.za-0.20) + wallLen*T*0.30 };
+    conc = { col: nCols*T*0.25*H*fl, viga: (3*D - nt + 2*W + v.a + c - (v.nd===1?(D-w-y2):0))*T*e*fl, cim: wallLen*cim.an*(cim.za-0.20) + wallLen*T*0.30 };
   } else {
     conc = { col: nCols*0.25*0.25*(H+e)*fl, viga: (3*D + 3*W)*0.25*(hv-e)*fl, cim: nCols*1.0*1.0*0.60 + (3*D+3*W)*0.25*0.40 + wallLen*0.40*0.50 };
   }
@@ -1074,7 +1081,7 @@ function compute(v){
   const cost = gross*v.cm2, cost2 = gross2*v.cm2;
   const wallPct = (gross-util)/gross*100;
   terVol(v, W, gross2 > 0, add, E2.up);
-  return {W,D,c,w,y2,rooms,gross,gross2,util,checks,wallLen,wallNet,bricks,perM2,losa,bloques,cost,cost2,wallPct,hL,v,wD1,wSC,wD2,dDoor,cols,nCols,hv,cim,conc,fl,up:E2.up,stair:E2.stair};
+  return {dd,nt,W,D,c,w,y2,rooms,gross,gross2,util,checks,wallLen,wallNet,bricks,perM2,losa,bloques,cost,cost2,wallPct,hL,v,wD1,wSC,wD2,dDoor,cols,nCols,hv,cim,conc,fl,up:E2.up,stair:E2.stair};
 }
 
 function draw(r){
@@ -1105,6 +1112,8 @@ function draw(r){
     const sY = r.stair && r.stair.axis==='y', pLx = sY ? 0.15 : L/2, pAn = sY ? 'start' : 'middle';
     g += `<text x="${XL(pLx)}" y="${YL(F - Math.min(v.rp, patio)/2 - (patio>v.rp+1.5 ? (patio-v.rp)/2 : 0))+4}" text-anchor="${pAn}" font-size="11.5" font-weight="600" fill="var(--ok)">Patio-lavandería = retiro posterior</text>`;
     g += `<text x="${XL(pLx)}" y="${YL(F - Math.min(v.rp, patio)/2 - (patio>v.rp+1.5 ? (patio-v.rp)/2 : 0))+20}" text-anchor="${pAn}" font-size="10.5" fill="var(--ok)">${f2(patio)} m libres</text>`; }
+  if(r.nt){ g += `<rect x="${XL(0)}" y="${YL(patioY0)}" width="${(v.a + ox - T/2)*s}" height="${r.nt*s}" fill="var(--ok-soft)"/>`;
+    g += `<text x="${XL((v.a+ox)/2)}" y="${(YL(patioY0)+YL(v.rf + r.dd + T/2))/2+4}" text-anchor="middle" font-size="10.5" fill="var(--ok)">patio ${f2(r.nt)} m</text>`; }
   let lavX = r.typ==='T3' ? v.a + r.P + 0.05 : v.a + 0.02, lavY = D + T/2;
   { const sb = r.stair && r.stair.box, hit = (x, y) => sb && x < sb.x1 + 0.05 && x + 0.55 > sb.x0 - 0.05 && y < sb.y1 + 0.05 && y + 0.55 > sb.y0 - 0.05;
     if(hit(lavX, lavY)){ const c = [W - T/2 - 0.60, T/2 + 0.05, v.a + 0.02].find(x=>!hit(x, lavY)); if(c !== undefined) lavX = c; else lavY = sb.y1 + 0.10; }
@@ -1182,13 +1191,16 @@ function draw(r){
   wall(0,0,W,0,[[d1w0,d1w0+wD1],[scDoor0,scDoor0+1.0],[scw0,scw0+wSC]]);
   win(d1w0,0,d1w0+wD1,0); win(scw0,0,scw0+wSC,0);
   // back y=D
-  const d2w0 = (v.a - wD2)/2; bd0 = v.a + T/2 + 0.60; const bw0 = W - c/2 - 0.25;
-  wall(0,D,W,D,[[d2w0,d2w0+wD2],[bd0,bd0+dW],[bw0,bw0+0.5]]);
-  win(d2w0,D,d2w0+wD2,D); win(bw0,D,bw0+0.5,D);
+  const d2w0 = (v.a - wD2)/2; bd0 = v.a + T/2 + 0.60; const bw0 = W - c/2 - 0.25, dd = r.dd || D;
+  if(r.nt){ // planta escalonada: el ala de dormitorios termina en dd
+    wall(0,dd,v.a,dd,[[d2w0,d2w0+wD2]]); win(d2w0,dd,d2w0+wD2,dd);
+    wall(v.a,D,W,D,[[bd0-v.a,bd0-v.a+dW],[bw0-v.a,bw0-v.a+0.5]]);
+  } else { wall(0,D,W,D,[[d2w0,d2w0+wD2],[bd0,bd0+dW],[bw0,bw0+0.5]]); win(d2w0,D,d2w0+wD2,D); }
+  win(bw0,D,bw0+0.5,D);
   // medianeras
-  wall(0,0,0,D); wall(W,0,W,D);
+  wall(0,0,0,dd); wall(W,0,W,D);
   // B axis x=a, doors to dorms
-  wall(v.a,0,v.a,D, v.nd===1 ? [[y2-0.10-dW,y2-0.10],[y2+T/2,D-w-T/2]] : [[y2-0.10-dW,y2-0.10],[y2+0.10,y2+0.10+dW]]);
+  wall(v.a,0,v.a,D, v.nd===1 ? [[y2-0.10-dW,y2-0.10],[y2+T/2,Math.min(D-w,dd)-T/2]] : [[y2-0.10-dW,y2-0.10],[y2+0.10,y2+0.10+dW]]);
   // y2 wall
   wall(0,y2,v.a,y2);
   // wet: C axis tabique and wall y=D-w over bath
@@ -1257,7 +1269,7 @@ function draw(r){
   g += `<g class="hdl" data-k="lote"><title>Arrastra para cambiar el frente</title><rect x="${XL(L)-6}" y="${YL(hy)-22}" width="12" height="44" rx="5"/></g>`;
   g += `<g class="hdl v" data-k="fondo"><title>Arrastra para cambiar el fondo</title><rect x="${XL(hx)-22}" y="${YL(F)-6}" width="44" height="12" rx="5"/></g>`;
   // tiradores del bloque construido: eje B (ancho de la crujía de dormitorios), eje D (ancho de la crujía social) y fondo construido
-  houseGeo = {X0: X(0), Y0: Y(0), s, a: v.a, W, D, r, y2, w};
+  houseGeo = {X0: X(0), Y0: Y(0), s, a: v.a, W, D, r, y2, w, dd: r.nt ? r.dd : D};
   g += `<rect id="casa-ghost" x="${X(0)}" y="${Y(D)}" width="${W*s}" height="${D*s}" fill="none" stroke="var(--brick)" stroke-width="1.5" stroke-dasharray="6 4" visibility="hidden"/>`;
   g += `<line id="casa-ghost-b" x1="${X(v.a)}" x2="${X(v.a)}" y1="${Y(D)}" y2="${Y(0)}" stroke="var(--brick)" stroke-width="1.5" stroke-dasharray="6 4" visibility="hidden"/>`;
   g += `<text id="casa-lbl" x="${X(0)}" y="${Y(D)-8}" font-size="11" font-weight="600" fill="var(--brick)" visibility="hidden"></text>`;
@@ -1268,7 +1280,10 @@ function draw(r){
     g += `<g class="hdl casa v" data-h="Y2"><title>Arrastra el muro entre el dormitorio 1 y el 2 (eje 2)</title><rect x="${X(v.a*0.28)-18}" y="${Y(y2)-6}" width="36" height="12" rx="5"/></g>`;
     g += `<g class="hdl casa v" data-h="WC"><title>Arrastra el muro entre la sala y la cocina-baño (eje 3)</title><rect x="${X(v.a + (W-v.a)*0.72)-18}" y="${Y(D-w)-6}" width="36" height="12" rx="5"/></g>`;
   }
-  g += `<g class="hdl casa v" data-h="F"><title>Arrastra para cambiar el fondo construido</title><rect x="${X(v.a/2)-18}" y="${Y(D)-6}" width="36" height="12" rx="5"/></g>`;
+  if(r.typ !== 'T3' && r.typ !== 'T3L'){
+    g += `<g class="hdl casa v" data-h="F"><title>Arrastra para cambiar el fondo de la crujía social (sala, cocina y baño)</title><rect x="${X(v.a + (W-v.a)/2)-18}" y="${Y(D)-6}" width="36" height="12" rx="5"/></g>`;
+    g += `<g class="hdl casa v" data-h="DD"><title>Arrastra para cambiar el fondo de la crujía de dormitorios, por su cuenta</title><rect x="${X(v.a/2)-18}" y="${Y(r.nt ? r.dd : D)-6}" width="36" height="12" rx="5"/></g>`;
+  } else g += `<g class="hdl casa v" data-h="F"><title>Arrastra para cambiar el fondo construido</title><rect x="${X(v.a/2)-18}" y="${Y(D)-6}" width="36" height="12" rx="5"/></g>`;
   el('svgbox').innerHTML = `<svg viewBox="0 0 ${vw+20} ${vh+20}" role="img" aria-label="Planta de la vivienda con ${f1(r.gross)} m² techados">${g}</svg>`;
   bindHandles(); bindHouseHandles();
   bindCotas(r);
@@ -1431,7 +1446,9 @@ function draw2(r){
   });
   // muros: contorno + bordes entre grupos distintos
   const yf = -vo;
-  const walls = [[0,yf,W,yf,vo?'light':'wall'],[0,D,W,D,'wall'],[0,yf,0,D,'wall'],[W,yf,W,D,'wall']];
+  const dd = r.nt ? r.dd : D, rearY = x => (r.nt && x < v.a - eps) ? dd : D;
+  const walls = r.nt ? [[0,yf,W,yf,vo?'light':'wall'],[0,dd,v.a,dd,'wall'],[v.a,D,W,D,'wall'],[v.a,dd,v.a,D,'wall'],[0,yf,0,dd,'wall'],[W,yf,W,D,'wall']]
+    : [[0,yf,W,yf,vo?'light':'wall'],[0,D,W,D,'wall'],[0,yf,0,D,'wall'],[W,yf,W,D,'wall']];
   for(let i=0;i<R.length;i++) for(let j=i+1;j<R.length;j++){
     const a = R[i][1], b = R[j][1]; if(a.grp === b.grp) continue;
     if(Math.abs(a.x1-b.x0)<eps || Math.abs(a.x0-b.x1)<eps){ const x = Math.abs(a.x1-b.x0)<eps ? a.x1 : a.x0; const y0 = Math.max(a.y0,b.y0), y1 = Math.min(a.y1,b.y1); if(y1-y0>0.05) walls.push([x,y0,x,y1, (a.wet||b.wet)?'tab':'wall', a, b]); }
@@ -1445,7 +1462,7 @@ function draw2(r){
     if(q.sky) return;
     const isDorm = q.grp.startsWith('d') || (q.grp.startsWith('e') && q.grp !== 'estar');
     if(!q.ter && Math.abs(q.y0)<eps && (isDorm || q.grp==='estar')){ const L = q.x1-q.x0-T, ww = Math.min(1.5, L-0.6); if(ww>0.4){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,yf,c+ww/2,yf,'win']); } }
-    if(!q.ter && Math.abs(q.y1-D)<eps && (isDorm || q.wet)){ const L = q.x1-q.x0-T, ww = q.wet ? 0.5 : Math.min(1.2, L-0.6); if(ww>0.3){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,D,c+ww/2,D,'win']); } }
+    if(!q.ter && Math.abs(q.y1-rearY(q.x0))<eps && (isDorm || q.wet)){ const L = q.x1-q.x0-T, ww = q.wet ? 0.5 : Math.min(1.2, L-0.6); if(ww>0.3){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,q.y1,c+ww/2,q.y1,'win']); } }
     if(q.grp==='estar') return;
     // ventana al patio de luz
     R.forEach(([k2,p])=>{ if(!p.sky || !isDorm) return;
@@ -1833,6 +1850,16 @@ function houseBoxes(r, o){
     B(x0-T/2, x0+T/2, y0-T/2, y1+T/2, z, z+2.10, 'wall'); B(x1-T/2, x1+T/2, y0-T/2, y1+T/2, z, z+2.10, 'wall');
     [y0, y1].forEach(y=>{ B(x0, x1, y-0.03, y+0.03, z+1.06, z+1.10, 'rail'); for(let x=x0+0.6; x<x1-0.1; x+=1.2) B(x-0.03, x+0.03, y-0.03, y+0.03, z, z+1.10, 'rail'); B(x0, x1, y-T/2, y+T/2, z, z+0.15, 'wall'); });
   };
+  // azotea: en planta escalonada, muro de 2.10 en las medianeras y baranda en el borde del escalón
+  const roofPar = (y0, z) => {
+    if(!r.nt) return parapets(0, W, y0, D, z);
+    const dd = r.dd, a = v.a;
+    B(-T/2, T/2, y0-T/2, dd+T/2, z, z+2.10, 'wall'); B(W-T/2, W+T/2, y0-T/2, D+T/2, z, z+2.10, 'wall');
+    const rail = (x0, y0r, x1, y1r) => { const hor = Math.abs(y1r-y0r) < 1e-6;
+      if(hor){ B(x0, x1, y0r-0.03, y0r+0.03, z+1.06, z+1.10, 'rail'); B(x0, x1, y0r-T/2, y0r+T/2, z, z+0.15, 'wall'); for(let x=x0+0.6; x<x1-0.1; x+=1.2) B(x-0.03, x+0.03, y0r-0.03, y0r+0.03, z, z+1.10, 'rail'); }
+      else { B(x0-0.03, x0+0.03, y0r, y1r, z+1.06, z+1.10, 'rail'); B(x0-T/2, x0+T/2, y0r, y1r, z, z+0.15, 'wall'); for(let y=y0r+0.6; y<y1r-0.1; y+=1.2) B(x0-0.03, x0+0.03, y-0.03, y+0.03, z, z+1.10, 'rail'); } };
+    rail(0, y0, W, y0); rail(0, dd, a, dd); rail(a, D, W, D); rail(a, dd, a, D);
+  };
   if(built2){
     const z2 = H2, U = Object.values(r.up.rooms);
     U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; B(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2-0.0, z2+0.02, q.wet ? 'wet' : 'floor', false); });
@@ -1841,10 +1868,10 @@ function houseBoxes(r, o){
     // terraza del 2.º piso: barandas donde da a la calle o al patio, muro de 2.10 hacia el vecino (A.020 art. 18.4 y 19.3)
     U.filter(q=>q.ter).forEach(q=>{
       [[q.x0,'x'],[q.x1,'x']].forEach(([x])=>{ if(Math.abs(x)<1e-6 || Math.abs(x-W)<1e-6) B(x-T/2, x+T/2, q.y0-T/2, q.y1+T/2, z2, z2+2.10, 'wall'); });
-      [q.y0, q.y1].forEach(y=>{ if(Math.abs(y)<1e-6 || Math.abs(y-D)<1e-6){ B(q.x0, q.x1, y-0.03, y+0.03, z2+1.06, z2+1.10, 'rail'); for(let x=q.x0+0.5; x<q.x1-0.1; x+=1.0) B(x-0.03, x+0.03, y-0.03, y+0.03, z2, z2+1.10, 'rail'); } });
+      [q.y0, q.y1].forEach(y=>{ if(Math.abs(y)<1e-6 || Math.abs(y-D)<1e-6 || (r.nt && Math.abs(y-r.dd)<1e-6 && q.x1 <= v.a + 1e-6)){ B(q.x0, q.x1, y-0.03, y+0.03, z2+1.06, z2+1.10, 'rail'); for(let x=q.x0+0.5; x<q.x1-0.1; x+=1.0) B(x-0.03, x+0.03, y-0.03, y+0.03, z2, z2+1.10, 'rail'); } });
     });
-    if(v.ter && !(r.up.free > 0) && !noRoof) parapets(0, W, -vo, D, z2+H+e);
-  } else if(v.ter && roof1) parapets(0, W, 0, D, H2);
+    if(v.ter && !(r.up.free > 0) && !noRoof) roofPar(-vo, z2+H+e);
+  } else if(v.ter && roof1) roofPar(0, H2);
   // escalera exterior: pasos de 0.25, contrapasos iguales y descansos (A.010 art. 23)
   const st = r.stair;
   if(st && (built2 || (v.ter && !built2) || o.future)){
@@ -1956,6 +1983,7 @@ function setCota(k, x, r){
   else if(k==='pp'){ up.pp = x; up.d = r.D + (x - r.pp); }
   else if(k==='d3') up.d = r.yd + x;
   else if(k==='y2only') up.y2 = x;
+  else if(k==='ddr') up.ddr = Math.max(0, x - 0.5);
   else if(k==='wonly') up.w = x;
   else return;
   for(const key in up){
@@ -1971,7 +1999,7 @@ function setCota(k, x, r){
   document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on'));
   clearTimeout(genTimer);
   render();
-  const NM = {a:'crujía A–B', b:'crujía B–D', c:'ancho del baño', d:'fondo construido', y2:'fondo del dormitorio 1', w:'franja húmeda', pp:'patio de luz'};
+  const NM = {ddr:'recorte de la crujía de dormitorios', a:'crujía A–B', b:'crujía B–D', c:'ancho del baño', d:'fondo construido', y2:'fondo del dormitorio 1', w:'franja húmeda', pp:'patio de luz'};
   const off = Math.abs(x/M - Math.round(x/M)) > 1e-6;
   msg.innerHTML = `<b style="color:var(--ok)">Cota cambiada a ${f2(x)} m</b> (${Object.keys(up).map(q=>`${NM[q]} ${f2(up[q])} m`).join(', ')}). Las demás cotas se mantienen; mira las verificaciones.` + (off ? ` <b style="color:var(--warn)">No es múltiplo de 25 cm</b>: habrá ladrillos cortados.` : '');
 }
@@ -2015,7 +2043,7 @@ function bindHouseHandles(){
     const ghost = el('casa-ghost'), gb = el('casa-ghost-b'), lbl = el('casa-lbl');
     const toSvg = e => { const pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY; return pt.matrixTransform(svg.getScreenCTM().inverse()); };
     const snap = x => Math.round(x/M)*M;
-    let A = G.a, W = G.W, D = G.D, Y2 = G.y2, WC = G.w;
+    let A = G.a, W = G.W, D = G.D, Y2 = G.y2, WC = G.w, DD = G.dd;
     const bW = G.W - G.a, minB = (r.typ==='T3' ? r.P : r.c) + 1.50;
     [ghost, gb, lbl].forEach(e=>e.setAttribute('visibility', 'visible'));
     h.classList.add('drag'); dragging = true; h.setPointerCapture(ev.pointerId);
@@ -2023,7 +2051,8 @@ function bindHouseHandles(){
       ghost.setAttribute('width', W*G.s); ghost.setAttribute('y', G.Y0 - D*G.s); ghost.setAttribute('height', D*G.s);
       gb.setAttribute('x1', G.X0 + A*G.s); gb.setAttribute('x2', G.X0 + A*G.s); gb.setAttribute('y1', G.Y0 - D*G.s);
       lbl.setAttribute('y', G.Y0 - D*G.s - 8);
-      lbl.textContent = k==='Y2' ? `Dormitorio 1: ${f2(Y2)} · dormitorio 2: ${f2(G.D-Y2)} m entre ejes · suelta para aplicar` : k==='WC' ? `Sala-comedor: ${f2(G.D-WC)} · cocina y baño: ${f2(WC)} m entre ejes · suelta para aplicar` : `Crujía A–B ${f2(A)} · B–D ${f2(W-A)} · fondo ${f2(D)} m · suelta para aplicar`;
+      lbl.textContent = k==='DD' ? `Crujía de dormitorios: fondo ${f2(DD)} m${G.D-DD > 0.01 ? ` (${f2(G.D-DD)} m más corta que la social)` : ' (igual a la social)'} · suelta para aplicar` : k==='Y2' ? `Dormitorio 1: ${f2(Y2)} · dormitorio 2: ${f2(G.D-Y2)} m entre ejes · suelta para aplicar` : k==='WC' ? `Sala-comedor: ${f2(G.D-WC)} · cocina y baño: ${f2(WC)} m entre ejes · suelta para aplicar` : `Crujía A–B ${f2(A)} · B–D ${f2(W-A)} · fondo ${f2(D)} m · suelta para aplicar`;
+      if(k==='DD'){ gb.setAttribute('x1', G.X0); gb.setAttribute('x2', G.X0 + A*G.s); gb.setAttribute('y1', G.Y0 - DD*G.s); gb.setAttribute('y2', G.Y0 - DD*G.s); ghost.setAttribute('visibility', 'hidden'); }
       if(k==='Y2' || k==='WC'){ const yy = k==='Y2' ? Y2 : G.D - WC; gb.setAttribute('x1', G.X0 + (k==='Y2' ? 0 : A)*G.s); gb.setAttribute('x2', G.X0 + (k==='Y2' ? A : W)*G.s); gb.setAttribute('y1', G.Y0 - yy*G.s); gb.setAttribute('y2', G.Y0 - yy*G.s); ghost.setAttribute('visibility', 'hidden'); }
     };
     const move = e => {
@@ -2031,6 +2060,7 @@ function bindHouseHandles(){
       if(k==='B'){ A = Math.min(6, Math.max(2.00, snap(x))); W = A + bW; hr.setAttribute('x', G.X0 + A*G.s - 6); }
       else if(k==='D'){ W = Math.max(A + minB, Math.min(A + 8, snap(x))); hr.setAttribute('x', G.X0 + W*G.s - 6); }
       else if(k==='Y2'){ Y2 = Math.min(G.D - 2.50, Math.max(2.50, snap(y))); hr.setAttribute('y', G.Y0 - Y2*G.s - 6); }
+      else if(k==='DD'){ DD = Math.min(G.D, Math.max(G.y2 + 2.50, snap(y))); hr.setAttribute('y', G.Y0 - DD*G.s - 6); }
       else if(k==='WC'){ WC = Math.min(G.D - 3.00, Math.max(1.50, snap(G.D - y))); hr.setAttribute('y', G.Y0 - (G.D - WC)*G.s - 6); }
       else { D = Math.min(25, Math.max(4.00, snap(y))); hr.setAttribute('y', G.Y0 - D*G.s - 6); }
       paint();
@@ -2041,11 +2071,12 @@ function bindHouseHandles(){
       dragging = false; h.classList.remove('drag');
       if(k==='B' && Math.abs(A - G.a) > 1e-6) setCota('a', A, r);
       else if(k==='D' && Math.abs(W - G.W) > 1e-6){ const nb = W - A; if(r.typ==='T3') setCota('b3', nb - r.P, r); else setCota('bm', nb - r.c, r); }
+      else if(k==='DD' && Math.abs(DD - G.dd) > 1e-6) setCota('ddr', Math.max(0.5, G.D - DD + 0.5), r);
       else if(k==='Y2' && Math.abs(Y2 - G.y2) > 1e-6) setCota('y2only', Y2, r);
       else if(k==='WC' && Math.abs(WC - G.w) > 1e-6) setCota('wonly', WC, r);
-      else if(k==='F' && Math.abs(D - G.D) > 1e-6){ if(r.typ==='T3L') setCota('d3', D - r.yd, r); else if(r.typ==='T3') setCota('y3', D - r.yb, r); else setCota('ym', D - r.y2 - r.w, r); }
+      else if(k==='F' && Math.abs(D - G.D) > 1e-6){ if(r.typ !== 'T3' && r.typ !== 'T3L'){ const nd = Math.max(0, D - G.dd); el('ddr').value = String(nd); if(nd > parseFloat(el('ddr').max)) el('ddr').max = String(Math.ceil(nd)); } if(r.typ==='T3L') setCota('d3', D - r.yd, r); else if(r.typ==='T3') setCota('y3', D - r.yb, r); else setCota('ym', D - r.y2 - r.w, r); }
       else { [ghost, gb, lbl].forEach(e=>e.setAttribute('visibility', 'hidden')); return; }
-      const msg = el('gen-msg'); msg.innerHTML = msg.innerHTML.replace(/Cota cambiada a [\d.]+ m(<\/b>) \([^)]*\)/, (x, bb)=> (k==='Y2' ? `Muro entre dormitorios movido: dormitorio 1 de ${f2(Y2)} m y dormitorio 2 de ${f2(G.D-Y2)} m entre ejes` : k==='WC' ? `Muro de la cocina movido: sala-comedor de ${f2(G.D-WC)} m y cocina-baño de ${f2(WC)} m entre ejes` : k==='F' ? `Fondo construido: ${f2(D)} m` : `Crujías: A–B ${f2(A)} m, B–D ${f2(W-A)} m`) + bb);
+      const msg = el('gen-msg'); msg.innerHTML = msg.innerHTML.replace(/Cota cambiada a [\d.]+ m(<\/b>) \([^)]*\)/, (x, bb)=> (k==='DD' ? (G.D-DD > 0.01 ? `Crujía de dormitorios más corta: llega a ${f2(DD)} m, ${f2(G.D-DD)} m antes que la social` : `Las dos crujías llegan al mismo fondo`) : k==='Y2' ? `Muro entre dormitorios movido: dormitorio 1 de ${f2(Y2)} m y dormitorio 2 de ${f2(G.D-Y2)} m entre ejes` : k==='WC' ? `Muro de la cocina movido: sala-comedor de ${f2(G.D-WC)} m y cocina-baño de ${f2(WC)} m entre ejes` : k==='F' ? `Fondo construido: ${f2(D)} m` : `Crujías: A–B ${f2(A)} m, B–D ${f2(W-A)} m`) + bb);
     };
     h.addEventListener('pointermove', move); h.addEventListener('pointerup', up); h.addEventListener('pointercancel', up);
   }));
@@ -2438,7 +2469,8 @@ let proFurn = (()=>{ try { return localStorage.getItem('vvm-pro-muebles') === '1
 function axesOf(r){
   const v = r.v, W = r.W, D = r.D, tL = r.typ === 'T3L', t3 = r.typ === 'T3';
   const ax = t3 ? [['A',0],['B',v.a],['C',v.a+r.P],['D',W]] : [['A',0],['B',v.a],['C',W-r.c],['D',W]];
-  const ay = tL ? [['1',0],['2',r.y2],['3',r.yp],['4',r.yd],['5',D]] : t3 ? [['1',0],['2',r.y2],['3',r.yb],['4',D]] : [['1',0],['2',r.y2],['3',D-r.w],['4',D]];
+  let ay = tL ? [['1',0],['2',r.y2],['3',r.yp],['4',r.yd],['5',D]] : t3 ? [['1',0],['2',r.y2],['3',r.yb],['4',D]] : [['1',0],['2',r.y2],['3',D-r.w],['4',D]];
+  if(r.nt && !ay.some(([,y])=>Math.abs(y-r.dd)<0.05)) ay = ay.concat([['',r.dd]]).sort((p,q)=>p[1]-q[1]).map(([,y],i)=>[String(i+1),y]);
   return {ax, ay};
 }
 function gapList(w, floor){
@@ -2668,7 +2700,7 @@ document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.addEventListener
 
 function render(){
   const v = read();
-  ['a','b','d','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
+  ['a','b','d','ddr','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
   const r = compute(v);
   draw(r); draw2(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
@@ -2830,7 +2862,7 @@ function applyPlan(text, flname){
     try {
       const data = JSON.parse(text);
       if(!data || data.app !== 'verificador-vivienda-minima' || !data.valores) throw new Error('formato');
-      ids.forEach(k=>{ if(!(k in data.valores)) return; const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
+      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
       el('ppm').value = data.valores.ppm || 'auto'; if(!el('ppm').value) el('ppm').value = 'auto';
       if(NIV[data.nivel]){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
       clearTimeout(genTimer); wantTotal = null;
@@ -2878,7 +2910,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne'));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-14j';
+const APP_VERSION = '2026-11-14h';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
