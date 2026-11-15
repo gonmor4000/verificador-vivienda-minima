@@ -77,6 +77,7 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 14px;font-weight:600;color:var(--muted)}
 .tabs button.on{color:var(--ink);border-bottom-color:var(--brick);background:none}
 .rules{max-width:860px}
+#tab-par{max-width:1100px}#tab-par .tbl td,#tab-par .tbl th{text-align:left;font-family:var(--f-body);font-size:13px;vertical-align:top;padding:6px 8px}#tab-par .tbl td .pill{margin-right:4px}
 .rules h3{font-family:var(--f-display);font-size:15px;margin:20px 0 6px}
 .rules ol{margin:0;padding-left:22px}
 .rules li{margin:6px 0;line-height:1.5}
@@ -276,6 +277,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <button type="button" role="tab" id="tab-btn-mat" aria-selected="false">Materiales</button>
     <button type="button" role="tab" id="tab-btn-eta" aria-selected="false">Etapas</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
+    <button type="button" role="tab" id="tab-btn-par" aria-selected="false">Parámetros</button>
     <button type="button" role="tab" id="tab-btn-rne" aria-selected="false">RNE</button>
     <button type="button" role="tab" id="tab-btn-cam" aria-selected="false">Cambios</button>
   </nav>
@@ -461,6 +463,41 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     </ol>
   </section>
 
+  <section id="tab-par" class="card rules" hidden aria-label="Certificados de parámetros urbanísticos">
+    <h2>Certificado de parámetros urbanísticos y edificatorios</h2>
+    <p class="hint" style="margin-top:0">Es el papel de la municipalidad que dice qué se puede construir en <b>tu</b> lote. Todo lo demás (el RNE, este verificador) se aplica dentro de lo que permite el certificado. Valores buscados en internet el 15 nov 2026, con su fuente: son ejemplos para orientarse; el que vale es el certificado de tu lote.</p>
+
+    <h3>Cotejar mi plano con un certificado</h3>
+    <div class="ctl" style="border:0;max-width:520px"><label for="par-pre">Certificado de referencia</label><select id="par-pre"></select></div>
+    <table class="tbl" id="par-cot" aria-label="Cotejo del plano con el certificado"></table>
+    <p class="hint" id="par-cot-n"></p>
+
+    <h3>Qué dice un certificado y qué significa para tu casa</h3>
+    <table class="tbl"><thead><tr><th>Campo</th><th>Qué es</th><th>Qué implica al construir por etapas</th></tr></thead><tbody>
+      <tr><td>Zonificación</td><td>El uso principal de la zona: RDB, RDM, RDA (residencial de densidad baja, media, alta), CV, CZ (comercio), ZRE…</td><td>Una casa unifamiliar entra en zonas residenciales y, casi siempre, en las comerciales (uso compatible).</td></tr>
+      <tr><td>Usos compatibles</td><td>Otros usos que se permiten en la zona.</td><td>Decide si puedes tener <b>taller o tienda</b> abajo (vivienda taller): si no está, no habrá licencia de funcionamiento.</td></tr>
+      <tr><td>Lote mínimo y frente mínimo</td><td>El lote más chico permitido para ese uso (por ejemplo 90 m² con 6 m de frente).</td><td>Los lotes más chicos ya existentes siguen siendo válidos, pero <b>no se pueden subdividir</b>. Para independizar los pisos se divide la propiedad por pisos, no el lote.</td></tr>
+      <tr><td>Altura máxima</td><td>En pisos o metros; a veces con fórmula 1.5 (a + r): ancho de la calle más los retiros.</td><td>Es el techo de tu crecimiento: si dice 3 pisos, el cálculo estructural se hace para 3 desde la etapa 1.</td></tr>
+      <tr><td>Coeficiente de edificación</td><td>Área techada total permitida dividida entre el área del lote.</td><td>Limita cuánto puede sumar la casa terminada, con todos sus pisos.</td></tr>
+      <tr><td>Área libre</td><td>Parte del lote sin techar, en %; incluye los retiros y el patio.</td><td>Fija el tamaño mínimo del patio. En esquina la municipalidad puede reducirla (A.020 art. 17).</td></tr>
+      <tr><td>Retiros</td><td>Distancia libre del límite del lote a la fachada, por cada calle (más en avenida que en calle o pasaje). A veces viene como «alineamiento de fachada» medido desde el eje de la vía.</td><td>En esquina o atravesante hay un retiro por cada calle. Allí pueden ir la escalera de una ampliación y el volado de 0.50 m (A.010 art. 8.3 y 13).</td></tr>
+      <tr><td>Estacionamientos</td><td>Plazas exigidas (por ejemplo 1 por vivienda, o 1 cada 2 o 3 en programas sociales).</td><td>En unifamiliar suele pedirse 1; si el retiro no alcanza para un auto, pregunta si se puede exonerar o pagar.</td></tr>
+      <tr><td>Densidad</td><td>Habitantes por hectárea.</td><td>Limita cuántas viviendas caben en el lote: importa si el 2.º piso será otra vivienda (bifamiliar).</td></tr>
+      <tr><td>Vigencia</td><td>36 meses desde que se emite.</td><td>Pídelo cuando vayas a tramitar la licencia, no años antes.</td></tr>
+    </tbody></table>
+    <p class="hint">Cómo se pide: en la municipalidad del distrito (mesa de partes o en línea), con una solicitud o declaración jurada, un plano de ubicación del lote y el pago del derecho: <b>S/ 66.50</b> en San Juan de Miraflores (TUPA, Ord. 565-MDSJM, publicada el 17 ene 2026) y <b>S/ 42.80</b> en San Juan de Lurigancho (Ord. 358-MDSJL, 2017). Con él, una casa de hasta 120 m² construidos, única en el lote, va a licencia por la <b>Modalidad A</b> de la Ley 29090 (ver el TUPA de Villa El Salvador, Ord. 391-MVES).</p>
+
+    <h3>Valores reales encontrados</h3>
+    <div style="overflow-x:auto"><table class="tbl" id="par-tbl"><thead><tr><th>Dónde</th><th>Zona</th><th>Lote mín. · frente</th><th>Altura</th><th>Área libre</th><th>Estac.</th><th>Norma y estado</th></tr></thead><tbody></tbody></table></div>
+
+    <h3>Cuidado: Lima está cambiando sus normas</h3>
+    <ul>
+      <li><b>Lima Norte</b> (Ancón, Carabayllo, Comas, Independencia, Los Olivos, Puente Piedra, San Martín de Porres y Santa Rosa): el <b>PDU Lima Norte 2034</b> (Ord. 2757-MML, El Peruano 3 ago 2025) derogó en esa parte la Ord. 1015 de 2007; la Ord. 2866-MML (21 oct 2026) lo actualizó. Los nuevos parámetros están en su Reglamento de Zonificación (Anexo 2), en <a href="https://portal.imp.gob.pe/pdulimanorte/" target="_blank" rel="noopener">portal.imp.gob.pe/pdulimanorte</a>: la altura pasa a depender del ancho de la vía más los retiros, área libre de 30 % en multifamiliar y 40 % en conjuntos, y en vivienda social 1 estacionamiento cada 3 a 5 viviendas. Mientras cada distrito no apruebe su índice de usos rigen equivalencias transitorias. <b>Los valores de 2007 de la tabla pueden ya no valer allí.</b></li>
+      <li><b>Lima Este</b> (Ate, Chaclacayo, El Agustino, La Molina, Lurigancho-Chosica, San Juan de Lurigancho y Santa Anita): el PDU Lima Este 2026-2036 terminó su consulta pública (set. 2026) y aún no estaba aprobado.</li>
+      <li>En <b>Villa El Salvador</b> y los demás distritos del sur no encontré en internet un certificado con valores: hay que pedirlo para cada lote.</li>
+    </ul>
+    <p class="hint">Fuentes: <a href="https://www.municomas.gob.pe/resources/upload/paginas/licencias/lf/Ordenanza%202757%20MML%20-%20PDU%20LIMA%20NORTE%202034-1.pdf" target="_blank" rel="noopener">Ord. 2757-MML</a> · <a href="https://busquedas.elperuano.pe/dispositivo/NL/2566013-1" target="_blank" rel="noopener">Ord. 2866-MML</a> · <a href="https://www.revisoresurbanos.pe/blog/nuevos-parametros-urbanisticos-en-lima-norte-oportunidades-y-retos-para-los-proyectos-inmobiliarios" target="_blank" rel="noopener">resumen del PDU Lima Norte</a> · <a href="https://gestion.pe/economia/lima-este-tendria-nuevas-reglas-para-construir-cambios-para-inmobiliarios-y-propietarios-en-la-molina-chosica-san-juan-de-lurigancho-y-otros-4-distritos-noticia/" target="_blank" rel="noopener">Gestión sobre el PDU Lima Este</a> · <a href="https://cdn.www.gob.pe/uploads/document/file/9391992/7696634-ordenanza-n-565-mdsjm.pdf" target="_blank" rel="noopener">TUPA de San Juan de Miraflores</a> · <a href="https://cdn.www.gob.pe/uploads/document/file/4498568/Ordenanza%20N%C2%BA%20391-2018%20MVESGTfoi.pdf" target="_blank" rel="noopener">TUPA de Villa El Salvador</a> · <a href="https://hackeandoproyectos.substack.com/p/que-son-los-parametros-urbanisticos" target="_blank" rel="noopener">qué son los parámetros</a>.</p>
+  </section>
   <section id="tab-rne" class="card rules" hidden aria-label="Artículos del RNE">
     <h2>Artículos del RNE que respeta el verificador</h2>
     <p class="hint" style="margin-top:0">Cada fila es un artículo del Reglamento Nacional de Edificaciones vigente que la herramienta aplica al generar la casa o comprueba en sus verificaciones. Haz clic en la cita para abrir ese artículo en el <a href="rne.html" target="_blank" rel="noopener" class="rne-home">RNE consultable</a>, con su texto completo y la página del RNE ilustrado. Las dudas de normativa que ya salieron están en el tablón de <a href="preguntas.html" target="_blank" rel="noopener" class="preg-home">Preguntas</a>. Normas usadas: A.010 (RM 191-2021), A.020 (RM 188-2021) y A.120 (RM 075-2023).</p>
@@ -560,6 +597,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Parámetros</b>: qué dice un certificado de parámetros urbanísticos y qué implica cada campo, valores reales encontrados por distrito con su fuente y estado (Lima Norte cambió con el PDU 2034), costo del trámite y un cotejo del plano con el certificado elegido. El asistente pregunta ahora también <b>cuántos dormitorios</b> (y dice cuántos duermen en cada uno) y el <b>presupuesto de la primera etapa</b> sin el terreno: al final dice qué etapas alcanza y cuánto falta. </span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Mensaje de inicio</b> corto, pensado para el celular y el maestro de obra: «Construye por etapas sin tener que romper después», qué da el plano, que es gratis y que los datos no salen del equipo, con un aviso de licencia y cálculo estructural. Al terminar el asistente, pantalla <b>Siguientes pasos para construir</b>: certificado de parámetros, estudio de suelos, cálculo estructural para todos los pisos previstos, expediente y licencia (Modalidad A de la Ley 29090 hasta 120 m²) y obra por etapas hasta la inscripción en SUNARP.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos independientes</b>: nueva opción «Independizar los pisos en el futuro» (y pregunta en el asistente). La escalera va al <b>retiro frontal</b> con entrada propia desde la calle (A.010 art. 8.3 l): de un tramo junto a la fachada si no pasa sobre la puerta de la casa, si no de caracol; el descanso llega frente al estar del 2.º piso, que abre su puerta a la fachada. Si el retiro es corto, lo dice y deja la escalera en el patio.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Vivienda taller</b> (A.020 art. 4.1): opción «Taller o negocio en el 1.er piso», en una parte (la sala del frente pasa a taller o tienda) o en todo el piso (taller, depósito, atención, cocineta y baño del taller, sin camas, y la familia vive arriba). Verificaciones de dónde vive la familia, acceso sin cruzar el taller, zonificación, licencia y extintor. El asistente pregunta además el tamaño del terreno y muestra su área.</span></li>
@@ -628,7 +666,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         <option value="7x20">7 × 20 · 140 m² · Villa El Salvador</option>
         <option value="8x20">8 × 20 · 160 m² · urbanización popular</option>
         <option value="10x20">10 × 20 · 200 m² · clase media</option>
-      </select><span class="hint">Pone frente y fondo; después los puedes cambiar. Los mínimos de densidad media en Lima son 6 × 15 en el Área de Tratamiento I y 6 × 20 en la II: salen de las ordenanzas 1015, 1076 y 1099-MML; los demás son tamaños habituales, por verificar.</span></div>
+      </select><span class="hint">Pone frente y fondo; después los puedes cambiar. Los mínimos de densidad media en Lima son 6 × 15 en el Área de Tratamiento I y 6 × 20 en la II: salen de las ordenanzas 1015, 1076 y 1099-MML (en Lima Norte ya rige el PDU 2034: ver la pestaña Parámetros); los demás son tamaños habituales, por verificar.</span></div>
       <div class="ctl"><div class="inline">
         <div><label for="lote" class="hint">Frente (m)</label><input type="number" id="lote" min="4" max="12" step="0.05"></div>
         <div><label for="fondo" class="hint">Fondo (m)</label><input type="number" id="fondo" min="8" max="40" step="0.05"></div>
@@ -720,11 +758,11 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 
 <dialog class="wz" id="wz" aria-labelledby="wz-title">
   <form method="dialog" class="wz-in" id="wz-form">
-    <div class="wz-head"><h2 id="wz-title">Empecemos tu casa</h2><div class="wz-dots" id="wz-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="wz-head"><h2 id="wz-title">Empecemos tu casa</h2><div class="wz-dots" id="wz-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="wz-body">
       <div class="wz-step" data-step="0">
         <p style="font-size:16px"><b>Construye por etapas sin tener que romper después.</b></p>
-        <p>En 5 preguntas te doy el plano de tu casa en tu lote, listo para crecer:</p>
+        <p>En 6 preguntas te doy el plano de tu casa en tu lote, listo para crecer:</p>
         <ul class="wz-list">
           <li>cada etapa ya tiene su sitio: baño, desagües, escalera y columnas;</li>
           <li>cuánto cuesta cada etapa y qué materiales comprar;</li>
@@ -737,6 +775,8 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <div class="wz-step" data-step="1" hidden>
         <p><b>¿Cuántas personas van a vivir en la casa?</b></p>
         <div class="wz-cnt"><button type="button" id="wz-pm" aria-label="Una persona menos">−</button><output id="wz-p" aria-live="polite">4</output><button type="button" id="wz-pp" aria-label="Una persona más">+</button><span class="hint">personas</span></div>
+        <p style="margin-top:4px"><b>¿Cuántos dormitorios necesitan?</b></p>
+        <div class="wz-cnt"><button type="button" id="wz-dm" aria-label="Un dormitorio menos">−</button><output id="wz-d" aria-live="polite">2</output><button type="button" id="wz-dp" aria-label="Un dormitorio más">+</button><span class="hint">dormitorios</span></div>
         <p class="hint" id="wz-p-txt"></p>
       </div>
       <div class="wz-step" data-step="2" hidden>
@@ -776,14 +816,21 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         </div>
       </div>
       <div class="wz-step" data-step="5" hidden>
+        <p><b>¿Cuánto tienes para la primera etapa de la obra?</b></p>
+        <label>Presupuesto en soles, solo para construir (sin el terreno)<input type="number" id="wz-pres" min="0" step="500" inputmode="numeric" placeholder="Ej.: 40000"></label>
+        <p class="hint">Lo que tienes ahorrado o el crédito que puedes sacar (por ejemplo, el bono de Techo Propio más tu ahorro). Al final te digo qué etapas alcanzas con eso y cuánto falta. Puedes dejarlo vacío.</p>
+      </div>
+      <div class="wz-step" data-step="6" hidden>
         <p><b>Tus datos</b> <span class="hint">(opcional)</span></p>
         <label>Nombre<input type="text" id="wz-nom" autocomplete="name"></label>
         <label>Correo<input type="email" id="wz-mail" autocomplete="email"></label>
         <label>Teléfono o WhatsApp<input type="tel" id="wz-tel" autocomplete="tel"></label>
         <p class="hint">Se quedan solo en este equipo y van dentro del plano cuando lo guardas. No se envían a ningún lado.</p>
       </div>
-      <div class="wz-step" data-step="6" hidden>
-        <p><b>Tu plano ya está listo.</b> <span id="wz-done-txt"></span> Para construirlo bien, estos son los siguientes pasos, en orden:</p>
+      <div class="wz-step" data-step="7" hidden>
+        <p><b>Tu plano ya está listo.</b> <span id="wz-done-txt"></span></p>
+        <p class="wz-note" id="wz-pres-txt" hidden></p>
+        <p>Para construirlo bien, estos son los siguientes pasos, en orden:</p>
         <ol class="wz-steps">
           <li><b>Certificado de parámetros urbanísticos</b>Se pide en tu municipalidad. Dice los retiros, la altura y los usos permitidos en tu lote (también si se permite un taller): revisa que coincidan con lo que pusiste aquí.</li>
           <li><b>Estudio de suelos</b>Lo hace un ingeniero especialista. Dice qué tan firme es el terreno y cómo deben ser los cimientos (E.050).</li>
@@ -3602,6 +3649,34 @@ function tallerApply(r, v){
   }
   add('Permisos y seguridad', 'ok', `La zonificación del lote debe ser compatible con el taller (certificado de parámetros), con licencia de funcionamiento (Ley 28976) e inspección de seguridad (ITSE); en el área de taller va un extintor (A.020, cuadro de seguridad: NTP 350.043-1).`);
 }
+// ---------- Certificados de parámetros: valores reales encontrados y cotejo con el plano ----------
+const PARQ = [
+  {k:'ate', d:'Ate (Área de Tratamiento Normativo I)', z:'RDM unifamiliar', lote:90, fr:6, p:3, al:30, est:'1 por vivienda', n:'Certificado modelo de la municipalidad de Ate; Ord. 1099 y 1015-MML. PDU Lima Este en camino.', url:'https://muniate.gob.pe/ate/files/licenciaEdificacion/PROCEDIMIENTO/4_Par.pdf', st:'warn'},
+  {k:'norte', d:'Comas, SMP, Independencia, Los Olivos (ATN II, 2007)', z:'RDM unifamiliar', lote:120, fr:6, p:3, al:30, est:'1 por vivienda', n:'Ord. 1015-MML (2007). Reemplazada en Lima Norte por el PDU Lima Norte 2034: verificar.', url:'https://www.municomas.gob.pe/resources/upload/paginas/licencias/lf/Ordenanza%202757%20MML%20-%20PDU%20LIMA%20NORTE%202034-1.pdf', st:'bad'},
+  {k:'sur2', d:'Barranco, Surquillo, parte de Surco (ATN II)', z:'RDM unifamiliar', lote:120, fr:6, p:3, al:30, est:'1 por vivienda', n:'Ord. 1076-MML (2007). Nota b: unifamiliar se permite en todo lote de más de 90 m².', url:'https://ipdu.pe/ordenanzasyplanos/barranco/barranco-ordenanza.pdf', st:'warn'},
+  {k:'aqp', d:'J. L. Bustamante y Rivero, Arequipa', z:'RDM-1 unifamiliar', lote:90, fr:8, p:3, al:30, est:'—', n:'Certificado de la municipalidad (PDM Arequipa 2016-2025); coeficiente 2.10; vigencia 36 meses.', url:'https://munibustamante.gob.pe/archivos/1457644063.pdf', st:'ok'},
+  {k:'mira', d:'Miraflores', z:'RDM', lote:300, fr:10, p:5, al:35, est:'—', n:'Ord. 920-MML (presentación al Congreso, texto poco legible): 5 a 8 pisos según la vía. Referencia de un distrito consolidado.', url:'https://www.congreso.gob.pe/Docs/comisiones2024/Vivienda/files/presentaciones/5_so_m.d._de_miraflores.pdf', st:'warn'}
+];
+const PAR_ST = {ok:'vigente', warn:'por confirmar', bad:'reemplazada'};
+function parRender(r){
+  const tb = document.querySelector('#par-tbl tbody'); if(!tb) return;
+  if(!tb.dataset.ok){ tb.innerHTML = PARQ.map(q=>`<tr><td>${q.d}</td><td>${q.z}</td><td>${q.lote} m² · ${f2(q.fr)} m</td><td>${q.p} pisos</td><td>${q.al} %</td><td>${q.est}</td><td><span class="pill ${q.st}">${PAR_ST[q.st]}</span> ${q.n} <a href="${q.url}" target="_blank" rel="noopener">fuente</a></td></tr>`).join('')
+      + `<tr><td>San Borja (ejemplo de redacción)</td><td>OU</td><td>—</td><td>según entorno</td><td>según entorno</td><td>por cuadro</td><td>Documento informativo de feb. 2025: un retiro por cada calle, <b>5.00 m en avenida y 3.00 m en calle</b>, y alineamiento de fachada medido desde el eje de la vía. <a href="https://cdn.www.gob.pe/uploads/document/file/8756438/7242955-informacion-de-parametros.PDF" target="_blank" rel="noopener">fuente</a></td></tr>`;
+    tb.dataset.ok = '1';
+    el('par-pre').innerHTML = PARQ.map(q=>`<option value="${q.k}">${q.d} · ${q.z}</option>`).join('');
+    el('par-pre').addEventListener('change', ()=>{ if(lastR) parRender(lastR); }); }
+  const q = PARQ.find(x=>x.k === el('par-pre').value) || PARQ[0], v = r.v, A = v.lote*v.fondo;
+  const libre = Math.max(0, 1 - r.gross/A)*100, pisos = Math.max(v.n || 1, r.gross2 > 0 ? 2 : 1);
+  const row = (t, mine, req, ok, note='') => `<tr><td>${t}</td><td>${mine}</td><td>${req}</td><td><span class="pill ${ok}">${{ok:'cumple', warn:'aviso', bad:'no cumple'}[ok]}</span> ${note}</td></tr>`;
+  el('par-cot').innerHTML = `<thead><tr><th>Parámetro</th><th>Tu plano</th><th>Certificado</th><th></th></tr></thead><tbody>`
+    + row('Área del lote', `${f1(A)} m²`, `${q.lote} m² mínimo`, A >= q.lote - 1e-6 ? 'ok' : 'warn', A >= q.lote - 1e-6 ? '' : 'Un lote existente más chico sigue siendo válido, pero no se puede subdividir.')
+    + row('Frente', `${f2(v.lote)} m`, `${f2(q.fr)} m mínimo`, v.lote >= q.fr - 1e-6 ? 'ok' : 'warn', v.lote >= q.fr - 1e-6 ? '' : 'Vale para lotes ya existentes; confirma en tu certificado.')
+    + row('Pisos', `${pisos} previsto${pisos>1?'s':''}`, `${q.p} como máximo`, pisos <= q.p ? 'ok' : 'bad', pisos < q.p ? `Puedes crecer hasta ${q.p} pisos: que el cálculo estructural los considere desde la etapa 1.` : '')
+    + row('Área libre en la etapa 1', `${Math.round(libre)} %`, `${q.al} % mínimo`, libre >= q.al ? 'ok' : 'bad', libre >= q.al ? '' : 'Agranda el patio o reduce el fondo construido.')
+    + row('Retiro frontal', `${f2(v.rf)} m`, 'según la vía', 'warn', 'Usa el de tu certificado: suele ser mayor en avenida que en calle o pasaje.')
+    + `</tbody>`;
+  el('par-cot-n').textContent = `Cotejo con «${q.d}». El área libre se mide con el 1.er piso de la etapa 1 (${f1(r.gross)} m² techados en ${f1(A)} m² de lote).`;
+}
 function render(){
   const v = read();
   ['a','b','d','ddr','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
@@ -3611,6 +3686,7 @@ function render(){
   try { relRender(r); } catch(e){ console.error('relaciones', e); }
   try { bolas(r); } catch(e){ console.error('bolas', e); }
   try { materiales(r); } catch(e){ console.error('materiales', e); }
+  try { parRender(r); } catch(e){ console.error('parámetros', e); }
   try { etapas(r); applyProj(r); } catch(e){ console.error('etapas', e); }
   lastR = r; try { proRender(r); } catch(e){ console.error('diseño pro', e); }
   if(!el('tab-3d').hidden && d3) { try { build3D(r); } catch(e){ console.error('3D', e); } }
@@ -3817,7 +3893,7 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','mat','eta','reg','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('tab-par').hidden = k!=='par'; el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','mat','eta','reg','par','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 // Exportar el 3D a SketchUp: COLLADA 1.4.1 en metros, con lo que se ve en el visor (etapa, techos, 1.er piso)
 el('v3-dae').addEventListener('click', async ()=>{
   const msg = el('v3-dae-msg');
@@ -3840,9 +3916,9 @@ el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d'
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15e';
+const APP_VERSION = '2026-11-15f';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
@@ -3860,14 +3936,14 @@ el('upd-btn').addEventListener('click', async ()=>{
   location.replace(location.pathname + '?v=' + Date.now());
 });
 // ---------- Asistente de inicio: personas, dirección, frentes del lote y datos (todo se puede pasar) ----------
-const WZ_N = 6;
-let wzStep = 0, wzP = 4;
+const WZ_N = 7;
+let wzStep = 0, wzP = 4, wzD = 2, wzDauto = true;
 const wzCli = () => { try { return JSON.parse(localStorage.getItem('vvm-cliente') || 'null') || {}; } catch(e){ return {}; } };
 // dormitorios: padres en el principal y hasta 2 por dormitorio secundario; la VIS pide 2 como mínimo
 const wzDorm = p => Math.min(6, Math.max(2, 1 + Math.ceil(Math.max(0, p - 2)/2)));
 function wzShowInfo(){
   const c = wzCli(), box = el('proj-info'), esc = t => String(t).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
-  const parts = [c.nom && `<b>${esc(c.nom)}</b>`, (c.dir || c.dist) && esc([c.dir, c.dist].filter(Boolean).join(', ')), c.p && `${c.p} ${c.p == 1 ? 'persona' : 'personas'}`].filter(Boolean);
+  const parts = [c.nom && `<b>${esc(c.nom)}</b>`, (c.dir || c.dist) && esc([c.dir, c.dist].filter(Boolean).join(', ')), c.p && `${c.p} ${c.p == 1 ? 'persona' : 'personas'}${c.d ? `, ${c.d} dorm.` : ''}`, c.pres > 0 && `presupuesto etapa 1: S/ ${nf(c.pres)}`].filter(Boolean);
   box.hidden = !parts.length;
   box.innerHTML = parts.length ? `Proyecto: ${parts.join(' · ')} <button type="button" id="proj-edit">Editar</button>` : '';
   const b = el('proj-edit'); if(b) b.addEventListener('click', ()=>wzOpen());
@@ -3875,19 +3951,26 @@ function wzShowInfo(){
 function wzRender(){
   document.querySelectorAll('#wz .wz-step').forEach(d=> d.hidden = +d.dataset.step !== wzStep);
   document.querySelectorAll('#wz-dots i').forEach((d,i)=> d.classList.toggle('on', i <= wzStep));
-  el('wz-title').textContent = ['Empecemos tu casa','Las personas','El terreno','Las calles del lote','El futuro de la casa','Tus datos','Siguientes pasos para construir'][wzStep];
+  el('wz-title').textContent = ['Empecemos tu casa','Las personas','El terreno','Las calles del lote','El futuro de la casa','El presupuesto','Tus datos','Siguientes pasos para construir'][wzStep];
   const done = wzStep === WZ_N; el('wz-dots').hidden = done; el('wz-skip').hidden = done;
   el('wz-back').hidden = wzStep === 0 || done;
   el('wz-next').textContent = done ? 'Ver mi casa' : wzStep === 0 ? 'Empezar' : wzStep === WZ_N - 1 ? 'Listo' : 'Siguiente';
-  el('wz-p').textContent = wzP;
-  const nd = wzDorm(wzP), up = nd > 3;
-  el('wz-p-txt').innerHTML = `Para ${wzP} ${wzP==1?'persona':'personas'}: <b>${nd} dormitorios</b> (padres en el principal y hasta dos por dormitorio)${up ? `, ${SPLIT[nd][0]} abajo y ${SPLIT[nd][1]} en el 2.º piso` : ''}.${wzP <= 2 ? ' La vivienda VIS pide 2 dormitorios como mínimo: el segundo puede ser estudio.' : ''} Lo puedes cambiar después.`;
+  if(wzDauto) wzD = wzDorm(wzP);
+  el('wz-p').textContent = wzP; el('wz-d').textContent = wzD;
+  { const sec = Math.max(0, wzP - 2), perS = wzD > 1 ? sec/(wzD - 1) : 0, per = wzP/wzD, up = wzD > 3;
+    let t = wzD === 1 ? `Todos duermen en un solo dormitorio.` : `En el principal duermen 2 (los padres) y en los otros ${wzD-1} quedan ${sec} ${sec===1?'persona':'personas'}: ${perS <= 1 ? '<b>una por dormitorio</b>, con cama de 0.90' : perS <= 2 ? '<b>dos por dormitorio</b>, con camarote o dos camas de 0.90 (el cuarto crece)' : `<b>${f1(perS)} por dormitorio</b>`}.`;
+    if(per > 3) t += ` <b style="color:var(--bad)">Más de 3 personas por dormitorio se considera hacinamiento</b>: suma un dormitorio.`;
+    else if(perS < 1 && wzD > 1 && sec < wzD - 1) t += ` Sobra ${wzD - 1 - sec === 1 ? 'un dormitorio' : (wzD - 1 - sec) + ' dormitorios'}: puede ser estudio, taller o para alquilar.`;
+    if(up) t += ` Van ${SPLIT[wzD][0]} abajo y ${SPLIT[wzD][1]} en el 2.º piso.`;
+    if(wzD < 2) t += ' La vivienda VIS pide 2 dormitorios como mínimo: el plano deja el segundo como estudio.';
+    el('wz-p-txt').innerHTML = t + (wzDauto ? ' Propuesta automática: cámbiala con − y +.' : ''); }
   const fr = (document.querySelector('input[name="wz-fr"]:checked') || {}).value || 'uno', e = fr==='esq'||fr==='tres', a = fr==='atr'||fr==='tres';
   { const lo = parseFloat(el('wz-lote').value), fo = parseFloat(el('wz-fondo').value); el('wz-area').innerHTML = lo > 0 && fo > 0 ? `Terreno de <b>${f2(lo)} × ${f2(fo)} m = ${f1(lo*fo)} m²</b>.` : ''; }
   el('wz-rl-l').hidden = !e; el('wz-rp-t').textContent = a ? 'Retiro a la calle de atrás (m)' : 'Retiro posterior (m)';
 }
 function wzOpen(){
   const c = wzCli();
+  wzDauto = !c.d; wzD = c.d || 2; el('wz-pres').value = c.pres || '';
   wzStep = 0; wzP = c.p || Math.max(2, Math.min(12, ((parseInt(el('nd').value,10)||2) + (parseInt(el('nd2').value,10)||0))*2));
   el('wz-lotpre').innerHTML = el('lotpre').innerHTML;
   ['lote','fondo','rf','rl','rp'].forEach(k=> el('wz-'+k).value = el(k).value);
@@ -3900,23 +3983,35 @@ function wzOpen(){
   wzRender();
   const d = el('wz'); if(d.showModal) { if(!d.open) d.showModal(); } else d.setAttribute('open', '');
 }
+// Presupuesto de la familia frente al costo de cada etapa (pestaña Etapas): qué alcanza y cuánto falta
+function wzPres(B){
+  const box = el('wz-pres-txt'); if(!lastR) return;
+  let E; try { E = etapasCalc(lastR).E; } catch(e){ return; }
+  const ks = Object.keys(E).map(Number).filter(k=>E[k].cost > 0).sort((a,b)=>a-b);
+  let acc = 0, last = 0; for(const k of ks){ if(acc + E[k].cost <= B) { acc += E[k].cost; last = k; } else break; }
+  const c1 = E[ks[0]].cost, mes = x => { const m = Math.ceil(x/etAhorro); return m <= 1 ? 'un mes' : `unos ${m} meses`; };
+  box.innerHTML = last ? `Con <b>S/ ${nf(B)}</b> alcanzas hasta la <b>etapa ${last}: ${ET_N[last].toLowerCase()}</b> (S/ ${nf(acc)}).${last < ks[ks.length-1] ? ` La etapa ${last+1} cuesta unos S/ ${nf(E[last+1].cost)}: ahorrando S/ ${nf(etAhorro)} al mes, son ${mes(Math.max(0, E[last+1].cost - (B - acc)))}.` : ''} El detalle por partida está en la pestaña Etapas.`
+    : `Con <b>S/ ${nf(B)}</b> todavía no alcanza la etapa 1 (casco habitable), que cuesta unos <b>S/ ${nf(c1)}</b>: faltan S/ ${nf(c1 - B)}, ${mes(c1 - B)} ahorrando S/ ${nf(etAhorro)} al mes. En la pestaña Etapas ves cada partida, por si quieres empezar por los cimientos.`;
+  box.hidden = false;
+}
 function wzClose(){ const d = el('wz'); if(d.close) d.close(); else d.removeAttribute('open'); }
 function wzFinish(){
   const num = (id, lo, hi) => { const x = parseFloat(el(id).value); return isFinite(x) ? Math.min(hi, Math.max(lo, x)) : null; };
   const fr = (document.querySelector('input[name="wz-fr"]:checked') || {}).value || 'uno';
-  const c = {p:wzP, dir:el('wz-dir').value.trim(), dist:el('wz-dist').value.trim(), nom:el('wz-nom').value.trim(), mail:el('wz-mail').value.trim(), tel:el('wz-tel').value.trim()};
+  const c = {p:wzP, d:wzD, pres: parseFloat(el('wz-pres').value) || 0, dir:el('wz-dir').value.trim(), dist:el('wz-dist').value.trim(), nom:el('wz-nom').value.trim(), mail:el('wz-mail').value.trim(), tel:el('wz-tel').value.trim()};
   try { localStorage.setItem('vvm-cliente', JSON.stringify(c)); } catch(e){}
   [['lote',4,12],['fondo',8,40],['rf',0,10],['rl',0,6],['rp',0,10]].forEach(([k,lo,hi])=>{ const x = num('wz-'+k, lo, hi); if(x != null) el(k).value = f2(x); });
   el('fr').value = fr; syncLotPre();
   el('ind').checked = ((document.querySelector('input[name="wz-ind"]:checked') || {}).value === 'si');
   wzShowInfo();
   const tal = (document.querySelector('input[name="wz-tal"]:checked') || {}).value || 'no'; el('tal').value = tal;
-  const nd = wzDorm(wzP); let [a,b] = SPLIT[nd];
+  const nd = Math.max(1, Math.min(6, wzD)); let [a,b] = SPLIT[nd];
   if(tal === 'todo'){ a = 2; b = 2; } // la vivienda sube: 2 dormitorios arriba, encima de los ambientes del taller
   el('ndt').value = String(a + b); wantTotal = tal === 'todo' ? null : nd; el('nd').value = String(a); el('nd2').value = String(b);
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
-  el('wz-done-txt').textContent = `Lo dibujé para ${wzP} ${wzP==1?'persona':'personas'} en ${f2(parseFloat(el('lote').value))} × ${f2(parseFloat(el('fondo').value))} m; lo ves al cerrar esta ventana.`;
+  el('wz-done-txt').textContent = `Lo dibujé para ${wzP} ${wzP==1?'persona':'personas'} y ${nd} ${nd==1?'dormitorio':'dormitorios'} en ${f2(parseFloat(el('lote').value))} × ${f2(parseFloat(el('fondo').value))} m; lo ves al cerrar esta ventana.`;
+  el('wz-pres-txt').hidden = true; if(c.pres > 0){ const tryP = () => el('gen-msg').textContent.startsWith('Buscando') ? setTimeout(tryP, 300) : wzPres(c.pres); setTimeout(tryP, 500); }
   wzStep = WZ_N; wzRender();
 }
 el('wz-open').addEventListener('click', ()=>wzOpen());
@@ -3925,6 +4020,8 @@ el('wz-back').addEventListener('click', ()=>{ wzStep = Math.max(0, wzStep - 1); 
 el('wz-next').addEventListener('click', ()=>{ if(wzStep === WZ_N) wzClose(); else if(wzStep === WZ_N - 1) wzFinish(); else { wzStep++; wzRender(); } });
 el('wz-pm').addEventListener('click', ()=>{ wzP = Math.max(1, wzP - 1); wzRender(); });
 el('wz-pp').addEventListener('click', ()=>{ wzP = Math.min(12, wzP + 1); wzRender(); });
+el('wz-dm').addEventListener('click', ()=>{ wzDauto = false; wzD = Math.max(1, wzD - 1); wzRender(); });
+el('wz-dp').addEventListener('click', ()=>{ wzDauto = false; wzD = Math.min(6, wzD + 1); wzRender(); });
 document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.addEventListener('change', ()=>{ const f = r.value; if((f==='atr'||f==='tres') && parseFloat(el('wz-rp').value) < parseFloat(el('wz-rf').value)) el('wz-rp').value = el('wz-rf').value; wzRender(); }));
 el('wz-lotpre').addEventListener('change', ()=>{ const v = el('wz-lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('wz-lote').value = f; el('wz-fondo').value = d; wzRender(); });
 ['wz-lote','wz-fondo'].forEach(id=> el(id).addEventListener('input', ()=>{ el('wz-lotpre').value = ''; wzRender(); }));
