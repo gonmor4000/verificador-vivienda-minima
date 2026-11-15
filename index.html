@@ -728,7 +728,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <div class="ctl"><label for="pis">Piso de la sala y los dormitorios (etapa 2)</label><select id="pis"><option value="vinr">Vinílico en rollo (lámina de PVC): el más barato</option><option value="vin">Vinílico SPC en clic: resiste agua y golpes</option><option value="cer">Cerámico 60 × 60</option><option value="por">Porcelanato 60 × 60</option><option value="pul">Cemento pulido con sellador (se queda el de la etapa 1)</option></select><span class="hint">La cocina y el baño llevan siempre cerámico antideslizante. Se ve en Diseño Pro, en el 3D y en el costo de la etapa 2.</span></div>
       <div class="ctl"><label for="tal">Taller o negocio en el 1.er piso</label><select id="tal"><option value="no">No</option><option value="parte">Sí, en una parte: la sala, al frente</option><option value="todo">Sí, todo el 1.er piso; la familia vive arriba</option></select><span class="hint" id="tal-hint">Vivienda taller (A.020 art. 4.1): la zonificación del lote tiene que permitir el uso y el taller necesita licencia de funcionamiento.</span></div>
       <div class="chk"><input type="checkbox" id="auto"><label for="auto">Estacionar un auto en casa<br><span class="hint">El retiro frontal pasa a <b>5.00 m</b> para que entre un auto (cajón de 2.70 × 5.00 m, A.010 art. 54); el estacionamiento sin techo o con techo ligero se permite en el retiro (art. 8.3 d).</span></label></div>
-      <div class="chk"><input type="checkbox" id="ind"><label for="ind">Independizar los pisos en el futuro<br><span class="hint">La escalera va en el <b>retiro frontal</b>, con entrada propia desde la calle, para que el 2.º piso (y los que vengan) sea una vivienda aparte. La A.010 (art. 8.3 l) lo permite en ampliaciones de vivienda.</span></label></div>
+      <div class="chk"><input type="checkbox" id="ind"><label for="ind">Independizar los pisos en el futuro<br><span class="hint">El 2.º piso (y los que vengan) como vivienda aparte, con entrada propia hasta la escalera: por la otra calle si el lote es de esquina o atravesante, o por un pasaje lateral de 0.90 m. La escalera <b>nunca va en el retiro frontal</b>.</span></label></div>
       <div class="chk"><input type="checkbox" id="pmr"><label for="pmr">Hacer la vivienda accesible (opcional)<br><span class="hint">Giro de 1.50 m en cada ambiente, ba&ntilde;o accesible y puertas de 0.90 m. La A.120 (RM 075-2023) solo lo exige en las áreas comunes de edificios (art. 28); dentro de una casa unifamiliar es una decisión de diseño.</span></label></div>
       <button type="button" id="gen" class="gen">Generar plano para este terreno</button>
       <div class="inline" style="margin-top:8px"><button type="button" id="save-plan">Guardar plano</button><button type="button" id="open-plan">Abrir plano</button></div>
@@ -849,12 +849,12 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
           <label><input type="radio" name="wz-obj" value="renta"><span>Sacarle el máximo provecho<br><span class="hint">construir lo más posible para alquilar o vender</span></span></label>
         </div>
         <p style="margin-top:6px"><b>¿Piensas independizar los pisos en el futuro?</b></p>
-        <p class="hint">Por ejemplo, que el 2.º piso sea para un hijo que forma su familia o para alquilar. Si es así, conviene dejar desde ahora la <b>escalera en el retiro frontal</b>, con entrada propia desde la calle, para seguir subiéndola cuando crezcan los pisos.</p>
+        <p class="hint">Por ejemplo, que el 2.º piso sea para un hijo que forma su familia o para alquilar. Si es así, conviene prever desde ahora una <b>entrada propia hasta la escalera</b> (por la otra calle o por un pasaje lateral de 0.90 m), sin pasar por la casa.</p>
         <div class="wz-fr" role="radiogroup" aria-label="Independizar los pisos">
-          <label><input type="radio" name="wz-ind" value="si"><span>Sí, quiero esa opción<br><span class="hint">escalera al frente, en el retiro</span></span></label>
+          <label><input type="radio" name="wz-ind" value="si"><span>Sí, quiero esa opción<br><span class="hint">entrada propia hasta la escalera</span></span></label>
           <label><input type="radio" name="wz-ind" value="no" checked><span>No, o todavía no sé<br><span class="hint">escalera en el patio</span></span></label>
         </div>
-        <p class="hint">La A.010 (art. 8.3 l) permite la escalera en el retiro frontal cuando es ampliación de vivienda. Lo puedes cambiar después en Terreno.</p>
+        <p class="hint">La escalera no se construye en el retiro frontal: queda en el patio o en un patio interior. Lo puedes cambiar después en Terreno.</p>
         <p style="margin-top:6px"><b>¿Tendrás un taller o negocio en el 1.er piso?</b></p>
         <div class="wz-fr" role="radiogroup" aria-label="Taller en el primer piso">
           <label><input type="radio" name="wz-tal" value="no" checked><span>No<br><span class="hint">todo el 1.er piso es casa</span></span></label>
@@ -982,13 +982,28 @@ function frentes(v, W, D, built2, add, latW){
     const sec = v.vd;
     if(sec >= 3.00 - 1e-6) add(G,'Ochavo','ok', `De la calzada al límite del lote hay ${f2(sec)} m (3.00 m o más): no hace falta ochavo (A.010 art. 12).`);
     else { const ok = v.rf + lat >= OCH - 1e-6;
-      add(G,'Ochavo', ok?'ok':'warn', `La vereda de ${f2(sec)} m tiene menos de 3.00 m, así que la esquina lleva un <b>ochavo</b> de 3.00 m en diagonal (${f2(OCH)} m sobre cada lindero), libre hasta 2.30 m de altura (A.010 art. 12). ` + (ok ? `Cae dentro de los retiros: la casa no se toca; solo el cerco de la esquina se corta en diagonal.` : `<b>La esquina de la casa entra en el ochavo</b>: hay que cortarla en diagonal en el 1.er piso o sumar ${f2(OCH - v.rf - lat)} m entre el retiro frontal y el lateral.`)); }
+      add(G,'Ochavo', ok?'ok':'warn', `La vereda de ${f2(sec)} m tiene menos de 3.00 m, así que la esquina lleva un <b>ochavo</b> de 3.00 m en diagonal (${f2(OCH)} m sobre cada lindero), libre hasta 2.30 m de altura (A.010 art. 12, «Ochavo»; la A.020 art. 17, «Lotes en esquina», permite además reducir el área libre). ` + (ok ? `Cae dentro de los retiros: la casa no se toca; solo el cerco de la esquina se corta en diagonal.` : `<b>La esquina de la casa entra en el ochavo</b>: hay que cortarla en diagonal en el 1.er piso o sumar ${f2(OCH - v.rf - lat)} m entre el retiro frontal y el lateral.`)); }
     add(G,'Fachada lateral','ok', `El muro del eje D da a la calle: es <b>fachada, no medianera</b>${v.med ? ' (no se comparte con un vecino: va entero dentro del lote)' : ''}. Se tarrajea y pinta por fuera y puede tener ventanas: los ambientes junto a él pueden tomar luz y aire de la calle (A.020 art. 11.4)${latW ? `; la sala ya tiene una ventana lateral de ${f2(latW[1]-latW[0])} m` : ''}.`);
     add(G,'Área libre en esquina','ok', `En lotes en esquina la municipalidad puede reducir el área libre exigida si la vivienda funciona bien (A.020 art. 17): compáralo con tu certificado de parámetros.`);
   }
   if(isAtr(v)) add(G,'Fachada posterior','ok', `El fondo del lote da a otra calle: el patio es el <b>retiro frontal de esa calle</b> (A.010 art. 8.1 a) y se cierra con un cerco con portón. El muro posterior de la casa es una segunda fachada.`);
   const via = isAtr(v) && isEsq(v) ? 'la calle lateral o la de atrás' : isAtr(v) ? 'la calle de atrás' : 'la calle lateral';
   add(G,'Segundo ingreso','ok', `Un portón en el cerco de ${via} entra directo al patio. ${built2 ? 'La escalera del patio sube al 2.º piso <b>sin pasar por la casa</b>: arriba puede ser un departamento independiente (bifamiliar) o alquilarse.' : 'Cuando se construya el 2.º piso, su escalera en el patio tendrá entrada propia desde la calle: arriba podrá ser un departamento independiente.'} También sirve para meter materiales en cada etapa de obra sin cruzar la casa.`);
+}
+
+// Retiros: los fija el certificado de parámetros urbanísticos; pueden ser 0 (Gonzalo, 15 nov 2026).
+// Lo que quede libre al fondo es patio: si a él dan ventanas, funciona como pozo de luz (A.020 art. 11.4 a, cuadro 3):
+// 2.00 m libres frente a dormitorio, sala o comedor; 1.80 m frente a cocina y patio de servicio.
+function retiros(v, add, patio, back){
+  add('Terreno','Retiro frontal', 'ok', v.rf > 0.005 ? `La fachada queda a <b>${f2(v.rf)} m</b> del límite del lote, detrás de la vereda de ${f2(v.vd)} m: es el retiro de tu certificado de parámetros urbanísticos. En él no se construye escalera.` : `<b>Sin retiro frontal</b>: la fachada va en el límite del lote, detrás de la vereda de ${f2(v.vd)} m. Vale si tu certificado de parámetros no pide retiro; sin retiro no hay volado sobre la vereda ni auto adelante.`);
+  const rpName = isAtr(v) ? 'Retiro a la calle posterior' : 'Retiro posterior';
+  if(v.rp > 0.005) add('Terreno', rpName, patio >= v.rp - 1e-6 ? 'ok':'bad', `Quedan <b>${f2(Math.max(0,patio))} m</b> libres al fondo frente a ${f2(v.rp)} m de retiro de tu certificado de parámetros.`);
+  else add('Terreno', rpName, 'ok', `<b>Sin retiro posterior exigido</b> (según tu certificado de parámetros). ${patio > 0.05 ? `Los ${f2(patio)} m que quedan al fondo son un <b>patio interior</b>: lavandería y luz para los ambientes que dan atrás.` : 'La casa llega al fondo del lote: toda la luz entra por la fachada y los patios interiores.'}`);
+  if(isAtr(v)) return; // al fondo hay una calle: no es pozo de luz
+  back.forEach(([n, need, open, ex])=>{ if(!n) return;
+    const pt = patio + (ex || 0), ok = pt >= need - 1e-6, al = n.startsWith('el ') ? 'al ' + n.slice(3) : 'a ' + n, de = n.startsWith('el ') ? 'del ' + n.slice(3) : 'de ' + n;
+    add('Iluminación', `Patio frente ${al}`, ok ? 'ok' : 'bad', ok ? `${open ? 'Las ventanas' : 'La ventana'} ${de} da${open?'n':''} al patio del fondo, que deja <b>${f2(pt)} m</b> libres frente a ${f2(need)} m (A.020 art. 11.4 a, cuadro 3: 2.00 m frente a dormitorio, sala o comedor; 1.80 m frente a cocina y patio de servicio).` : `La ventana ${de} da a un patio de solo <b>${f2(Math.max(0,pt))} m</b>; el pozo de luz pide ${f2(need)} m libres (A.020 art. 11.4 a). Deja más patio al fondo o lleva la luz por un patio interior.`);
+  });
 }
 
 function compute3L(v){
@@ -1021,7 +1036,7 @@ function compute3L(v){
   add('Norma','Cabe en el lote', frenteNec <= v.lote + 1e-6 ? 'ok':'bad', `Necesita <b>${f2(frenteNec)} m</b> de frente${isEsq(v) ? `, con ${f2(v.rl)} m de retiro a la calle lateral` : ''}; el lote tiene <b>${f2(v.lote)} m</b>.`);
   const patio = v.fondo - v.rf - D - T;
   add('Terreno','Construido hasta el máximo', 'ok', `La casa ocupa todo el fondo edificable: <b>${f2(D)} m</b> entre el retiro frontal (${f2(v.rf)} m) y el posterior (${f2(v.rp)} m).`);
-  add('Terreno', isAtr(v) ? 'Retiro a la calle posterior' : 'Retiro posterior', patio >= v.rp - 1e-6 ? 'ok':'bad', `Quedan <b>${f2(patio)} m</b> de patio-lavandería frente a ${f2(v.rp)} m de retiro.`);
+  retiros(v, add, patio, [['el dormitorio 3', 2.00]]);
   add('Norma','Programa VIS', 'ok', `Sala-comedor, cocina, baño y <b>3 dormitorios en un solo piso</b>, en fila a lo largo de la medianera.`);
   const roomRule = (r, minW, minD, label) => {
     const a = Math.min(r.cw, r.cd), b = Math.max(r.cw, r.cd), mn = Math.min(minW,minD), mx = Math.max(minW,minD);
@@ -1210,8 +1225,7 @@ function compute3(v){
   const frenteNec = W + sideUse(v);
   add('Norma','Cabe en el lote', frenteNec <= v.lote + 1e-6 ? 'ok':'bad', `Necesita <b>${f2(frenteNec)} m</b> de frente ${isEsq(v) ? `(${f2(v.rl)} m de retiro a la calle lateral${v.med?', medianero solo del otro lado':''})` : v.med?'(medianeros compartidos)':'(muros dentro del lote)'}; el lote tiene <b>${f2(v.lote)} m</b>.`);
   const patio = v.fondo - v.rf - D - T;
-  add('Terreno','Retiro frontal', 'ok', `La fachada queda a <b>${f2(v.rf)} m</b> del límite del lote; detrás de la vereda de ${f2(v.vd)} m.`);
-  add('Terreno', isAtr(v) ? 'Retiro a la calle posterior' : 'Retiro posterior', patio >= v.rp - 1e-6 ? 'ok':'bad', `Quedan <b>${f2(patio)} m</b> libres al fondo frente a ${f2(v.rp)} m de retiro exigido.`);
+  retiros(v, add, patio, [['los dormitorios 2 y 3', 2.00, true]]);
   add('Terreno','Espacio para la escalera', patio >= 1.80 - 1e-6 ? 'ok':'warn', patio >= 1.80 - 1e-6 ? `El patio de ${f2(patio)} m admite la escalera recta con descanso, pegada al muro posterior (0.90 m), y deja paso y lavandería.` : `Con ${f2(patio)} m de patio la escalera al 2.º piso tendría que ir dentro de la vivienda.`);
   const libre = 1 - gross/(v.lote*v.fondo);
   add('Terreno','Área libre del lote', 'ok', `<b>${Math.round(libre*100)} %</b> del lote queda sin techar en la etapa 1; compáralo con el mínimo de tu municipio.`);
@@ -1360,8 +1374,7 @@ function compute(v){
   else add('Circulación','Acceso al patio', 'ok', `Se sale al patio por la <b>cocina</b>, la opción más barata: no hay pasillo ni tabique extra.`);
   add('Norma','Cabe en el lote', frenteNec <= v.lote + 1e-6 ? 'ok':'bad', `Necesita <b>${f2(frenteNec)} m</b> de frente ${isEsq(v) ? `(${f2(v.rl)} m de retiro a la calle lateral${v.med?', medianero solo del otro lado':''})` : v.med?'(medianeros compartidos)':'(muros dentro del lote)'}; el lote tiene <b>${f2(v.lote)} m</b>.`);
   const patio = v.fondo - v.rf - D - T;
-  add('Terreno','Retiro frontal', 'ok', `La fachada queda a <b>${f2(v.rf)} m</b> del límite del lote; detrás de la vereda de ${f2(v.vd)} m.`);
-  add('Terreno', isAtr(v) ? 'Retiro a la calle posterior' : 'Retiro posterior', patio >= v.rp - 1e-6 ? 'ok':'bad', `Quedan <b>${f2(patio)} m</b> libres al fondo frente a ${f2(v.rp)} m de retiro exigido.`);
+  retiros(v, add, patio, [[v.nd === 1 ? 'el comedor-estudio' : 'el dormitorio 2', 2.00, false, nt], ...(pas ? [['la cocina', 1.80]] : [])]);
   add('Terreno','Espacio para la escalera', patio >= 1.80 - 1e-6 ? 'ok':'warn', patio >= 1.80 - 1e-6 ? `El patio de ${f2(patio)} m admite la escalera recta con descanso, pegada al muro posterior (0.90 m), y deja paso y lavandería.` : `Con ${f2(patio)} m de patio la escalera al 2.º piso tendría que ir dentro de la vivienda.`);
   const libre = 1 - gross/(v.lote*v.fondo);
   add('Terreno','Área libre del lote', 'ok', `<b>${Math.round(libre*100)} %</b> del lote queda sin techar en la etapa 1; compáralo con el mínimo de tu municipio.`);
@@ -1572,7 +1585,7 @@ function draw(r){
       else if(patio > 1.0){ const py = patioY0 + Math.max(0.15, (patio - pw)/2); g += `<line x1="${XL(L)}" y1="${YL(py)}" x2="${XL(L)}" y2="${YL(py+pw)}" stroke="var(--panel)" stroke-width="4"/><path d="M${XL(L)},${YL(py)} L${XL(L-pw*0.7)},${YL(py+pw*0.7)}" stroke="var(--brick)" stroke-width="1.4" fill="none"/><text x="${XL(L)-6}" y="${YL(py+pw)-4}" text-anchor="end" font-size="10" fill="var(--brick)">portón</text>`; } }
     const ym = patioY0 + Math.max(patio - 0.9, patio/2);
     const sY = r.stair && r.stair.axis==='y', pLx = sY ? 0.15 : L/2, pAn = sY ? 'start' : 'middle';
-    g += `<text x="${XL(pLx)}" y="${YL(F - Math.min(v.rp, patio)/2 - (patio>v.rp+1.5 ? (patio-v.rp)/2 : 0))+4}" text-anchor="${pAn}" font-size="11.5" font-weight="600" fill="var(--ok)">${atr ? 'Patio = retiro a la calle posterior' : 'Patio-lavandería = retiro posterior'}</text>`;
+    g += `<text x="${XL(pLx)}" y="${YL(F - Math.min(v.rp, patio)/2 - (patio>v.rp+1.5 ? (patio-v.rp)/2 : 0))+4}" text-anchor="${pAn}" font-size="11.5" font-weight="600" fill="var(--ok)">${atr ? 'Patio = retiro a la calle posterior' : v.rp > 0.005 ? 'Patio-lavandería = retiro posterior' : 'Patio interior-lavandería'}</text>`;
     g += `<text x="${XL(pLx)}" y="${YL(F - Math.min(v.rp, patio)/2 - (patio>v.rp+1.5 ? (patio-v.rp)/2 : 0))+20}" text-anchor="${pAn}" font-size="10.5" fill="var(--ok)">${f2(patio)} m libres</text>`; }
   if(r.nt){ g += `<rect x="${XL(0)}" y="${YL(patioY0)}" width="${(v.a + ox - T/2)*s}" height="${r.nt*s}" fill="var(--ok-soft)"/>`;
     g += `<text x="${XL((v.a+ox)/2)}" y="${(YL(patioY0)+YL(v.rf + r.dd + T/2))/2+4}" text-anchor="middle" font-size="10.5" fill="var(--ok)">patio ${f2(r.nt)} m</text>`; }
@@ -1833,35 +1846,6 @@ function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2, nt){
   st.vol = st.treads.reduce((s,t)=>s + polyA(t.poly)*(0.15*1.15 + cr/2),0) + st.lands.reduce((s,l)=>s + (l.x1-l.x0)*(l.y1-l.y0)*0.15,0);
   return st;
 }
-// Escalera en el retiro frontal (pisos independientes, A.010 art. 8.3 l): las mismas escaleras mínimas, armadas
-// como en el patio y reflejadas hacia la calle. Llega a un descanso frente al estar del 2.º piso y no pasa sobre la puerta de la casa.
-function frontStair(v, up, W, nR, H2){
-  const eps = 1e-6, segs = Object.values(up.rooms).filter(q=>q.grp==='estar' && Math.abs(q.y0)<eps).map(q=>[q.x0,q.x1]).sort((a,b)=>(b[1]-b[0])-(a[1]-a[0]));
-  if(!segs.length) return {why:'el 2.º piso no tiene un estar que dé a la fachada'};
-  const [s0,s1] = segs[0], y0 = T/2 + 0.02, y1 = y0 + 0.90, door = [v.a + 0.30, v.a + 1.30];
-  const mirror = st => { const fy = y => -y;
-    st.treads.forEach(t=>{ t.poly = t.poly.map(([x,y])=>[x,fy(y)]); if(t.sec) t.sec = {...t.sec, cy:fy(t.sec.cy), t0:-t.sec.t0, t1:-t.sec.t1}; });
-    st.lands.forEach(l=>{ const a = fy(l.y1), b = fy(l.y0); l.y0 = a; l.y1 = b; });
-    st.path = st.path.map(([x,y])=>[x,fy(y)]);
-    if(st.landRails) st.landRails = st.landRails.map(sg=>sg.map(([x,y])=>[x,fy(y)]));
-    if(st.spiral) st.spiral = {...st.spiral, cy:fy(st.spiral.cy)};
-    st.box = {x0:st.box.x0, x1:st.box.x1, y0:fy(st.box.y1), y1:fy(st.box.y0)}; st.ry1 = st.box.y1;
-    st.front = true; st.axis = 'f'; st.labTop = false; return st; };
-  // el paso por la puerta de la casa necesita 2.10 m libres bajo la escalera
-  const blocksDoor = st => st.treads.some(t=>{ const xs = t.poly.map(p=>p[0]); return t.z < 2.10 + 0.20 && Math.max(...xs) > door[0] - 0.05 && Math.min(...xs) < door[1] + 0.05; });
-  const L = [s0 + T/2 + 0.02, s0 + T/2 + 1.02], R = [s1 - T/2 - 1.02, s1 - T/2 - 0.02];
-  const cands = [];
-  for(const type of ['recta','caracol']) for(const [lx0,lx1] of [R, L]){
-    if(lx1 - lx0 < 0.90 - eps || lx0 < -eps) continue;
-    const st = makeStair(type, lx0, lx1, y0, y1, W, v.rf, nR, H2, null); if(!st) continue;
-    // en el retiro no hace falta el paso de 0.60 junto a la escalera que se deja en el patio: basta con que entre hasta el lindero
-    if(st.spiral){ st.need = 0.02 + st.gap + 2*st.spiral.R + 0.05; st.fits = v.rf >= st.need - 1e-6; }
-    mirror(st); st.blocks = blocksDoor(st); cands.push(st); }
-  const ok = cands.filter(q=>q.fits && !q.blocks && q.maxT <= 17);
-  if(ok.length) return {st: ok[0]};
-  const need = Math.min(...cands.filter(q=>!q.blocks).map(q=>q.need).concat([9]));
-  return {why: cands.some(q=>!q.blocks) ? `el retiro frontal de ${f2(v.rf)} m es corto: la escalera pide ${f2(need)} m` : 'en este frente la escalera tendría que pasar sobre la puerta de la casa'};
-}
 function etapa2(v, rooms, W, D, hL, add, gross){
   const nd2 = v.nd2 || 0;
   const slots = ['d1','d2','d3'].filter(k=>rooms[k]);
@@ -1908,13 +1892,10 @@ function etapa2(v, rooms, W, D, hL, add, gross){
       } else if(want === 'auto') stair.auto = true;
     }
   }
-  let frontWhy = null;
-  if(v.ind){ const fs = frontStair(v, up, W, nR, H2); if(fs.st){ fs.st.auto = false; stair = fs.st; } else frontWhy = fs.why; }
   if(stair) stair.built = nd2 > 0;
   { const G = 'Pisos independientes';
-    if(v.ind && stair && stair.front) add(G,'Escalera en el retiro frontal', 'ok', `Escalera ${ESC_N[stair.type]} exterior en el retiro frontal, con entrada propia desde la calle: el 2.º piso puede ser una vivienda aparte sin pasar por la casa, y la escalera se prolonga cuando se construyan más pisos. La A.010 (art. 8.3 l) permite escaleras en el retiro frontal en ampliaciones de vivienda. <b>${stair.nR}</b> contrapasos de ${f2(stair.cr)} m, pasos de 0.25 m y 0.90 m de ancho (A.010 art. 23 y A.020 art. 15.1); el descanso llega frente al estar del 2.º piso${stair.type==='recta' ? ' y el tramo sube junto a la fachada sin tapar la puerta de la casa (2.10 m libres)' : ''}.`);
-    else if(v.ind) add(G,'Escalera en el retiro frontal', 'bad', `Pediste pisos independientes, pero ${frontWhy || 'no hay dónde llegar'}. Se deja la escalera en el patio${isEsq(v) || isAtr(v) ? ', que con el portón de la otra calle también da entrada propia al 2.º piso' : ''}. Opciones: un retiro frontal más hondo (la de caracol pide unos 1.80 m) o un frente más ancho para la de un tramo.`);
-    if(v.ind && stair && stair.front && v.vol) add(G,'Volado y escalera', 'warn', `El volado de 0.50 m queda encima del descanso de la escalera: hay que retirarlo en ese tramo o llevar el descanso al nivel del volado.`);
+    if(v.ind){ const otra = isEsq(v) || isAtr(v);
+      add(G,'Entrada propia al 2.º piso', otra ? 'ok' : 'warn', otra ? `La escalera queda ${stair && stair.inner ? 'en el patio interior' : 'en el patio'} y el portón de ${isAtr(v) ? 'la calle de atrás' : 'la calle lateral'} le da entrada propia: el 2.º piso puede ser una vivienda aparte sin pasar por la casa. La escalera <b>no se construye en el retiro frontal</b> (criterio del proyecto).` : `La escalera <b>no se construye en el retiro frontal</b> (criterio del proyecto, aunque la A.010 art. 8.3 l lo permite en ampliaciones). Queda ${stair && stair.inner ? 'en el patio interior' : 'en el patio'}: para llegar a ella sin cruzar la casa hace falta un <b>pasaje lateral de 0.90 m</b> (A.020 art. 13) desde la calle, a lo largo de una medianera, o un lote en esquina o atravesante con portón al patio.`); }
     if(v.ind) add(G,'Independizar de verdad', 'ok', `Además de la escalera: medidores de luz y agua aparte, una cocineta arriba y, para venderlo o hipotecarlo por separado, licencia de ampliación (Ley 29090), reglamento interno e independización en SUNARP.`); }
   const patio = v.fondo - v.rf - D - T;
   let gross2 = 0;
@@ -1926,7 +1907,7 @@ function etapa2(v, rooms, W, D, hL, add, gross){
     add(G,'Dormitorios en el 2.º piso', fits ? 'ok':'bad', fits ? `${nd2===1?'El dormitorio va':'Los '+nd2+' dormitorios van'} exactamente encima de los dormitorios de abajo: mismos ejes, muros alineados de piso a piso y la misma losa (manual).${up.free?` Sobre el resto del ala queda ${v.ter?'una terraza':'un estudio'}.`:''}` : `Arriba solo caben <b>${slots.length}</b> dormitorios, uno sobre cada dormitorio de abajo, para que los muros queden alineados.`);
     { const okE = stair && stair.fits && stair.maxT <= 17, tN = stair ? ESC_N[stair.type] : '';
       const extra = stair ? (stair.type==='caracol' ? ` Caracol de ${f2(2*stair.spiral.R)} m de diámetro con pasos de 0.25 a 0.50 m del eje: la A.020 (art. 15.1 b) admite el caracol en vivienda si el paso tiene 0.25 m a 0.50 m del eje.` : stair.type==='U' ? ' Dos tramos paralelos al muro posterior con un descanso de media vuelta de 0.90 × 1.80 m.' : stair.type==='L' ? ' Un tramo desde el patio hacia el muro posterior, un descanso de esquina de 0.90 × 0.90 m y otro tramo pegado al muro.' : (stair.axis==='y' ? ' Perpendicular al muro posterior porque a lo ancho no entra.' : stair.axis==='n' ? ' Baja por el patio del escalón, pegada al muro del eje B, y gira al descanso: así casi no ocupa el retiro posterior.' : ' Pegada al muro posterior.')) : '';
-      if(!(stair && stair.front)) add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra en el patio: se usa la ${ESC_N[stair.type]}, que sí entra. ` : stair.auto ? `Elegida sola entre las mínimas (caracol, un tramo, en U, en L): la primera que entra en el patio. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23.2), ancho de 0.90 m (A.020 art. 15.1 a), un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso, y pasamanos a 1.00 m en el lado abierto (A.020 art. 15.1 c).${extra}${stair.maxT > 17 ? ` <b>Un tramo tiene ${stair.maxT} pasos: la A.010 (art. 23.2 a) permite 17 como máximo entre descansos.</b>` : ''}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m. Ninguna de las mínimas entra (de un tramo pegada al muro: 1.80 m de fondo pero ${f2(run + 1.0)} m de muro libre a un lado del descanso; caracol: 2.22 m; en U o en L: 2.72 m). Opciones: un patio más hondo (menos fondo construido), una crujía de dormitorios más corta para que el tramo baje por el escalón (${f2(run + 0.10)} m de escalón), o la escalera en el retiro frontal, que la A.010 (art. 8.3 l) permite cuando es ampliación de vivienda.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
+      if(!(stair && stair.front)) add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra en el patio: se usa la ${ESC_N[stair.type]}, que sí entra. ` : stair.auto ? `Elegida sola entre las mínimas (caracol, un tramo, en U, en L): la primera que entra en el patio. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23.2), ancho de 0.90 m (A.020 art. 15.1 a), un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso, y pasamanos a 1.00 m en el lado abierto (A.020 art. 15.1 c).${extra}${stair.maxT > 17 ? ` <b>Un tramo tiene ${stair.maxT} pasos: la A.010 (art. 23.2 a) permite 17 como máximo entre descansos.</b>` : ''}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m. Ninguna de las mínimas entra (de un tramo pegada al muro: 1.80 m de fondo pero ${f2(run + 1.0)} m de muro libre a un lado del descanso; caracol: 2.22 m; en U o en L: 2.72 m). Opciones: un patio más hondo (menos fondo construido), una crujía de dormitorios más corta para que el tramo baje por el escalón (${f2(run + 0.10)} m de escalón), o la escalera adentro, en un patio interior (en Terreno, «Escalera: dentro de la casa»). En el retiro frontal no se construye escalera.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
     if(v.n < 2) add(G,'Pisos para el sismo', 'warn', `Con dormitorios en el 2.º piso la densidad de muros se verifica para 2 pisos.`);
     add(G,'Baño 2', 'ok', `Sobre el baño del 1.er piso: mismas montantes y desagües.`);
   }
@@ -3452,7 +3433,7 @@ function etapas(r){
   box.querySelectorAll('[data-pjgo]').forEach(b=> b.addEventListener('click', ()=>{ setProj(true, +b.dataset.pjgo); showTab('3d'); }));
   const lo = x => soles(Math.round(x/500)*500);
   el('et-opts').innerHTML = [
-    ['Departamento independiente arriba', `El 2.º piso se separa con una <b>escalera propia al frente</b>, en el retiro (el RNE lo permite en ampliaciones de vivienda, A.010 art. 8.3 l), una cocineta y medidores de luz y agua aparte. Sirve para alquilar o para un hijo que forma familia.`, `${lo(8000)} a ${lo(12000)}`, 'La casa pasa a ser <b>bifamiliar</b>: licencia de ampliación en la municipalidad (Ley 29090) y, para venderlo o hipotecarlo por separado, reglamento interno e independización en SUNARP.'],
+    ['Departamento independiente arriba', `El 2.º piso se separa con una <b>entrada propia hasta la escalera</b> (por la otra calle o por un pasaje lateral; nunca con escalera en el retiro frontal), una cocineta y medidores de luz y agua aparte. Sirve para alquilar o para un hijo que forma familia.`, `${lo(8000)} a ${lo(12000)}`, 'La casa pasa a ser <b>bifamiliar</b>: licencia de ampliación en la municipalidad (Ley 29090) y, para venderlo o hipotecarlo por separado, reglamento interno e independización en SUNARP.'],
     ['Tienda o bodega al frente', `La sala del 1.er piso se abre a la calle con una <b>puerta enrollable</b> y la sala pasa al fondo o arriba. Es la ampliación más rápida de pagar.`, `${lo(4000)} a ${lo(8000)}`, 'La zonificación del lote tiene que permitir comercio vecinal; <b>licencia de funcionamiento</b> municipal (Ley 28976) e inspección de seguridad (ITSE).'],
     ['3.er piso', `Otro piso como la etapa 3, para más dormitorios o un segundo departamento.`, `${lo(E[3].cost*0.95)} a ${lo(E[3].cost*1.15)}`, 'La altura máxima la fijan los parámetros urbanísticos de la municipalidad (A.010 art. 10). Los cimientos y los muros de la etapa 1 tienen que calcularse para 3 pisos (E.070); <b>este verificador hoy comprueba hasta 2 pisos</b>.']
   ].map(([t,d,c,n])=>`<div><h3>${t}</h3><p>${d}</p><p><b>Costo aproximado:</b> ${c}</p><p class="hint">${n}</p></div>`).join('');
@@ -4077,10 +4058,29 @@ function parRender(r){
     + `</tbody>`;
   el('par-cot-n').textContent = `Cotejo con «${q.d}». El área libre se mide con el 1.er piso de la etapa 1 (${f1(r.gross)} m² techados en ${f1(A)} m² de lote).`;
 }
+// Lote VIS (DS 005-2025-VIVIENDA, art. 18.2 y 18.3): lote desde 66 m² con frente desde 5.50 m y módulo de 35 m² ampliable;
+// «lote reducido especial» desde 60 m² si la casa tiene 2 pisos con al menos 50 m² techados. Solo rige para habilitaciones nuevas de VIS:
+// un lote existente más chico sigue siendo válido, así que es aviso, no error.
+function visApply(r, v){
+  const G = 'Lote VIS (DS 005-2025)', add = (t, st, d) => r.checks.push({g:G, t, st, d});
+  const A = v.lote*v.fondo, tot = r.gross + (r.gross2 || 0), dosP = (r.gross2 || 0) > 0;
+  add('Frente del lote', v.lote >= 5.50 - 1e-6 ? 'ok' : 'warn', `Frente de <b>${f2(v.lote)} m</b> frente a 5.50 m de la VIS (art. 18.3).${v.lote < 5.50 - 1e-6 ? ' Si el lote ya existe sigue siendo válido; solo no entra en un programa VIS nuevo.' : ''}`);
+  if(A >= 66 - 1e-6) add('Área del lote', 'ok', `Lote de <b>${f1(A)} m²</b> frente a 66 m² del lote VIS estándar (art. 18.3), con un módulo de 35 m² techados como mínimo, ampliable (art. 18.2).`);
+  else if(A >= 60 - 1e-6) add('Área del lote', dosP && tot >= 50 - 1e-6 ? 'ok' : 'warn', `Lote de <b>${f1(A)} m²</b>: menos de 66 m², así que es <b>lote reducido especial</b> (desde 60 m², art. 18.3), que pide la casa en <b>2 pisos con al menos 50 m² techados</b>. ${dosP ? `Tienes ${f1(tot)} m² en 2 pisos${tot >= 50 - 1e-6 ? ': cumple' : ': faltan ' + f1(50 - tot) + ' m²'}.` : 'Esta casa es de un piso: agrega dormitorios arriba para cumplirlo.'}`);
+  else add('Área del lote', 'warn', `Lote de <b>${f1(A)} m²</b>, menos de los 60 m² del lote reducido especial VIS (art. 18.3). Si el lote ya existe sigue siendo válido para construir; solo no entra en un programa VIS nuevo.`);
+}
+// Crecimiento: primero horizontal (se completa el 1.er piso hasta donde lo permiten los patios) y luego vertical (Gonzalo, 15 nov 2026)
+function growApply(r, v){
+  if(!(r.gross2 > 0)) return;
+  const patio = v.fondo - v.rf - r.D - T, keep = Math.max(v.rp, 2.00), spare = patio - keep - T;
+  const G = 'Crecimiento', add = (t, st, d) => r.checks.push({g:G, t, st, d});
+  if(!isAtr(v) && spare >= 2.70 + T - 1e-6) add('Primero horizontal, luego vertical', 'warn', `Antes de subir al 2.º piso todavía quedan <b>${f2(spare)} m</b> de fondo libre en el 1.er piso (dejando ${f2(keep)} m de patio). La casa crece primero en horizontal, que es más barato y no necesita escalera: prueba con más dormitorios abajo (casa larga o tres franjas) y sube cuando el 1.er piso esté completo.`);
+  else add('Primero horizontal, luego vertical', 'ok', `El 1.er piso ya ocupa el fondo edificable (queda el patio de ${f2(Math.max(0,patio))} m): la casa crece primero en horizontal y recién entonces sube.`);
+}
 function render(){
   const v = read();
   ['a','b','d','ddr','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
-  const r = compute(v); tallerApply(r, v); carApply(r, v); objApply(r, v);
+  const r = compute(v); tallerApply(r, v); carApply(r, v); objApply(r, v); visApply(r, v); growApply(r, v);
   draw(r); draw2(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
   try { relRender(r); } catch(e){ console.error('relaciones', e); }
