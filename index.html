@@ -77,6 +77,13 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 14px;font-weight:600;color:var(--muted)}
 .tabs button.on{color:var(--ink);border-bottom-color:var(--brick);background:none}
 .rules{max-width:860px}
+#tab-par{max-width:1100px}
+#tab-zon{max-width:1100px}#zon-map{height:460px;border:1px solid var(--line);border-radius:8px;margin-top:10px;background:var(--bg)}
+.zon-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.zon-bar input{flex:1 1 260px;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:7px 8px}
+.zon-cands{display:flex;flex-direction:column;gap:4px;margin-top:6px}.zon-cands button{text-align:left}
+.zon-res{margin-top:12px;border-left:4px solid var(--brick);background:var(--brick-soft);border-radius:0 8px 8px 0;padding:10px 14px}.zon-res h3{margin:0 0 4px;font-family:var(--f-display)}
+.zon-code{font-family:var(--f-mono);font-size:22px;font-weight:700}
+.zon-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;margin-top:8px}.zon-leg i{display:inline-block;width:12px;height:12px;border:1px solid rgba(0,0,0,.3);margin-right:4px;vertical-align:-2px}#tab-par .tbl td,#tab-par .tbl th{text-align:left;font-family:var(--f-body);font-size:13px;vertical-align:top;padding:6px 8px}#tab-par .tbl td .pill{margin-right:4px}
 .rules h3{font-family:var(--f-display);font-size:15px;margin:20px 0 6px}
 .rules ol{margin:0;padding-left:22px}
 .rules li{margin:6px 0;line-height:1.5}
@@ -224,10 +231,12 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 .wz-head h2{font-family:var(--f-display);font-size:18px;margin:0}
 .wz-dots{display:flex;gap:5px}.wz-dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.wz-dots i.on{background:var(--brick)}
 .wz-body{padding:16px 20px;overflow:auto;display:flex;flex-direction:column;gap:12px}
-.wz-body p{margin:0}.wz-body .hint{font-size:12.5px;color:var(--muted)}
+.wz-body p{margin:0}.wz-note{font-size:12.5px;border-left:3px solid var(--brick);background:var(--brick-soft);padding:8px 10px;border-radius:0 6px 6px 0}.wz-body .hint{font-size:12.5px;color:var(--muted)}
 .wz-body label{font-weight:500;display:flex;flex-direction:column;gap:4px}
 .wz-body input[type=text],.wz-body input[type=email],.wz-body input[type=tel]{font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:7px 8px;width:100%}
 .wz-step{display:flex;flex-direction:column;gap:12px}
+.wz-list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px}
+.wz-steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:9px}.wz-steps li>b:first-child{display:block}
 .wz-cnt{display:flex;align-items:center;gap:10px}.wz-cnt button{width:40px;height:40px;font-size:20px;padding:0}.wz-cnt output{font-family:var(--f-mono);font-size:30px;min-width:2ch;text-align:center}
 .wz-fr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .wz-fr label{flex-direction:row;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;font-weight:500;font-size:13px;line-height:1.3}
@@ -275,12 +284,14 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <button type="button" role="tab" id="tab-btn-mat" aria-selected="false">Materiales</button>
     <button type="button" role="tab" id="tab-btn-eta" aria-selected="false">Etapas</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
+    <button type="button" role="tab" id="tab-btn-zon" aria-selected="false">Zonificación</button>
+    <button type="button" role="tab" id="tab-btn-par" aria-selected="false">Parámetros</button>
     <button type="button" role="tab" id="tab-btn-rne" aria-selected="false">RNE</button>
     <button type="button" role="tab" id="tab-btn-cam" aria-selected="false">Cambios</button>
   </nav>
   <div class="pj-bar" id="pj-bar">
     <label class="v3-chk"><input type="checkbox" id="pj-on"> <b>Proyección en el tiempo</b></label>
-    <div class="seg" role="group" aria-label="Etapa de la casa" id="pj-seg"><button type="button" data-pj="1">1 Casco</button><button type="button" data-pj="2">2 Acabados</button><button type="button" data-pj="3">3 2.º piso</button><button type="button" data-pj="4">4 Terminada</button><button type="button" data-pj="5">5 Crece</button></div>
+    <div class="seg" role="group" aria-label="Etapa de la casa" id="pj-seg"><button type="button" data-pj="1">1 Casco</button><button type="button" data-pj="2">2 Acabados</button><button type="button" data-pj="3">3 2.º piso y fachada</button><button type="button" data-pj="4">4 Crece</button></div>
     <span class="hint" id="pj-txt">Actívala para ver la casa como queda al final de cada etapa, en la planta y en el 3D.</span>
   </div>
 
@@ -293,7 +304,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <label class="v3-chk"><input type="checkbox" id="v3-p1"> Solo el 1.er piso</label>
       <button type="button" id="v3-fly" aria-pressed="false">Modo dron</button>
       <button type="button" id="v3-dae" title="Baja el modelo que ves en formato COLLADA (.dae): en SketchUp, Archivo > Importar">Exportar a SketchUp (.dae)</button><span class="hint" id="v3-dae-msg" aria-live="polite"></span>
-      <div class="seg" role="group" aria-label="Etapa que se ve en el 3D" id="v3-et"><button type="button" data-v3et="0">Sin etapas</button><button type="button" data-v3et="1">Etapa 1</button><button type="button" data-v3et="2">Etapa 2</button><button type="button" data-v3et="3">Etapa 3</button><button type="button" data-v3et="4">Etapa 4</button><button type="button" data-v3et="5">Etapa 5</button></div>
+      <div class="seg" role="group" aria-label="Etapa que se ve en el 3D" id="v3-et"><button type="button" data-v3et="0">Sin etapas</button><button type="button" data-v3et="1">Etapa 1</button><button type="button" data-v3et="2">Etapa 2</button><button type="button" data-v3et="3">Etapa 3</button><button type="button" data-v3et="4">Etapa 4</button></div>
     </div>
     <div style="position:relative"><div id="v3-etlbl" class="v3-etlbl"></div>
     <div id="box3d" class="box3d"><p class="hint" id="v3-msg" style="padding:16px">Cargando el visor 3D…</p></div></div>
@@ -337,11 +348,14 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <section class="card plan">
       <h2>Planta de arquitectura</h2>
       <p class="hint" style="margin-top:0">Plano para el expediente: ejes con su grilla, cotas entre ejes y totales, cotas libres de cada ambiente (en rojo), vanos de puertas (P) y ventanas (V, con ancho × alto y alféizar) y su cuadro de vanos. <b>Arrastra las líneas de corte A y B</b> para mover los cortes de abajo.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px"><span class="hint">Piso</span><div class="seg" role="group" aria-label="Piso"><button type="button" data-pp="1">1.er piso</button><button type="button" data-pp="2" id="pro-f2">2.º piso</button></div><label class="v3-chk"><input type="checkbox" id="pro-furn"> Mostrar muebles</label></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px"><span class="hint">Piso</span><div class="seg" role="group" aria-label="Piso"><button type="button" data-pp="1">1.er piso</button><button type="button" data-pp="2" id="pro-f2">2.º piso</button></div><label class="v3-chk"><input type="checkbox" id="pro-furn"> Mostrar muebles</label><button type="button" id="pro-dxf" title="Plano en metros, por capas (muros, ventanas, puertas, muebles, cotas, ejes, textos). AutoCAD lo abre y lo guarda como DWG.">Descargar plano CAD (.dxf → DWG)</button></div>
       <div id="pro-plan" class="pro-plan"></div>
       <h3 style="font-size:14px;margin:14px 0 4px">Cuadro de vanos</h3>
       <p class="hint" style="margin:0 0 6px">Medidas en metros. En la planta cada ventana lleva su código, ancho × alto y alféizar (a).</p>
       <div class="ca-wrap" id="pro-vanos"></div>
+      <h3 style="font-size:14px;margin:14px 0 4px">Cuadro de acabados de pisos</h3>
+      <p class="hint" style="margin:0 0 6px">Se colocan en la etapa 2 (1.er piso) y en la etapa 3 (2.º piso). El piso de la sala y los dormitorios se cambia en Terreno o en el asistente.</p>
+      <div class="ca-wrap" id="pro-acab"></div>
     </section>
     <section class="card plan">
       <h2>Cortes</h2>
@@ -397,7 +411,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <p class="hint" id="et-note" style="margin:6px 0 0"></p>
     </section>
     <div id="et-cards"></div>
-    <section class="card"><h2>Etapa 5 · Diversificación</h2>
+    <section class="card"><h2>Etapa 4 · Diversificación</h2>
       <p class="hint" style="margin-top:0">Cuando la casa ya está terminada, deja de ser solo la casa de una familia: se parte para alquilar o para un hijo que forma su hogar, se abre un negocio o se sube otro piso. Es lo que pasó en PREVI (Lima) en 40 años, donde varias casas se volvieron multifamiliares. No tiene un costo fijo: depende de la opción. Conviene <b>decidirlo desde la etapa 1</b>, porque los cimientos, las columnas y la escalera ya tienen que estar pensados para eso.</p>
       <div class="et-opts" id="et-opts"></div>
     </section>
@@ -460,6 +474,52 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     </ol>
   </section>
 
+  <section id="tab-zon" class="card rules" hidden aria-label="Zonificación del lote">
+    <h2>¿Qué zonificación tiene mi lote?</h2>
+    <p class="hint" style="margin-top:0">Busca la dirección o toca el lote en el mapa y te digo su zonificación. Los datos salen del <b>plano de zonificación vigente de Lima Metropolitana</b> que publica el Instituto Metropolitano de Planificación (IMP) en su visor «Zonificación Urbana 2026», actualizado al 2 nov 2026. Solo cubre Lima Metropolitana.</p>
+    <div class="zon-bar"><input type="text" id="zon-q" placeholder="Ej.: Av. Túpac Amaru 1500, Comas" aria-label="Dirección del lote"><button type="button" id="zon-go">Buscar</button><button type="button" id="zon-gps">Estoy en el lote</button></div>
+    <div class="zon-cands" id="zon-cands"></div>
+    <p class="hint" id="zon-msg">En los asentamientos, la dirección con manzana y lote casi nunca aparece: busca la avenida o el parque más cercano y toca tu lote en el mapa.</p>
+    <div id="zon-map" role="application" aria-label="Mapa de zonificación"></div>
+    <div class="zon-leg" id="zon-leg"></div>
+    <div class="zon-res" id="zon-res" hidden></div>
+    <p class="hint">Es una consulta orientativa: el plano puede tener desfases de unos metros y las municipalidades aprueban cambios de zonificación cada año. <b>Lo que vale es el certificado de parámetros</b> de tu lote (ver la pestaña Parámetros). Fuente: <a href="https://experience.arcgis.com/experience/9bf8fbedd99c4b2daae0d421caa33583" target="_blank" rel="noopener">IMP, Zonificación Urbana 2026</a> · <a href="https://portal.imp.gob.pe/planos-de-zonificacion/" target="_blank" rel="noopener">planos de zonificación en PDF</a>. Mapa base © colaboradores de OpenStreetMap.</p>
+  </section>
+  <section id="tab-par" class="card rules" hidden aria-label="Certificados de parámetros urbanísticos">
+    <h2>Certificado de parámetros urbanísticos y edificatorios</h2>
+    <p class="hint" style="margin-top:0">Es el papel de la municipalidad que dice qué se puede construir en <b>tu</b> lote. Todo lo demás (el RNE, este verificador) se aplica dentro de lo que permite el certificado. Valores buscados en internet el 15 nov 2026, con su fuente: son ejemplos para orientarse; el que vale es el certificado de tu lote.</p>
+
+    <h3>Cotejar mi plano con un certificado</h3>
+    <div class="ctl" style="border:0;max-width:520px"><label for="par-pre">Certificado de referencia</label><select id="par-pre"></select></div>
+    <table class="tbl" id="par-cot" aria-label="Cotejo del plano con el certificado"></table>
+    <p class="hint" id="par-cot-n"></p>
+
+    <h3>Qué dice un certificado y qué significa para tu casa</h3>
+    <table class="tbl"><thead><tr><th>Campo</th><th>Qué es</th><th>Qué implica al construir por etapas</th></tr></thead><tbody>
+      <tr><td>Zonificación</td><td>El uso principal de la zona. <b>RDMB</b>, <b>RDB</b>, <b>RDM</b>, <b>RDA</b>: residencial de densidad muy baja, baja, media y alta (RDM es la más común en los barrios de autoconstrucción). <b>VT</b>: vivienda taller. <b>CV</b>, <b>CZ</b>, <b>CM</b>: comercio vecinal, zonal y metropolitano. <b>I1</b>, <b>I2</b>: industria. <b>E</b>: educación. <b>H</b>: salud. <b>ZRP</b>: zona de recreación pública. <b>OU</b>: otros usos. <b>ZRE</b>: zona de reglamentación especial.</td><td>Una casa unifamiliar entra en zonas residenciales y, casi siempre, en las comerciales (uso compatible).</td></tr>
+      <tr><td>Usos compatibles</td><td>Otros usos que se permiten en la zona.</td><td>Decide si puedes tener <b>taller o tienda</b> abajo (vivienda taller): si no está, no habrá licencia de funcionamiento.</td></tr>
+      <tr><td>Lote mínimo y frente mínimo</td><td>El lote más chico permitido para ese uso (por ejemplo 90 m² con 6 m de frente).</td><td>Los lotes más chicos ya existentes siguen siendo válidos, pero <b>no se pueden subdividir</b>. Para independizar los pisos se divide la propiedad por pisos, no el lote.</td></tr>
+      <tr><td>Altura máxima</td><td>En pisos o metros; a veces con fórmula 1.5 (a + r): ancho de la calle más los retiros.</td><td>Es el techo de tu crecimiento: si dice 3 pisos, el cálculo estructural se hace para 3 desde la etapa 1.</td></tr>
+      <tr><td>Coeficiente de edificación</td><td>Área techada total permitida dividida entre el área del lote.</td><td>Limita cuánto puede sumar la casa terminada, con todos sus pisos.</td></tr>
+      <tr><td>Área libre</td><td>Parte del lote sin techar, en %; incluye los retiros y el patio.</td><td>Fija el tamaño mínimo del patio. En esquina la municipalidad puede reducirla (A.020 art. 17).</td></tr>
+      <tr><td>Retiros</td><td>Distancia libre del límite del lote a la fachada, por cada calle (más en avenida que en calle o pasaje). A veces viene como «alineamiento de fachada» medido desde el eje de la vía.</td><td>En esquina o atravesante hay un retiro por cada calle. Allí pueden ir la escalera de una ampliación y el volado de 0.50 m (A.010 art. 8.3 y 13).</td></tr>
+      <tr><td>Estacionamientos</td><td>Plazas exigidas (por ejemplo 1 por vivienda, o 1 cada 2 o 3 en programas sociales).</td><td>En unifamiliar suele pedirse 1. El auto puede ir en el retiro frontal, sin techo o con techo ligero (A.010 art. 8.3 d), en un espacio de 2.70 × 5.00 m (art. 54): el retiro tiene que medir 5.00 m. Si no alcanza, pregunta si se puede exonerar o pagar.</td></tr>
+      <tr><td>Densidad</td><td>Habitantes por hectárea.</td><td>Limita cuántas viviendas caben en el lote: importa si el 2.º piso será otra vivienda (bifamiliar).</td></tr>
+      <tr><td>Vigencia</td><td>36 meses desde que se emite.</td><td>Pídelo cuando vayas a tramitar la licencia, no años antes.</td></tr>
+    </tbody></table>
+    <p class="hint">Cómo se pide: en la municipalidad del distrito (mesa de partes o en línea), con una solicitud o declaración jurada, un plano de ubicación del lote y el pago del derecho: <b>S/ 66.50</b> en San Juan de Miraflores (TUPA, Ord. 565-MDSJM, publicada el 17 ene 2026) y <b>S/ 42.80</b> en San Juan de Lurigancho (Ord. 358-MDSJL, 2017). Con él, una casa de hasta 120 m² construidos, única en el lote, va a licencia por la <b>Modalidad A</b> de la Ley 29090 (ver el TUPA de Villa El Salvador, Ord. 391-MVES).</p>
+
+    <h3>Valores reales encontrados</h3>
+    <div style="overflow-x:auto"><table class="tbl" id="par-tbl"><thead><tr><th>Dónde</th><th>Zona</th><th>Lote mín. · frente</th><th>Altura</th><th>Área libre</th><th>Estac.</th><th>Norma y estado</th></tr></thead><tbody></tbody></table></div>
+
+    <h3>Cuidado: Lima está cambiando sus normas</h3>
+    <ul>
+      <li><b>Lima Norte</b> (Ancón, Carabayllo, Comas, Independencia, Los Olivos, Puente Piedra, San Martín de Porres y Santa Rosa): el <b>PDU Lima Norte 2034</b> (Ord. 2757-MML, El Peruano 3 ago 2025) derogó en esa parte la Ord. 1015 de 2007; la Ord. 2866-MML (21 oct 2026) lo actualizó. Los nuevos parámetros están en su Reglamento de Zonificación (Anexo 2), en <a href="https://portal.imp.gob.pe/pdulimanorte/" target="_blank" rel="noopener">portal.imp.gob.pe/pdulimanorte</a>: la altura pasa a depender del ancho de la vía más los retiros, área libre de 30 % en multifamiliar y 40 % en conjuntos, y en vivienda social 1 estacionamiento cada 3 a 5 viviendas. Mientras cada distrito no apruebe su índice de usos rigen equivalencias transitorias. <b>Los valores de 2007 de la tabla pueden ya no valer allí.</b></li>
+      <li><b>Lima Este</b> (Ate, Chaclacayo, El Agustino, La Molina, Lurigancho-Chosica, San Juan de Lurigancho y Santa Anita): el PDU Lima Este 2026-2036 terminó su consulta pública (set. 2026) y aún no estaba aprobado.</li>
+      <li>En <b>Villa El Salvador</b> y los demás distritos del sur no encontré en internet un certificado con valores: hay que pedirlo para cada lote.</li>
+    </ul>
+    <p class="hint">Fuentes: <a href="https://www.municomas.gob.pe/resources/upload/paginas/licencias/lf/Ordenanza%202757%20MML%20-%20PDU%20LIMA%20NORTE%202034-1.pdf" target="_blank" rel="noopener">Ord. 2757-MML</a> · <a href="https://busquedas.elperuano.pe/dispositivo/NL/2566013-1" target="_blank" rel="noopener">Ord. 2866-MML</a> · <a href="https://www.revisoresurbanos.pe/blog/nuevos-parametros-urbanisticos-en-lima-norte-oportunidades-y-retos-para-los-proyectos-inmobiliarios" target="_blank" rel="noopener">resumen del PDU Lima Norte</a> · <a href="https://gestion.pe/economia/lima-este-tendria-nuevas-reglas-para-construir-cambios-para-inmobiliarios-y-propietarios-en-la-molina-chosica-san-juan-de-lurigancho-y-otros-4-distritos-noticia/" target="_blank" rel="noopener">Gestión sobre el PDU Lima Este</a> · <a href="https://cdn.www.gob.pe/uploads/document/file/9391992/7696634-ordenanza-n-565-mdsjm.pdf" target="_blank" rel="noopener">TUPA de San Juan de Miraflores</a> · <a href="https://cdn.www.gob.pe/uploads/document/file/4498568/Ordenanza%20N%C2%BA%20391-2018%20MVESGTfoi.pdf" target="_blank" rel="noopener">TUPA de Villa El Salvador</a> · <a href="https://hackeandoproyectos.substack.com/p/que-son-los-parametros-urbanisticos" target="_blank" rel="noopener">qué son los parámetros</a>.</p>
+  </section>
   <section id="tab-rne" class="card rules" hidden aria-label="Artículos del RNE">
     <h2>Artículos del RNE que respeta el verificador</h2>
     <p class="hint" style="margin-top:0">Cada fila es un artículo del Reglamento Nacional de Edificaciones vigente que la herramienta aplica al generar la casa o comprueba en sus verificaciones. Haz clic en la cita para abrir ese artículo en el <a href="rne.html" target="_blank" rel="noopener" class="rne-home">RNE consultable</a>, con su texto completo y la página del RNE ilustrado. Las dudas de normativa que ya salieron están en el tablón de <a href="preguntas.html" target="_blank" rel="noopener" class="preg-home">Preguntas</a>. Normas usadas: A.010 (RM 191-2021), A.020 (RM 188-2021) y A.120 (RM 075-2023).</p>
@@ -559,6 +619,17 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Plano para AutoCAD</b>: en Diseño Pro, el botón «Descargar plano CAD (.dxf → DWG)» baja la planta en metros y a escala real, con los dos pisos lado a lado si hay 2.º piso. Viene por capas: MUROS, TABIQUES, COLUMNAS, VENTANAS, PUERTAS, MUEBLES (si están visibles), COTAS, EJES, ESCALERA, CORTES, PISOS, TERRENO y TEXTOS. AutoCAD lo abre directamente y con «Guardar como» queda en DWG (el DWG es un formato cerrado de Autodesk, por eso se exporta en DXF).</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Acceso al patio según el nivel</b>: en el económico se sale por la cocina (lo más barato); desde el estándar, por un <b>pasillo de 0.90 m</b> junto a la cocina, separado con un tabique, y la cocina gana una ventana al patio. Si el frente no da para el pasillo y una cocina de 1.50 m, se queda por la cocina y la verificación dice cuánto falta. Se puede fijar a mano en «Acceso al patio».</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Objetivo con la casa</b>: el asistente pregunta si es para vivir cómodos, vivir y alquilar una parte, o sacarle el máximo provecho. Eso fija el nivel de los ambientes (amplio, estándar o económico), propone independizar los pisos cuando hay alquiler y suma una verificación con lo que conviene prever.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos de la etapa 2</b>: nueva opción «Piso de la sala y los dormitorios» (vinílico en rollo, el más barato; vinílico SPC en clic; cerámico; porcelanato; o quedarse con el cemento pulido) y el botón <b>«Elegir acabados»</b> de la etapa 2 (pestaña Etapas y barra de proyección), aparte del asistente inicial para no cargarlo. La cocina y el baño llevan cerámico antideslizante. Se ve en Diseño Pro (trama y rótulo en cada ambiente y un cuadro de acabados con m² y costo), en el 3D y en el costo de las etapas 2 y 3.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Etapas 3 y 4 juntas y 3D coherente con las etapas</b>: ahora son 4 etapas. 1 casco, 2 acabados del 1.er piso, 3 el 2.º piso terminado con la fachada y la azotea (antes eran dos etapas) y 4 diversificación. En el 3D la etapa 1 es todo casco (ladrillo visto, piso pulido, sin puertas interiores); en la etapa 2 el 1.er piso queda tarrajeado y pintado por dentro, con pisos, enchape en el baño y la cocina y puertas interiores, pero la fachada sigue en ladrillo, como en el presupuesto; la etapa 3 sube y termina el 2.º piso y pinta la fachada. Las medianeras quedan en ladrillo (el vecino las tapa). En las etapas 2 y 3 el 3D se abre sin techo para que se vean los acabados.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Zonificación</b>: buscas la dirección (o tocas el lote en el mapa, o pulsas «Estoy en el lote» con el teléfono) y dice la zonificación del lote según el plano vigente de Lima Metropolitana del IMP (visor Zonificación Urbana 2026), con su área de tratamiento normativo, la ordenanza y qué implica para la casa. La zonificación queda en la línea del proyecto.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Auto en casa</b>: nueva pregunta en el asistente y opción «Estacionar un auto en casa». El retiro frontal pasa a <b>5.00 m</b> y se dibuja el espacio del auto de 2.70 × 5.00 m (A.010 art. 54), a un lado de la puerta y sin chocar con la escalera del retiro; el estacionamiento en el retiro va sin techo o con techo ligero (art. 8.3 d). La pestaña Parámetros explica las siglas de zonificación (RDM, RDB, VT, CV…).</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Parámetros</b>: qué dice un certificado de parámetros urbanísticos y qué implica cada campo, valores reales encontrados por distrito con su fuente y estado (Lima Norte cambió con el PDU 2034), costo del trámite y un cotejo del plano con el certificado elegido. El asistente pregunta ahora también <b>cuántos dormitorios</b> (y dice cuántos duermen en cada uno) y el <b>presupuesto de la primera etapa</b> sin el terreno: al final dice qué etapas alcanza y cuánto falta. </span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Mensaje de inicio</b> corto, pensado para el celular y el maestro de obra: «Construye por etapas sin tener que romper después», qué da el plano, que es gratis y que los datos no salen del equipo, con un aviso de licencia y cálculo estructural. Al terminar el asistente, pantalla <b>Siguientes pasos para construir</b>: certificado de parámetros, estudio de suelos, cálculo estructural para todos los pisos previstos, expediente y licencia (Modalidad A de la Ley 29090 hasta 120 m²) y obra por etapas hasta la inscripción en SUNARP.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos independientes</b>: nueva opción «Independizar los pisos en el futuro» (y pregunta en el asistente). La escalera va al <b>retiro frontal</b> con entrada propia desde la calle (A.010 art. 8.3 l): de un tramo junto a la fachada si no pasa sobre la puerta de la casa, si no de caracol; el descanso llega frente al estar del 2.º piso, que abre su puerta a la fachada. Si el retiro es corto, lo dice y deja la escalera en el patio.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Vivienda taller</b> (A.020 art. 4.1): opción «Taller o negocio en el 1.er piso», en una parte (la sala del frente pasa a taller o tienda) o en todo el piso (taller, depósito, atención, cocineta y baño del taller, sin camas, y la familia vive arriba). Verificaciones de dónde vive la familia, acceso sin cruzar el taller, zonificación, licencia y extintor. El asistente pregunta además el tamaño del terreno y muestra su área.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span>Nueva página <b>PREVI 1978 → 2003</b> (tiempo-construye.html, enlace arriba junto a Referentes): <b>11 casas PREVI en 1978 y en 2003</b>, redibujadas a partir del libro «¡El tiempo construye!» (Kikutake-Maki-Kurokawa, Esguerra y otros, Atelier 5 ×2, Van Eyck, Korhonen, Svenssons, Crousse-Páez-Pérez León, Alexander, Llanos-Mazzarri y Correa). Cada caso muestra el plano original y la transformación de las plantas, con lo agregado por la familia en rojo, muebles, cotas generales de la parcela y m² por etapa, con cita y página.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Asistente de inicio</b> al abrir la página: pregunta cuántas personas vivirán (y propone los dormitorios), la dirección y las medidas del lote, cuántas calles lo tocan y, al final y de forma opcional, nombre, correo y teléfono, que se quedan en el equipo y van dentro del plano guardado. Tiene botón <b>Pasar</b> en cada paso, se vuelve a abrir con «Asistente de inicio» y se puede desactivar.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Lotes en esquina, atravesantes y de tres frentes</b> (nuevo selector «Frentes del lote»): cada lado que da a una calle lleva su retiro (A.010 art. 8.1 a), con un retiro lateral propio; se dibujan la calle lateral y la posterior con su vereda, el <b>ochavo</b> de 3.00 m (A.010 art. 12) y un portón al patio. En esquina el eje D pasa a ser fachada y la sala gana una <b>ventana lateral</b>; Diseño Pro suma la elevación lateral y el 3D las calles. Nuevas verificaciones: retiro lateral, ochavo, fachadas y segundo ingreso, que permite subir al 2.º piso sin pasar por la casa.</span></li>
@@ -625,7 +696,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         <option value="7x20">7 × 20 · 140 m² · Villa El Salvador</option>
         <option value="8x20">8 × 20 · 160 m² · urbanización popular</option>
         <option value="10x20">10 × 20 · 200 m² · clase media</option>
-      </select><span class="hint">Pone frente y fondo; después los puedes cambiar. Los mínimos de densidad media en Lima son 6 × 15 en el Área de Tratamiento I y 6 × 20 en la II: salen de las ordenanzas 1015, 1076 y 1099-MML; los demás son tamaños habituales, por verificar.</span></div>
+      </select><span class="hint">Pone frente y fondo; después los puedes cambiar. Los mínimos de densidad media en Lima son 6 × 15 en el Área de Tratamiento I y 6 × 20 en la II: salen de las ordenanzas 1015, 1076 y 1099-MML (en Lima Norte ya rige el PDU 2034: ver la pestaña Parámetros); los demás son tamaños habituales, por verificar.</span></div>
       <div class="ctl"><div class="inline">
         <div><label for="lote" class="hint">Frente (m)</label><input type="number" id="lote" min="4" max="12" step="0.05"></div>
         <div><label for="fondo" class="hint">Fondo (m)</label><input type="number" id="fondo" min="8" max="40" step="0.05"></div>
@@ -651,6 +722,12 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <div class="chk"><input type="checkbox" id="ter"><label for="ter">Terraza<br><span class="hint">En el 2.º piso sobre el dormitorio 2 o, si no, azotea transitable sobre el techo.</span></label></div>
       <div class="chk"><input type="checkbox" id="vol"><label for="vol">Volado hacia la calle<br><span class="hint">El 2.º piso sale 0.50 m sobre el retiro frontal (A.010 art. 13).</span></label></div>
       <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="auto">Automática: caracol si entra en el patio</option><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
+      <div class="ctl"><label for="obj">Objetivo con la casa</label><select id="obj"><option value="vivir">Vivir cómodos</option><option value="ambos">Vivir y alquilar una parte</option><option value="renta">Sacarle el máximo provecho</option></select></div>
+      <div class="ctl"><label for="pat">Acceso al patio</label><select id="pat"><option value="auto">Según el nivel: por la cocina en el económico, por un pasillo en el estándar y el amplio</option><option value="coc">Por la cocina (lo más barato)</option><option value="pas">Por un pasillo, sin cruzar la cocina</option></select></div>
+      <div class="ctl"><label for="pis">Piso de la sala y los dormitorios (etapa 2)</label><select id="pis"><option value="vinr">Vinílico en rollo (lámina de PVC): el más barato</option><option value="vin">Vinílico SPC en clic: resiste agua y golpes</option><option value="cer">Cerámico 60 × 60</option><option value="por">Porcelanato 60 × 60</option><option value="pul">Cemento pulido con sellador (se queda el de la etapa 1)</option></select><span class="hint">La cocina y el baño llevan siempre cerámico antideslizante. Se ve en Diseño Pro, en el 3D y en el costo de la etapa 2.</span></div>
+      <div class="ctl"><label for="tal">Taller o negocio en el 1.er piso</label><select id="tal"><option value="no">No</option><option value="parte">Sí, en una parte: la sala, al frente</option><option value="todo">Sí, todo el 1.er piso; la familia vive arriba</option></select><span class="hint" id="tal-hint">Vivienda taller (A.020 art. 4.1): la zonificación del lote tiene que permitir el uso y el taller necesita licencia de funcionamiento.</span></div>
+      <div class="chk"><input type="checkbox" id="auto"><label for="auto">Estacionar un auto en casa<br><span class="hint">El retiro frontal pasa a <b>5.00 m</b> para que entre un auto (cajón de 2.70 × 5.00 m, A.010 art. 54); el estacionamiento sin techo o con techo ligero se permite en el retiro (art. 8.3 d).</span></label></div>
+      <div class="chk"><input type="checkbox" id="ind"><label for="ind">Independizar los pisos en el futuro<br><span class="hint">La escalera va en el <b>retiro frontal</b>, con entrada propia desde la calle, para que el 2.º piso (y los que vengan) sea una vivienda aparte. La A.010 (art. 8.3 l) lo permite en ampliaciones de vivienda.</span></label></div>
       <div class="chk"><input type="checkbox" id="pmr"><label for="pmr">Hacer la vivienda accesible (opcional)<br><span class="hint">Giro de 1.50 m en cada ambiente, ba&ntilde;o accesible y puertas de 0.90 m. La A.120 (RM 075-2023) solo lo exige en las áreas comunes de edificios (art. 28); dentro de una casa unifamiliar es una decisión de diseño.</span></label></div>
       <button type="button" id="gen" class="gen">Generar plano para este terreno</button>
       <div class="inline" style="margin-top:8px"><button type="button" id="save-plan">Guardar plano</button><button type="button" id="open-plan">Abrir plano</button></div>
@@ -688,7 +765,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <p class="pj-cap" id="pj-cap1" hidden></p>
       <div id="svgbox"></div>
       <p class="hint" style="margin:0">Haz clic en una cota entre ejes (o llega a ella con Tab y pulsa Enter) para escribir su medida; las demás cotas se mantienen.</p>
-      <div id="p2" hidden><h2 style="margin-top:10px">Planta del 2.º piso, etapas 3 y 4</h2><p class="pj-cap" id="pj-cap2" hidden></p><div id="svgbox2"></div></div>
+      <div id="p2" hidden><h2 style="margin-top:10px">Planta del 2.º piso, etapa 3</h2><p class="pj-cap" id="pj-cap2" hidden></p><div id="svgbox2"></div></div>
       <div class="legend">
         <span><i class="sw" style="background:var(--wall)"></i>Muro y columna</span>
         <span><i class="sw" style="background:var(--wet)"></i>Núcleo húmedo</span>
@@ -715,23 +792,35 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 
 <dialog class="wz" id="wz" aria-labelledby="wz-title">
   <form method="dialog" class="wz-in" id="wz-form">
-    <div class="wz-head"><h2 id="wz-title">Empecemos tu casa</h2><div class="wz-dots" id="wz-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="wz-head"><h2 id="wz-title">Empecemos tu casa</h2><div class="wz-dots" id="wz-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="wz-body">
       <div class="wz-step" data-step="0">
-        <p>Te hago cuatro preguntas cortas y dibujo una casa que cumple el RNE en tu lote: cuántos viven, dónde está el lote, cuántas calles lo tocan y, al final, si quieres, tus datos.</p>
+        <p style="font-size:16px"><b>Construye por etapas sin tener que romper después.</b></p>
+        <p>En 6 preguntas te doy el plano de tu casa en tu lote, listo para crecer:</p>
+        <ul class="wz-list">
+          <li>cada etapa ya tiene su sitio: baño, desagües, escalera y columnas;</li>
+          <li>cuánto cuesta cada etapa y qué materiales comprar;</li>
+          <li>cumple el Reglamento Nacional de Edificaciones.</li>
+        </ul>
+        <p>Es gratis y tus datos no salen de tu celular. Enséñaselo a tu maestro de obra.</p>
+        <p class="wz-note"><b>Antes de la obra:</b> este plano te sirve para organizarte, pero no es un permiso. Saca la licencia en tu municipalidad y que un ingeniero calcule la estructura: en un sismo eso protege a tu familia, y con licencia tu casa vale más y la puedes inscribir, vender o hipotecar.</p>
         <p class="hint">Si solo quieres mirar, pulsa <b>Pasar</b> y se abre la propuesta de ejemplo. Puedes volver aquí con el botón «Asistente de inicio» de arriba.</p>
       </div>
       <div class="wz-step" data-step="1" hidden>
         <p><b>¿Cuántas personas van a vivir en la casa?</b></p>
         <div class="wz-cnt"><button type="button" id="wz-pm" aria-label="Una persona menos">−</button><output id="wz-p" aria-live="polite">4</output><button type="button" id="wz-pp" aria-label="Una persona más">+</button><span class="hint">personas</span></div>
+        <p style="margin-top:4px"><b>¿Cuántos dormitorios necesitan?</b></p>
+        <div class="wz-cnt"><button type="button" id="wz-dm" aria-label="Un dormitorio menos">−</button><output id="wz-d" aria-live="polite">2</output><button type="button" id="wz-dp" aria-label="Un dormitorio más">+</button><span class="hint">dormitorios</span></div>
         <p class="hint" id="wz-p-txt"></p>
       </div>
       <div class="wz-step" data-step="2" hidden>
         <p><b>¿Dónde está el lote?</b></p>
         <label>Dirección<input type="text" id="wz-dir" autocomplete="street-address" placeholder="Ej.: Mz. B Lt. 12, AA. HH. Las Flores"></label>
         <label>Distrito y provincia<input type="text" id="wz-dist" placeholder="Ej.: Villa El Salvador, Lima"></label>
-        <label>Tamaño del lote<select id="wz-lotpre"></select></label>
+        <p><b>¿De qué tamaño es el terreno?</b></p>
+        <label>Tamaño típico<select id="wz-lotpre"></select></label>
         <div class="inline"><label>Frente (m)<input type="number" id="wz-lote" min="4" max="12" step="0.05"></label><label>Fondo (m)<input type="number" id="wz-fondo" min="8" max="40" step="0.05"></label></div>
+        <p class="hint" id="wz-area"></p>
         <p class="hint">La dirección solo sirve para identificar tu proyecto; las medidas son las del título o la constancia de posesión.</p>
       </div>
       <div class="wz-step" data-step="3" hidden>
@@ -743,14 +832,59 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
           <label><input type="radio" name="wz-fr" value="tres"><svg viewBox="0 0 54 54" aria-hidden="true"><rect x="10" y="10" width="30" height="34" fill="var(--ok-soft)" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="4 2"/><rect x="0" y="46" width="54" height="8" fill="var(--line)"/><rect x="0" y="0" width="54" height="8" fill="var(--line)"/><rect x="46" y="0" width="8" height="54" fill="var(--line)"/><rect x="16" y="20" width="16" height="16" fill="var(--wall)"/></svg><span>Tres frentes<br><span class="hint">esquina y atravesante</span></span></label>
         </div>
         <div class="inline"><label>Retiro frontal (m)<input type="number" id="wz-rf" min="0" max="10" step="0.05"></label><label id="wz-rl-l">Retiro a la calle lateral (m)<input type="number" id="wz-rl" min="0" max="6" step="0.05"></label><label id="wz-rp-l"><span id="wz-rp-t">Retiro posterior (m)</span><input type="number" id="wz-rp" min="0" max="10" step="0.05"></label></div>
+        <p style="margin-top:6px"><b>¿Tienes auto o piensas tenerlo, y quieres estacionarlo en tu casa?</b></p>
+        <div class="wz-fr" role="radiogroup" aria-label="Estacionar un auto">
+          <label><input type="radio" name="wz-auto" value="si"><span>Sí<br><span class="hint">el retiro frontal pasa a 5.00 m</span></span></label>
+          <label><input type="radio" name="wz-auto" value="no" checked><span>No<br><span class="hint">el retiro queda como dice el certificado</span></span></label>
+        </div>
+        <p class="hint">Un auto pide un espacio de 2.70 × 5.00 m (A.010 art. 54). Cada metro de retiro de más es un metro menos de casa, así que conviene decidirlo desde el inicio.</p>
         <p class="hint" id="wz-fr-txt">Los retiros salen del certificado de parámetros urbanísticos de la municipalidad. Cada lado que da a una calle lleva retiro frontal (A.010 art. 8.1 a).</p>
       </div>
       <div class="wz-step" data-step="4" hidden>
+        <p><b>¿Cuál es tu objetivo con esta casa?</b></p>
+        <div class="wz-fr" role="radiogroup" aria-label="Objetivo con la casa">
+          <label><input type="radio" name="wz-obj" value="vivir" checked><span>Vivir cómodos<br><span class="hint">ambientes amplios y la casa para la familia</span></span></label>
+          <label><input type="radio" name="wz-obj" value="ambos"><span>Vivir y alquilar una parte<br><span class="hint">ambientes estándar y un piso independiente</span></span></label>
+          <label><input type="radio" name="wz-obj" value="renta"><span>Sacarle el máximo provecho<br><span class="hint">construir lo más posible para alquilar o vender</span></span></label>
+        </div>
+        <p style="margin-top:6px"><b>¿Piensas independizar los pisos en el futuro?</b></p>
+        <p class="hint">Por ejemplo, que el 2.º piso sea para un hijo que forma su familia o para alquilar. Si es así, conviene dejar desde ahora la <b>escalera en el retiro frontal</b>, con entrada propia desde la calle, para seguir subiéndola cuando crezcan los pisos.</p>
+        <div class="wz-fr" role="radiogroup" aria-label="Independizar los pisos">
+          <label><input type="radio" name="wz-ind" value="si"><span>Sí, quiero esa opción<br><span class="hint">escalera al frente, en el retiro</span></span></label>
+          <label><input type="radio" name="wz-ind" value="no" checked><span>No, o todavía no sé<br><span class="hint">escalera en el patio</span></span></label>
+        </div>
+        <p class="hint">La A.010 (art. 8.3 l) permite la escalera en el retiro frontal cuando es ampliación de vivienda. Lo puedes cambiar después en Terreno.</p>
+        <p style="margin-top:6px"><b>¿Tendrás un taller o negocio en el 1.er piso?</b></p>
+        <div class="wz-fr" role="radiogroup" aria-label="Taller en el primer piso">
+          <label><input type="radio" name="wz-tal" value="no" checked><span>No<br><span class="hint">todo el 1.er piso es casa</span></span></label>
+          <label><input type="radio" name="wz-tal" value="parte"><span>Sí, una parte<br><span class="hint">la sala del frente es taller o tienda</span></span></label>
+          <label><input type="radio" name="wz-tal" value="todo"><span>Sí, todo el 1.er piso<br><span class="hint">la familia vive arriba</span></span></label>
+        </div>
+      </div>
+      <div class="wz-step" data-step="5" hidden>
+        <p><b>¿Cuánto tienes para la primera etapa de la obra?</b></p>
+        <label>Presupuesto en soles, solo para construir (sin el terreno)<input type="number" id="wz-pres" min="0" step="500" inputmode="numeric" placeholder="Ej.: 40000"></label>
+        <p class="hint">Lo que tienes ahorrado o el crédito que puedes sacar (por ejemplo, el bono de Techo Propio más tu ahorro). Al final te digo qué etapas alcanzas con eso y cuánto falta. Puedes dejarlo vacío.</p>
+      </div>
+      <div class="wz-step" data-step="6" hidden>
         <p><b>Tus datos</b> <span class="hint">(opcional)</span></p>
         <label>Nombre<input type="text" id="wz-nom" autocomplete="name"></label>
         <label>Correo<input type="email" id="wz-mail" autocomplete="email"></label>
         <label>Teléfono o WhatsApp<input type="tel" id="wz-tel" autocomplete="tel"></label>
         <p class="hint">Se quedan solo en este equipo y van dentro del plano cuando lo guardas. No se envían a ningún lado.</p>
+      </div>
+      <div class="wz-step" data-step="7" hidden>
+        <p><b>Tu plano ya está listo.</b> <span id="wz-done-txt"></span></p>
+        <p class="wz-note" id="wz-pres-txt" hidden></p>
+        <p>Para construirlo bien, estos son los siguientes pasos, en orden:</p>
+        <ol class="wz-steps">
+          <li><b>Certificado de parámetros urbanísticos</b>Se pide en tu municipalidad. Dice los retiros, la altura y los usos permitidos en tu lote (también si se permite un taller): revisa que coincidan con lo que pusiste aquí.</li>
+          <li><b>Estudio de suelos</b>Lo hace un ingeniero especialista. Dice qué tan firme es el terreno y cómo deben ser los cimientos (E.050).</li>
+          <li><b>Cálculo estructural</b>Lo hace un ingeniero civil colegiado, para <b>todos los pisos que piensas tener</b>, aunque hoy construyas uno: así los cimientos y las columnas de la etapa 1 ya aguantan los pisos de después.</li>
+          <li><b>Expediente y licencia de edificación</b>Un arquitecto firma los planos de arquitectura e ingenieros firman estructuras, instalaciones sanitarias y eléctricas. Una casa de hasta 120 m² construidos, única en el lote, suele ir por la Modalidad A de la Ley 29090, el trámite más simple.</li>
+          <li><b>Obra por etapas, con tu maestro</b>Sigue este plano etapa por etapa y guarda planos y licencia. Al terminar, la conformidad de obra y la declaratoria de fábrica permiten inscribir la casa en SUNARP.</li>
+        </ol>
+        <p class="hint">Puedes volver a ver estos pasos con el botón «Asistente de inicio».</p>
       </div>
     </div>
     <div class="wz-foot">
@@ -761,16 +895,33 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     </div>
   </form>
 </dialog>
+<dialog class="wz" id="wz2" aria-labelledby="wz2-title">
+  <form method="dialog" class="wz-in">
+    <div class="wz-head"><h2 id="wz2-title">Acabados de la etapa 2</h2></div>
+    <div class="wz-body">
+      <p class="hint">Estas decisiones se toman cuando el casco (etapa 1) ya está hecho y la familia vive en la casa. Se ven en Diseño Pro, en el 3D y en el costo de la etapa 2; los mismos acabados se usan en el 2.º piso (etapa 3).</p>
+        <p><b>¿Qué piso quieres en la sala y los dormitorios?</b></p>
+        <div class="wz-fr" role="radiogroup" aria-label="Piso de la sala y los dormitorios">
+          <label><input type="radio" name="wz-pis" value="vinr" checked><span>Vinílico en rollo<br><span class="hint">lámina de PVC, el más barato · unos S/ 35 el m²</span></span></label>
+          <label><input type="radio" name="wz-pis" value="vin"><span>Vinílico SPC en clic<br><span class="hint">parece madera y aguanta agua y golpes · unos S/ 60 el m²</span></span></label>
+          <label><input type="radio" name="wz-pis" value="cer"><span>Cerámico<br><span class="hint">60 × 60, el de siempre · unos S/ 65 el m²</span></span></label>
+          <label><input type="radio" name="wz-pis" value="pul"><span>Me quedo con el cemento pulido<br><span class="hint">solo un sellador · unos S/ 12 el m²</span></span></label>
+        </div>
+        <p class="hint">La cocina y el baño llevan cerámico antideslizante, que se limpia con agua. Precios con instalación, de referencia.</p>
+    </div>
+    <div class="wz-foot"><span class="sp"></span><button type="button" id="wz2-cancel">Cancelar</button><button type="button" id="wz2-ok" class="wz-next">Guardar</button></div>
+  </form>
+</dialog>
 
 <script>
 (function(){
 let T = 0.13; const H = 2.40, M = 0.25;
 const presets = {
-  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00},
-  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto',fr:'uno',rl:1.00},
-  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00}
+  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'},
+  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'},
+  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'}
 };
-const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc'];
+const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc','ind','tal','auto','pis','obj','pat'];
 const el = id => document.getElementById(id);
 const f2 = x => x.toFixed(2);
 const f1 = x => x.toFixed(1);
@@ -786,7 +937,7 @@ function read(){
   ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','rl','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
   v.fr = el('fr').value || 'uno';
   v.nd = parseInt(el('nd').value,10)||2; v.nd2 = parseInt(el('nd2').value,10)||0; v.pl = el('pl').value; v.pp = parseFloat(el('pp').value)||1.25; v.ty = el('ty').value; v.sis = el('sis').value; v.ap = el('ap').value; v.z = parseFloat(el('z').value); v.s = parseFloat(el('s').value); v.n = parseInt(el('n').value,10);
-  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto';
+  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto'; v.ind = el('ind').checked; v.auto = el('auto').checked; v.pis = el('pis').value || 'vinr'; v.obj = el('obj').value || 'vivir'; v.pat = el('pat').value || 'auto'; v.tal = el('tal').value || 'no';
   return v;
 }
 
@@ -799,7 +950,7 @@ function terVol(v, W, built2, add, up){
   const terrPlan = built2 && up && up.free > 0;
   if(v.ter){
     if(terrPlan) add(G,'Terraza en el 2.º piso','ok', `En el 2.º piso, sobre el dormitorio que no se repite arriba, queda una terraza sin techar con baranda de 1.00 m hacia la calle o el patio (A.010 art. 35 a) y muro de 2.10 m hacia el vecino (A.020 art. 18.4 y 19.3).`);
-    else add(G,'Azotea-terraza','ok', `Azotea transitable sobre el último techo, a la que se llega por la escalera del patio: parapetos de <b>2.10 m</b> hacia los vecinos (A.020 art. 18.4, que en vivienda pide más que los 1.80 m de la A.010 art. 14.3), baranda de <b>1.10 m</b> hacia la calle y el patio (A.020 art. 18.4 y A.010 art. 35 a) y techo de como máximo el 50 % del área, retirado 2.50 m de la fachada (A.010 art. 14.2).`);
+    else add(G,'Azotea-terraza','ok', `Azotea transitable sobre el último techo, a la que se llega por la escalera exterior: parapetos de <b>2.10 m</b> hacia los vecinos (A.020 art. 18.4, que en vivienda pide más que los 1.80 m de la A.010 art. 14.3), baranda de <b>1.10 m</b> hacia la calle y el patio (A.020 art. 18.4 y A.010 art. 35 a) y techo de como máximo el 50 % del área, retirado 2.50 m de la fachada (A.010 art. 14.2).`);
   } else if(terrPlan) add(G,'Sin terraza','ok', `En el 2.º piso, sobre el dormitorio que no se repite arriba, va un estudio techado.`);
   if(v.vol){
     const ok = v.rf >= 0.50 - 1e-6;
@@ -814,6 +965,8 @@ function terVol(v, W, built2, add, up){
 const FR_N = {uno:'un frente, entre medianeras', esq:'dos frentes, en esquina', atr:'dos frentes, atravesante (calle a calle)', tres:'tres frentes: esquina y atravesante'};
 const isEsq = v => v.fr === 'esq' || v.fr === 'tres', isAtr = v => v.fr === 'atr' || v.fr === 'tres';
 // frente del lote que no ocupa la casa entre ejes: muros fuera de eje y retiro a la calle lateral
+// acceso al patio: «auto» sigue el nivel (económico por la cocina; estándar y amplio por un pasillo)
+const patMode = v => v.pat === 'coc' || v.pat === 'pas' ? v.pat : (nivel === 'eco' ? 'coc' : 'pas');
 const sideUse = v => isEsq(v) ? Math.max(0, v.rl || 0) + (v.med ? T/2 : T) : (v.med ? 0 : T);
 const OCH = 3.00/Math.SQRT2; // ochavo de 3.00 m en esquina a 90°: 2.12 m sobre cada lindero
 // ventana lateral de la sala hacia la calle (solo en esquina, plantas de dos crujías): en el tramo más largo del eje D entre columnas
@@ -1187,7 +1340,12 @@ function compute(v){
     ba:{n:'Baño', x0:W-c, y0:D-w, x1:W, y1:D, wet:true}
   };
   if(v.nd === 1) rooms.d2 = {n:'Comedor-estudio', x0:0, y0:y2, x1:v.a, y1:dd, open:true};
+  // acceso al patio: por la cocina (económico) o por un pasillo de 0.90 junto a la cocina, separado con un tabique (estándar y amplio)
+  const patWant = patMode(v) === 'pas', kitMin = v.pmr ? 2.10 : 1.50, bayClr = (W - c) - v.a - T, pasNeed = 0.90 + T*0.6 + kitMin;
+  const pas = patWant && bayClr >= pasNeed - 1e-6 ? v.a + T/2 + 0.90 + T*0.3 : 0;
+  if(pas){ rooms.pa = {n:'Pasillo', x0:v.a, y0:D-w, x1:pas, y1:D, open:true, pas:true}; rooms.co.x0 = pas; }
   for(const k in rooms){ const r = rooms[k]; r.cw = r.x1-r.x0-T; r.cd = r.y1-r.y0-T; r.area = Math.max(0,r.cw*r.cd); }
+  if(rooms.pa){ rooms.pa.cw = rooms.pa.x1 - rooms.pa.x0 - T/2 - T*0.3; rooms.pa.area = rooms.pa.cw*rooms.pa.cd; rooms.co.cw = rooms.co.x1 - rooms.co.x0 - T/2 - T*0.3; rooms.co.area = rooms.co.cw*rooms.co.cd; }
   const gross = (v.med ? W : W + T)*(D+T) - v.a*nt; // A.010 art. 9.1 a: a eje de muros con otra unidad
   const util = Object.values(rooms).reduce((s,r)=>s+r.area,0);
   const checks = [];
@@ -1197,6 +1355,8 @@ function compute(v){
   add('Norma','Área techada mínima VIS', gross>=35?'ok':'bad', `<b>${f1(gross)} m²</b> frente a 35 m² para vivienda unifamiliar con crecimiento (Anexo 1 VIS; la A.020 art. 8.1 c pide 25 m² para el módulo básico).`);
   add('Norma','Altura libre', 'ok', `Muro de <b>2.40 m</b> (24 hiladas) frente a 2.30 m de la A.020.`);
   const frenteNec = W + sideUse(v);
+  if(patWant) add('Circulación','Acceso al patio', pas ? 'ok' : 'warn', pas ? `Se sale al patio por un <b>pasillo de 0.90 m</b> junto a la cocina, separado con un tabique: no se cruza la zona de trabajo. La cocina queda de ${f2(rooms.co.cw)} m libres, con su ventana al patio.` : `Con este nivel el patio iría por un pasillo, pero entre la crujía de dormitorios (${f2(v.a)} m) y el baño (${f2(c)} m) quedan ${f2(bayClr)} m libres y el pasillo con la cocina pide ${f2(pasNeed)} m. Se sale por la cocina. Entra con unos ${f2(pasNeed - bayClr)} m más de frente o en el nivel económico.`);
+  else add('Circulación','Acceso al patio', 'ok', `Se sale al patio por la <b>cocina</b>, la opción más barata: no hay pasillo ni tabique extra.`);
   add('Norma','Cabe en el lote', frenteNec <= v.lote + 1e-6 ? 'ok':'bad', `Necesita <b>${f2(frenteNec)} m</b> de frente ${isEsq(v) ? `(${f2(v.rl)} m de retiro a la calle lateral${v.med?', medianero solo del otro lado':''})` : v.med?'(medianeros compartidos)':'(muros dentro del lote)'}; el lote tiene <b>${f2(v.lote)} m</b>.`);
   const patio = v.fondo - v.rf - D - T;
   add('Terreno','Retiro frontal', 'ok', `La fachada queda a <b>${f2(v.rf)} m</b> del límite del lote; detrás de la vereda de ${f2(v.vd)} m.`);
@@ -1353,7 +1513,7 @@ function compute(v){
   const wallPct = (gross-util)/gross*100;
   terVol(v, W, gross2 > 0, add, E2.up);
   frentes(v, W, D, gross2 > 0, add, typeof latW !== 'undefined' ? latW : null);
-  return {latW,dd,nt,W,D,c,w,y2,rooms,gross,gross2,util,checks,wallLen,wallNet,bricks,perM2,losa,bloques,cost,cost2,wallPct,hL,v,wD1,wSC,wD2,dDoor,cols,nCols,hv,cim,conc,fl,up:E2.up,stair:E2.stair};
+  return {pas, patMiss: patWant && !pas, latW,dd,nt,W,D,c,w,y2,rooms,gross,gross2,util,checks,wallLen,wallNet,bricks,perM2,losa,bloques,cost,cost2,wallPct,hL,v,wD1,wSC,wD2,dDoor,cols,nCols,hv,cim,conc,fl,up:E2.up,stair:E2.stair};
 }
 
 function draw(r){
@@ -1399,7 +1559,8 @@ function draw(r){
   if(vd>0) g += `<text x="${XL(L/2)}" y="${(YL(0)+YL(-vd))/2+4}" text-anchor="middle" font-size="11" fill="var(--ink)">Vereda ${f2(vd)} m</text>`;
   g += `<text x="${XL(L/2)}" y="${YL(-vd)+18}" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--muted)">Calle</text>`;
   if(v.rf>0){ g += `<rect x="${XL(0)}" y="${YL(v.rf)}" width="${L*s}" height="${v.rf*s}" fill="var(--ok-soft)"/>`;
-    g += `<text x="${XL(L/2)}" y="${(YL(0)+YL(v.rf))/2+4}" text-anchor="middle" font-size="11" fill="var(--ok)">Retiro frontal ${f2(v.rf)} m</text>`; }
+    { const sf = r.stair && r.stair.front, lx = r.car ? (r.car.x0 + ox > L/2 ? (r.car.x0 + ox)/2 : (r.car.x1 + ox + L)/2) : sf ? (r.stair.box.x0 > L/2 ? L*0.25 : L*0.75) : L/2; g += `<text x="${XL(lx)}" y="${(YL(0)+YL(v.rf))/2+4}" text-anchor="middle" font-size="11" fill="var(--ok)">Retiro frontal ${f2(v.rf)} m</text>`; }
+    if(r.car) g += carSvg(r.car, X, Y, s); }
   const patioY0 = v.rf + D + T, patio = F - patioY0;
   // patio-lavandería = retiro posterior: todo el fondo libre es un solo espacio; la línea punteada marca el mínimo exigido
   if(patio > 0.05){ g += `<rect x="${XL(0)}" y="${YL(F)}" width="${L*s}" height="${patio*s}" fill="var(--ok-soft)"/>`;
@@ -1491,12 +1652,17 @@ function draw(r){
   wall(0,0,W,0,[[d1w0,d1w0+wD1],[scDoor0,scDoor0+1.0],[scw0,scw0+wSC]]);
   win(d1w0,0,d1w0+wD1,0); win(scw0,0,scw0+wSC,0);
   // back y=D
-  const d2w0 = (v.a - wD2)/2; bd0 = v.a + T/2 + 0.60; const bw0 = W - c/2 - 0.25, dd = r.dd || D;
+  const d2w0 = (v.a - wD2)/2; bd0 = r.pas ? v.a + T/2 + 0.05 : v.a + T/2 + 0.60; const bw0 = W - c/2 - 0.25, dd = r.dd || D;
+  const pDW = r.pas ? 0.80 : dW, kw = r.pas ? Math.min(0.80, (W - c) - r.pas - T - 0.30) : 0, kw0 = r.pas ? r.pas + ((W - c) - r.pas - kw)/2 : 0;
+  const backG = [[bd0,bd0+pDW],[bw0,bw0+0.5]].concat(kw > 0.3 ? [[kw0,kw0+kw]] : []);
   if(r.nt){ // planta escalonada: el ala de dormitorios termina en dd
     wall(0,dd,v.a,dd,[[d2w0,d2w0+wD2]]); win(d2w0,dd,d2w0+wD2,dd);
-    wall(v.a,D,W,D,[[bd0-v.a,bd0-v.a+dW],[bw0-v.a,bw0-v.a+0.5]]);
-  } else { wall(0,D,W,D,[[d2w0,d2w0+wD2],[bd0,bd0+dW],[bw0,bw0+0.5]]); win(d2w0,D,d2w0+wD2,D); }
-  win(bw0,D,bw0+0.5,D);
+    wall(v.a,D,W,D,backG.map(([a,b])=>[a-v.a,b-v.a]).sort((p,q)=>p[0]-q[0]));
+  } else { wall(0,D,W,D,[[d2w0,d2w0+wD2]].concat(backG).sort((p,q)=>p[0]-q[0])); win(d2w0,D,d2w0+wD2,D); }
+  win(bw0,D,bw0+0.5,D); if(kw > 0.3) win(kw0,D,kw0+kw,D);
+  if(r.pas){ // tabique entre el pasillo al patio y la cocina
+    g += `<line x1="${X(r.pas)}" y1="${Y(D-w)}" x2="${X(r.pas)}" y2="${Y(D)}" stroke="var(--wall)" stroke-width="${Math.max(2,tw*0.6)}"/>`;
+    G3.f1.push({x1:r.pas,y1:D-w,x2:r.pas,y2:D,gaps:[],kind:'tab'}); }
   // medianeras (en esquina, el eje D es fachada a la calle lateral y la sala lleva ventana)
   wall(0,0,0,dd); if(r.latW){ wall(W,0,W,D,[r.latW]); win(W,r.latW[0],W,r.latW[1]); } else wall(W,0,W,D);
   // B axis x=a, doors to dorms
@@ -1528,7 +1694,7 @@ function draw(r){
   door(scDoor0, T/2, 1,0, 0,1, 1.0);
   door(v.a-T/2, y2-0.10, 0,-1, -1,0, dW);
   if(v.nd >= 2) door(v.a-T/2, y2+0.10, 0,1, -1,0, dW);
-  door(bd0, D-T/2, 1,0, 0,-1, dW);
+  door(bd0, D-T/2, 1,0, 0,-1, r.pas ? 0.80 : dW);
   door(W-c+baDoor, D-w+T/2, 1,0, 0,1, v.pmr?0.90:0.70);
   }
   }
@@ -1666,6 +1832,35 @@ function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2, nt){
   st.vol = st.treads.reduce((s,t)=>s + polyA(t.poly)*(0.15*1.15 + cr/2),0) + st.lands.reduce((s,l)=>s + (l.x1-l.x0)*(l.y1-l.y0)*0.15,0);
   return st;
 }
+// Escalera en el retiro frontal (pisos independientes, A.010 art. 8.3 l): las mismas escaleras mínimas, armadas
+// como en el patio y reflejadas hacia la calle. Llega a un descanso frente al estar del 2.º piso y no pasa sobre la puerta de la casa.
+function frontStair(v, up, W, nR, H2){
+  const eps = 1e-6, segs = Object.values(up.rooms).filter(q=>q.grp==='estar' && Math.abs(q.y0)<eps).map(q=>[q.x0,q.x1]).sort((a,b)=>(b[1]-b[0])-(a[1]-a[0]));
+  if(!segs.length) return {why:'el 2.º piso no tiene un estar que dé a la fachada'};
+  const [s0,s1] = segs[0], y0 = T/2 + 0.02, y1 = y0 + 0.90, door = [v.a + 0.30, v.a + 1.30];
+  const mirror = st => { const fy = y => -y;
+    st.treads.forEach(t=>{ t.poly = t.poly.map(([x,y])=>[x,fy(y)]); if(t.sec) t.sec = {...t.sec, cy:fy(t.sec.cy), t0:-t.sec.t0, t1:-t.sec.t1}; });
+    st.lands.forEach(l=>{ const a = fy(l.y1), b = fy(l.y0); l.y0 = a; l.y1 = b; });
+    st.path = st.path.map(([x,y])=>[x,fy(y)]);
+    if(st.landRails) st.landRails = st.landRails.map(sg=>sg.map(([x,y])=>[x,fy(y)]));
+    if(st.spiral) st.spiral = {...st.spiral, cy:fy(st.spiral.cy)};
+    st.box = {x0:st.box.x0, x1:st.box.x1, y0:fy(st.box.y1), y1:fy(st.box.y0)}; st.ry1 = st.box.y1;
+    st.front = true; st.axis = 'f'; st.labTop = false; return st; };
+  // el paso por la puerta de la casa necesita 2.10 m libres bajo la escalera
+  const blocksDoor = st => st.treads.some(t=>{ const xs = t.poly.map(p=>p[0]); return t.z < 2.10 + 0.20 && Math.max(...xs) > door[0] - 0.05 && Math.min(...xs) < door[1] + 0.05; });
+  const L = [s0 + T/2 + 0.02, s0 + T/2 + 1.02], R = [s1 - T/2 - 1.02, s1 - T/2 - 0.02];
+  const cands = [];
+  for(const type of ['recta','caracol']) for(const [lx0,lx1] of [R, L]){
+    if(lx1 - lx0 < 0.90 - eps || lx0 < -eps) continue;
+    const st = makeStair(type, lx0, lx1, y0, y1, W, v.rf, nR, H2, null); if(!st) continue;
+    // en el retiro no hace falta el paso de 0.60 junto a la escalera que se deja en el patio: basta con que entre hasta el lindero
+    if(st.spiral){ st.need = 0.02 + st.gap + 2*st.spiral.R + 0.05; st.fits = v.rf >= st.need - 1e-6; }
+    mirror(st); st.blocks = blocksDoor(st); cands.push(st); }
+  const ok = cands.filter(q=>q.fits && !q.blocks && q.maxT <= 17);
+  if(ok.length) return {st: ok[0]};
+  const need = Math.min(...cands.filter(q=>!q.blocks).map(q=>q.need).concat([9]));
+  return {why: cands.some(q=>!q.blocks) ? `el retiro frontal de ${f2(v.rf)} m es corto: la escalera pide ${f2(need)} m` : 'en este frente la escalera tendría que pasar sobre la puerta de la casa'};
+}
 function etapa2(v, rooms, W, D, hL, add, gross){
   const nd2 = v.nd2 || 0;
   const slots = ['d1','d2','d3'].filter(k=>rooms[k]);
@@ -1712,7 +1907,14 @@ function etapa2(v, rooms, W, D, hL, add, gross){
       } else if(want === 'auto') stair.auto = true;
     }
   }
+  let frontWhy = null;
+  if(v.ind){ const fs = frontStair(v, up, W, nR, H2); if(fs.st){ fs.st.auto = false; stair = fs.st; } else frontWhy = fs.why; }
   if(stair) stair.built = nd2 > 0;
+  { const G = 'Pisos independientes';
+    if(v.ind && stair && stair.front) add(G,'Escalera en el retiro frontal', 'ok', `Escalera ${ESC_N[stair.type]} exterior en el retiro frontal, con entrada propia desde la calle: el 2.º piso puede ser una vivienda aparte sin pasar por la casa, y la escalera se prolonga cuando se construyan más pisos. La A.010 (art. 8.3 l) permite escaleras en el retiro frontal en ampliaciones de vivienda. <b>${stair.nR}</b> contrapasos de ${f2(stair.cr)} m, pasos de 0.25 m y 0.90 m de ancho (A.010 art. 23 y A.020 art. 15.1); el descanso llega frente al estar del 2.º piso${stair.type==='recta' ? ' y el tramo sube junto a la fachada sin tapar la puerta de la casa (2.10 m libres)' : ''}.`);
+    else if(v.ind) add(G,'Escalera en el retiro frontal', 'bad', `Pediste pisos independientes, pero ${frontWhy || 'no hay dónde llegar'}. Se deja la escalera en el patio${isEsq(v) || isAtr(v) ? ', que con el portón de la otra calle también da entrada propia al 2.º piso' : ''}. Opciones: un retiro frontal más hondo (la de caracol pide unos 1.80 m) o un frente más ancho para la de un tramo.`);
+    if(v.ind && stair && stair.front && v.vol) add(G,'Volado y escalera', 'warn', `El volado de 0.50 m queda encima del descanso de la escalera: hay que retirarlo en ese tramo o llevar el descanso al nivel del volado.`);
+    if(v.ind) add(G,'Independizar de verdad', 'ok', `Además de la escalera: medidores de luz y agua aparte, una cocineta arriba y, para venderlo o hipotecarlo por separado, licencia de ampliación (Ley 29090), reglamento interno e independización en SUNARP.`); }
   const patio = v.fondo - v.rf - D - T;
   let gross2 = 0;
   if(nd2 > 0){
@@ -1723,7 +1925,7 @@ function etapa2(v, rooms, W, D, hL, add, gross){
     add(G,'Dormitorios en el 2.º piso', fits ? 'ok':'bad', fits ? `${nd2===1?'El dormitorio va':'Los '+nd2+' dormitorios van'} exactamente encima de los dormitorios de abajo: mismos ejes, muros alineados de piso a piso y la misma losa (manual).${up.free?` Sobre el resto del ala queda ${v.ter?'una terraza':'un estudio'}.`:''}` : `Arriba solo caben <b>${slots.length}</b> dormitorios, uno sobre cada dormitorio de abajo, para que los muros queden alineados.`);
     { const okE = stair && stair.fits && stair.maxT <= 17, tN = stair ? ESC_N[stair.type] : '';
       const extra = stair ? (stair.type==='caracol' ? ` Caracol de ${f2(2*stair.spiral.R)} m de diámetro con pasos de 0.25 a 0.50 m del eje: la A.020 (art. 15.1 b) admite el caracol en vivienda si el paso tiene 0.25 m a 0.50 m del eje.` : stair.type==='U' ? ' Dos tramos paralelos al muro posterior con un descanso de media vuelta de 0.90 × 1.80 m.' : stair.type==='L' ? ' Un tramo desde el patio hacia el muro posterior, un descanso de esquina de 0.90 × 0.90 m y otro tramo pegado al muro.' : (stair.axis==='y' ? ' Perpendicular al muro posterior porque a lo ancho no entra.' : stair.axis==='n' ? ' Baja por el patio del escalón, pegada al muro del eje B, y gira al descanso: así casi no ocupa el retiro posterior.' : ' Pegada al muro posterior.')) : '';
-      add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra en el patio: se usa la ${ESC_N[stair.type]}, que sí entra. ` : stair.auto ? `Elegida sola entre las mínimas (caracol, un tramo, en U, en L): la primera que entra en el patio. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23.2), ancho de 0.90 m (A.020 art. 15.1 a), un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso, y pasamanos a 1.00 m en el lado abierto (A.020 art. 15.1 c).${extra}${stair.maxT > 17 ? ` <b>Un tramo tiene ${stair.maxT} pasos: la A.010 (art. 23.2 a) permite 17 como máximo entre descansos.</b>` : ''}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m. Ninguna de las mínimas entra (de un tramo pegada al muro: 1.80 m de fondo pero ${f2(run + 1.0)} m de muro libre a un lado del descanso; caracol: 2.22 m; en U o en L: 2.72 m). Opciones: un patio más hondo (menos fondo construido), una crujía de dormitorios más corta para que el tramo baje por el escalón (${f2(run + 0.10)} m de escalón), o la escalera en el retiro frontal, que la A.010 (art. 8.3 l) permite cuando es ampliación de vivienda.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
+      if(!(stair && stair.front)) add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra en el patio: se usa la ${ESC_N[stair.type]}, que sí entra. ` : stair.auto ? `Elegida sola entre las mínimas (caracol, un tramo, en U, en L): la primera que entra en el patio. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23.2), ancho de 0.90 m (A.020 art. 15.1 a), un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso, y pasamanos a 1.00 m en el lado abierto (A.020 art. 15.1 c).${extra}${stair.maxT > 17 ? ` <b>Un tramo tiene ${stair.maxT} pasos: la A.010 (art. 23.2 a) permite 17 como máximo entre descansos.</b>` : ''}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m. Ninguna de las mínimas entra (de un tramo pegada al muro: 1.80 m de fondo pero ${f2(run + 1.0)} m de muro libre a un lado del descanso; caracol: 2.22 m; en U o en L: 2.72 m). Opciones: un patio más hondo (menos fondo construido), una crujía de dormitorios más corta para que el tramo baje por el escalón (${f2(run + 0.10)} m de escalón), o la escalera en el retiro frontal, que la A.010 (art. 8.3 l) permite cuando es ampliación de vivienda.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
     if(v.n < 2) add(G,'Pisos para el sismo', 'warn', `Con dormitorios en el 2.º piso la densidad de muros se verifica para 2 pisos.`);
     add(G,'Baño 2', 'ok', `Sobre el baño del 1.er piso: mismas montantes y desagües.`);
   }
@@ -1760,7 +1962,7 @@ function draw2(r){
   if(!r.gross2 || !up){ box.innerHTML = ''; el('p2').hidden = true; return; }
   el('p2').hidden = false;
   const vo = v.vol && v.rf >= 0.5 ? 0.50 : 0;
-  const ext = st ? Math.max(1.4, st.box.y1 - D + 0.6) : 1.4;
+  const ext = st && !st.front ? Math.max(1.4, st.box.y1 - D + 0.6) : 1.4;
   const pad = 40, s = Math.min(520/(W+1.4), 34);
   const X = x => pad + x*s, Y = y => pad + (D + ext - y)*s;
   const tw = Math.max(3, T*s), op = v.sis==='portico' ? .55 : 1, eps = 1e-6;
@@ -1788,7 +1990,7 @@ function draw2(r){
   R.forEach(([k,q])=>{
     if(q.sky) return;
     const isDorm = q.grp.startsWith('d') || (q.grp.startsWith('e') && q.grp !== 'estar');
-    if(!q.ter && Math.abs(q.y0)<eps && (isDorm || q.grp==='estar')){ const L = q.x1-q.x0-T, ww = Math.min(1.5, L-0.6); if(ww>0.4){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,yf,c+ww/2,yf,'win']); } }
+    if(!q.ter && Math.abs(q.y0)<eps && (isDorm || q.grp==='estar')){ let a0 = q.x0, a1 = q.x1; if(st && st.front && q.grp==='estar' && st.lx1 > a0 && st.lx0 < a1){ if(st.lx0 - a0 >= a1 - st.lx1) a1 = st.lx0 - 0.05; else a0 = st.lx1 + 0.05; } const L = a1-a0-T, ww = Math.min(1.5, L-0.6); if(ww>0.4){ const c = (a0+a1)/2; opens.push([c-ww/2,yf,c+ww/2,yf,'win']); } }
     if(!q.ter && Math.abs(q.y1-rearY(q.x0))<eps && (isDorm || q.wet)){ const L = q.x1-q.x0-T, ww = q.wet ? 0.5 : Math.min(1.2, L-0.6); if(ww>0.3){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,q.y1,c+ww/2,q.y1,'win']); } }
     if(q.grp==='estar') return;
     // ventana al patio de luz
@@ -1805,7 +2007,8 @@ function draw2(r){
       else { opens.push([t0,best.y,t1,best.y,'door']); doors.push([t1, best.y + best.ny*T/2, -1,0, 0,best.ny, t1-t0]); }
     }
   });
-  if(st){ const d0 = st.lx0 + 0.05, d1 = Math.min(st.lx1 - 0.05, d0 + dW); opens.push([d0,D,d1,D,'door']); doors.push([d0, D - T/2, 1,0, 0,-1, d1-d0]); }
+  if(st && st.front){ const d0 = st.lx0 + 0.05, d1 = Math.min(st.lx1 - 0.05, d0 + dW); opens.push([d0,yf,d1,yf,'door']); doors.push([d0, yf + T/2, 1,0, 0,1, d1-d0]); }
+  else if(st){ const d0 = st.lx0 + 0.05, d1 = Math.min(st.lx1 - 0.05, d0 + dW); opens.push([d0,D,d1,D,'door']); doors.push([d0, D - T/2, 1,0, 0,-1, d1-d0]); }
   // dibujar muros con sus aberturas
   walls.forEach(([x1,y1,x2,y2_,kind])=>{
     const hor = Math.abs(y2_-y1)<eps, L = hor ? x2-x1 : y2_-y1;
@@ -1835,7 +2038,7 @@ function draw2(r){
     g += `<text x="${cx}" y="${cy-2}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="${fs}" fill="${q.sky||q.ter?'var(--ok)':'var(--ink)'}">${q.n}</text>`;
     if(!q.sky) g += `<text x="${cx}" y="${cy+14}" text-anchor="middle" font-family="var(--f-mono)" font-size="${fs-1.5}" fill="var(--muted)">${q.ter?'sin techar':f1(A)+' m²'}</text>`; });
   g += `<text x="${X(W/2)}" y="${Y(yf)+26}" text-anchor="middle" font-size="10.5" fill="var(--muted)">fachada</text>`;
-  const vw = Math.round(2*pad + W*s + 50), vh = Math.round(Y(-0.9) + 20);
+  const vw = Math.round(2*pad + W*s + 50), vh = Math.round(Y(Math.min(-0.9, st && st.front ? st.box.y0 - 0.6 : 0)) + 20);
   box.innerHTML = `<svg viewBox="0 0 ${vw} ${vh}" role="img" aria-label="Planta del segundo piso">${g}</svg>`;
 }
 
@@ -1957,7 +2160,7 @@ function furnWet(r, X, Y, s){
   const R = r.rooms, co = R.co, W = r.W; if(!co) return '';
   FURN_HITS.length = 0;
   const P = swingPts(G3.d1);
-  let g = G3.beds.map(b=> bedSvg(placeBed(b, P), X, Y, s)).join('');
+  let g = (r.v.tal === 'todo' ? [] : G3.beds).map(b=> bedSvg(placeBed(b, P), X, Y, s)).join('');
   g += bathSvg(R.ba, G3.d1, X, Y, s);
   const strip = (r.typ === 'T3' || r.typ === 'T3L') ? [W-T/2-0.60, co.y0+T/2, W-T/2, co.y1-T/2] : [co.x0+T/2, co.y0+T/2, co.x0+T/2+0.60, co.y1-T/2];
   g += kitchenSvg(co, strip, X, Y, s);
@@ -2125,8 +2328,16 @@ function view3D(k){
 // Volúmenes de la casa como cajas (x a lo ancho, y hacia el fondo desde el eje de fachada, z altura): los usan el 3D, los cortes y las elevaciones
 function houseBoxes(r, o){
   const out = [], v = r.v, W = r.W, D = r.D;
-  const B = (x0,x1,y0,y1,z0,z1,m,e=true) => { if(x1-x0<=0.005 || y1-y0<=0.005 || z1-z0<=0.005) return; out.push({x0,x1,y0,y1,z0,z1,m,e}); };
+  const B = (x0,x1,y0,y1,z0,z1,m,e=true) => { if(x1-x0<=0.005 || y1-y0<=0.005 || z1-z0<=0.005) return null; const b = {x0,x1,y0,y1,z0,z1,m,e}; out.push(b); return b; };
   const e = r.hL || 0.20, H2 = H + e, built2 = o.built2, noRoof = o.noRoof;
+  // qué hay al otro lado de cada cara de un muro o columna: un ambiente seco, uno húmedo (baño, cocina) o el exterior
+  // (calle, patio o vecino). Sirve para pintar por dentro y dejar la fachada en ladrillo hasta su etapa.
+  const inR = (RM, x, y) => RM.find(q=> x > q.x0 + 1e-6 && x < q.x1 - 1e-6 && y > q.y0 + 1e-6 && y < q.y1 - 1e-6);
+  const extK = (dir, x, y) => dir==='ny' && y < 0.02 ? 'street' : dir==='py' && y > D - 0.02 ? (isAtr(v) ? 'street' : 'patio') : dir==='nx' && x < 0.02 ? 'med' : dir==='px' && x > W - 0.02 ? (isEsq(v) ? 'street' : 'med') : 'patio';
+  const sidesOf = (b, RM) => { const cx = (b.x0+b.x1)/2, cy = (b.y0+b.y1)/2, k = 0.06, sd = {};
+    [['px', b.x1+k, cy], ['nx', b.x0-k, cy], ['py', cx, b.y1+k], ['ny', cx, b.y0-k]].forEach(([d, x, y])=>{ const q = inR(RM, x, y); sd[d] = q ? (q.wet ? 'wet' : 'dry') : extK(d, x, y); });
+    return sd; };
+  const tag = (b, fl, RM) => { if(b){ b.fl = fl; b.sides = sidesOf(b, RM); } return b; };
   const vo = v.vol && v.rf >= 0.5 && r.gross2 > 0 ? 0.50 : 0;
   // pisos de los ambientes (techados, sin el patio de luz)
   const rooms1 = Object.values(r.rooms).filter(q=>!q.sky);
@@ -2138,16 +2349,20 @@ function houseBoxes(r, o){
     if(!hor && Math.abs(x1-w.x1)<1e-6 && Math.abs(x2-w.x1)<1e-6){ const ga = Math.min(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)), gb = Math.max(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)); return Math.min(gb, Math.max(y1,y2)) - Math.max(ga, Math.min(y1,y2)) > 0.05; }
     return false;
   });
-  const walls = (list, z0, floor) => list.forEach(w=>{
+  const walls = (list, z0, floor, RM) => list.forEach(w=>{
     const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
     const ux = (w.x2-w.x1)/Lw, uy = (w.y2-w.y1)/Lw, t = w.kind==='wall' ? T : T*0.6, m = w.kind==='wall' ? 'wall' : 'tab';
     const hor = Math.abs(uy) < 1e-6;
     const piece = (a, b, h0, h1, mm=m, tt=t) => {
       if(b - a < 0.01 || h1 - h0 < 0.01) return;
       const a2 = a <= 1e-6 ? -t/2 : a, b2 = b >= Lw - 1e-6 ? Lw + t/2 : b;
-      const px0 = w.x1 + ux*a2, px1 = w.x1 + ux*b2, py0 = w.y1 + uy*a2, py1 = w.y1 + uy*b2;
-      if(hor) B(Math.min(px0,px1), Math.max(px0,px1), w.y1 - tt/2, w.y1 + tt/2, z0+h0, z0+h1, mm);
-      else B(w.x1 - tt/2, w.x1 + tt/2, Math.min(py0,py1), Math.max(py0,py1), z0+h0, z0+h1, mm);
+      // se parte en los encuentros con otros ambientes para pintar cada tramo según el ambiente que tiene delante
+      const cuts = [a2]; if(mm !== 'glass') RM.forEach(q=> (hor ? [q.x0, q.x1] : [q.y0, q.y1]).forEach(c=>{ const tc = (c - (hor ? w.x1 : w.y1))/(hor ? ux : uy); if(tc > a2 + 0.05 && tc < b2 - 0.05) cuts.push(tc); }));
+      const ts = [...new Set(cuts.map(c=>Math.round(c*1000)/1000))].sort((p,q)=>p-q).concat([b2]);
+      for(let i = 0; i < ts.length - 1; i++){ const s0 = ts[i], s1 = ts[i+1]; if(s1 - s0 < 0.005) continue;
+        const px0 = w.x1 + ux*s0, px1 = w.x1 + ux*s1, py0 = w.y1 + uy*s0, py1 = w.y1 + uy*s1;
+        const bb = hor ? B(Math.min(px0,px1), Math.max(px0,px1), w.y1 - tt/2, w.y1 + tt/2, z0+h0, z0+h1, mm) : B(w.x1 - tt/2, w.x1 + tt/2, Math.min(py0,py1), Math.max(py0,py1), z0+h0, z0+h1, mm);
+        if(mm !== 'glass') tag(bb, floor, RM); }
     };
     const gs = (w.gaps||[]).filter(q=>q[1]>q[0]).map(q=>[Math.max(0,q[0]), Math.min(Lw,q[1]), q[2] || (floor===1 && winLike(w, q[0], q[1]) ? 'win' : 'door')]).sort((p,q)=>p[0]-q[0]);
     let t0 = 0;
@@ -2159,14 +2374,22 @@ function houseBoxes(r, o){
     });
     piece(t0, Lw, 0, H);
   });
-  walls(G3.f1, 0, 1);
+  walls(G3.f1, 0, 1, rooms1);
+  // hojas de puerta, abiertas a 90° como en la planta: la de la calle y la del patio desde la etapa 1, las interiores con los acabados
+  const leaves = (list, z0, fl, RM) => list.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
+    const ext = !inR(RM, hx - nx*(T+0.10) + ux*wd/2, hy - ny*(T+0.10) + uy*wd/2), L_ = wd - 0.03;
+    const xs = [hx, hx + nx*L_, hx + ux*0.04], ys = [hy, hy + ny*L_, hy + uy*0.04];
+    const b = B(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys), z0, z0 + 2.08, ext ? 'dext' : 'wood');
+    if(b){ b.fl = fl; b.leaf = ext ? 'ext' : 'int'; } });
+  leaves(G3.d1, 0, 1, rooms1);
   // columnas de confinamiento y losa del 1.er piso
   const cs = 0.25 + 0.012;
-  const colAt = (x, y, z0, z1, list) => {
-    if(v.sis === 'portico') B(x-cs/2, x+cs/2, y-cs/2, y+cs/2, z0, z1, 'conc');
-    else colRects(x, y, list).forEach(([x0,y0,x1,y1])=> B(x0-0.006, x1+0.006, y0-0.006, y1+0.006, z0, z1, 'conc'));
+  const U2 = built2 ? Object.values(r.up.rooms).filter(q=>!q.sky && !q.ter) : [];
+  const colAt = (x, y, z0, z1, list, fl, RM) => {
+    if(v.sis === 'portico') tag(B(x-cs/2, x+cs/2, y-cs/2, y+cs/2, z0, z1, 'conc'), fl, RM);
+    else colRects(x, y, list).forEach(([x0,y0,x1,y1])=> tag(B(x0-0.006, x1+0.006, y0-0.006, y1+0.006, z0, z1, 'conc'), fl, RM));
   };
-  (r.cols||[]).forEach(([x,y])=>{ colAt(x, y, 0, H, G3.f1); if(built2) colAt(x, y, H2, H2+H, G3.f2); });
+  (r.cols||[]).forEach(([x,y])=>{ colAt(x, y, 0, H, G3.f1, 1, rooms1); if(built2) colAt(x, y, H2, H2+H, G3.f2, 2, U2); });
   const roof1 = !(noRoof && !built2);
   if(roof1 || built2){
     rooms1.forEach(q=> B(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, H, H2, 'slab'));
@@ -2190,7 +2413,7 @@ function houseBoxes(r, o){
   if(built2){
     const z2 = H2, U = Object.values(r.up.rooms);
     U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; B(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2-0.0, z2+0.02, q.wet ? 'wet' : 'floor', false); });
-    walls(G3.f2, z2, 2);
+    walls(G3.f2, z2, 2, U2); leaves(G3.d2, z2, 2, U2);
     if(!noRoof) U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; B(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2+H, z2+H+e, 'slab'); });
     // terraza del 2.º piso: barandas donde da a la calle o al patio, muro de 2.10 hacia el vecino (A.020 art. 18.4 y 19.3)
     U.filter(q=>q.ter).forEach(q=>{
@@ -2237,7 +2460,32 @@ function build3D(r){
   const mat = (c, o={}) => new THREE.MeshLambertMaterial(Object.assign({color:c}, o));
   const M = {wall: mat(0xe9e2d6), tab: mat(0xf1ece4), conc: mat(0xa9a49c), slab: mat(0xc9c3b9), floor: mat(0xf7f4ef), glass: mat(0x9fc3d6, {transparent:true, opacity:0.45, depthWrite:false}),
     green: mat(0xc9dcc4), walk: mat(0xd2cfca), street: mat(0x9a9894), stair: mat(0xc47a55), rail: mat(0x55504a), wet: mat(0xdfe8ef),
-    brick: mat(0xb8664a), cem: mat(0xbdb8b0), rebar: mat(0x4a3428)};
+    brick: mat(0xb8664a), cem: mat(0xbdb8b0), rebar: mat(0x4a3428),
+    paint: mat(0xf5f0e6), vinr: mat(0xcbb79c), fach: mat(0xe4c58e), ench: mat(0xdde9ef), wood: mat(0x9a6a45), dext: mat(0x4a5056)};
+  // cerámico: textura de losetas con su junta, repetida según el tamaño de cada piso
+  const tileTex = (base, line) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+    x.fillStyle = base; x.fillRect(0,0,64,64); x.strokeStyle = line; x.lineWidth = 3; x.strokeRect(0,0,64,64); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; };
+  const plankTex = () => { const c = document.createElement('canvas'); c.width = c.height = 128; const x = c.getContext('2d');
+    for(let i = 0; i < 4; i++){ x.fillStyle = ['#c9b293','#bfa786','#cdb89b','#c4ac8c'][i]; x.fillRect(0, i*32, 128, 32); x.strokeStyle = '#9c8667'; x.lineWidth = 2; x.strokeRect(0, i*32, 128, 32); const j = i % 2 ? 64 : 0; x.beginPath(); x.moveTo(j, i*32); x.lineTo(j, i*32+32); x.stroke(); }
+    const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; };
+  const TX = d3.tx || (d3.tx = {floor: tileTex('#e9dcc6', '#b9a98f'), wet: tileTex('#e8eef1', '#a9b8c0'), por: tileTex('#f1ece4', '#d6cfc4'), vin: plankTex()});
+  const floorMat = (b, k, size) => { const t = TX[k].clone(); t.needsUpdate = true; t.repeat.set((b.x1-b.x0)/size, (b.y1-b.y0)/size); return new THREE.MeshLambertMaterial({map:t}); };
+  // material de cada caja según la etapa: cada cara de un muro mira a un ambiente o al exterior
+  const FACE = ['px','nx','top','bot','ny','py']; // orden de las caras de BoxGeometry: +x, -x, +y, -y, +z (planta -y) y -z (planta +y)
+  const matFor = b => {
+    const fl = b.fl || (b.z0 >= H2 - 0.01 ? 2 : 1), f = pjFin(fl);
+    if(b.m === 'wet') return f === 0 ? M.cem : floorMat(b, 'wet', 0.30);
+    if(b.m === 'floor'){ if(f === 0 || v.pis === 'pul') return M.cem; if(v.pis === 'vinr') return M.vinr;
+      return v.pis === 'vin' ? floorMat(b, 'vin', 0.72) : v.pis === 'por' ? floorMat(b, 'por', 0.60) : floorMat(b, 'floor', 0.60); }
+    if(b.leaf === 'int' && f === 0) return null; // sin puertas interiores en el casco: se usan cortinas
+    if(!b.sides) return (b.m === 'wall' || b.m === 'tab') && f === 0 ? M.brick : M[b.m];
+    const bare = b.m === 'conc' ? M.conc : M.brick;
+    if(f === 0) return bare;
+    const face = k => { const sd = b.sides[k]; if(!sd) return b.m === 'conc' ? M.paint : M.paint;
+      if(sd === 'dry') return M.paint; if(sd === 'wet') return M.ench;
+      if(sd === 'street') return f === 2 ? M.fach : bare; if(sd === 'patio') return f === 2 ? M.paint : bare; return bare; };
+    return FACE.map(face);
+  };
   const edgeM = new THREE.LineBasicMaterial({color:0x3a3530, transparent:true, opacity:0.45});
   const ox = v.med ? 0 : T/2, oy = v.rf + T/2;
   // caja en coordenadas de planta: x a lo ancho, y hacia el fondo desde el eje de fachada, z altura
@@ -2267,7 +2515,7 @@ function build3D(r){
     if(b.poly){ const sh = new THREE.Shape(); b.poly.forEach(([x,y],i)=> i ? sh.lineTo(x,y) : sh.moveTo(x,y));
       const g = new THREE.ExtrudeGeometry(sh, {depth: b.z1-b.z0, bevelEnabled:false}), me = new THREE.Mesh(g, M[b.m]); me.rotation.x = -Math.PI/2; me.position.set(ox, b.z0, -oy); grp.add(me);
       if(b.e){ const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), edgeM); l.rotation.x = -Math.PI/2; l.position.copy(me.position); grp.add(l); } return; }
-    if(!b.rot) return box(b.x0, b.x1, b.y0, b.y1, b.z0, b.z1, M[b.m], b.e);
+    if(!b.rot){ const mm = matFor(b); if(mm) box(b.x0, b.x1, b.y0, b.y1, b.z0, b.z1, mm, b.e); return; }
     const g = new THREE.BoxGeometry(b.rot.len, b.z1-b.z0, b.rot.wid), me = new THREE.Mesh(g, M[b.m]);
     me.position.set(ox + b.rot.cx, (b.z0+b.z1)/2, -(oy + b.rot.cy)); me.rotation.y = b.rot.ang; grp.add(me);
     const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), edgeM); l.position.copy(me.position); l.rotation.y = b.rot.ang; grp.add(l);
@@ -3097,10 +3345,15 @@ el('mat-copy').addEventListener('click', ()=>{
 
 // ---------- Etapas de crecimiento y proyección de la casa en el tiempo ----------
 // Precios unitarios de referencia (S/, Lima 2026, con mano de obra salvo donde se dice). Supuestos de anteproyecto.
+// pisos de la etapa 2 en la sala, el comedor y los dormitorios: precio por m² con instalación (referencia Lima 2026, por cotizar)
+const PIS = {vinr:{n:'Vinílico en rollo', l:'vinílico en rollo', p:35}, vin:{n:'Vinílico SPC en clic', l:'vinílico SPC', p:60}, cer:{n:'Cerámico 60 × 60', l:'cerámico 60 × 60', p:65}, por:{n:'Porcelanato 60 × 60', l:'porcelanato 60 × 60', p:95}, pul:{n:'Cemento pulido con sellador', l:'cemento pulido', p:12}};
+const pisOf = v => PIS[v.pis] || PIS.vinr;
+// área libre de pisos en ambientes húmedos (cocina, baño) y secos, sin muros ni patios
+const floorAreas = rooms => Object.values(rooms || {}).filter(q=>!q.sky && !q.ter).reduce((a,q)=>{ const ar = Math.max(0, (q.x1-q.x0-T)*(q.y1-q.y0-T)); if(q.wet) a.wet += ar; else a.dry += ar; return a; }, {wet:0, dry:0});
 const ET_R = {mo:0.75, bano:2800, coc:900, elec:70, carp:60, pcalle:1200, pulido:30, tarr:28, pint:10, cer:65, ench:70, enchB:18, enchC:4, puerta:550, mcoc:2000, terma:600, fach:55, azot:45, parap:120, escM:3500};
-const ET_N = {1:'Casco habitable', 2:'Acabados del 1.er piso', 3:'Casco del 2.º piso', 4:'Acabados del 2.º piso, fachada y azotea', 5:'Diversificación'};
+const ET_N = {1:'Casco habitable', 2:'Acabados del 1.er piso', 3:'2.º piso terminado, fachada y azotea', 4:'Diversificación'};
 const ET_S = {1:'Casco', 2:'Acabados', 3:'2.º piso', 4:'Terminada', 5:'Crece'};
-let pj = (()=>{ try { const o = JSON.parse(localStorage.getItem('vvm-proy') || 'null'); if(o && o.st >= 1 && o.st <= 5) return {on:!!o.on, st:o.st}; } catch(e){} return {on:false, st:1}; })();
+let pj = (()=>{ try { const o = JSON.parse(localStorage.getItem('vvm-proy') || 'null'); if(o && o.st >= 1 && o.st <= 5) return {on:!!o.on, st: o.v ? Math.min(4, o.st) : (o.st === 5 ? 4 : o.st === 4 ? 3 : o.st)}; } catch(e){} return {on:false, st:1}; })();
 const pjOn = () => pj.on;
 let etAhorro = (()=>{ try { const x = parseFloat(localStorage.getItem('vvm-ahorro')); return isFinite(x) && x >= 100 ? x : 1550; } catch(e){ return 1550; } })();
 const half = x => Math.max(0.5, Math.round(x*2)/2);
@@ -3113,6 +3366,7 @@ function etapasCalc(r){
   const m2 = has2 ? P.filter(p=>p.et===2).reduce((s,p)=>s+cP(p), 0) : P.filter(p=>p.id==='1.2'||p.id==='1.3').reduce((s,p)=>s+cP(p), 0) + 1000;
   const b2 = has2 ? (r.up && Object.values(r.up.rooms).some(q=>q.wet) ? 1 : 0) : 1;
   const nd2 = has2 ? (v.nd2 || 0) : 2, e = r.hL || 0.20;
+  const fa1 = floorAreas(r.rooms), fa2 = has2 && r.up ? floorAreas(r.up.rooms) : {wet: b2 ? 3.2 : 0, dry: Math.max(0, u2 - (b2 ? 3.2 : 0))};
   const sup2 = has2 ? '' : ' (supuesto)';
   const E = {
     1: {A:A1, it:[
@@ -3129,11 +3383,12 @@ function etapasCalc(r){
     2: {A:A1, it:[
       ['Tarrajeo de muros y cielo raso', (wall1*1.6 + u1)*R.tarr],
       ['Pintura interior', (wall1*1.6 + u1)*R.pint],
-      ['Cerámico en pisos', u1*R.cer],
+      [`Piso de la sala, el comedor y los dormitorios: ${pisOf(v).n.toLowerCase()} (${f1(fa1.dry)} m²)`, fa1.dry*pisOf(v).p],
+      [`Cerámico antideslizante en la cocina y el baño (${f1(fa1.wet)} m²)`, fa1.wet*R.cer],
       ['Enchape del baño y de la cocina', (R.enchB + R.enchC)*R.ench],
       [`Puertas interiores (${v.nd + 1}) con marco y chapa`, (v.nd + 1)*R.puerta],
       ['Mueble de cocina con lavadero y terma eléctrica', R.mcoc + R.terma]],
-      inc:['Tarrajeo y pintura por dentro', 'Cerámico en pisos, enchape del baño y de la cocina', 'Puertas de los dormitorios y del baño', 'Mueble de cocina y terma'],
+      inc:['Tarrajeo y pintura por dentro', `${pisOf(v).n} en la sala y los dormitorios; cerámico antideslizante y enchape en la cocina y el baño`, 'Puertas de los dormitorios y del baño', 'Mueble de cocina y terma'],
       no:['Fachada y muros laterales (el vecino puede construir más alto y taparlos)', 'Tarrajeo del techo por encima (será el piso de arriba)'],
       why:'Se hace antes de subir porque es lo que más cambia la vida diaria (limpieza, humedad, privacidad) y cuesta menos de la mitad que el 2.º piso. Al construir arriba hay que proteger los pisos y cuidar el polvo y el agua del vaciado del techo.',
       ob: half(Math.max(1, A1/32))},
@@ -3151,7 +3406,7 @@ function etapasCalc(r){
       ob: half(Math.max(2, A2/16))},
     4: {A:A2, it:[
       ['Tarrajeo y pintura interior del 2.º piso', (wall2*1.6 + u2)*(R.tarr + R.pint)],
-      ['Cerámico en pisos', u2*R.cer],
+      [`Pisos del 2.º piso: ${pisOf(v).n.toLowerCase()} y cerámico en el baño`, fa2.dry*pisOf(v).p + fa2.wet*R.cer],
       ...(b2 ? [['Enchape y terma del baño 2', R.enchB*R.ench + R.terma]] : []),
       [`Puertas interiores (${nd2 + b2})`, (nd2 + b2)*R.puerta],
       ['Fachada: tarrajeo y pintura exterior', r.W*(2*(H + e) + 1.10)*R.fach],
@@ -3162,6 +3417,11 @@ function etapasCalc(r){
       why:'La fachada va al final porque ya no cambia: el 2.º piso está hecho y la casa se ve terminada. Es la consolidación de PREVI.',
       ob: half(Math.max(1, A2/25))}
   };
+  // el casco y los acabados del 2.º piso van en una sola etapa: se sube, se termina y se pinta la fachada de una vez
+  { const a = E[3], b = E[4];
+    E[3] = {A:A2, it: a.it.concat(b.it), inc: a.inc.concat(['Tarrajeo, pintura, pisos, enchapes y puertas del 2.º piso', 'Fachada terminada y pintada', 'Azotea impermeabilizada, con parapetos de 2.10 hacia los vecinos y baranda de 1.10 hacia la calle y el patio']), no: [],
+      why: a.why + ' Se termina de una vez, con la fachada: la obra se hace en un solo tramo, el 2.º piso se puede habitar o alquilar al acabar y la casa se ve terminada (la consolidación de PREVI).', ob: a.ob + b.ob};
+    delete E[4]; }
   for(const s in E){ E[s].cost = E[s].it.reduce((a,b)=>a + b[1], 0); E[s].sav = Math.ceil(E[s].cost/etAhorro); }
   return {E, has2, A1, A2};
 }
@@ -3169,7 +3429,7 @@ function etapas(r){
   const box = el('et-cards'); if(!box) return;
   el('et-ahorro').value = String(etAhorro);
   const {E, has2, A1, A2} = etapasCalc(r);
-  const tot = [1,2,3,4].reduce((s,k)=>s + E[k].cost, 0), mSav = [1,2,3,4].reduce((s,k)=>s + E[k].sav, 0), mOb = [1,2,3,4].reduce((s,k)=>s + E[k].ob, 0);
+  const tot = [1,2,3].reduce((s,k)=>s + E[k].cost, 0), mSav = [1,2,3].reduce((s,k)=>s + E[k].sav, 0), mOb = [1,2,3].reduce((s,k)=>s + E[k].ob, 0);
   const yrs = (mSav + mOb)/12;
   el('et-kpis').innerHTML = [
     ['Casa terminada', `${soles(tot)} <small>${f1(A1 + A2)} m²</small>`],
@@ -3178,26 +3438,27 @@ function etapas(r){
     ['Por m²', `${soles(tot/(A1 + A2))} <small>con mano de obra</small>`]
   ].map(([a,b])=>`<div class="kpi"><div class="k">${a}</div><div class="v">${b}</div></div>`).join('');
   { let t0 = 0; const Tt = mSav + mOb;
-    el('et-line').innerHTML = [1,2,3,4].map(k=>{ const a = E[k].sav, o = E[k].ob, pre = t0; t0 += a + o;
+    el('et-line').innerHTML = [1,2,3].map(k=>{ const a = E[k].sav, o = E[k].ob, pre = t0; t0 += a + o;
       const y0 = pre/12, y1 = t0/12;
       return `<div class="lb"><b>Etapa ${k} · ${ET_N[k]}</b><span>${a} meses de ahorro + ${f1(o)} de obra · año ${f1(y0)} a ${f1(y1)}</span></div><div class="bar" title="Etapa ${k}"><div class="gap" style="flex:${pre}"></div><div class="sv" style="flex:${a}"></div><div class="ob" style="flex:${o}"></div><div class="gap" style="flex:${Tt - t0}"></div></div>`; }).join(''); }
-  el('et-note').innerHTML = `Cada fila es una etapa sobre la misma línea de tiempo: rayado, meses ahorrando; color, meses de obra. Total: unos <b>${Math.round(yrs*2)/2} años</b> desde que se tiene el lote, frente a los 16 años típicos de la autoconstrucción en Lima (GRADE).` + (has2 ? '' : ` <b>Tu plano no tiene 2.º piso</b>: las etapas 3 y 4 suponen un 2.º piso del mismo tamaño con 2 dormitorios y baño. Elige dormitorios arriba en la pestaña Diseño para calcularlas con tu plano.`) + ` La pestaña Diseño calcula la casa a S/ ${nf(r.v.cm2)}/m², un precio de constructora con gastos generales; aquí se suma partida por partida.`;
-  box.innerHTML = [1,2,3,4].map(k=>{ const s = E[k];
-    return `<section class="card et-card"><div class="et-h"><h2>Etapa ${k} · ${ET_N[k]}</h2><span class="et-c">${soles(s.cost)}</span><span class="hint">${s.sav} meses de ahorro · unos ${f1(s.ob)} meses de obra · ${f1(s.A)} m²${(k>2 && !has2)?' supuestos':''}</span><button type="button" data-pjgo="${k}">Ver en planta y 3D</button></div>
+  el('et-note').innerHTML = `Cada fila es una etapa sobre la misma línea de tiempo: rayado, meses ahorrando; color, meses de obra. Total: unos <b>${Math.round(yrs*2)/2} años</b> desde que se tiene el lote, frente a los 16 años típicos de la autoconstrucción en Lima (GRADE).` + (has2 ? '' : ` <b>Tu plano no tiene 2.º piso</b>: la etapa 3 supone un 2.º piso del mismo tamaño con 2 dormitorios y baño. Elige dormitorios arriba en la pestaña Diseño para calcularla con tu plano.`) + ` La pestaña Diseño calcula la casa a S/ ${nf(r.v.cm2)}/m², un precio de constructora con gastos generales; aquí se suma partida por partida.`;
+  box.innerHTML = [1,2,3].map(k=>{ const s = E[k];
+    return `<section class="card et-card"><div class="et-h"><h2>Etapa ${k} · ${ET_N[k]}</h2><span class="et-c">${soles(s.cost)}</span><span class="hint">${s.sav} meses de ahorro · unos ${f1(s.ob)} meses de obra · ${f1(s.A)} m²${(k>2 && !has2)?' supuestos':''}</span><button type="button" data-pjgo="${k}">Ver en planta y 3D</button>${k === 2 ? '<button type="button" class="wz-next" data-acab="1">Elegir acabados</button>' : ''}</div>
       <p class="hint" style="margin:6px 0 0">${s.why}</p>
       <div class="et-cols"><div><h3>Qué incluye</h3><ul>${s.inc.map(x=>`<li>${x}</li>`).join('')}</ul>${s.no.length?`<h3 style="margin-top:8px">Qué queda para después</h3><ul>${s.no.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}</div>
       <div style="min-width:0"><h3>Costo estimado por partida</h3><div class="ca-wrap"><table class="ca et-t"><tbody>${s.it.map(([n,c])=>`<tr><td>${n}</td><td class="n">${soles(c)}</td></tr>`).join('')}<tr class="tot"><td>Total etapa ${k}</td><td class="n">${soles(s.cost)}</td></tr></tbody></table></div></div></div></section>`; }).join('');
+  box.querySelectorAll('[data-acab]').forEach(b=> b.addEventListener('click', wz2Open));
   box.querySelectorAll('[data-pjgo]').forEach(b=> b.addEventListener('click', ()=>{ setProj(true, +b.dataset.pjgo); showTab('3d'); }));
   const lo = x => soles(Math.round(x/500)*500);
   el('et-opts').innerHTML = [
     ['Departamento independiente arriba', `El 2.º piso se separa con una <b>escalera propia al frente</b>, en el retiro (el RNE lo permite en ampliaciones de vivienda, A.010 art. 8.3 l), una cocineta y medidores de luz y agua aparte. Sirve para alquilar o para un hijo que forma familia.`, `${lo(8000)} a ${lo(12000)}`, 'La casa pasa a ser <b>bifamiliar</b>: licencia de ampliación en la municipalidad (Ley 29090) y, para venderlo o hipotecarlo por separado, reglamento interno e independización en SUNARP.'],
     ['Tienda o bodega al frente', `La sala del 1.er piso se abre a la calle con una <b>puerta enrollable</b> y la sala pasa al fondo o arriba. Es la ampliación más rápida de pagar.`, `${lo(4000)} a ${lo(8000)}`, 'La zonificación del lote tiene que permitir comercio vecinal; <b>licencia de funcionamiento</b> municipal (Ley 28976) e inspección de seguridad (ITSE).'],
-    ['3.er piso', `Otro piso como la etapa 3 más la 4, para más dormitorios o un segundo departamento.`, `${lo((E[3].cost + E[4].cost)*0.95)} a ${lo((E[3].cost + E[4].cost)*1.15)}`, 'La altura máxima la fijan los parámetros urbanísticos de la municipalidad (A.010 art. 10). Los cimientos y los muros de la etapa 1 tienen que calcularse para 3 pisos (E.070); <b>este verificador hoy comprueba hasta 2 pisos</b>.']
+    ['3.er piso', `Otro piso como la etapa 3, para más dormitorios o un segundo departamento.`, `${lo(E[3].cost*0.95)} a ${lo(E[3].cost*1.15)}`, 'La altura máxima la fijan los parámetros urbanísticos de la municipalidad (A.010 art. 10). Los cimientos y los muros de la etapa 1 tienen que calcularse para 3 pisos (E.070); <b>este verificador hoy comprueba hasta 2 pisos</b>.']
   ].map(([t,d,c,n])=>`<div><h3>${t}</h3><p>${d}</p><p><b>Costo aproximado:</b> ${c}</p><p class="hint">${n}</p></div>`).join('');
   el('et-how').innerHTML = [
     'Los materiales del casco (etapas 1 y 3) son los de la pestaña <b>Materiales</b>, con tus precios. La mano de obra del casco se toma como el 75 % de esos materiales (maestro y peón, unos 3 a 4 meses para el 1.er piso).',
     `Instalaciones: S/ ${nf(ET_R.bano)} por baño con aparatos básicos, S/ ${nf(ET_R.coc)} cocina y lavandería, S/ ${ET_R.elec} por m² de instalación eléctrica. Puerta de calle S/ ${nf(ET_R.pcalle)} y ventanas S/ ${ET_R.carp} por m² techado. Piso pulido S/ ${ET_R.pulido}/m². Escalera de caracol metálica de taller, instalada: S/ ${nf(ET_R.escM)} (estimado de referencia, por cotizar).`,
-    `Acabados, con mano de obra: tarrajeo S/ ${ET_R.tarr}/m² y pintura S/ ${ET_R.pint}/m² (muros por 1.6 caras más el cielo raso), cerámico S/ ${ET_R.cer}/m², enchape S/ ${ET_R.ench}/m² (${ET_R.enchB} m² por baño y ${ET_R.enchC} en la cocina), puerta interior S/ ${ET_R.puerta}, mueble de cocina S/ ${nf(ET_R.mcoc)}, terma S/ ${ET_R.terma}.`,
+    `Acabados, con mano de obra: tarrajeo S/ ${ET_R.tarr}/m² y pintura S/ ${ET_R.pint}/m² (muros por 1.6 caras más el cielo raso), cerámico S/ ${ET_R.cer}/m², pisos de sala y dormitorios según la opción elegida (${Object.values(PIS).map(q=>`${q.n.toLowerCase()} S/ ${q.p}`).join(', ')}, por m² instalado), enchape S/ ${ET_R.ench}/m² (${ET_R.enchB} m² por baño y ${ET_R.enchC} en la cocina), puerta interior S/ ${ET_R.puerta}, mueble de cocina S/ ${nf(ET_R.mcoc)}, terma S/ ${ET_R.terma}.`,
     `Fachada S/ ${ET_R.fach}/m² (frente por la altura de los dos pisos y el parapeto), azotea S/ ${ET_R.azot}/m² y parapetos o barandas S/ ${ET_R.parap} por metro.`,
     'Meses de ahorro = costo de la etapa ÷ ahorro mensual. Meses de obra: el 1.er piso a unos 14 m² por mes de casco y 32 m² por mes de acabados; el 2.º piso a 16 y 25 m² por mes.',
     'Son precios de referencia de Lima en 2026 para un anteproyecto. El presupuesto definitivo sale de los planos firmados y de la cotización del maestro.'
@@ -3205,7 +3466,9 @@ function etapas(r){
 }
 function setProj(on, st){
   pj = {on, st: st || pj.st};
-  try { localStorage.setItem('vvm-proy', JSON.stringify(pj)); } catch(e){}
+  // en las etapas con acabados nuevos (2 y 3) el 3D se ve sin techo, para mirar los acabados por dentro; en las de casco, con techo
+  if(on && st){ el('v3-techo').checked = st === 2 || (st === 3 && !!lastR && lastR.gross2 > 0); }
+  try { localStorage.setItem('vvm-proy', JSON.stringify(Object.assign({v:2}, pj))); } catch(e){}
   if(lastR){ applyProj(lastR); if(!el('tab-3d').hidden && d3) try { build3D(lastR); } catch(e){ console.error('3D', e); } }
 }
 function applyProj(r){
@@ -3216,13 +3479,14 @@ function applyProj(r){
   { const lb = el('v3-etlbl'); if(lb) lb.innerHTML = on ? `<b>Etapa ${st}</b> · ${ET_N[st]}` : '<b>Casa terminada</b> · sin etapas'; }
   const b1 = el('svgbox'), b2 = el('svgbox2'), c1 = el('pj-cap1'), c2 = el('pj-cap2');
   b1.classList.toggle('pj-casco', on && st===1);
-  b2.classList.toggle('pj-casco', on && st===3);
+  b2.classList.toggle('pj-casco', false);
   b2.classList.toggle('pj-fut', on && st<3);
   const cap = (n, t) => { n.hidden = !t; n.textContent = t || ''; };
   if(!on){ cap(c1); cap(c2); el('pj-txt').textContent = 'Actívala para ver la casa como queda al final de cada etapa, en la planta y en el 3D.'; return; }
   cap(c1, st===1 ? 'Etapa 1 · casco: ladrillo sin tarrajeo, piso pulido; ya se puede vivir' : 'Terminado en la etapa 2 (acabados)');
-  cap(c2, !has2 ? '' : st<3 ? 'Todavía no existe: se construye en la etapa 3' : st===3 ? 'Etapa 3 · casco del 2.º piso, sin acabados' : 'Terminado en la etapa 4');
-  el('pj-txt').innerHTML = `<b>Etapa ${st} · ${ET_N[st]}.</b> ` + (st===5 ? 'La casa terminada con los fierros listos para crecer. Las opciones están en la pestaña Etapas.' : (!has2 && st>=3 ? 'Tu plano no tiene 2.º piso: elige dormitorios arriba en Diseño para verlo.' : 'Detalle y costo en la pestaña Etapas.'));
+  cap(c2, !has2 ? '' : st<3 ? 'Todavía no existe: se construye en la etapa 3' : 'Construido y terminado en la etapa 3');
+  el('pj-txt').innerHTML = `<b>Etapa ${st} · ${ET_N[st]}.</b> ` + (st===2 ? 'Los pisos y demás acabados se eligen con <a href="#" id="pj-acab">Elegir acabados</a>. Detalle y costo en la pestaña Etapas.' : st===4 ? 'La casa terminada con los fierros listos para crecer. Las opciones están en la pestaña Etapas.' : (!has2 && st>=3 ? 'Tu plano no tiene 2.º piso: elige dormitorios arriba en Diseño para verlo.' : 'Detalle y costo en la pestaña Etapas.'));
+  { const a = el('pj-acab'); if(a) a.addEventListener('click', e=>{ e.preventDefault(); wz2Open(); }); }
 }
 el('pj-on').addEventListener('change', ()=> setProj(el('pj-on').checked));
 document.querySelectorAll('#pj-seg button').forEach(b=> b.addEventListener('click', ()=> setProj(true, +b.dataset.pj)));
@@ -3234,16 +3498,21 @@ function pjBox(b, H2, r){
   const st = pj.st, upper = b.z0 >= H2 - 0.01;
   // antes de la etapa 3, si el plano tiene 2.º piso, el techo queda libre: sin parapetos de azotea ni escalera
   if(st < 3 && r && r.gross2 > 0 && ((upper && b.m !== 'slab') || b.m === 'stair' || b.esc)) return null;
-  const casco = st===1 || ((st===2 || st===3) && upper);
-  if(!casco) return b;
-  const m = b.m==='wall' || b.m==='tab' ? 'brick' : b.m==='floor' || b.m==='wet' ? 'cem' : b.m;
-  return m===b.m ? b : Object.assign({}, b, {m});
+  return b;
+}
+// acabado de cada piso según la etapa: 0 casco (ladrillo y piso pulido), 1 acabados por dentro (la fachada sigue en ladrillo), 2 terminado
+function pjFin(fl){
+  if(!pj.on) return 2;
+  const st = pj.st;
+  if(st >= 3) return 2;
+  if(st === 1) return 0;
+  return fl === 1 ? 1 : 0;
 }
 // fierros de empalme que asoman sobre las columnas: la casa queda lista para crecer
 function pjRebar(r, built2, H2){
   if(!pj.on) return [];
-  const st = pj.st; if(!(st <= 2 || st === 5)) return [];
-  const z = st===5 && built2 ? H2 + H + (r.hL || 0.20) : H2, out = [], d = 0.045, s = 0.008;
+  const st = pj.st; if(!(st <= 2 || st === 4)) return [];
+  const z = st===4 && built2 ? H2 + H + (r.hL || 0.20) : H2, out = [], d = 0.045, s = 0.008;
   (r.cols||[]).forEach(([x,y])=> [[-d,-d],[d,-d],[-d,d],[d,d]].forEach(([a,b])=> out.push({x0:x+a-s, x1:x+a+s, y0:y+b-s, y1:y+b+s, z0:z, z1:z+0.75, m:'rebar', e:false})));
   return out;
 }
@@ -3268,10 +3537,10 @@ function gapList(w, floor){
   return (w.gaps||[]).filter(q=>q[1]>q[0]).map(q=>[Math.max(0,q[0]), Math.min(Lw,q[1]), q[2] || (floor===1 && winLike(q[0], q[1]) ? 'win' : 'door')]).sort((p,q)=>p[0]-q[0]);
 }
 const dimH = (X, Y, x0, x1, y, txt, col='var(--ink)') => { const a = X(x0), b = X(x1), yy = Y(y);
-  return `<line x1="${a}" y1="${yy}" x2="${b}" y2="${yy}" stroke="${col}" stroke-width=".7"/><line x1="${a-4}" y1="${yy+4}" x2="${a+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><line x1="${b-4}" y1="${yy+4}" x2="${b+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><text x="${(a+b)/2}" y="${yy-4}" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text>`; };
+  return `<g data-l="COTAS"><line x1="${a}" y1="${yy}" x2="${b}" y2="${yy}" stroke="${col}" stroke-width=".7"/><line x1="${a-4}" y1="${yy+4}" x2="${a+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><line x1="${b-4}" y1="${yy+4}" x2="${b+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><text x="${(a+b)/2}" y="${yy-4}" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text></g>`; };
 const dimV = (X, Y, y0, y1, x, txt, col='var(--ink)') => { const a = Y(y0), b = Y(y1), xx = X(x);
-  return `<line x1="${xx}" y1="${a}" x2="${xx}" y2="${b}" stroke="${col}" stroke-width=".7"/><line x1="${xx-4}" y1="${a+4}" x2="${xx+4}" y2="${a-4}" stroke="${col}" stroke-width="1.1"/><line x1="${xx-4}" y1="${b+4}" x2="${xx+4}" y2="${b-4}" stroke="${col}" stroke-width="1.1"/><text transform="translate(${xx-4},${(a+b)/2}) rotate(-90)" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text>`; };
-const bubble = (x, y, n) => `<circle cx="${x}" cy="${y}" r="10" fill="var(--panel)" stroke="var(--ink)" stroke-width=".9"/><text x="${x}" y="${y+4}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" font-weight="600" fill="var(--ink)">${n}</text>`;
+  return `<g data-l="COTAS"><line x1="${xx}" y1="${a}" x2="${xx}" y2="${b}" stroke="${col}" stroke-width=".7"/><line x1="${xx-4}" y1="${a+4}" x2="${xx+4}" y2="${a-4}" stroke="${col}" stroke-width="1.1"/><line x1="${xx-4}" y1="${b+4}" x2="${xx+4}" y2="${b-4}" stroke="${col}" stroke-width="1.1"/><text transform="translate(${xx-4},${(a+b)/2}) rotate(-90)" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text></g>`; };
+const bubble = (x, y, n) => `<g data-l="EJES"><circle cx="${x}" cy="${y}" r="10" fill="var(--panel)" stroke="var(--ink)" stroke-width=".9"/><text x="${x}" y="${y+4}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" font-weight="600" fill="var(--ink)">${n}</text></g>`;
 function proDefaults(r){
   const st = r.stair, F = Math.max(r.v.fondo, r.v.rf + r.D + T), oy = r.v.rf + T/2;
   const yMax = F - oy - 0.1;
@@ -3280,6 +3549,21 @@ function proDefaults(r){
   return {yMin: -oy + 0.05, yMax, xMin: -0.30, xMax: r.W + 0.30};
 }
 const WIN_SILL = 0.90, WIN_H = 1.20; // ventanas: alféizar 0.90, dintel 2.10 (igual que el 3D y los cortes)
+// trama del piso terminado en Diseño Pro: losetas, tablas de vinílico o nada (lámina, pulido)
+function floorHatch(v, wet, x0, x1, y0, y1, X, Y){
+  if(x1 - x0 < 0.3 || y1 - y0 < 0.3) return '';
+  const k = wet ? 'wet' : (v.pis || 'vinr'), st = 'stroke="var(--line)" stroke-width=".7"';
+  let g = '';
+  const grid = m => { for(let x = x0 + m; x < x1 - 0.02; x += m) g += `<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}" ${st}/>`; for(let y = y0 + m; y < y1 - 0.02; y += m) g += `<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" ${st}/>`; };
+  if(k === 'wet') grid(0.30);
+  else if(k === 'cer' || k === 'por') grid(0.60);
+  else if(k === 'vin'){ // tablas de 0.18 × 1.22 a lo largo del lado mayor, con juntas trabadas
+    const alongX = (x1 - x0) >= (y1 - y0), w = 0.18, Lp = 1.22;
+    if(alongX){ let i = 0; for(let y = y0 + w; y < y1 - 0.02; y += w, i++){ g += `<line x1="${X(x0)}" y1="${Y(y)}" x2="${X(x1)}" y2="${Y(y)}" ${st}/>`; for(let x = x0 + (i % 2 ? Lp/2 : Lp); x < x1 - 0.05; x += Lp) g += `<line x1="${X(x)}" y1="${Y(y)}" x2="${X(x)}" y2="${Y(y - w)}" ${st}/>`; } }
+    else { let i = 0; for(let x = x0 + w; x < x1 - 0.02; x += w, i++){ g += `<line x1="${X(x)}" y1="${Y(y0)}" x2="${X(x)}" y2="${Y(y1)}" ${st}/>`; for(let y = y0 + (i % 2 ? Lp/2 : Lp); y < y1 - 0.05; y += Lp) g += `<line x1="${X(x - w)}" y1="${Y(y)}" x2="${X(x)}" y2="${Y(y)}" ${st}/>`; } }
+  }
+  return `<g opacity=".8" aria-hidden="true">${g}</g>`;
+}
 function proPlan(r){
   const v = r.v, W = r.W, D = r.D, f2nd = proFloor === 2 && r.gross2 > 0 && r.up;
   const list = f2nd ? G3.f2 : G3.f1, doors = f2nd ? G3.d2 : G3.d1, A = axesOf(r), st = r.stair;
@@ -3291,10 +3575,11 @@ function proPlan(r){
   const X = x => (x - x0)*s, Y = y => (y1 - y)*s;
   const vw = Math.round((W + 2.2 - x0)*s), vh = Math.round((y1 - (yBot - 2.3))*s);
   let g = '';
+  g += '<g data-l="TERRENO">';
   // terreno: vereda, retiros, patio y límite del lote
   { const lab = (x, y, t, c='var(--ok)', fs=11) => `<text x="${X(x)}" y="${Y(y)}" text-anchor="middle" font-size="${fs}" fill="${c}">${t}</text>`;
     if(vd > 0){ g += `<rect x="${X(lx0-0.4)}" y="${Y(ly0)}" width="${(lx1-lx0+0.8)*s}" height="${vd*s}" fill="var(--line)" opacity=".55"/>` + lab((lx0+lx1)/2, ly0 - vd/2 + 0.05, `Vereda ${f2(vd)} m · calle`, 'var(--muted)', 10); }
-    if(v.rf > 0.05){ g += `<rect x="${X(lx0)}" y="${Y(-T/2)}" width="${(lx1-lx0)*s}" height="${(-T/2-ly0)*s}" fill="var(--ok-soft)"/>` + lab((lx0+lx1)/2, (ly0-T/2)/2 - 0.08, `Retiro frontal ${f2(v.rf)} m`); }
+    if(v.rf > 0.05){ g += `<rect x="${X(lx0)}" y="${Y(-T/2)}" width="${(lx1-lx0)*s}" height="${(-T/2-ly0)*s}" fill="var(--ok-soft)"/>` + lab(r.car ? (r.car.x0 > (lx0+lx1)/2 ? (lx0 + r.car.x0)/2 : (r.car.x1 + lx1)/2) : st && st.front ? ((st.box.x0+st.box.x1)/2 > (lx0+lx1)/2 ? lx0 + (lx1-lx0)*0.25 : lx0 + (lx1-lx0)*0.75) : (lx0+lx1)/2, (ly0-T/2)/2 - 0.08, `Retiro frontal ${f2(v.rf)} m`) + (r.car && !f2nd ? carSvg(r.car, X, Y, s) : ''); }
     if(isEsq(v)){ const xw = W + T/2; // retiro lateral y vereda de la calle lateral
       if(lx1 - xw > 0.05){ g += `<rect x="${X(xw)}" y="${Y(D + T/2)}" width="${(lx1-xw)*s}" height="${(D+T)*s}" fill="var(--ok-soft)"/>` + `<text transform="translate(${X((xw+lx1)/2)+4},${Y(D/2)}) rotate(-90)" text-anchor="middle" font-size="10" fill="var(--ok)">retiro lateral ${f2(lx1-xw)} m</text>`; }
       if(vd > 0) g += `<rect x="${X(lx1)}" y="${Y(ly1 + (isAtr(v) ? vd : 0.4))}" width="${vd*s}" height="${(ly1 - ly0 + vd + (isAtr(v) ? vd : 0.4))*s}" fill="var(--line)" opacity=".55"/>` + `<text transform="translate(${X(lx1+vd/2)+4},${Y((ly0+ly1)/2)}) rotate(-90)" text-anchor="middle" font-size="10" fill="var(--muted)">Vereda ${f2(vd)} m · calle lateral</text>`;
@@ -3310,16 +3595,20 @@ function proPlan(r){
     const xc = -2.35; let yy = ly0; [[-T/2,'retiro'],[pb,'construido'],[ly1,'patio']].forEach(([yb,t])=>{ if(yb - yy > 0.05) g += dimV(X, Y, yy, yb, xc, f2(yb-yy), 'var(--ok)'); yy = yb; });
     g += dimV(X, Y, ly0, ly1, xc - 0.5, `${f2(v.fondo)} fondo del lote`, 'var(--ink)');
   }
+  g += '</g><g data-l="EJES">';
   // ejes y burbujas
   A.ax.forEach(([n,x])=>{ g += `<line x1="${X(x)}" y1="${Y(yBot-1.45)}" x2="${X(x)}" y2="${Y(yTop+0.55)}" stroke="var(--muted)" stroke-width=".6" stroke-dasharray="14 4 2 4"/>` + bubble(X(x), Y(yBot-1.75), n) + bubble(X(x), Y(yTop+0.85), n); });
   A.ay.forEach(([n,y])=>{ g += `<line x1="${X(-1.45)}" y1="${Y(y)}" x2="${X(W+1.45)}" y2="${Y(y)}" stroke="var(--muted)" stroke-width=".6" stroke-dasharray="14 4 2 4"/>` + bubble(X(-1.75), Y(y), n) + bubble(X(W+1.75), Y(y), n); });
+  g += '</g><g data-l="PISOS">';
   // ambientes: nombre, área y cotas interiores libres
   const rooms = f2nd ? Object.values(r.up.rooms) : Object.values(r.rooms);
   rooms.forEach(q=>{
     const yy0 = f2nd && Math.abs(q.y0) < 1e-6 ? -vo : q.y0;
     if(q.sky || q.ter){ g += `<rect x="${X(q.x0+T/2)}" y="${Y(q.y1-T/2)}" width="${(q.x1-q.x0-T)*s}" height="${(q.y1-yy0-T)*s}" fill="var(--ok-soft)"/>`; }
     else if(q.wet) g += `<rect x="${X(q.x0+T/2)}" y="${Y(q.y1-T/2)}" width="${(q.x1-q.x0-T)*s}" height="${(q.y1-yy0-T)*s}" fill="var(--wet)"/>`;
+    if(!q.sky && !q.ter) g += floorHatch(v, q.wet, q.x0+T/2, q.x1-T/2, yy0+T/2, q.y1-T/2, X, Y);
   });
+  g += '</g><g data-l="MUEBLES">';
   // muebles (opcional): los mismos que la pestaña Diseño, sin repetir sus verificaciones
   if(proFurn){ const rr = Object.assign({}, r, {checks: []});
     try {
@@ -3328,7 +3617,9 @@ function proPlan(r){
         g += `<rect x="${X(mx)}" y="${Y(co.y1-T/2)}" width="${0.60*s}" height="${(co.y1-co.y0-T)*s}" fill="var(--furn)"/>`; }
         g += furnWet(rr, X, Y, s); }
     } catch(e){ console.error('muebles pro', e); } }
+  g += '</g><g data-l="TEXTOS">';
   const VAN = {v:[], p:[]};
+  g += '</g>';
   // muros cortados (relleno), ventanas y puertas
   list.forEach(w=>{
     const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
@@ -3336,19 +3627,20 @@ function proPlan(r){
     const rect = (a, b, fill, extra='') => { const a2 = a <= 1e-6 ? -t/2 : a, b2 = b >= Lw-1e-6 ? Lw + t/2 : b;
       const px0 = w.x1+ux*a2, px1 = w.x1+ux*b2, py0 = w.y1+uy*a2, py1 = w.y1+uy*b2;
       const [rx0, rx1, ry0, ry1] = hor ? [Math.min(px0,px1), Math.max(px0,px1), w.y1-t/2, w.y1+t/2] : [w.x1-t/2, w.x1+t/2, Math.min(py0,py1), Math.max(py0,py1)];
-      return `<rect x="${X(rx0)}" y="${Y(ry1)}" width="${(rx1-rx0)*s}" height="${(ry1-ry0)*s}" fill="${fill}" ${extra}/>`; };
+      return `<rect data-l="${w.kind==='light' ? 'TABIQUES' : 'MUROS'}" x="${X(rx0)}" y="${Y(ry1)}" width="${(rx1-rx0)*s}" height="${(ry1-ry0)*s}" fill="${fill}" ${extra}/>`; };
     let t0 = 0;
     gapList(w, f2nd ? 2 : 1).forEach(([a,b,k])=>{
       if(a > t0) g += rect(t0, a, w.kind==='light' ? 'var(--muted)' : 'var(--wall)');
       if(k==='win'){ const pa = [w.x1+ux*a, w.y1+uy*a], pb = [w.x1+ux*b, w.y1+uy*b], nx = -uy*t/2, ny = ux*t/2;
-        [-1,0,1].forEach(sg=> g += `<line x1="${X(pa[0]+nx*sg)}" y1="${Y(pa[1]+ny*sg)}" x2="${X(pb[0]+nx*sg)}" y2="${Y(pb[1]+ny*sg)}" stroke="var(--wall)" stroke-width="${sg?0.8:1.4}"/>`);
+        [-1,0,1].forEach(sg=> g += `<line data-l="VENTANAS" x1="${X(pa[0]+nx*sg)}" y1="${Y(pa[1]+ny*sg)}" x2="${X(pb[0]+nx*sg)}" y2="${Y(pb[1]+ny*sg)}" stroke="var(--wall)" stroke-width="${sg?0.8:1.4}"/>`);
         const wv = Math.round((b-a)*100)/100; VAN.v.push(wv);
         const tx = X((pa[0]+pb[0])/2 + (hor ? 0 : (w.x1 < W/2 ? -0.55 : 0.55))), ty = Y((pa[1]+pb[1])/2 + (hor ? (w.y1 < D/2 ? 0.33 : 0.36) : 0));
-        g += `<text x="${tx}" y="${ty-1}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" font-weight="700" fill="var(--wet-line)">@@V${wv}@@</text><text x="${tx}" y="${ty+8}" text-anchor="middle" font-family="var(--f-mono)" font-size="7.5" fill="var(--wet-line)">${f2(wv)}×${f2(WIN_H)} a${f2(WIN_SILL)}</text>`; }
+        g += `<g data-l="VENTANAS"><text x="${tx}" y="${ty-1}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" font-weight="700" fill="var(--wet-line)">@@V${wv}@@</text><text x="${tx}" y="${ty+8}" text-anchor="middle" font-family="var(--f-mono)" font-size="7.5" fill="var(--wet-line)">${f2(wv)}×${f2(WIN_H)} a${f2(WIN_SILL)}</text></g>`; }
       t0 = Math.max(t0, b);
     });
     if(t0 < Lw) g += rect(t0, Lw, w.kind==='light' ? 'var(--muted)' : 'var(--wall)');
   });
+  g += '<g data-l="PUERTAS">';
   doors.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
     g += `<line x1="${X(hx)}" y1="${Y(hy)}" x2="${X(hx+nx*wd)}" y2="${Y(hy+ny*wd)}" stroke="var(--wall)" stroke-width="1.6"/>`;
     const pts=[]; for(let i=0;i<=12;i++){ const t=i/12*Math.PI/2; pts.push(`${X(hx+wd*(Math.cos(t)*ux+Math.sin(t)*nx))},${Y(hy+wd*(Math.cos(t)*uy+Math.sin(t)*ny))}`); }
@@ -3356,18 +3648,22 @@ function proPlan(r){
     const dv = Math.round(wd*100)/100; VAN.p.push(dv);
     g += `<text x="${X(hx+ux*wd/2+nx*wd*0.45)}" y="${Y(hy+uy*wd/2+ny*wd*0.45)+3}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" fill="var(--muted)">@@P${dv}@@</text>`;
   });
+  g += '</g><g data-l="COLUMNAS">';
   const cs = Math.max(5, 0.25*s*0.95);
   if(v.sis==='portico') r.cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)" stroke="var(--panel)" stroke-width=".8"/>`; });
   else g += colSvg(r.cols, list, X, Y, s);
-  if(st) g += drawStair(X, Y, s, st, f2nd);
+  g += '</g>';
+  if(st) g += '<g data-l="ESCALERA">' + drawStair(X, Y, s, st, f2nd) + '</g>';
   rooms.forEach(q=>{
     if(!q.n || q.open && q.sky) { if(q.sky) g += `<text x="${X((q.x0+q.x1)/2)}" y="${Y((q.y0+q.y1)/2)+4}" text-anchor="middle" font-size="10.5" fill="var(--ok)">patio de luz</text>`; return; }
     const yy0 = f2nd && Math.abs(q.y0) < 1e-6 ? -vo : q.y0, cw = q.x1-q.x0-T, cd = q.y1-yy0-T, cx = (q.x0+q.x1)/2, cy = (yy0+q.y1)/2;
     g += `<text x="${X(cx)}" y="${Y(cy)+2}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="${cw*s < 90 ? 10.5 : 12}" fill="var(--ink)">${q.n}</text>`;
     if(!q.ter) g += `<text x="${X(cx)}" y="${Y(cy)+15}" text-anchor="middle" font-family="var(--f-mono)" font-size="9.5" fill="var(--muted)">${f1(Math.max(0,cw*cd))} m²</text>`;
+    if(!q.ter && !q.sky && cw >= 1.6) g += `<text x="${X(cx)}" y="${Y(cy)+27}" text-anchor="middle" font-size="9" fill="var(--muted)">piso: ${q.wet ? 'cerámico antidesl.' : pisOf(v).l}</text>`;
     if(!q.open && cw > 1.0 && cd > 1.3) g += dimH(X, Y, q.x0+T/2, q.x1-T/2, yy0 + T/2 + Math.min(0.45, cd*0.2), f2(cw), 'var(--brick)');
     if(!q.open && cd > 1.0 && cw > 1.3) g += dimV(X, Y, yy0+T/2, q.y1-T/2, q.x0 + T/2 + Math.min(0.40, cw*0.18), f2(cd), 'var(--brick)');
   });
+  g += '<g data-l="COTAS">';
   // cotas entre ejes y totales
   const xs = A.ax.map(a=>a[1]), ys = A.ay.map(a=>a[1]);
   for(let i=0;i<xs.length-1;i++) if(xs[i+1]-xs[i] > 0.01) g += dimH(X, Y, xs[i], xs[i+1], yBot-0.55, f2(xs[i+1]-xs[i]));
@@ -3377,16 +3673,19 @@ function proPlan(r){
   g += dimV(X, Y, ys[0], ys[ys.length-1], -1.0, f2(ys[ys.length-1]-ys[0]));
   g += dimH(X, Y, -T/2, W+T/2, yTop+0.25, `${f2(W+T)} exterior`, 'var(--muted)');
   if(st){ const b = st.box; g += dimV(X, Y, D+T/2, b.y1, W+0.55, f2(b.y1-D-T/2), 'var(--brick)'); }
+  g += '</g>';
   // líneas de corte desplazables
   const ya = proCut.y, xb = proCut.x;
   const arrowUp = (x, y, lab) => `<path d="M${x-7},${y+2} L${x+7},${y+2} L${x},${y-10} Z" fill="var(--brick)"/><text x="${x}" y="${y+16}" text-anchor="middle" font-family="var(--f-mono)" font-weight="700" font-size="12" fill="var(--brick)">${lab}</text>`;
   const arrowL = (x, y, lab) => `<path d="M${x+2},${y-7} L${x+2},${y+7} L${x-10},${y} Z" fill="var(--brick)"/><text x="${x+14}" y="${y+4}" font-family="var(--f-mono)" font-weight="700" font-size="12" fill="var(--brick)">${lab}</text>`;
-  g += `<g class="pro-cut" data-cut="y"><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="transparent" stroke-width="18"/>${arrowUp(X(-1.25), Y(ya), 'A')}${arrowUp(X(W+1.25), Y(ya), 'A')}<title>Arrastra para mover el corte A-A</title></g>`;
-  g += `<g class="pro-cut" data-cut="x"><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="transparent" stroke-width="18"/>${arrowL(X(xb), Y(yBot-1.25), 'B')}${arrowL(X(xb), Y(yTop+0.35), 'B')}<title>Arrastra para mover el corte B-B</title></g>`;
+  g += `<g class="pro-cut" data-cut="y" data-l="CORTES"><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="transparent" stroke-width="18"/>${arrowUp(X(-1.25), Y(ya), 'A')}${arrowUp(X(W+1.25), Y(ya), 'A')}<title>Arrastra para mover el corte A-A</title></g>`;
+  g += `<g class="pro-cut" data-cut="x" data-l="CORTES"><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="transparent" stroke-width="18"/>${arrowL(X(xb), Y(yBot-1.25), 'B')}${arrowL(X(xb), Y(yTop+0.35), 'B')}<title>Arrastra para mover el corte B-B</title></g>`;
+  g += '<g data-l="TEXTOS">';
   // escala gráfica
   const sx = X(-1.9), sy = Y(yBot-2.15);
   g += `<text x="${X(W+1.9)}" y="${sy+8}" text-anchor="end" font-family="var(--f-mono)" font-size="10" fill="var(--muted)">${f2nd ? '2.º piso · NPT ' + f2SignLevel(H + (r.hL||0.20)) : '1.er piso · NPT ±0.00'} · cotas en metros</text>`;
   g += `<g font-family="var(--f-mono)" font-size="9" fill="var(--muted)">${[0,1,2].map(i=>`<rect x="${sx+i*s}" y="${sy-4}" width="${s}" height="4" fill="${i%2?'var(--panel)':'var(--ink)'}" stroke="var(--ink)" stroke-width=".6"/><text x="${sx+i*s}" y="${sy+10}" text-anchor="middle">${i}</text>`).join('')}<text x="${sx+3*s}" y="${sy+10}" text-anchor="middle">3 m</text></g>`;
+  g += '</g>';
   proGeo = {X, Y, s, x0, y1, lim};
   // códigos de vanos (V-1, P-1…) de mayor a menor ancho y cuadro de vanos
   const codes = (arr, pre) => { const u = [...new Set(arr)].sort((x,y)=>y-x), m = {}; u.forEach((w,i)=> m[w] = `${pre}-${i+1}`); return {u, m}; };
@@ -3398,6 +3697,9 @@ function proPlan(r){
     + CV.u.map(w=>`<tr><td><b>${CV.m[w]}</b></td><td>Ventana corrediza</td><td class="n">${f2(w)}</td><td class="n">${f2(WIN_H)}</td><td class="n">${f2(WIN_SILL)}</td><td class="n">${cnt(VAN.v, w)}</td><td>Dintel a ${f2(WIN_SILL+WIN_H)} m; 0.10 m inferiores con vidrio fijo (A.020 art. 12.5 c)</td></tr>`).join('')
     + CP.u.map(w=>`<tr><td><b>${CP.m[w]}</b></td><td>Puerta batiente</td><td class="n">${f2(w)}</td><td class="n">2.10</td><td class="n">—</td><td class="n">${cnt(VAN.p, w)}</td><td>${w >= 0.90 ? 'Ingreso' : w >= 0.80 ? 'Dormitorios, estar, cocina, patio' : 'Baño'} (A.020 art. 12.2)</td></tr>`).join('')
     + `</tbody></table>`;
+  { const rows = [], add = (fl, q) => { if(!q || q.sky || q.ter || !q.n) return; const ar = Math.max(0, (q.x1-q.x0-T)*(q.y1-q.y0-T)), P = q.wet ? {n:'Cerámico antideslizante 30 × 30', p:ET_R.cer} : pisOf(v); rows.push(`<tr><td>${fl}</td><td>${q.n}</td><td>${P.n}</td><td class="n">${f1(ar)}</td><td class="n">${soles(ar*P.p)}</td></tr>`); };
+    Object.values(r.rooms).forEach(q=>add('1.er piso', q)); if(r.gross2 > 0 && r.up) Object.values(r.up.rooms).forEach(q=>add('2.º piso', q));
+    el('pro-acab').innerHTML = `<table class="ca"><thead><tr><th>Piso</th><th>Ambiente</th><th>Acabado</th><th class="n">m²</th><th class="n">Costo aprox.</th></tr></thead><tbody>${rows.join('')}</tbody></table>`; }
   bindProCuts();
 }
 const f2SignLevel = z => (z > 0 ? '+' : '±') + f2(z);
@@ -3425,7 +3727,7 @@ function bindProCuts(){
 function proSection(r, axis, pos, look, title){
   const v = r.v, W = r.W, D = r.D, e = r.hL || 0.20, H2 = H + e, built2 = r.gross2 > 0 && !!r.up;
   const L = Math.max(v.lote, W + (v.med?0:T)), F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0, v.vd), ox = v.med ? 0 : T/2, oy = v.rf + T/2;
-  const bx = houseBoxes(r, {built2, noRoof:false}).filter(b=> !b.seg && b.m !== 'floor' && b.m !== 'wet');
+  const bx = houseBoxes(r, {built2, noRoof:false}).filter(b=> !b.seg && !b.leaf && b.m !== 'floor' && b.m !== 'wet');
   // cimientos bajo los muros del 1.er piso
   G3.f1.forEach(w=>{ if(w.kind !== 'wall') return; const hor = Math.abs(w.y2-w.y1) < 1e-6, a0 = hor ? Math.min(w.x1,w.x2) : Math.min(w.y1,w.y2), a1 = hor ? Math.max(w.x1,w.x2) : Math.max(w.y1,w.y2);
     const an = v.sis==='portante' ? r.cim.an : 0.40, zb = v.sis==='portante' ? -r.cim.za : -0.70;
@@ -3507,15 +3809,283 @@ function proRender(r){
 el('pro-furn').checked = proFurn; el('pro-furn').addEventListener('change', e=>{ proFurn = e.target.checked; try { localStorage.setItem('vvm-pro-muebles', proFurn ? '1' : '0'); } catch(_){} if(lastR) proPlan(lastR); });
 document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.addEventListener('click', ()=>{ if(b.disabled) return; proFloor = +b.dataset.pp; if(lastR) proRender(lastR); }));
 
+// ---- exportar la planta de Diseño Pro a DXF (AutoCAD lo abre y lo guarda como DWG) ----
+const DXF_LAY = {MUROS:[7,'CONTINUOUS'], TABIQUES:[8,'CONTINUOUS'], VENTANAS:[4,'CONTINUOUS'], PUERTAS:[3,'CONTINUOUS'], MUEBLES:[9,'CONTINUOUS'], COTAS:[1,'CONTINUOUS'], EJES:[8,'CENTER'], TEXTOS:[7,'CONTINUOUS'], TERRENO:[3,'CONTINUOUS'], PISOS:[252,'CONTINUOUS'], COLUMNAS:[7,'CONTINUOUS'], ESCALERA:[30,'CONTINUOUS'], CORTES:[1,'CENTER']};
+function dxfCollect(svg, G, dx, out){
+  const root = svg.getScreenCTM(); if(!root) return;
+  const inv = root.inverse(), m2 = (px, py) => [px/G.s + G.x0 + dx, G.y1 - py/G.s];
+  const vis = e => { const cs = getComputedStyle(e); if(cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity === 0) return null;
+    const none = c => !c || c === 'none' || c === 'transparent' || /rgba\(.*,\s*0\)$/.test(c);
+    return {st: !none(cs.stroke) && parseFloat(cs.strokeWidth) > 0, fi: !none(cs.fill) && +cs.fillOpacity > 0, dash: cs.strokeDasharray && cs.strokeDasharray !== 'none', fs: parseFloat(cs.fontSize)||10, anc: cs.textAnchor}; };
+  svg.querySelectorAll('line,rect,polyline,polygon,path,circle,ellipse,text').forEach(e=>{
+    if(e.closest('title')) return;
+    const V = vis(e); if(!V) return;
+    const tag = e.tagName.toLowerCase(), hold = e.closest('[data-l]');
+    let L = hold ? hold.dataset.l : (tag === 'text' ? 'TEXTOS' : 'VARIOS');
+    const M = inv.multiply(e.getScreenCTM()), P = (x, y) => m2(M.a*x + M.c*y + M.e, M.b*x + M.d*y + M.f);
+    const lt = V.dash ? (DXF_LAY[L] && DXF_LAY[L][1] === 'CENTER' ? 'CENTER' : 'DASHED') : null;
+    const n = a => +e.getAttribute(a) || 0;
+    if(tag === 'text'){ const t = e.textContent.trim(); if(!t) return;
+      const ang = Math.atan2(-M.b, M.a)*180/Math.PI, sc = Math.hypot(M.a, M.b);
+      out.push({k:'T', L, p:P(n('x'), n('y')), h: V.fs*sc*0.72/G.s, t, ang, al: V.anc === 'middle' ? 1 : V.anc === 'end' ? 2 : 0}); return; }
+    if(!V.st && !V.fi) return;
+    let pts = null, closed = false;
+    if(tag === 'line'){ out.push({k:'L', L, lt, a:P(n('x1'), n('y1')), b:P(n('x2'), n('y2'))}); return; }
+    if(tag === 'rect'){ const x = n('x'), y = n('y'), w = n('width'), h = n('height'); if(w <= 0 || h <= 0) return;
+      pts = [P(x,y), P(x+w,y), P(x+w,y+h), P(x,y+h)]; closed = true;
+      if(V.fi && /^(MUROS|TABIQUES|COLUMNAS)$/.test(L)) out.push({k:'S', L, p:pts}); }
+    else if(tag === 'circle'){ const c = P(n('cx'), n('cy')); out.push({k:'C', L, c, r: n('r')*Math.hypot(M.a, M.b)/G.s}); return; }
+    else if(tag === 'ellipse'){ const cx = n('cx'), cy = n('cy'), rx = n('rx'), ry = n('ry'); pts = []; for(let i=0;i<24;i++){ const t = i/24*2*Math.PI; pts.push(P(cx+rx*Math.cos(t), cy+ry*Math.sin(t))); } closed = true; }
+    else if(tag === 'polyline' || tag === 'polygon'){ pts = [...e.points].map(q=>P(q.x, q.y)); closed = tag === 'polygon'; }
+    else if(tag === 'path'){ const len = e.getTotalLength(); if(!(len > 0)) return; const d = e.getAttribute('d') || '', N = /[aAcCqQsStT]/.test(d) ? Math.max(8, Math.min(64, Math.ceil(len/3))) : 0;
+      if(N){ pts = []; for(let i=0;i<=N;i++){ const q = e.getPointAtLength(len*i/N); pts.push(P(q.x, q.y)); } }
+      else { pts = []; d.replace(/([MLHVZmlhvz])([^MLHVZmlhvz]*)/g, (_, c, a)=>{ const v = a.trim().split(/[\s,]+/).filter(Boolean).map(Number), last = pts.length ? pts[pts.length-1].raw : [0,0];
+          if(c === 'M' || c === 'L') for(let i=0;i+1<v.length;i+=2) pts.push({raw:[v[i], v[i+1]]});
+          else if(c === 'm' || c === 'l'){ let [x,y] = last; for(let i=0;i+1<v.length;i+=2){ x += v[i]; y += v[i+1]; pts.push({raw:[x,y]}); } }
+          else if(c === 'H') pts.push({raw:[v[0], last[1]]}); else if(c === 'h') pts.push({raw:[last[0]+v[0], last[1]]});
+          else if(c === 'V') pts.push({raw:[last[0], v[0]]}); else if(c === 'v') pts.push({raw:[last[0], last[1]+v[0]]});
+          else closed = true; });
+        pts = pts.map(q=>P(q.raw[0], q.raw[1])); }
+      if(closed && V.fi && pts.length === 3) out.push({k:'S', L, p:[pts[0], pts[1], pts[2], pts[2]]}); }
+    if(pts && pts.length > 1) out.push({k:'P', L, lt, p:pts, c:closed});
+  });
+}
+function dxfText(list){
+  const o = [], w = (c, v) => o.push(c, typeof v === 'number' ? (Number.isInteger(v) ? String(v) : v.toFixed(4)) : v);
+  const esc = t => t.replace(/[^\x20-\x7e\u00a0-\u00ff\u2014\u2013\u2026]/g, ch => '\\U+' + ch.codePointAt(0).toString(16).toUpperCase().padStart(4, '0'));
+  let xmin = 1e9, ymin = 1e9, xmax = -1e9, ymax = -1e9; const bb = p => { xmin = Math.min(xmin, p[0]); xmax = Math.max(xmax, p[0]); ymin = Math.min(ymin, p[1]); ymax = Math.max(ymax, p[1]); };
+  list.forEach(E=> (E.p && E.p.length > 2 ? E.p : [E.a, E.b, E.c, E.p].filter(x=>x && typeof x[0] === 'number')).forEach(bb));
+  w(0,'SECTION'); w(2,'HEADER'); w(9,'$ACADVER'); w(1,'AC1009'); w(9,'$DWGCODEPAGE'); w(3,'ANSI_1252'); w(9,'$INSBASE'); w(10,0); w(20,0); w(30,0);
+  w(9,'$EXTMIN'); w(10,xmin); w(20,ymin); w(30,0); w(9,'$EXTMAX'); w(10,xmax); w(20,ymax); w(30,0); w(9,'$LTSCALE'); w(40,1); w(9,'$DIMSCALE'); w(40,0.05); w(0,'ENDSEC');
+  w(0,'SECTION'); w(2,'TABLES');
+  const LT = [['CONTINUOUS','Solid line',[]], ['DASHED','Dashed __ __ __',[0.25,-0.12]], ['CENTER','Center ____ _ ____',[0.6,-0.1,0.1,-0.1]]];
+  w(0,'TABLE'); w(2,'LTYPE'); w(70,LT.length);
+  LT.forEach(([nm, ds, pat])=>{ w(0,'LTYPE'); w(2,nm); w(70,0); w(3,ds); w(72,65); w(73,pat.length); w(40,pat.reduce((a,b)=>a+Math.abs(b),0)); pat.forEach(x=>w(49,x)); });
+  w(0,'ENDTAB');
+  const lays = Object.keys(DXF_LAY).concat(list.some(E=>E.L === 'VARIOS') ? ['VARIOS'] : []);
+  w(0,'TABLE'); w(2,'LAYER'); w(70,lays.length);
+  lays.forEach(nm=>{ const [c, lt] = DXF_LAY[nm] || [7,'CONTINUOUS']; w(0,'LAYER'); w(2,nm); w(70,0); w(62,c); w(6,lt); });
+  w(0,'ENDTAB'); w(0,'ENDSEC');
+  w(0,'SECTION'); w(2,'ENTITIES');
+  const head = (k, E) => { w(0,k); w(8,E.L); if(E.lt) w(6,E.lt); };
+  list.forEach(E=>{
+    if(E.k === 'L'){ head('LINE', E); w(10,E.a[0]); w(20,E.a[1]); w(30,0); w(11,E.b[0]); w(21,E.b[1]); w(31,0); }
+    else if(E.k === 'C'){ head('CIRCLE', E); w(10,E.c[0]); w(20,E.c[1]); w(30,0); w(40,E.r); }
+    else if(E.k === 'S'){ head('SOLID', E); const q = E.p; [[10,0],[11,1],[13,2],[12,3]].forEach(([c,i])=>{ w(c,q[i][0]); w(c+10,q[i][1]); w(c+20,0); }); }
+    else if(E.k === 'P'){ head('POLYLINE', E); w(66,1); w(10,0); w(20,0); w(30,0); w(70,E.c ? 1 : 0);
+      E.p.forEach(q=>{ w(0,'VERTEX'); w(8,E.L); w(10,q[0]); w(20,q[1]); w(30,0); }); w(0,'SEQEND'); w(8,E.L); }
+    else if(E.k === 'T'){ head('TEXT', E); w(10,E.p[0]); w(20,E.p[1]); w(30,0); w(40,Math.max(0.02,E.h)); w(1,esc(E.t)); if(Math.abs(E.ang) > 0.01) w(50,E.ang);
+      if(E.al){ w(72,E.al); w(11,E.p[0]); w(21,E.p[1]); w(31,0); } }
+  });
+  w(0,'ENDSEC'); w(0,'EOF');
+  return o.join('\r\n') + '\r\n';
+}
+function proDxf(){
+  if(!lastR) return;
+  const r = lastR, keep = proFloor, floors = r.gross2 > 0 && r.up ? [1,2] : [1], out = [];
+  let dx = 0;
+  try {
+    floors.forEach(f=>{ proFloor = f; proPlan(r); const svg = el('pro-plan').querySelector('svg'); if(!svg) return;
+      const G = proGeo, vb = svg.viewBox.baseVal, n0 = out.length;
+      dxfCollect(svg, G, dx, out);
+      if(floors.length > 1) out.push({k:'T', L:'TEXTOS', p:[dx + G.x0 + vb.width/G.s/2, G.y1 - vb.height/G.s - 0.4], h:0.35, t: f === 1 ? 'PLANTA 1.ER PISO' : 'PLANTA 2.º PISO', ang:0, al:1});
+      dx += vb.width/G.s + 3; });
+  } finally { proFloor = keep; proPlan(r); }
+  const txt = dxfText(out), CP = {0x2014:0x97, 0x2013:0x96, 0x2026:0x85}, by = new Uint8Array(txt.length);
+  for(let i=0;i<txt.length;i++){ const c = txt.charCodeAt(i); by[i] = c < 256 ? c : (CP[c] || 63); } // Windows-1252, como espera AutoCAD
+  const blob = new Blob([by], {type:'application/dxf'}), a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = `vivienda-${f2(r.v.lote)}x${f2(r.v.fondo)}-planta.dxf`.replace(/\s/g,'');
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  return out.length;
+}
+el('pro-dxf').addEventListener('click', proDxf);
+
+// Vivienda taller (A.020 art. 4.1): el taller en la sala (al frente) o en todo el 1.er piso, con la vivienda arriba
+const TAL_N = {d1:'Taller', d2:'Depósito', d3:'Depósito 2', sc:'Taller · atención', co:'Cocineta', ba:'Baño del taller', pa:'Pasaje'};
+// Auto en el retiro frontal: cajón individual de 2.70 × 5.00 m (A.010 art. 54.1, cuadro 3), permitido en el retiro sin techo o con techo ligero (art. 8.3 d)
+const CAR_W = 2.70, CAR_L = 5.00;
+function carApply(r, v){
+  r.car = null; if(!v.auto) return;
+  const G = 'Estacionamiento', add = (t, st, d) => r.checks.push({g:G, t, st, d});
+  const ox = v.med ? 0 : T/2, lx0 = -ox, lx1 = v.lote - ox, ly0 = -(v.rf + T/2), door = [v.a + 0.30, v.a + 1.30];
+  if(v.rf < CAR_L - 1e-6){ add('Retiro para el auto','bad', `El cajón de un auto mide <b>2.70 × 5.00 m</b> (A.010 art. 54.1, cuadro 3) y el retiro frontal tiene ${f2(v.rf)} m: súbelo a 5.00 m (se hace solo al marcar la opción). Al crecer el retiro, la casa pierde ${f2(CAR_L - v.rf)} m de fondo.`); return; }
+  const st = r.stair && r.stair.front ? r.stair.box : null, ov = (a0,a1,b0,b1) => a1 > b0 + 1e-6 && b1 > a0 + 1e-6;
+  const sides = isEsq(v) ? [[lx0, 'izquierda'], [lx1 - CAR_W, 'derecha']] : [[lx1 - CAR_W, 'derecha'], [lx0, 'izquierda']];
+  let why = '';
+  for(const [x0, lado] of sides){
+    const c = {x0, x1:x0 + CAR_W, y0:ly0, y1:ly0 + CAR_L, lado};
+    if(ov(c.x0, c.x1, door[0], door[1])){ why = 'el cajón tapa la puerta de la casa'; continue; }
+    if(st && ov(c.x0, c.x1, st.x0, st.x1) && ov(c.y0, c.y1, st.y0, st.y1)){ why = `choca con la escalera del retiro: haría falta un retiro de ${f2(CAR_L + (-T/2 - st.y0))} m`; continue; }
+    r.car = c; break; }
+  if(!r.car){ add('Cajón del auto','bad', `No entra el auto en el retiro: ${why}. Opciones: un frente más ancho, quitar la escalera del retiro o hacer más hondo el retiro.`); return; }
+  const libre = (lx1 - lx0) - CAR_W;
+  add('Cajón del auto','ok', `Cajón de <b>2.70 × 5.00 m</b> a la ${r.car.lado} del retiro frontal (A.010 art. 54.1, cuadro 3, estacionamiento individual), con altura libre de 2.10 m. Al lado quedan ${f2(libre)} m para entrar caminando a la casa${r.stair && r.stair.front ? ' y a la escalera' : ''}.`);
+  add('Techo y portón','ok', `En el retiro el estacionamiento va sin techo o con un techo ligero (A.010 art. 8.3 d). El portón puede ir en el límite del lote si al abrirse no invade la vereda: corredizo o que abra hacia adentro (art. 53.1 b).`);
+  add('Lo que cuesta','warn', `Con ${f2(v.rf)} m de retiro quedan <b>${f2(Math.max(0, v.fondo - v.rf - v.rp - T))} m</b> de fondo para construir. Si el certificado de parámetros pide menos retiro, ese metraje extra es el precio del auto: cada metro de retiro de más es un metro menos de casa en cada piso.`);
+}
+// dibujo del auto: cajón punteado y la silueta del coche (coordenadas de la casa)
+function carSvg(c, X, Y, s){
+  const bw = 1.80, bl = 4.40, cx = (c.x0 + c.x1)/2, cy = (c.y0 + c.y1)/2;
+  const bx = X(cx - bw/2), by = Y(cy + bl/2), w = bw*s, h = bl*s, rr = 0.35*s;
+  return `<g class="car"><rect x="${X(c.x0)}" y="${Y(c.y1)}" width="${CAR_W*s}" height="${CAR_L*s}" fill="none" stroke="var(--muted)" stroke-width="1" stroke-dasharray="5 3"/>`
+    + `<rect x="${bx}" y="${by}" width="${w}" height="${h}" rx="${rr}" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.1"/>`
+    + `<rect x="${bx + 0.18*s}" y="${by + 1.10*s}" width="${w - 0.36*s}" height="${2.0*s}" rx="${0.2*s}" fill="none" stroke="var(--ink)" stroke-width=".8"/>`
+    + `<line x1="${bx + 0.18*s}" y1="${by + 1.60*s}" x2="${bx + w - 0.18*s}" y2="${by + 1.60*s}" stroke="var(--ink)" stroke-width=".6"/>`
+    + `<text x="${X(cx)}" y="${Y(c.y0) - 6}" text-anchor="middle" font-size="10" fill="var(--muted)">auto 2.70 × 5.00</text></g>`;
+}
+// objetivo de la familia: qué cambia en el plano y qué conviene prever
+function objApply(r, v){
+  const G = 'Objetivo', add = (t, st, d) => r.checks.push({g:G, t, st, d}), sep = v.ind && r.stair && r.stair.front;
+  if(v.obj === 'renta') add('Sacarle el máximo provecho', sep ? 'ok' : 'warn', `Ambientes al nivel <b>económico</b> del cuadro de áreas para que entren más, la casa al fondo máximo que dejan los retiros y ${sep ? 'la escalera al frente, con entrada propia, para alquilar o vender cada piso por separado' : '<b>conviene marcar «Independizar los pisos»</b> para alquilar cada piso por separado'}. Pide en el certificado de parámetros la <b>altura máxima</b>: la estructura de la etapa 1 se calcula para todos esos pisos. Cada departamento aparte necesita medidores propios y su cocina.`);
+  else if(v.obj === 'ambos') add('Vivir y alquilar una parte', sep ? 'ok' : 'warn', `Ambientes al nivel <b>estándar</b>. ${sep ? 'El 2.º piso tiene entrada propia por la escalera del retiro: se puede alquilar sin pasar por la casa.' : '<b>Marca «Independizar los pisos»</b> para que el piso que alquiles tenga entrada propia.'} Deja previstos medidores de luz y agua aparte.`);
+  else add('Vivir cómodos', 'ok', `Ambientes al nivel <b>amplio</b> del cuadro de áreas, con el patio y la luz pensados para la familia. Si más adelante quieres alquilar una parte, la opción «Independizar los pisos» pone la escalera al frente.`);
+}
+function tallerApply(r, v){
+  if(!v.tal || v.tal === 'no') return;
+  const R = r.rooms, G = 'Vivienda taller', add = (t, st, d) => r.checks.push({g:G, t, st, d});
+  if(v.tal === 'parte'){
+    if(R.sc) R.sc.n = 'Taller / tienda';
+    add('Taller al frente', 'ok', `La sala-comedor del 1.er piso, que da a la calle, pasa a ser <b>taller o tienda</b> (${R.sc ? f1(R.sc.area) + ' m²' : ''}) con la puerta de la calle. Los dormitorios, la cocina y el baño siguen siendo de la casa: es una <b>vivienda taller</b> (A.020 art. 4.1).`);
+    add('Dónde vive la familia', r.gross2 > 0 ? 'ok' : 'warn', r.gross2 > 0 ? 'La sala de la familia es el estar del 2.º piso.' : 'Sin 2.º piso la familia se queda sin sala mientras el taller ocupe la del 1.er piso: conviene subir la sala en la etapa 3.');
+  } else {
+    for(const k in R) if(TAL_N[k]) R[k].n = TAL_N[k];
+    add('Todo el 1.er piso es taller', 'ok', `Los ambientes del 1.er piso se usan como taller, depósito, atención, cocineta y baño del taller, sin camas. Es una <b>vivienda taller</b> (A.020 art. 4.1): el taller abajo y la vivienda arriba.`);
+    add('La vivienda en el 2.º piso', r.gross2 > 0 ? (v.nd2 >= 2 ? 'warn' : 'bad') : 'bad', r.gross2 > 0 ? `Arriba hay ${v.nd2} ${v.nd2===1?'dormitorio':'dormitorios'}, el estar y el baño 2, pero <b>falta la cocina</b>: va una cocineta en el estar, con sus propias montantes. ${v.nd + v.nd2 > 0 && v.nd2 < 2 ? 'La VIS pide 2 dormitorios.' : ''}` : `Si todo el 1.er piso es taller, la familia vive en el 2.º piso: elige dormitorios en el 2.º piso.`);
+    add('Acceso a la vivienda', v.ind && r.stair && r.stair.front ? 'ok' : 'warn', v.ind && r.stair && r.stair.front ? 'La escalera del retiro frontal sube a la vivienda sin pasar por el taller.' : 'Para llegar arriba sin cruzar el taller, marca «Independizar los pisos»: la escalera va al retiro frontal con entrada propia.');
+  }
+  add('Permisos y seguridad', 'ok', `La zonificación del lote debe ser compatible con el taller (certificado de parámetros), con licencia de funcionamiento (Ley 28976) e inspección de seguridad (ITSE); en el área de taller va un extintor (A.020, cuadro de seguridad: NTP 350.043-1).`);
+}
+// ---------- Zonificación: plano vigente de Lima Metropolitana (IMP, ArcGIS Online, consulta pública) ----------
+const ZON_URL = 'https://services5.arcgis.com/bHvzrGGxW8wP6Utm/arcgis/rest/services/Zonficacion_Urbana_Vigente_LM_13022026_project/FeatureServer/0';
+const ATN_URL = 'https://services5.arcgis.com/bHvzrGGxW8wP6Utm/arcgis/rest/services/ATNS_LIMA_2023/FeatureServer/210';
+const GEO_URL = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
+// colores del plano del IMP para los códigos más comunes
+const ZON_COL = [[/^(ZDMB|RDMB)/,'#ffffbe'],[/^(ZDMA|RDMA)/,'#6d0909'],[/^(ZDA|RDA)/,'#b72020'],[/^ZDM-1/,'#ff5252'],[/^ZDM-2/,'#fc8135'],[/^(ZDM|RDM)/,'#f99e19'],[/^(ZDB|RDB)/,'#ffff00'],[/^(ZDMB|RDMB)/,'#ffffbe'],[/^VT/,'#d7b5d8'],[/^(CV|CZ|CM|ZC|CH)/,'#e31a1c'],[/^(I|IB|IM)/,'#9e9ac8'],[/^(E\d?|E-)/,'#6baed6'],[/^H\d?/,'#41ab5d'],[/^(ZRP|PZ|PTP|ZA|ZPA)/,'#74c476'],[/^OU/,'#bdbdbd'],[/^(ZRE|ZTE|ZHR|ZM|ZEU|ZArq)/,'#c994c7']];
+const zonCol = c => { for(const [re, col] of ZON_COL) if(re.test(c || '')) return col; return '#d9d9d9'; };
+const ZON_LEG = [['ZDM / RDM','RDM'],['ZDB / RDB','RDB'],['ZDMB / RDMB','RDMB'],['ZDA / RDA','RDA'],['VT','VT'],['Comercio','CV'],['Industria','I1'],['Educación','E1'],['Salud','H1'],['Recreación','ZRP'],['Otros usos','OU'],['Reglamentación especial','ZRE']];
+// qué implica cada familia de códigos para una casa que crece por etapas
+function zonDice(c){
+  const t = c || '', mod = [];
+  if(/-C\b|-C$/.test(t)) mod.push('<b>Condicionada</b>: la altura o la densidad dependen de condiciones extra (por ejemplo frente mínimo o acumulación de lotes).');
+  if(/-R\b|-R$/.test(t)) mod.push('<b>Riesgo</b>: zona con peligro identificado (ladera, cauce, suelo): pide el estudio de suelos y pregunta qué restricciones hay.');
+  if(/ZEIS/.test(t)) mod.push('<b>ZEIS</b>: zona especial de interés social, pensada para vivienda social: suele tener parámetros más flexibles.');
+  let d;
+  if(/^(ZDMB|RDMB)/.test(t)) d = 'Residencial de densidad muy baja: casas en lotes grandes y de pocos pisos. Tu casa unifamiliar entra; dividirla en varias viviendas suele estar limitado.';
+  else if(/^(ZDB|RDB)/.test(t)) d = 'Residencial de densidad baja: casas unifamiliares o bifamiliares de 2 o 3 pisos. Tu casa entra; revisa en el certificado cuántos pisos y viviendas permite.';
+  else if(/^(ZDM|RDM)/.test(t)) d = 'Residencial de densidad media: la zona típica de los barrios que crecen por pisos. Permite casas y edificios de unos 3 a 5 pisos según el lote y el ancho de la calle. Tu casa por etapas encaja bien.';
+  else if(/^(ZDA|RDA|ZDMA|RDMA)/.test(t)) d = 'Residencial de densidad alta: zona de edificios. Una casa se permite, pero el lote vale más para varios pisos: conviene prever la estructura para crecer.';
+  else if(/^VT/.test(t)) d = 'Vivienda taller: casa con taller o pequeña industria. Es la zona ideal si tendrás un taller en el 1.er piso.';
+  else if(/^(CV|CZ|CM|CH|ZC)/.test(t)) d = 'Comercial: la vivienda casi siempre es compatible, a menudo con comercio en el 1.er piso. Revisa en el certificado los usos y la altura.';
+  else if(/^(I\d|IB|IM|IA|IE|I2E|IMEA)/.test(t)) d = 'Industrial: <b>la vivienda en general no se permite</b>. Consulta a la municipalidad antes de construir.';
+  else if(/^E/.test(t)) d = 'Educación: el lote está reservado para un colegio o instituto. <b>No es para vivienda.</b>';
+  else if(/^H/.test(t)) d = 'Salud: reservado para posta, clínica u hospital. <b>No es para vivienda.</b>';
+  else if(/^(ZRP|PZ|PTP|ZA|ZPA|ANPM)/.test(t)) d = 'Recreación pública, protección o área natural: parque, playa o ladera protegida. <b>No es para vivienda.</b>';
+  else if(/^OU/.test(t)) d = 'Otros usos: equipamientos (iglesias, comisarías, servicios). <b>No es para vivienda.</b>';
+  else if(/^(ZRE|ZTE|ZHR|ZM|ZEU|ZArq|ZONA)/.test(t)) d = 'Zona de reglamentación o tratamiento especial: tiene su propio reglamento. Pide el certificado y pregunta qué se puede hacer.';
+  else d = 'Revisa el significado en el certificado de parámetros.';
+  return d + (mod.length ? '<br>' + mod.join('<br>') : '');
+}
+let zonMap = null, zonMk = null, zonLoading = null;
+const zonLoad = () => zonLoading || (zonLoading = new Promise((ok, no)=>{
+  if(window.L && L.esri) return ok();
+  const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(css);
+  const add = src => new Promise((a, b)=>{ const sc = document.createElement('script'); sc.src = src; sc.onload = a; sc.onerror = b; document.head.appendChild(sc); });
+  add('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js').then(()=>add('https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js')).then(ok, no);
+}));
+function zonOpen(){
+  if(!el('zon-leg').innerHTML) el('zon-leg').innerHTML = ZON_LEG.map(([n,c])=>`<span><i style="background:${zonCol(c)}"></i>${n}</span>`).join('');
+  if(!el('zon-q').value){ const c = wzCli(); el('zon-q').value = [c.dir, c.dist].filter(Boolean).join(', '); }
+  if(zonMap){ setTimeout(()=>zonMap.invalidateSize(), 50); return; }
+  zonLoad().then(()=>{
+    zonMap = L.map('zon-map', {zoomControl:true}).setView([-12.03, -77.03], 11);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(zonMap);
+    L.esri.featureLayer({url: ZON_URL, minZoom: 14, simplifyFactor: 0.4, precision: 6, fields:['OBJECTID','simb_zoni','sclas_zoni'],
+      style: f => ({color:'#333', weight:0.6, fillColor: zonCol(f.properties.simb_zoni), fillOpacity:0.45})})
+      .bindTooltip(l => `${l.feature.properties.simb_zoni} · ${l.feature.properties.sclas_zoni || ''}`, {sticky:true}).addTo(zonMap);
+    zonMap.on('click', e => zonAt(e.latlng.lat, e.latlng.lng));
+    zonMap.on('zoomend', ()=>{ if(zonMap.getZoom() < 14) zonMsg('Acerca el mapa para ver los colores de la zonificación.'); });
+    const c = wzCli(); if(c.zon && c.zon.lat) zonAt(c.zon.lat, c.zon.lng, true);
+  }).catch(()=> zonMsg('No se pudo cargar el mapa (sin internet). La búsqueda por «Estoy en el lote» sigue funcionando.'));
+}
+const zonMsg = t => { el('zon-msg').innerHTML = t; };
+const zonQ = (url, prm) => fetch(url + '?' + new URLSearchParams(Object.assign({f:'json'}, prm))).then(r=>r.json());
+async function zonSearch(){
+  const q = el('zon-q').value.trim(); if(!q) return;
+  zonMsg('Buscando la dirección…'); el('zon-cands').innerHTML = '';
+  try {
+    const j = await zonQ(GEO_URL, {SingleLine: /lima|callao/i.test(q) ? q : q + ', Lima', countryCode:'PER', maxLocations:5, outFields:'Match_addr', location:'-77.03,-12.03', searchExtent:'-77.35,-12.55,-76.6,-11.55'});
+    const cs = (j.candidates || []).filter(c=>c.score >= 70);
+    if(!cs.length){ zonMsg('No encontré esa dirección. Prueba con la avenida o un lugar conocido cercano, o toca tu lote en el mapa.'); return; }
+    el('zon-cands').innerHTML = cs.map((c,i)=>`<button type="button" data-i="${i}">${c.address}</button>`).join('');
+    el('zon-cands').querySelectorAll('button').forEach(b=> b.addEventListener('click', ()=>{ const c = cs[+b.dataset.i]; zonAt(c.location.y, c.location.x); }));
+    zonAt(cs[0].location.y, cs[0].location.x);
+    zonMsg(cs.length > 1 ? 'Elegí la primera coincidencia; si no es, elige otra de la lista. Luego <b>toca tu lote exacto en el mapa</b>.' : 'Ahora <b>toca tu lote exacto en el mapa</b> para afinar.');
+  } catch(e){ zonMsg('No se pudo buscar (¿sin internet?). Toca tu lote en el mapa o usa «Estoy en el lote».'); }
+}
+async function zonAt(lat, lng, quiet){
+  if(zonMap){ if(zonMk) zonMk.setLatLng([lat, lng]); else zonMk = L.circleMarker([lat, lng], {radius:8, color:'#fff', weight:3, fillColor:'#b5462a', fillOpacity:1}).addTo(zonMap); if(zonMap.getZoom() < 17) zonMap.setView([lat, lng], 17); }
+  const box = el('zon-res'); box.hidden = false; box.innerHTML = 'Consultando el plano de zonificación…';
+  try {
+    const geo = {geometry:`${lng},${lat}`, geometryType:'esriGeometryPoint', inSR:4326, spatialRel:'esriSpatialRelIntersects', returnGeometry:false};
+    const [z, a] = await Promise.all([zonQ(ZON_URL + '/query', Object.assign({outFields:'simb_zoni,sclas_zoni,ordenanza,anio_ordenanza,nombdist,nom_aim,observ'}, geo)), zonQ(ATN_URL + '/query', Object.assign({outFields:'ATN'}, geo)).catch(()=>({}))]);
+    const f = (z.features || [])[0], at = ((a.features || [])[0] || {}).attributes;
+    const gm = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
+    if(!f){ box.innerHTML = `Ese punto no tiene zonificación en el plano (puede ser una calle o estar fuera de Lima Metropolitana). Toca dentro de tu lote. <a href="${gm}" target="_blank" rel="noopener">Ver en Google Maps</a>`; return; }
+    const p = f.attributes, cod = (p.simb_zoni || '').trim() || '—', esc = t => String(t || '').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    const norma = p.ordenanza ? `Ordenanza ${esc(p.ordenanza)}${p.anio_ordenanza ? ' (' + esc(p.anio_ordenanza) + ')' : ''}` : 'ordenanza no indicada en el plano';
+    box.innerHTML = `<h3><span class="zon-code">${esc(cod)}</span> · ${esc(p.sclas_zoni)}</h3>`
+      + `<p style="margin:4px 0">${zonDice(cod)}</p>`
+      + `<p class="hint" style="margin:6px 0 0">${p.nombdist ? 'Distrito: <b>' + esc(p.nombdist) + '</b> · ' : ''}${p.nom_aim ? 'Lima ' + esc(p.nom_aim.replace(/^LIMA\s*/i,'')).toLowerCase() + ' · ' : ''}${at && at.ATN ? 'Área de tratamiento normativo <b>' + esc(at.ATN) + '</b> · ' : ''}${norma}${(p.observ || '').trim() ? ' · ' + esc(p.observ) : ''}</p>`
+      + `<p class="hint" style="margin:6px 0 0">Punto: ${lat.toFixed(5)}, ${lng.toFixed(5)} · <a href="${gm}" target="_blank" rel="noopener">ver en Google Maps</a> · los números (altura, área libre, retiros) van en la pestaña <a href="#" id="zon-par">Parámetros</a> y en tu certificado.</p>`;
+    el('zon-par').addEventListener('click', e=>{ e.preventDefault(); showTab('par'); });
+    if(!quiet){ const c = wzCli(); c.zon = {cod, n:p.sclas_zoni || '', lat, lng}; try { localStorage.setItem('vvm-cliente', JSON.stringify(c)); } catch(e){} wzShowInfo(); }
+  } catch(e){ box.innerHTML = 'No se pudo consultar el plano de zonificación (¿sin internet?).'; }
+}
+el('zon-go').addEventListener('click', zonSearch);
+el('zon-q').addEventListener('keydown', e=>{ if(e.key === 'Enter') zonSearch(); });
+el('zon-gps').addEventListener('click', ()=>{
+  if(!navigator.geolocation){ zonMsg('Este equipo no da la ubicación.'); return; }
+  zonMsg('Buscando tu ubicación…');
+  navigator.geolocation.getCurrentPosition(p=>{ zonMsg('Ubicación del teléfono (precisión de unos ' + Math.round(p.coords.accuracy) + ' m): si no cae en tu lote, tócalo en el mapa.'); zonAt(p.coords.latitude, p.coords.longitude); }, ()=> zonMsg('No se pudo leer la ubicación: da permiso al navegador o toca tu lote en el mapa.'), {enableHighAccuracy:true, timeout:15000});
+});
+// ---------- Certificados de parámetros: valores reales encontrados y cotejo con el plano ----------
+const PARQ = [
+  {k:'ate', d:'Ate (Área de Tratamiento Normativo I)', z:'RDM unifamiliar', lote:90, fr:6, p:3, al:30, est:'1 por vivienda', n:'Certificado modelo de la municipalidad de Ate; Ord. 1099 y 1015-MML. PDU Lima Este en camino.', url:'https://muniate.gob.pe/ate/files/licenciaEdificacion/PROCEDIMIENTO/4_Par.pdf', st:'warn'},
+  {k:'norte', d:'Comas, SMP, Independencia, Los Olivos (ATN II, 2007)', z:'RDM unifamiliar', lote:120, fr:6, p:3, al:30, est:'1 por vivienda', n:'Ord. 1015-MML (2007). Reemplazada en Lima Norte por el PDU Lima Norte 2034: verificar.', url:'https://www.municomas.gob.pe/resources/upload/paginas/licencias/lf/Ordenanza%202757%20MML%20-%20PDU%20LIMA%20NORTE%202034-1.pdf', st:'bad'},
+  {k:'sur2', d:'Barranco, Surquillo, parte de Surco (ATN II)', z:'RDM unifamiliar', lote:120, fr:6, p:3, al:30, est:'1 por vivienda', n:'Ord. 1076-MML (2007). Nota b: unifamiliar se permite en todo lote de más de 90 m².', url:'https://ipdu.pe/ordenanzasyplanos/barranco/barranco-ordenanza.pdf', st:'warn'},
+  {k:'aqp', d:'J. L. Bustamante y Rivero, Arequipa', z:'RDM-1 unifamiliar', lote:90, fr:8, p:3, al:30, est:'—', n:'Certificado de la municipalidad (PDM Arequipa 2016-2025); coeficiente 2.10; vigencia 36 meses.', url:'https://munibustamante.gob.pe/archivos/1457644063.pdf', st:'ok'},
+  {k:'mira', d:'Miraflores', z:'RDM', lote:300, fr:10, p:5, al:35, est:'—', n:'Ord. 920-MML (presentación al Congreso, texto poco legible): 5 a 8 pisos según la vía. Referencia de un distrito consolidado.', url:'https://www.congreso.gob.pe/Docs/comisiones2024/Vivienda/files/presentaciones/5_so_m.d._de_miraflores.pdf', st:'warn'}
+];
+const PAR_ST = {ok:'vigente', warn:'por confirmar', bad:'reemplazada'};
+function parRender(r){
+  const tb = document.querySelector('#par-tbl tbody'); if(!tb) return;
+  if(!tb.dataset.ok){ tb.innerHTML = PARQ.map(q=>`<tr><td>${q.d}</td><td>${q.z}</td><td>${q.lote} m² · ${f2(q.fr)} m</td><td>${q.p} pisos</td><td>${q.al} %</td><td>${q.est}</td><td><span class="pill ${q.st}">${PAR_ST[q.st]}</span> ${q.n} <a href="${q.url}" target="_blank" rel="noopener">fuente</a></td></tr>`).join('')
+      + `<tr><td>San Borja (ejemplo de redacción)</td><td>OU</td><td>—</td><td>según entorno</td><td>según entorno</td><td>por cuadro</td><td>Documento informativo de feb. 2025: un retiro por cada calle, <b>5.00 m en avenida y 3.00 m en calle</b>, y alineamiento de fachada medido desde el eje de la vía. <a href="https://cdn.www.gob.pe/uploads/document/file/8756438/7242955-informacion-de-parametros.PDF" target="_blank" rel="noopener">fuente</a></td></tr>`;
+    tb.dataset.ok = '1';
+    el('par-pre').innerHTML = PARQ.map(q=>`<option value="${q.k}">${q.d} · ${q.z}</option>`).join('');
+    el('par-pre').addEventListener('change', ()=>{ if(lastR) parRender(lastR); }); }
+  const q = PARQ.find(x=>x.k === el('par-pre').value) || PARQ[0], v = r.v, A = v.lote*v.fondo;
+  const libre = Math.max(0, 1 - r.gross/A)*100, pisos = Math.max(v.n || 1, r.gross2 > 0 ? 2 : 1);
+  const row = (t, mine, req, ok, note='') => `<tr><td>${t}</td><td>${mine}</td><td>${req}</td><td><span class="pill ${ok}">${{ok:'cumple', warn:'aviso', bad:'no cumple'}[ok]}</span> ${note}</td></tr>`;
+  el('par-cot').innerHTML = `<thead><tr><th>Parámetro</th><th>Tu plano</th><th>Certificado</th><th></th></tr></thead><tbody>`
+    + row('Área del lote', `${f1(A)} m²`, `${q.lote} m² mínimo`, A >= q.lote - 1e-6 ? 'ok' : 'warn', A >= q.lote - 1e-6 ? '' : 'Un lote existente más chico sigue siendo válido, pero no se puede subdividir.')
+    + row('Frente', `${f2(v.lote)} m`, `${f2(q.fr)} m mínimo`, v.lote >= q.fr - 1e-6 ? 'ok' : 'warn', v.lote >= q.fr - 1e-6 ? '' : 'Vale para lotes ya existentes; confirma en tu certificado.')
+    + row('Pisos', `${pisos} previsto${pisos>1?'s':''}`, `${q.p} como máximo`, pisos <= q.p ? 'ok' : 'bad', pisos < q.p ? `Puedes crecer hasta ${q.p} pisos: que el cálculo estructural los considere desde la etapa 1.` : '')
+    + row('Área libre en la etapa 1', `${Math.round(libre)} %`, `${q.al} % mínimo`, libre >= q.al ? 'ok' : 'bad', libre >= q.al ? '' : 'Agranda el patio o reduce el fondo construido.')
+    + row('Retiro frontal', `${f2(v.rf)} m`, 'según la vía', 'warn', 'Usa el de tu certificado: suele ser mayor en avenida que en calle o pasaje.')
+    + `</tbody>`;
+  el('par-cot-n').textContent = `Cotejo con «${q.d}». El área libre se mide con el 1.er piso de la etapa 1 (${f1(r.gross)} m² techados en ${f1(A)} m² de lote).`;
+}
 function render(){
   const v = read();
   ['a','b','d','ddr','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
-  const r = compute(v);
+  const r = compute(v); tallerApply(r, v); carApply(r, v); objApply(r, v);
   draw(r); draw2(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
   try { relRender(r); } catch(e){ console.error('relaciones', e); }
   try { bolas(r); } catch(e){ console.error('bolas', e); }
   try { materiales(r); } catch(e){ console.error('materiales', e); }
+  try { parRender(r); } catch(e){ console.error('parámetros', e); }
   try { etapas(r); applyProj(r); } catch(e){ console.error('etapas', e); }
   lastR = r; try { proRender(r); } catch(e){ console.error('diseño pro', e); }
   if(!el('tab-3d').hidden && d3) { try { build3D(r); } catch(e){ console.error('3D', e); } }
@@ -3593,7 +4163,7 @@ function generate(){
         const r = compute(v);
         if(r.checks.some(q=>q.st==='bad')) continue;
         const warns = r.checks.filter(q=>q.st==='warn').length;
-        const score = fill ? warns*4 + fitScore(r, tg) + r.gross*0.02 : r.gross + warns*4;
+        const score = (fill ? warns*4 + fitScore(r, tg) + r.gross*0.02 : r.gross + warns*4) + (r.patMiss ? 12 : 0);
         if(!best || score < best.score - 1e-9) best = {score, v, r};
       }
     }
@@ -3677,7 +4247,7 @@ function applyPlan(text, flname){
     try {
       const data = JSON.parse(text);
       if(!data || data.app !== 'verificador-vivienda-minima' || !data.valores) throw new Error('formato');
-      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
+      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='ind') el('ind').checked = false; if(k==='auto') el('auto').checked = false; if(k==='pis') el('pis').value = 'cer'; if(k==='obj') el('obj').value = 'vivir'; if(k==='pat') el('pat').value = 'auto'; if(k==='tal') el('tal').value = 'no'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
       if(data.cliente){ try { localStorage.setItem('vvm-cliente', JSON.stringify(data.cliente)); } catch(e){} wzShowInfo(); }
       el('ppm').value = data.valores.ppm || 'auto'; if(!el('ppm').value) el('ppm').value = 'auto';
       if(NIV[data.nivel]){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
@@ -3694,7 +4264,7 @@ el('ppm').addEventListener('change', ()=>{ if(el('ppm').value !== 'auto') el('pp
 el('gen').addEventListener('click', ()=>{ el('gen-msg').textContent = 'Buscando…'; setTimeout(generate, 30); });
 
 // Los datos del terreno y del programa regeneran la planta solos; las cotas entre ejes solo redibujan.
-const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc'];
+const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc','ind','auto','pat'];
 let genTimer = null;
 const regen = () => {
   if(el('nd2').value!=='0' && parseInt(el('n').value,10) < 2) el('n').value = '2';
@@ -3702,6 +4272,12 @@ const regen = () => {
   genTimer = setTimeout(()=>{ generate(); checkTotal(); }, 350);
 };
 ids.forEach(k=> el(k).addEventListener('input', ()=>{ document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on')); if(autoKeys.includes(k)) regen(); else render(); }));
+// el objetivo fija el nivel de los ambientes (como los botones del cuadro de áreas)
+el('obj').addEventListener('change', ()=>{ const niv = {vivir:'amp', ambos:'est', renta:'eco'}[el('obj').value]; if(niv && niv !== nivel){ nivel = niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); } });
+// al marcar el auto el retiro frontal sube a 5.00 m; al desmarcarlo vuelve al que había
+el('auto').addEventListener('change', ()=>{ const rf = el('rf'), x = parseFloat(rf.value) || 0;
+  if(el('auto').checked){ if(x < CAR_L){ rf.dataset.prev = rf.value; rf.value = f2(CAR_L); } }
+  else if(rf.dataset.prev != null && Math.abs(x - CAR_L) < 1e-6){ rf.value = f2(parseFloat(rf.dataset.prev) || 0); delete rf.dataset.prev; } });
 ids.forEach(k=> el(k).addEventListener('change', ()=>{ if(autoKeys.includes(k)) regen(); else render(); }));
 el('lotpre').addEventListener('change', ()=>{ const v = el('lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('lote').value = f; el('fondo').value = d; document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on')); regen(); });
 function syncLotPre(){ const k = `${+parseFloat(el('lote').value)}x${+parseFloat(el('fondo').value)}`; el('lotpre').value = [...el('lotpre').options].some(o=>o.value===k) ? k : ''; }
@@ -3722,7 +4298,7 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','mat','eta','reg','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('tab-par').hidden = k!=='par'; el('tab-zon').hidden = k!=='zon'; if(k==='zon') zonOpen(); el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','mat','eta','reg','zon','par','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 // Exportar el 3D a SketchUp: COLLADA 1.4.1 en metros, con lo que se ve en el visor (etapa, techos, 1.er piso)
 el('v3-dae').addEventListener('click', async ()=>{
   const msg = el('v3-dae-msg');
@@ -3745,9 +4321,9 @@ el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d'
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15d';
+const APP_VERSION = '2026-11-15l';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
@@ -3765,14 +4341,14 @@ el('upd-btn').addEventListener('click', async ()=>{
   location.replace(location.pathname + '?v=' + Date.now());
 });
 // ---------- Asistente de inicio: personas, dirección, frentes del lote y datos (todo se puede pasar) ----------
-const WZ_N = 5;
-let wzStep = 0, wzP = 4;
+const WZ_N = 7;
+let wzStep = 0, wzP = 4, wzD = 2, wzDauto = true;
 const wzCli = () => { try { return JSON.parse(localStorage.getItem('vvm-cliente') || 'null') || {}; } catch(e){ return {}; } };
 // dormitorios: padres en el principal y hasta 2 por dormitorio secundario; la VIS pide 2 como mínimo
 const wzDorm = p => Math.min(6, Math.max(2, 1 + Math.ceil(Math.max(0, p - 2)/2)));
 function wzShowInfo(){
   const c = wzCli(), box = el('proj-info'), esc = t => String(t).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
-  const parts = [c.nom && `<b>${esc(c.nom)}</b>`, (c.dir || c.dist) && esc([c.dir, c.dist].filter(Boolean).join(', ')), c.p && `${c.p} ${c.p == 1 ? 'persona' : 'personas'}`].filter(Boolean);
+  const parts = [c.nom && `<b>${esc(c.nom)}</b>`, (c.dir || c.dist) && esc([c.dir, c.dist].filter(Boolean).join(', ')), c.p && `${c.p} ${c.p == 1 ? 'persona' : 'personas'}${c.d ? `, ${c.d} dorm.` : ''}`, c.pres > 0 && `presupuesto etapa 1: S/ ${nf(c.pres)}`, c.zon && c.zon.cod && `zonificación ${esc(c.zon.cod)}`].filter(Boolean);
   box.hidden = !parts.length;
   box.innerHTML = parts.length ? `Proyecto: ${parts.join(' · ')} <button type="button" id="proj-edit">Editar</button>` : '';
   const b = el('proj-edit'); if(b) b.addEventListener('click', ()=>wzOpen());
@@ -3780,49 +4356,96 @@ function wzShowInfo(){
 function wzRender(){
   document.querySelectorAll('#wz .wz-step').forEach(d=> d.hidden = +d.dataset.step !== wzStep);
   document.querySelectorAll('#wz-dots i').forEach((d,i)=> d.classList.toggle('on', i <= wzStep));
-  el('wz-title').textContent = ['Empecemos tu casa','Las personas','El lote','Las calles del lote','Tus datos'][wzStep];
-  el('wz-back').hidden = wzStep === 0;
-  el('wz-next').textContent = wzStep === 0 ? 'Empezar' : wzStep === WZ_N - 1 ? 'Ver mi casa' : 'Siguiente';
-  el('wz-p').textContent = wzP;
-  const nd = wzDorm(wzP), up = nd > 3;
-  el('wz-p-txt').innerHTML = `Para ${wzP} ${wzP==1?'persona':'personas'}: <b>${nd} dormitorios</b> (padres en el principal y hasta dos por dormitorio)${up ? `, ${SPLIT[nd][0]} abajo y ${SPLIT[nd][1]} en el 2.º piso` : ''}.${wzP <= 2 ? ' La vivienda VIS pide 2 dormitorios como mínimo: el segundo puede ser estudio.' : ''} Lo puedes cambiar después.`;
+  el('wz-title').textContent = ['Empecemos tu casa','Las personas','El terreno','Las calles del lote','El futuro de la casa','El presupuesto','Tus datos','Siguientes pasos para construir'][wzStep];
+  const done = wzStep === WZ_N; el('wz-dots').hidden = done; el('wz-skip').hidden = done;
+  el('wz-back').hidden = wzStep === 0 || done;
+  el('wz-next').textContent = done ? 'Ver mi casa' : wzStep === 0 ? 'Empezar' : wzStep === WZ_N - 1 ? 'Listo' : 'Siguiente';
+  if(wzDauto) wzD = wzDorm(wzP);
+  el('wz-p').textContent = wzP; el('wz-d').textContent = wzD;
+  { const sec = Math.max(0, wzP - 2), perS = wzD > 1 ? sec/(wzD - 1) : 0, per = wzP/wzD, up = wzD > 3;
+    let t = wzD === 1 ? `Todos duermen en un solo dormitorio.` : `En el principal duermen 2 (los padres) y en los otros ${wzD-1} quedan ${sec} ${sec===1?'persona':'personas'}: ${perS <= 1 ? '<b>una por dormitorio</b>, con cama de 0.90' : perS <= 2 ? '<b>dos por dormitorio</b>, con camarote o dos camas de 0.90 (el cuarto crece)' : `<b>${f1(perS)} por dormitorio</b>`}.`;
+    if(per > 3) t += ` <b style="color:var(--bad)">Más de 3 personas por dormitorio se considera hacinamiento</b>: suma un dormitorio.`;
+    else if(perS < 1 && wzD > 1 && sec < wzD - 1) t += ` Sobra ${wzD - 1 - sec === 1 ? 'un dormitorio' : (wzD - 1 - sec) + ' dormitorios'}: puede ser estudio, taller o para alquilar.`;
+    if(up) t += ` Van ${SPLIT[wzD][0]} abajo y ${SPLIT[wzD][1]} en el 2.º piso.`;
+    if(wzD < 2) t += ' La vivienda VIS pide 2 dormitorios como mínimo: el plano deja el segundo como estudio.';
+    el('wz-p-txt').innerHTML = t + (wzDauto ? ' Propuesta automática: cámbiala con − y +.' : ''); }
   const fr = (document.querySelector('input[name="wz-fr"]:checked') || {}).value || 'uno', e = fr==='esq'||fr==='tres', a = fr==='atr'||fr==='tres';
+  { const lo = parseFloat(el('wz-lote').value), fo = parseFloat(el('wz-fondo').value); el('wz-area').innerHTML = lo > 0 && fo > 0 ? `Terreno de <b>${f2(lo)} × ${f2(fo)} m = ${f1(lo*fo)} m²</b>.` : ''; }
   el('wz-rl-l').hidden = !e; el('wz-rp-t').textContent = a ? 'Retiro a la calle de atrás (m)' : 'Retiro posterior (m)';
 }
+// acabados de la etapa 2: se eligen aparte, cuando la etapa 1 ya está validada
+function wz2Open(){ document.querySelectorAll('input[name="wz-pis"]').forEach(r=> r.checked = r.value === (el('pis').value || 'vinr')); const d = el('wz2'); if(d.showModal) d.showModal(); else d.setAttribute('open',''); }
+function wz2Close(){ const d = el('wz2'); if(d.close) d.close(); else d.removeAttribute('open'); }
+el('wz2-cancel').addEventListener('click', wz2Close);
+el('wz2-ok').addEventListener('click', ()=>{ el('pis').value = (document.querySelector('input[name="wz-pis"]:checked') || {}).value || 'vinr'; wz2Close(); render(); });
 function wzOpen(){
   const c = wzCli();
+  wzDauto = !c.d; wzD = c.d || 2; el('wz-pres').value = c.pres || '';
   wzStep = 0; wzP = c.p || Math.max(2, Math.min(12, ((parseInt(el('nd').value,10)||2) + (parseInt(el('nd2').value,10)||0))*2));
   el('wz-lotpre').innerHTML = el('lotpre').innerHTML;
   ['lote','fondo','rf','rl','rp'].forEach(k=> el('wz-'+k).value = el(k).value);
   el('wz-lotpre').value = el('lotpre').value;
   const fr = el('fr').value || 'uno'; document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.checked = r.value === fr);
+  document.querySelectorAll('input[name="wz-ind"]').forEach(r=> r.checked = r.value === (el('ind').checked ? 'si' : 'no'));
+  document.querySelectorAll('input[name="wz-auto"]').forEach(r=> r.checked = r.value === (el('auto').checked ? 'si' : 'no'));
+  document.querySelectorAll('input[name="wz-obj"]').forEach(r=> r.checked = r.value === (el('obj').value || 'vivir'));
+  document.querySelectorAll('input[name="wz-tal"]').forEach(r=> r.checked = r.value === (el('tal').value || 'no'));
   el('wz-dir').value = c.dir || ''; el('wz-dist').value = c.dist || ''; el('wz-nom').value = c.nom || ''; el('wz-mail').value = c.mail || ''; el('wz-tel').value = c.tel || '';
   try { el('wz-off').checked = localStorage.getItem('vvm-asist-off') === '1'; } catch(e){}
   wzRender();
   const d = el('wz'); if(d.showModal) { if(!d.open) d.showModal(); } else d.setAttribute('open', '');
 }
+// Presupuesto de la familia frente al costo de cada etapa (pestaña Etapas): qué alcanza y cuánto falta
+function wzPres(B){
+  const box = el('wz-pres-txt'); if(!lastR) return;
+  let E; try { E = etapasCalc(lastR).E; } catch(e){ return; }
+  const ks = Object.keys(E).map(Number).filter(k=>E[k].cost > 0).sort((a,b)=>a-b);
+  let acc = 0, last = 0; for(const k of ks){ if(acc + E[k].cost <= B) { acc += E[k].cost; last = k; } else break; }
+  const c1 = E[ks[0]].cost, mes = x => { const m = Math.ceil(x/etAhorro); return m <= 1 ? 'un mes' : `unos ${m} meses`; };
+  box.innerHTML = last ? `Con <b>S/ ${nf(B)}</b> alcanzas hasta la <b>etapa ${last}: ${ET_N[last].toLowerCase()}</b> (S/ ${nf(acc)}).${last < ks[ks.length-1] ? ` La etapa ${last+1} cuesta unos S/ ${nf(E[last+1].cost)}: ahorrando S/ ${nf(etAhorro)} al mes, son ${mes(Math.max(0, E[last+1].cost - (B - acc)))}.` : ''} El detalle por partida está en la pestaña Etapas.`
+    : `Con <b>S/ ${nf(B)}</b> todavía no alcanza la etapa 1 (casco habitable), que cuesta unos <b>S/ ${nf(c1)}</b>: faltan S/ ${nf(c1 - B)}, ${mes(c1 - B)} ahorrando S/ ${nf(etAhorro)} al mes. En la pestaña Etapas ves cada partida, por si quieres empezar por los cimientos.`;
+  box.hidden = false;
+}
 function wzClose(){ const d = el('wz'); if(d.close) d.close(); else d.removeAttribute('open'); }
 function wzFinish(){
   const num = (id, lo, hi) => { const x = parseFloat(el(id).value); return isFinite(x) ? Math.min(hi, Math.max(lo, x)) : null; };
   const fr = (document.querySelector('input[name="wz-fr"]:checked') || {}).value || 'uno';
-  const c = {p:wzP, dir:el('wz-dir').value.trim(), dist:el('wz-dist').value.trim(), nom:el('wz-nom').value.trim(), mail:el('wz-mail').value.trim(), tel:el('wz-tel').value.trim()};
+  const c = {p:wzP, d:wzD, pres: parseFloat(el('wz-pres').value) || 0, dir:el('wz-dir').value.trim(), dist:el('wz-dist').value.trim(), nom:el('wz-nom').value.trim(), mail:el('wz-mail').value.trim(), tel:el('wz-tel').value.trim()};
   try { localStorage.setItem('vvm-cliente', JSON.stringify(c)); } catch(e){}
   [['lote',4,12],['fondo',8,40],['rf',0,10],['rl',0,6],['rp',0,10]].forEach(([k,lo,hi])=>{ const x = num('wz-'+k, lo, hi); if(x != null) el(k).value = f2(x); });
   el('fr').value = fr; syncLotPre();
-  wzClose(); wzShowInfo();
-  const nd = wzDorm(wzP), [a,b] = SPLIT[nd];
-  el('ndt').value = String(nd); wantTotal = nd; el('nd').value = String(a); el('nd2').value = String(b);
+  el('auto').checked = ((document.querySelector('input[name="wz-auto"]:checked') || {}).value === 'si');
+  const obj = (document.querySelector('input[name="wz-obj"]:checked') || {}).value || 'vivir'; el('obj').value = obj;
+  { const niv = {vivir:'amp', ambos:'est', renta:'eco'}[obj]; if(niv && niv !== nivel){ nivel = niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} } }
+  if(el('auto').checked && (parseFloat(el('rf').value) || 0) < CAR_L) el('rf').value = f2(CAR_L);
+  el('ind').checked = ((document.querySelector('input[name="wz-ind"]:checked') || {}).value === 'si');
+  wzShowInfo();
+  const tal = (document.querySelector('input[name="wz-tal"]:checked') || {}).value || 'no'; el('tal').value = tal;
+  const nd = Math.max(1, Math.min(6, wzD)); let [a,b] = SPLIT[nd];
+  if(tal === 'todo'){ a = 2; b = 2; } // la vivienda sube: 2 dormitorios arriba, encima de los ambientes del taller
+  el('ndt').value = String(a + b); wantTotal = tal === 'todo' ? null : nd; el('nd').value = String(a); el('nd2').value = String(b);
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
+  el('wz-done-txt').textContent = `Lo dibujé para ${wzP} ${wzP==1?'persona':'personas'} y ${nd} ${nd==1?'dormitorio':'dormitorios'} en ${f2(parseFloat(el('lote').value))} × ${f2(parseFloat(el('fondo').value))} m; lo ves al cerrar esta ventana.`;
+  el('wz-pres-txt').hidden = true; if(c.pres > 0){ const tryP = () => el('gen-msg').textContent.startsWith('Buscando') ? setTimeout(tryP, 300) : wzPres(c.pres); setTimeout(tryP, 500); }
+  wzStep = WZ_N; wzRender();
 }
 el('wz-open').addEventListener('click', ()=>wzOpen());
 el('wz-skip').addEventListener('click', ()=>wzClose());
 el('wz-back').addEventListener('click', ()=>{ wzStep = Math.max(0, wzStep - 1); wzRender(); });
-el('wz-next').addEventListener('click', ()=>{ if(wzStep === WZ_N - 1) wzFinish(); else { wzStep++; wzRender(); } });
+el('wz-next').addEventListener('click', ()=>{ if(wzStep === WZ_N) wzClose(); else if(wzStep === WZ_N - 1) wzFinish(); else { wzStep++; wzRender(); } });
 el('wz-pm').addEventListener('click', ()=>{ wzP = Math.max(1, wzP - 1); wzRender(); });
 el('wz-pp').addEventListener('click', ()=>{ wzP = Math.min(12, wzP + 1); wzRender(); });
+el('wz-dm').addEventListener('click', ()=>{ wzDauto = false; wzD = Math.max(1, wzD - 1); wzRender(); });
+el('wz-dp').addEventListener('click', ()=>{ wzDauto = false; wzD = Math.min(6, wzD + 1); wzRender(); });
+document.querySelectorAll('input[name="wz-obj"]').forEach(r=> r.addEventListener('change', ()=>{ if(!r.checked) return; const si = document.querySelector(`input[name="wz-ind"][value="${r.value === 'vivir' ? 'no' : 'si'}"]`); if(si) si.checked = true; }));
+document.querySelectorAll('input[name="wz-auto"]').forEach(r=> r.addEventListener('change', ()=>{ const rf = el('wz-rf'), x = parseFloat(rf.value) || 0;
+  if(r.value === 'si' && r.checked && x < CAR_L){ rf.dataset.prev = rf.value; rf.value = f2(CAR_L); }
+  if(r.value === 'no' && r.checked && rf.dataset.prev != null){ rf.value = rf.dataset.prev; delete rf.dataset.prev; } }));
 document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.addEventListener('change', ()=>{ const f = r.value; if((f==='atr'||f==='tres') && parseFloat(el('wz-rp').value) < parseFloat(el('wz-rf').value)) el('wz-rp').value = el('wz-rf').value; wzRender(); }));
-el('wz-lotpre').addEventListener('change', ()=>{ const v = el('wz-lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('wz-lote').value = f; el('wz-fondo').value = d; });
+el('wz-lotpre').addEventListener('change', ()=>{ const v = el('wz-lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('wz-lote').value = f; el('wz-fondo').value = d; wzRender(); });
+['wz-lote','wz-fondo'].forEach(id=> el(id).addEventListener('input', ()=>{ el('wz-lotpre').value = ''; wzRender(); }));
+document.querySelectorAll('input[name="wz-tal"]').forEach(r=> r.addEventListener('change', ()=>{ if(r.value !== 'no'){ const si = document.querySelector('input[name="wz-ind"][value="si"]'); if(si) si.checked = true; } }));
 el('wz-off').addEventListener('change', ()=>{ try { localStorage.setItem('vvm-asist-off', el('wz-off').checked ? '1' : '0'); } catch(e){} });
 el('wz').addEventListener('cancel', ()=>{}); // Esc = Pasar
 el('wz-form').addEventListener('submit', e=> e.preventDefault());
