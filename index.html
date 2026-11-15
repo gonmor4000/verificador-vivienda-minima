@@ -347,7 +347,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <section class="card plan">
       <h2>Planta de arquitectura</h2>
       <p class="hint" style="margin-top:0">Plano para el expediente: ejes con su grilla, cotas entre ejes y totales, cotas libres de cada ambiente (en rojo), vanos de puertas (P) y ventanas (V, con ancho × alto y alféizar) y su cuadro de vanos. <b>Arrastra las líneas de corte A y B</b> para mover los cortes de abajo.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px"><span class="hint">Piso</span><div class="seg" role="group" aria-label="Piso"><button type="button" data-pp="1">1.er piso</button><button type="button" data-pp="2" id="pro-f2">2.º piso</button></div><label class="v3-chk"><input type="checkbox" id="pro-furn"> Mostrar muebles</label></div>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 10px"><span class="hint">Piso</span><div class="seg" role="group" aria-label="Piso"><button type="button" data-pp="1">1.er piso</button><button type="button" data-pp="2" id="pro-f2">2.º piso</button></div><label class="v3-chk"><input type="checkbox" id="pro-furn"> Mostrar muebles</label><button type="button" id="pro-dxf" title="Plano en metros, por capas (muros, ventanas, puertas, muebles, cotas, ejes, textos). AutoCAD lo abre y lo guarda como DWG.">Descargar plano CAD (.dxf → DWG)</button></div>
       <div id="pro-plan" class="pro-plan"></div>
       <h3 style="font-size:14px;margin:14px 0 4px">Cuadro de vanos</h3>
       <p class="hint" style="margin:0 0 6px">Medidas en metros. En la planta cada ventana lleva su código, ancho × alto y alféizar (a).</p>
@@ -618,6 +618,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Plano para AutoCAD</b>: en Diseño Pro, el botón «Descargar plano CAD (.dxf → DWG)» baja la planta en metros y a escala real, con los dos pisos lado a lado si hay 2.º piso. Viene por capas: MUROS, TABIQUES, COLUMNAS, VENTANAS, PUERTAS, MUEBLES (si están visibles), COTAS, EJES, ESCALERA, CORTES, PISOS, TERRENO y TEXTOS. AutoCAD lo abre directamente y con «Guardar como» queda en DWG (el DWG es un formato cerrado de Autodesk, por eso se exporta en DXF).</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Acceso al patio según el nivel</b>: en el económico se sale por la cocina (lo más barato); desde el estándar, por un <b>pasillo de 0.90 m</b> junto a la cocina, separado con un tabique, y la cocina gana una ventana al patio. Si el frente no da para el pasillo y una cocina de 1.50 m, se queda por la cocina y la verificación dice cuánto falta. Se puede fijar a mano en «Acceso al patio».</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Objetivo con la casa</b>: el asistente pregunta si es para vivir cómodos, vivir y alquilar una parte, o sacarle el máximo provecho. Eso fija el nivel de los ambientes (amplio, estándar o económico), propone independizar los pisos cuando hay alquiler y suma una verificación con lo que conviene prever.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos de la etapa 2</b>: nueva opción «Piso de la sala y los dormitorios» (vinílico en rollo, el más barato; vinílico SPC en clic; cerámico; porcelanato; o quedarse con el cemento pulido) y el botón <b>«Elegir acabados»</b> de la etapa 2 (pestaña Etapas y barra de proyección), aparte del asistente inicial para no cargarlo. La cocina y el baño llevan cerámico antideslizante. Se ve en Diseño Pro (trama y rótulo en cada ambiente y un cuadro de acabados con m² y costo), en el 3D y en el costo de las etapas 2 y 3.</span></li>
@@ -3535,10 +3536,10 @@ function gapList(w, floor){
   return (w.gaps||[]).filter(q=>q[1]>q[0]).map(q=>[Math.max(0,q[0]), Math.min(Lw,q[1]), q[2] || (floor===1 && winLike(q[0], q[1]) ? 'win' : 'door')]).sort((p,q)=>p[0]-q[0]);
 }
 const dimH = (X, Y, x0, x1, y, txt, col='var(--ink)') => { const a = X(x0), b = X(x1), yy = Y(y);
-  return `<line x1="${a}" y1="${yy}" x2="${b}" y2="${yy}" stroke="${col}" stroke-width=".7"/><line x1="${a-4}" y1="${yy+4}" x2="${a+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><line x1="${b-4}" y1="${yy+4}" x2="${b+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><text x="${(a+b)/2}" y="${yy-4}" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text>`; };
+  return `<g data-l="COTAS"><line x1="${a}" y1="${yy}" x2="${b}" y2="${yy}" stroke="${col}" stroke-width=".7"/><line x1="${a-4}" y1="${yy+4}" x2="${a+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><line x1="${b-4}" y1="${yy+4}" x2="${b+4}" y2="${yy-4}" stroke="${col}" stroke-width="1.1"/><text x="${(a+b)/2}" y="${yy-4}" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text></g>`; };
 const dimV = (X, Y, y0, y1, x, txt, col='var(--ink)') => { const a = Y(y0), b = Y(y1), xx = X(x);
-  return `<line x1="${xx}" y1="${a}" x2="${xx}" y2="${b}" stroke="${col}" stroke-width=".7"/><line x1="${xx-4}" y1="${a+4}" x2="${xx+4}" y2="${a-4}" stroke="${col}" stroke-width="1.1"/><line x1="${xx-4}" y1="${b+4}" x2="${xx+4}" y2="${b-4}" stroke="${col}" stroke-width="1.1"/><text transform="translate(${xx-4},${(a+b)/2}) rotate(-90)" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text>`; };
-const bubble = (x, y, n) => `<circle cx="${x}" cy="${y}" r="10" fill="var(--panel)" stroke="var(--ink)" stroke-width=".9"/><text x="${x}" y="${y+4}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" font-weight="600" fill="var(--ink)">${n}</text>`;
+  return `<g data-l="COTAS"><line x1="${xx}" y1="${a}" x2="${xx}" y2="${b}" stroke="${col}" stroke-width=".7"/><line x1="${xx-4}" y1="${a+4}" x2="${xx+4}" y2="${a-4}" stroke="${col}" stroke-width="1.1"/><line x1="${xx-4}" y1="${b+4}" x2="${xx+4}" y2="${b-4}" stroke="${col}" stroke-width="1.1"/><text transform="translate(${xx-4},${(a+b)/2}) rotate(-90)" text-anchor="middle" font-family="var(--f-mono)" font-size="10" fill="${col}">${txt}</text></g>`; };
+const bubble = (x, y, n) => `<g data-l="EJES"><circle cx="${x}" cy="${y}" r="10" fill="var(--panel)" stroke="var(--ink)" stroke-width=".9"/><text x="${x}" y="${y+4}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" font-weight="600" fill="var(--ink)">${n}</text></g>`;
 function proDefaults(r){
   const st = r.stair, F = Math.max(r.v.fondo, r.v.rf + r.D + T), oy = r.v.rf + T/2;
   const yMax = F - oy - 0.1;
@@ -3573,6 +3574,7 @@ function proPlan(r){
   const X = x => (x - x0)*s, Y = y => (y1 - y)*s;
   const vw = Math.round((W + 2.2 - x0)*s), vh = Math.round((y1 - (yBot - 2.3))*s);
   let g = '';
+  g += '<g data-l="TERRENO">';
   // terreno: vereda, retiros, patio y límite del lote
   { const lab = (x, y, t, c='var(--ok)', fs=11) => `<text x="${X(x)}" y="${Y(y)}" text-anchor="middle" font-size="${fs}" fill="${c}">${t}</text>`;
     if(vd > 0){ g += `<rect x="${X(lx0-0.4)}" y="${Y(ly0)}" width="${(lx1-lx0+0.8)*s}" height="${vd*s}" fill="var(--line)" opacity=".55"/>` + lab((lx0+lx1)/2, ly0 - vd/2 + 0.05, `Vereda ${f2(vd)} m · calle`, 'var(--muted)', 10); }
@@ -3592,9 +3594,11 @@ function proPlan(r){
     const xc = -2.35; let yy = ly0; [[-T/2,'retiro'],[pb,'construido'],[ly1,'patio']].forEach(([yb,t])=>{ if(yb - yy > 0.05) g += dimV(X, Y, yy, yb, xc, f2(yb-yy), 'var(--ok)'); yy = yb; });
     g += dimV(X, Y, ly0, ly1, xc - 0.5, `${f2(v.fondo)} fondo del lote`, 'var(--ink)');
   }
+  g += '</g><g data-l="EJES">';
   // ejes y burbujas
   A.ax.forEach(([n,x])=>{ g += `<line x1="${X(x)}" y1="${Y(yBot-1.45)}" x2="${X(x)}" y2="${Y(yTop+0.55)}" stroke="var(--muted)" stroke-width=".6" stroke-dasharray="14 4 2 4"/>` + bubble(X(x), Y(yBot-1.75), n) + bubble(X(x), Y(yTop+0.85), n); });
   A.ay.forEach(([n,y])=>{ g += `<line x1="${X(-1.45)}" y1="${Y(y)}" x2="${X(W+1.45)}" y2="${Y(y)}" stroke="var(--muted)" stroke-width=".6" stroke-dasharray="14 4 2 4"/>` + bubble(X(-1.75), Y(y), n) + bubble(X(W+1.75), Y(y), n); });
+  g += '</g><g data-l="PISOS">';
   // ambientes: nombre, área y cotas interiores libres
   const rooms = f2nd ? Object.values(r.up.rooms) : Object.values(r.rooms);
   rooms.forEach(q=>{
@@ -3603,6 +3607,7 @@ function proPlan(r){
     else if(q.wet) g += `<rect x="${X(q.x0+T/2)}" y="${Y(q.y1-T/2)}" width="${(q.x1-q.x0-T)*s}" height="${(q.y1-yy0-T)*s}" fill="var(--wet)"/>`;
     if(!q.sky && !q.ter) g += floorHatch(v, q.wet, q.x0+T/2, q.x1-T/2, yy0+T/2, q.y1-T/2, X, Y);
   });
+  g += '</g><g data-l="MUEBLES">';
   // muebles (opcional): los mismos que la pestaña Diseño, sin repetir sus verificaciones
   if(proFurn){ const rr = Object.assign({}, r, {checks: []});
     try {
@@ -3611,7 +3616,9 @@ function proPlan(r){
         g += `<rect x="${X(mx)}" y="${Y(co.y1-T/2)}" width="${0.60*s}" height="${(co.y1-co.y0-T)*s}" fill="var(--furn)"/>`; }
         g += furnWet(rr, X, Y, s); }
     } catch(e){ console.error('muebles pro', e); } }
+  g += '</g><g data-l="TEXTOS">';
   const VAN = {v:[], p:[]};
+  g += '</g>';
   // muros cortados (relleno), ventanas y puertas
   list.forEach(w=>{
     const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
@@ -3619,19 +3626,20 @@ function proPlan(r){
     const rect = (a, b, fill, extra='') => { const a2 = a <= 1e-6 ? -t/2 : a, b2 = b >= Lw-1e-6 ? Lw + t/2 : b;
       const px0 = w.x1+ux*a2, px1 = w.x1+ux*b2, py0 = w.y1+uy*a2, py1 = w.y1+uy*b2;
       const [rx0, rx1, ry0, ry1] = hor ? [Math.min(px0,px1), Math.max(px0,px1), w.y1-t/2, w.y1+t/2] : [w.x1-t/2, w.x1+t/2, Math.min(py0,py1), Math.max(py0,py1)];
-      return `<rect x="${X(rx0)}" y="${Y(ry1)}" width="${(rx1-rx0)*s}" height="${(ry1-ry0)*s}" fill="${fill}" ${extra}/>`; };
+      return `<rect data-l="${w.kind==='light' ? 'TABIQUES' : 'MUROS'}" x="${X(rx0)}" y="${Y(ry1)}" width="${(rx1-rx0)*s}" height="${(ry1-ry0)*s}" fill="${fill}" ${extra}/>`; };
     let t0 = 0;
     gapList(w, f2nd ? 2 : 1).forEach(([a,b,k])=>{
       if(a > t0) g += rect(t0, a, w.kind==='light' ? 'var(--muted)' : 'var(--wall)');
       if(k==='win'){ const pa = [w.x1+ux*a, w.y1+uy*a], pb = [w.x1+ux*b, w.y1+uy*b], nx = -uy*t/2, ny = ux*t/2;
-        [-1,0,1].forEach(sg=> g += `<line x1="${X(pa[0]+nx*sg)}" y1="${Y(pa[1]+ny*sg)}" x2="${X(pb[0]+nx*sg)}" y2="${Y(pb[1]+ny*sg)}" stroke="var(--wall)" stroke-width="${sg?0.8:1.4}"/>`);
+        [-1,0,1].forEach(sg=> g += `<line data-l="VENTANAS" x1="${X(pa[0]+nx*sg)}" y1="${Y(pa[1]+ny*sg)}" x2="${X(pb[0]+nx*sg)}" y2="${Y(pb[1]+ny*sg)}" stroke="var(--wall)" stroke-width="${sg?0.8:1.4}"/>`);
         const wv = Math.round((b-a)*100)/100; VAN.v.push(wv);
         const tx = X((pa[0]+pb[0])/2 + (hor ? 0 : (w.x1 < W/2 ? -0.55 : 0.55))), ty = Y((pa[1]+pb[1])/2 + (hor ? (w.y1 < D/2 ? 0.33 : 0.36) : 0));
-        g += `<text x="${tx}" y="${ty-1}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" font-weight="700" fill="var(--wet-line)">@@V${wv}@@</text><text x="${tx}" y="${ty+8}" text-anchor="middle" font-family="var(--f-mono)" font-size="7.5" fill="var(--wet-line)">${f2(wv)}×${f2(WIN_H)} a${f2(WIN_SILL)}</text>`; }
+        g += `<g data-l="VENTANAS"><text x="${tx}" y="${ty-1}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" font-weight="700" fill="var(--wet-line)">@@V${wv}@@</text><text x="${tx}" y="${ty+8}" text-anchor="middle" font-family="var(--f-mono)" font-size="7.5" fill="var(--wet-line)">${f2(wv)}×${f2(WIN_H)} a${f2(WIN_SILL)}</text></g>`; }
       t0 = Math.max(t0, b);
     });
     if(t0 < Lw) g += rect(t0, Lw, w.kind==='light' ? 'var(--muted)' : 'var(--wall)');
   });
+  g += '<g data-l="PUERTAS">';
   doors.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
     g += `<line x1="${X(hx)}" y1="${Y(hy)}" x2="${X(hx+nx*wd)}" y2="${Y(hy+ny*wd)}" stroke="var(--wall)" stroke-width="1.6"/>`;
     const pts=[]; for(let i=0;i<=12;i++){ const t=i/12*Math.PI/2; pts.push(`${X(hx+wd*(Math.cos(t)*ux+Math.sin(t)*nx))},${Y(hy+wd*(Math.cos(t)*uy+Math.sin(t)*ny))}`); }
@@ -3639,10 +3647,12 @@ function proPlan(r){
     const dv = Math.round(wd*100)/100; VAN.p.push(dv);
     g += `<text x="${X(hx+ux*wd/2+nx*wd*0.45)}" y="${Y(hy+uy*wd/2+ny*wd*0.45)+3}" text-anchor="middle" font-family="var(--f-mono)" font-size="8.5" fill="var(--muted)">@@P${dv}@@</text>`;
   });
+  g += '</g><g data-l="COLUMNAS">';
   const cs = Math.max(5, 0.25*s*0.95);
   if(v.sis==='portico') r.cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)" stroke="var(--panel)" stroke-width=".8"/>`; });
   else g += colSvg(r.cols, list, X, Y, s);
-  if(st) g += drawStair(X, Y, s, st, f2nd);
+  g += '</g>';
+  if(st) g += '<g data-l="ESCALERA">' + drawStair(X, Y, s, st, f2nd) + '</g>';
   rooms.forEach(q=>{
     if(!q.n || q.open && q.sky) { if(q.sky) g += `<text x="${X((q.x0+q.x1)/2)}" y="${Y((q.y0+q.y1)/2)+4}" text-anchor="middle" font-size="10.5" fill="var(--ok)">patio de luz</text>`; return; }
     const yy0 = f2nd && Math.abs(q.y0) < 1e-6 ? -vo : q.y0, cw = q.x1-q.x0-T, cd = q.y1-yy0-T, cx = (q.x0+q.x1)/2, cy = (yy0+q.y1)/2;
@@ -3652,6 +3662,7 @@ function proPlan(r){
     if(!q.open && cw > 1.0 && cd > 1.3) g += dimH(X, Y, q.x0+T/2, q.x1-T/2, yy0 + T/2 + Math.min(0.45, cd*0.2), f2(cw), 'var(--brick)');
     if(!q.open && cd > 1.0 && cw > 1.3) g += dimV(X, Y, yy0+T/2, q.y1-T/2, q.x0 + T/2 + Math.min(0.40, cw*0.18), f2(cd), 'var(--brick)');
   });
+  g += '<g data-l="COTAS">';
   // cotas entre ejes y totales
   const xs = A.ax.map(a=>a[1]), ys = A.ay.map(a=>a[1]);
   for(let i=0;i<xs.length-1;i++) if(xs[i+1]-xs[i] > 0.01) g += dimH(X, Y, xs[i], xs[i+1], yBot-0.55, f2(xs[i+1]-xs[i]));
@@ -3661,16 +3672,19 @@ function proPlan(r){
   g += dimV(X, Y, ys[0], ys[ys.length-1], -1.0, f2(ys[ys.length-1]-ys[0]));
   g += dimH(X, Y, -T/2, W+T/2, yTop+0.25, `${f2(W+T)} exterior`, 'var(--muted)');
   if(st){ const b = st.box; g += dimV(X, Y, D+T/2, b.y1, W+0.55, f2(b.y1-D-T/2), 'var(--brick)'); }
+  g += '</g>';
   // líneas de corte desplazables
   const ya = proCut.y, xb = proCut.x;
   const arrowUp = (x, y, lab) => `<path d="M${x-7},${y+2} L${x+7},${y+2} L${x},${y-10} Z" fill="var(--brick)"/><text x="${x}" y="${y+16}" text-anchor="middle" font-family="var(--f-mono)" font-weight="700" font-size="12" fill="var(--brick)">${lab}</text>`;
   const arrowL = (x, y, lab) => `<path d="M${x+2},${y-7} L${x+2},${y+7} L${x-10},${y} Z" fill="var(--brick)"/><text x="${x+14}" y="${y+4}" font-family="var(--f-mono)" font-weight="700" font-size="12" fill="var(--brick)">${lab}</text>`;
-  g += `<g class="pro-cut" data-cut="y"><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="transparent" stroke-width="18"/>${arrowUp(X(-1.25), Y(ya), 'A')}${arrowUp(X(W+1.25), Y(ya), 'A')}<title>Arrastra para mover el corte A-A</title></g>`;
-  g += `<g class="pro-cut" data-cut="x"><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="transparent" stroke-width="18"/>${arrowL(X(xb), Y(yBot-1.25), 'B')}${arrowL(X(xb), Y(yTop+0.35), 'B')}<title>Arrastra para mover el corte B-B</title></g>`;
+  g += `<g class="pro-cut" data-cut="y" data-l="CORTES"><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(-1.25)}" y1="${Y(ya)}" x2="${X(W+1.25)}" y2="${Y(ya)}" stroke="transparent" stroke-width="18"/>${arrowUp(X(-1.25), Y(ya), 'A')}${arrowUp(X(W+1.25), Y(ya), 'A')}<title>Arrastra para mover el corte A-A</title></g>`;
+  g += `<g class="pro-cut" data-cut="x" data-l="CORTES"><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="var(--brick)" stroke-width="1.4" stroke-dasharray="12 4 2 4"/><line x1="${X(xb)}" y1="${Y(yBot-1.25)}" x2="${X(xb)}" y2="${Y(yTop+0.35)}" stroke="transparent" stroke-width="18"/>${arrowL(X(xb), Y(yBot-1.25), 'B')}${arrowL(X(xb), Y(yTop+0.35), 'B')}<title>Arrastra para mover el corte B-B</title></g>`;
+  g += '<g data-l="TEXTOS">';
   // escala gráfica
   const sx = X(-1.9), sy = Y(yBot-2.15);
   g += `<text x="${X(W+1.9)}" y="${sy+8}" text-anchor="end" font-family="var(--f-mono)" font-size="10" fill="var(--muted)">${f2nd ? '2.º piso · NPT ' + f2SignLevel(H + (r.hL||0.20)) : '1.er piso · NPT ±0.00'} · cotas en metros</text>`;
   g += `<g font-family="var(--f-mono)" font-size="9" fill="var(--muted)">${[0,1,2].map(i=>`<rect x="${sx+i*s}" y="${sy-4}" width="${s}" height="4" fill="${i%2?'var(--panel)':'var(--ink)'}" stroke="var(--ink)" stroke-width=".6"/><text x="${sx+i*s}" y="${sy+10}" text-anchor="middle">${i}</text>`).join('')}<text x="${sx+3*s}" y="${sy+10}" text-anchor="middle">3 m</text></g>`;
+  g += '</g>';
   proGeo = {X, Y, s, x0, y1, lim};
   // códigos de vanos (V-1, P-1…) de mayor a menor ancho y cuadro de vanos
   const codes = (arr, pre) => { const u = [...new Set(arr)].sort((x,y)=>y-x), m = {}; u.forEach((w,i)=> m[w] = `${pre}-${i+1}`); return {u, m}; };
@@ -3793,6 +3807,97 @@ function proRender(r){
 }
 el('pro-furn').checked = proFurn; el('pro-furn').addEventListener('change', e=>{ proFurn = e.target.checked; try { localStorage.setItem('vvm-pro-muebles', proFurn ? '1' : '0'); } catch(_){} if(lastR) proPlan(lastR); });
 document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.addEventListener('click', ()=>{ if(b.disabled) return; proFloor = +b.dataset.pp; if(lastR) proRender(lastR); }));
+
+// ---- exportar la planta de Diseño Pro a DXF (AutoCAD lo abre y lo guarda como DWG) ----
+const DXF_LAY = {MUROS:[7,'CONTINUOUS'], TABIQUES:[8,'CONTINUOUS'], VENTANAS:[4,'CONTINUOUS'], PUERTAS:[3,'CONTINUOUS'], MUEBLES:[9,'CONTINUOUS'], COTAS:[1,'CONTINUOUS'], EJES:[8,'CENTER'], TEXTOS:[7,'CONTINUOUS'], TERRENO:[3,'CONTINUOUS'], PISOS:[252,'CONTINUOUS'], COLUMNAS:[7,'CONTINUOUS'], ESCALERA:[30,'CONTINUOUS'], CORTES:[1,'CENTER']};
+function dxfCollect(svg, G, dx, out){
+  const root = svg.getScreenCTM(); if(!root) return;
+  const inv = root.inverse(), m2 = (px, py) => [px/G.s + G.x0 + dx, G.y1 - py/G.s];
+  const vis = e => { const cs = getComputedStyle(e); if(cs.display === 'none' || cs.visibility === 'hidden' || +cs.opacity === 0) return null;
+    const none = c => !c || c === 'none' || c === 'transparent' || /rgba\(.*,\s*0\)$/.test(c);
+    return {st: !none(cs.stroke) && parseFloat(cs.strokeWidth) > 0, fi: !none(cs.fill) && +cs.fillOpacity > 0, dash: cs.strokeDasharray && cs.strokeDasharray !== 'none', fs: parseFloat(cs.fontSize)||10, anc: cs.textAnchor}; };
+  svg.querySelectorAll('line,rect,polyline,polygon,path,circle,ellipse,text').forEach(e=>{
+    if(e.closest('title')) return;
+    const V = vis(e); if(!V) return;
+    const tag = e.tagName.toLowerCase(), hold = e.closest('[data-l]');
+    let L = hold ? hold.dataset.l : (tag === 'text' ? 'TEXTOS' : 'VARIOS');
+    const M = inv.multiply(e.getScreenCTM()), P = (x, y) => m2(M.a*x + M.c*y + M.e, M.b*x + M.d*y + M.f);
+    const lt = V.dash ? (DXF_LAY[L] && DXF_LAY[L][1] === 'CENTER' ? 'CENTER' : 'DASHED') : null;
+    const n = a => +e.getAttribute(a) || 0;
+    if(tag === 'text'){ const t = e.textContent.trim(); if(!t) return;
+      const ang = Math.atan2(-M.b, M.a)*180/Math.PI, sc = Math.hypot(M.a, M.b);
+      out.push({k:'T', L, p:P(n('x'), n('y')), h: V.fs*sc*0.72/G.s, t, ang, al: V.anc === 'middle' ? 1 : V.anc === 'end' ? 2 : 0}); return; }
+    if(!V.st && !V.fi) return;
+    let pts = null, closed = false;
+    if(tag === 'line'){ out.push({k:'L', L, lt, a:P(n('x1'), n('y1')), b:P(n('x2'), n('y2'))}); return; }
+    if(tag === 'rect'){ const x = n('x'), y = n('y'), w = n('width'), h = n('height'); if(w <= 0 || h <= 0) return;
+      pts = [P(x,y), P(x+w,y), P(x+w,y+h), P(x,y+h)]; closed = true;
+      if(V.fi && /^(MUROS|TABIQUES|COLUMNAS)$/.test(L)) out.push({k:'S', L, p:pts}); }
+    else if(tag === 'circle'){ const c = P(n('cx'), n('cy')); out.push({k:'C', L, c, r: n('r')*Math.hypot(M.a, M.b)/G.s}); return; }
+    else if(tag === 'ellipse'){ const cx = n('cx'), cy = n('cy'), rx = n('rx'), ry = n('ry'); pts = []; for(let i=0;i<24;i++){ const t = i/24*2*Math.PI; pts.push(P(cx+rx*Math.cos(t), cy+ry*Math.sin(t))); } closed = true; }
+    else if(tag === 'polyline' || tag === 'polygon'){ pts = [...e.points].map(q=>P(q.x, q.y)); closed = tag === 'polygon'; }
+    else if(tag === 'path'){ const len = e.getTotalLength(); if(!(len > 0)) return; const d = e.getAttribute('d') || '', N = /[aAcCqQsStT]/.test(d) ? Math.max(8, Math.min(64, Math.ceil(len/3))) : 0;
+      if(N){ pts = []; for(let i=0;i<=N;i++){ const q = e.getPointAtLength(len*i/N); pts.push(P(q.x, q.y)); } }
+      else { pts = []; d.replace(/([MLHVZmlhvz])([^MLHVZmlhvz]*)/g, (_, c, a)=>{ const v = a.trim().split(/[\s,]+/).filter(Boolean).map(Number), last = pts.length ? pts[pts.length-1].raw : [0,0];
+          if(c === 'M' || c === 'L') for(let i=0;i+1<v.length;i+=2) pts.push({raw:[v[i], v[i+1]]});
+          else if(c === 'm' || c === 'l'){ let [x,y] = last; for(let i=0;i+1<v.length;i+=2){ x += v[i]; y += v[i+1]; pts.push({raw:[x,y]}); } }
+          else if(c === 'H') pts.push({raw:[v[0], last[1]]}); else if(c === 'h') pts.push({raw:[last[0]+v[0], last[1]]});
+          else if(c === 'V') pts.push({raw:[last[0], v[0]]}); else if(c === 'v') pts.push({raw:[last[0], last[1]+v[0]]});
+          else closed = true; });
+        pts = pts.map(q=>P(q.raw[0], q.raw[1])); }
+      if(closed && V.fi && pts.length === 3) out.push({k:'S', L, p:[pts[0], pts[1], pts[2], pts[2]]}); }
+    if(pts && pts.length > 1) out.push({k:'P', L, lt, p:pts, c:closed});
+  });
+}
+function dxfText(list){
+  const o = [], w = (c, v) => o.push(c, typeof v === 'number' ? (Number.isInteger(v) ? String(v) : v.toFixed(4)) : v);
+  const esc = t => t.replace(/[^\x20-\x7e\u00a0-\u00ff\u2014\u2013\u2026]/g, ch => '\\U+' + ch.codePointAt(0).toString(16).toUpperCase().padStart(4, '0'));
+  let xmin = 1e9, ymin = 1e9, xmax = -1e9, ymax = -1e9; const bb = p => { xmin = Math.min(xmin, p[0]); xmax = Math.max(xmax, p[0]); ymin = Math.min(ymin, p[1]); ymax = Math.max(ymax, p[1]); };
+  list.forEach(E=> (E.p && E.p.length > 2 ? E.p : [E.a, E.b, E.c, E.p].filter(x=>x && typeof x[0] === 'number')).forEach(bb));
+  w(0,'SECTION'); w(2,'HEADER'); w(9,'$ACADVER'); w(1,'AC1009'); w(9,'$DWGCODEPAGE'); w(3,'ANSI_1252'); w(9,'$INSBASE'); w(10,0); w(20,0); w(30,0);
+  w(9,'$EXTMIN'); w(10,xmin); w(20,ymin); w(30,0); w(9,'$EXTMAX'); w(10,xmax); w(20,ymax); w(30,0); w(9,'$LTSCALE'); w(40,1); w(9,'$DIMSCALE'); w(40,0.05); w(0,'ENDSEC');
+  w(0,'SECTION'); w(2,'TABLES');
+  const LT = [['CONTINUOUS','Solid line',[]], ['DASHED','Dashed __ __ __',[0.25,-0.12]], ['CENTER','Center ____ _ ____',[0.6,-0.1,0.1,-0.1]]];
+  w(0,'TABLE'); w(2,'LTYPE'); w(70,LT.length);
+  LT.forEach(([nm, ds, pat])=>{ w(0,'LTYPE'); w(2,nm); w(70,0); w(3,ds); w(72,65); w(73,pat.length); w(40,pat.reduce((a,b)=>a+Math.abs(b),0)); pat.forEach(x=>w(49,x)); });
+  w(0,'ENDTAB');
+  const lays = Object.keys(DXF_LAY).concat(list.some(E=>E.L === 'VARIOS') ? ['VARIOS'] : []);
+  w(0,'TABLE'); w(2,'LAYER'); w(70,lays.length);
+  lays.forEach(nm=>{ const [c, lt] = DXF_LAY[nm] || [7,'CONTINUOUS']; w(0,'LAYER'); w(2,nm); w(70,0); w(62,c); w(6,lt); });
+  w(0,'ENDTAB'); w(0,'ENDSEC');
+  w(0,'SECTION'); w(2,'ENTITIES');
+  const head = (k, E) => { w(0,k); w(8,E.L); if(E.lt) w(6,E.lt); };
+  list.forEach(E=>{
+    if(E.k === 'L'){ head('LINE', E); w(10,E.a[0]); w(20,E.a[1]); w(30,0); w(11,E.b[0]); w(21,E.b[1]); w(31,0); }
+    else if(E.k === 'C'){ head('CIRCLE', E); w(10,E.c[0]); w(20,E.c[1]); w(30,0); w(40,E.r); }
+    else if(E.k === 'S'){ head('SOLID', E); const q = E.p; [[10,0],[11,1],[13,2],[12,3]].forEach(([c,i])=>{ w(c,q[i][0]); w(c+10,q[i][1]); w(c+20,0); }); }
+    else if(E.k === 'P'){ head('POLYLINE', E); w(66,1); w(10,0); w(20,0); w(30,0); w(70,E.c ? 1 : 0);
+      E.p.forEach(q=>{ w(0,'VERTEX'); w(8,E.L); w(10,q[0]); w(20,q[1]); w(30,0); }); w(0,'SEQEND'); w(8,E.L); }
+    else if(E.k === 'T'){ head('TEXT', E); w(10,E.p[0]); w(20,E.p[1]); w(30,0); w(40,Math.max(0.02,E.h)); w(1,esc(E.t)); if(Math.abs(E.ang) > 0.01) w(50,E.ang);
+      if(E.al){ w(72,E.al); w(11,E.p[0]); w(21,E.p[1]); w(31,0); } }
+  });
+  w(0,'ENDSEC'); w(0,'EOF');
+  return o.join('\r\n') + '\r\n';
+}
+function proDxf(){
+  if(!lastR) return;
+  const r = lastR, keep = proFloor, floors = r.gross2 > 0 && r.up ? [1,2] : [1], out = [];
+  let dx = 0;
+  try {
+    floors.forEach(f=>{ proFloor = f; proPlan(r); const svg = el('pro-plan').querySelector('svg'); if(!svg) return;
+      const G = proGeo, vb = svg.viewBox.baseVal, n0 = out.length;
+      dxfCollect(svg, G, dx, out);
+      if(floors.length > 1) out.push({k:'T', L:'TEXTOS', p:[dx + G.x0 + vb.width/G.s/2, G.y1 - vb.height/G.s - 0.4], h:0.35, t: f === 1 ? 'PLANTA 1.ER PISO' : 'PLANTA 2.º PISO', ang:0, al:1});
+      dx += vb.width/G.s + 3; });
+  } finally { proFloor = keep; proPlan(r); }
+  const txt = dxfText(out), CP = {0x2014:0x97, 0x2013:0x96, 0x2026:0x85}, by = new Uint8Array(txt.length);
+  for(let i=0;i<txt.length;i++){ const c = txt.charCodeAt(i); by[i] = c < 256 ? c : (CP[c] || 63); } // Windows-1252, como espera AutoCAD
+  const blob = new Blob([by], {type:'application/dxf'}), a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = `vivienda-${f2(r.v.lote)}x${f2(r.v.fondo)}-planta.dxf`.replace(/\s/g,'');
+  document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); }, 500);
+  return out.length;
+}
+el('pro-dxf').addEventListener('click', proDxf);
 
 // Vivienda taller (A.020 art. 4.1): el taller en la sala (al frente) o en todo el 1.er piso, con la vivienda arriba
 const TAL_N = {d1:'Taller', d2:'Depósito', d3:'Depósito 2', sc:'Taller · atención', co:'Cocineta', ba:'Baño del taller', pa:'Pasaje'};
@@ -4217,7 +4322,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15k';
+const APP_VERSION = '2026-11-15l';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
