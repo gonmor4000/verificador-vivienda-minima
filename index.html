@@ -228,6 +228,8 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 .wz-body label{font-weight:500;display:flex;flex-direction:column;gap:4px}
 .wz-body input[type=text],.wz-body input[type=email],.wz-body input[type=tel]{font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:7px 8px;width:100%}
 .wz-step{display:flex;flex-direction:column;gap:12px}
+.wz-list{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:3px}
+.wz-steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:9px}.wz-steps li>b:first-child{display:block}
 .wz-cnt{display:flex;align-items:center;gap:10px}.wz-cnt button{width:40px;height:40px;font-size:20px;padding:0}.wz-cnt output{font-family:var(--f-mono);font-size:30px;min-width:2ch;text-align:center}
 .wz-fr{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .wz-fr label{flex-direction:row;align-items:center;gap:10px;border:1px solid var(--line);border-radius:8px;padding:8px 10px;cursor:pointer;font-weight:500;font-size:13px;line-height:1.3}
@@ -558,7 +560,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
-      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Mensaje de inicio</b> en el asistente: explica para qué sirve la herramienta (una casa ordenada que crece por etapas sin romper lo construido, con presupuesto aproximado y respetando el RNE) y recomienda certificado de parámetros, estudio de suelos, ingeniero civil, arquitecto e ingenieros para el expediente y licencia municipal.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Mensaje de inicio</b> corto, pensado para el celular y el maestro de obra: «Construye por etapas sin tener que romper después», qué da el plano, que es gratis y que los datos no salen del equipo, con un aviso de licencia y cálculo estructural. Al terminar el asistente, pantalla <b>Siguientes pasos para construir</b>: certificado de parámetros, estudio de suelos, cálculo estructural para todos los pisos previstos, expediente y licencia (Modalidad A de la Ley 29090 hasta 120 m²) y obra por etapas hasta la inscripción en SUNARP.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos independientes</b>: nueva opción «Independizar los pisos en el futuro» (y pregunta en el asistente). La escalera va al <b>retiro frontal</b> con entrada propia desde la calle (A.010 art. 8.3 l): de un tramo junto a la fachada si no pasa sobre la puerta de la casa, si no de caracol; el descanso llega frente al estar del 2.º piso, que abre su puerta a la fachada. Si el retiro es corto, lo dice y deja la escalera en el patio.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Vivienda taller</b> (A.020 art. 4.1): opción «Taller o negocio en el 1.er piso», en una parte (la sala del frente pasa a taller o tienda) o en todo el piso (taller, depósito, atención, cocineta y baño del taller, sin camas, y la familia vive arriba). Verificaciones de dónde vive la familia, acceso sin cruzar el taller, zonificación, licencia y extintor. El asistente pregunta además el tamaño del terreno y muestra su área.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Asistente de inicio</b> al abrir la página: pregunta cuántas personas vivirán (y propone los dormitorios), la dirección y las medidas del lote, cuántas calles lo tocan y, al final y de forma opcional, nombre, correo y teléfono, que se quedan en el equipo y van dentro del plano guardado. Tiene botón <b>Pasar</b> en cada paso, se vuelve a abrir con «Asistente de inicio» y se puede desactivar.</span></li>
@@ -721,9 +723,15 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <div class="wz-head"><h2 id="wz-title">Empecemos tu casa</h2><div class="wz-dots" id="wz-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="wz-body">
       <div class="wz-step" data-step="0">
-        <p><b>Tu casa, pensada para crecer.</b> Casi todas las casas se construyen por etapas, y está bien. El problema llega al ampliar: el baño nuevo no encuentra el desagüe, hay que romper una viga para pasar un tubo o la escalera ya no tiene dónde ir. Aquí obtienes desde el primer día un plano ordenado, en el que cada etapa ya tiene su lugar y ninguna estropea lo que ya construiste.</p>
-        <p>Lo dibujo en tu lote, cumpliendo el Reglamento Nacional de Edificaciones, y te digo cuánto cuesta más o menos cada etapa. Solo necesito cinco respuestas cortas: cuántos van a vivir, cómo es el terreno, cuántas calles lo tocan, si piensas independizar los pisos o tener un taller y, si quieres, tus datos.</p>
-        <p class="wz-note"><b>Importante:</b> esto es una guía para planificar, no un expediente para construir. Antes de empezar la obra, pide en tu municipalidad el <b>certificado de parámetros</b> de tu lote y saca la <b>licencia de edificación</b>. Un <b>estudio de suelos</b> y un <b>ingeniero civil</b> que calcule la estructura protegen a tu familia en un sismo, y el expediente lo firman un <b>arquitecto</b> y los ingenieros. Lo que planifiques aquí les ahorra trabajo a ellos y dinero a ti.</p>
+        <p style="font-size:16px"><b>Construye por etapas sin tener que romper después.</b></p>
+        <p>En 5 preguntas te doy el plano de tu casa en tu lote, listo para crecer:</p>
+        <ul class="wz-list">
+          <li>cada etapa ya tiene su sitio: baño, desagües, escalera y columnas;</li>
+          <li>cuánto cuesta cada etapa y qué materiales comprar;</li>
+          <li>cumple el Reglamento Nacional de Edificaciones.</li>
+        </ul>
+        <p>Es gratis y tus datos no salen de tu celular. Enséñaselo a tu maestro de obra.</p>
+        <p class="wz-note"><b>Antes de la obra:</b> este plano te sirve para organizarte, pero no es un permiso. Saca la licencia en tu municipalidad y que un ingeniero calcule la estructura: en un sismo eso protege a tu familia, y con licencia tu casa vale más y la puedes inscribir, vender o hipotecar.</p>
         <p class="hint">Si solo quieres mirar, pulsa <b>Pasar</b> y se abre la propuesta de ejemplo. Puedes volver aquí con el botón «Asistente de inicio» de arriba.</p>
       </div>
       <div class="wz-step" data-step="1" hidden>
@@ -773,6 +781,17 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         <label>Correo<input type="email" id="wz-mail" autocomplete="email"></label>
         <label>Teléfono o WhatsApp<input type="tel" id="wz-tel" autocomplete="tel"></label>
         <p class="hint">Se quedan solo en este equipo y van dentro del plano cuando lo guardas. No se envían a ningún lado.</p>
+      </div>
+      <div class="wz-step" data-step="6" hidden>
+        <p><b>Tu plano ya está listo.</b> <span id="wz-done-txt"></span> Para construirlo bien, estos son los siguientes pasos, en orden:</p>
+        <ol class="wz-steps">
+          <li><b>Certificado de parámetros urbanísticos</b>Se pide en tu municipalidad. Dice los retiros, la altura y los usos permitidos en tu lote (también si se permite un taller): revisa que coincidan con lo que pusiste aquí.</li>
+          <li><b>Estudio de suelos</b>Lo hace un ingeniero especialista. Dice qué tan firme es el terreno y cómo deben ser los cimientos (E.050).</li>
+          <li><b>Cálculo estructural</b>Lo hace un ingeniero civil colegiado, para <b>todos los pisos que piensas tener</b>, aunque hoy construyas uno: así los cimientos y las columnas de la etapa 1 ya aguantan los pisos de después.</li>
+          <li><b>Expediente y licencia de edificación</b>Un arquitecto firma los planos de arquitectura e ingenieros firman estructuras, instalaciones sanitarias y eléctricas. Una casa de hasta 120 m² construidos, única en el lote, suele ir por la Modalidad A de la Ley 29090, el trámite más simple.</li>
+          <li><b>Obra por etapas, con tu maestro</b>Sigue este plano etapa por etapa y guarda planos y licencia. Al terminar, la conformidad de obra y la declaratoria de fábrica permiten inscribir la casa en SUNARP.</li>
+        </ol>
+        <p class="hint">Puedes volver a ver estos pasos con el botón «Asistente de inicio».</p>
       </div>
     </div>
     <div class="wz-foot">
@@ -3823,7 +3842,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15d';
+const APP_VERSION = '2026-11-15e';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
@@ -3856,9 +3875,10 @@ function wzShowInfo(){
 function wzRender(){
   document.querySelectorAll('#wz .wz-step').forEach(d=> d.hidden = +d.dataset.step !== wzStep);
   document.querySelectorAll('#wz-dots i').forEach((d,i)=> d.classList.toggle('on', i <= wzStep));
-  el('wz-title').textContent = ['Empecemos tu casa','Las personas','El terreno','Las calles del lote','El futuro de la casa','Tus datos'][wzStep];
-  el('wz-back').hidden = wzStep === 0;
-  el('wz-next').textContent = wzStep === 0 ? 'Empezar' : wzStep === WZ_N - 1 ? 'Ver mi casa' : 'Siguiente';
+  el('wz-title').textContent = ['Empecemos tu casa','Las personas','El terreno','Las calles del lote','El futuro de la casa','Tus datos','Siguientes pasos para construir'][wzStep];
+  const done = wzStep === WZ_N; el('wz-dots').hidden = done; el('wz-skip').hidden = done;
+  el('wz-back').hidden = wzStep === 0 || done;
+  el('wz-next').textContent = done ? 'Ver mi casa' : wzStep === 0 ? 'Empezar' : wzStep === WZ_N - 1 ? 'Listo' : 'Siguiente';
   el('wz-p').textContent = wzP;
   const nd = wzDorm(wzP), up = nd > 3;
   el('wz-p-txt').innerHTML = `Para ${wzP} ${wzP==1?'persona':'personas'}: <b>${nd} dormitorios</b> (padres en el principal y hasta dos por dormitorio)${up ? `, ${SPLIT[nd][0]} abajo y ${SPLIT[nd][1]} en el 2.º piso` : ''}.${wzP <= 2 ? ' La vivienda VIS pide 2 dormitorios como mínimo: el segundo puede ser estudio.' : ''} Lo puedes cambiar después.`;
@@ -3889,18 +3909,20 @@ function wzFinish(){
   [['lote',4,12],['fondo',8,40],['rf',0,10],['rl',0,6],['rp',0,10]].forEach(([k,lo,hi])=>{ const x = num('wz-'+k, lo, hi); if(x != null) el(k).value = f2(x); });
   el('fr').value = fr; syncLotPre();
   el('ind').checked = ((document.querySelector('input[name="wz-ind"]:checked') || {}).value === 'si');
-  wzClose(); wzShowInfo();
+  wzShowInfo();
   const tal = (document.querySelector('input[name="wz-tal"]:checked') || {}).value || 'no'; el('tal').value = tal;
   const nd = wzDorm(wzP); let [a,b] = SPLIT[nd];
   if(tal === 'todo'){ a = 2; b = 2; } // la vivienda sube: 2 dormitorios arriba, encima de los ambientes del taller
   el('ndt').value = String(a + b); wantTotal = tal === 'todo' ? null : nd; el('nd').value = String(a); el('nd2').value = String(b);
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
+  el('wz-done-txt').textContent = `Lo dibujé para ${wzP} ${wzP==1?'persona':'personas'} en ${f2(parseFloat(el('lote').value))} × ${f2(parseFloat(el('fondo').value))} m; lo ves al cerrar esta ventana.`;
+  wzStep = WZ_N; wzRender();
 }
 el('wz-open').addEventListener('click', ()=>wzOpen());
 el('wz-skip').addEventListener('click', ()=>wzClose());
 el('wz-back').addEventListener('click', ()=>{ wzStep = Math.max(0, wzStep - 1); wzRender(); });
-el('wz-next').addEventListener('click', ()=>{ if(wzStep === WZ_N - 1) wzFinish(); else { wzStep++; wzRender(); } });
+el('wz-next').addEventListener('click', ()=>{ if(wzStep === WZ_N) wzClose(); else if(wzStep === WZ_N - 1) wzFinish(); else { wzStep++; wzRender(); } });
 el('wz-pm').addEventListener('click', ()=>{ wzP = Math.max(1, wzP - 1); wzRender(); });
 el('wz-pp').addEventListener('click', ()=>{ wzP = Math.min(12, wzP + 1); wzRender(); });
 document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.addEventListener('change', ()=>{ const f = r.value; if((f==='atr'||f==='tres') && parseFloat(el('wz-rp').value) < parseFloat(el('wz-rf').value)) el('wz-rp').value = el('wz-rf').value; wzRender(); }));
