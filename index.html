@@ -433,12 +433,15 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <li>La casa ocupa todo el frente del lote; el fondo es el mínimo que cumple, salvo en la «casa larga», que toma todo el fondo edificable. <span class="src">Diseño</span></li>
       <li>Planta de <b>dos crujías</b>: dormitorios a lo largo de una medianera; sala, cocina y baño en la otra. <span class="src">Diseño</span></li>
       <li>Cocina y baño forman un solo <b>núcleo húmedo</b>, para acortar tuberías; en el 2.º piso el baño va encima del de abajo. <span class="src">Diseño</span></li>
-      <li>El patio del fondo es a la vez <b>retiro posterior, lavandería y lugar de la escalera futura</b>. <span class="src">Diseño</span></li>
+      <li>El patio del fondo es a la vez <b>retiro posterior, lavandería y lugar de la escalera futura</b>. Los retiros frontal y posterior no son obligatorios: los fija el certificado de parámetros y pueden ser 0. <span class="src">Diseño + certificado de parámetros</span></li>
+      <li>Si no hay retiro posterior, la luz se concentra en un <b>patio interior</b> en el centro de la casa, que ilumina y ventila a sala, comedor, dormitorios y lavandería y aloja la escalera (opción «Escalera dentro de la casa»). <span class="src">Diseño</span></li>
+      <li>En el retiro frontal <b>no se construye escalera</b>, aunque la A.010 (art. 8.3 l) la permite en ampliaciones. <span class="src">Criterio del proyecto</span></li>
+      <li>La casa crece <b>primero en horizontal</b> (se completa el 1.er piso) y <b>luego en vertical</b>. <span class="src">Diseño</span></li>
       <li>El área techada se mide a eje de medianeras; los patios de luz no cuentan. <span class="src">A.010 art. 9.1 a</span></li>
     </ol>
 
     <h3>Estructura</h3>
-    <ol start="9">
+    <ol start="12">
       <li>Los muros y columnas del 2.º piso van <b>alineados</b> con los del 1.º: muros continuos de piso a piso. <span class="src">Manual</span></li>
       <li>La losa es igual en todos los pisos y ningún paño es más de <b>3 veces</b> más largo que ancho. <span class="src">Manual</span></li>
       <li>Muros portantes en las <b>dos direcciones</b> (a lo largo y a lo ancho). <span class="src">Manual + E.070</span></li>
@@ -453,24 +456,32 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     </ol>
 
     <h3>Uso y antropometría</h3>
-    <ol start="20">
+    <ol start="23">
       <li>Medidas libres mínimas: dormitorio <b>2.60 × 2.70</b> (cama de 1.40 + 0.60 de paso), sala-comedor <b>2.70 × 3.60</b>, cocina <b>1.50 × 1.80</b>, baño <b>1.30 × 1.80</b>; en la versión accesible, giro de 1.50 m. <span class="src">Panero y Zelnik, Neufert</span></li>
       <li>Puertas de 1.00 (ingreso), 0.80 (dormitorios y patio), 0.70 (baño); 0.90 en la versión accesible. Vano de 2.10 m de alto. Los mínimos de la norma son 0.90 para el ingreso, 0.80 para dormir, estar y cocinar, y 0.70 para el baño. <span class="src">A.020 art. 12.2 + A.010 art. 19</span></li>
       <li>Ventanas de 1.20 m de alto (alféizar a 0.90 y dintel a 2.10), corredizas (abren la mitad): iluminan ≥ 10 % y ventilan ≥ 5 % del piso. Como el alféizar queda bajo 1.00 m, los 10 cm de abajo van con vidrio fijo o baranda. <span class="src">A.020 art. 12.4 y 12.5 c + A.010 art. 38.2</span></li>
       <li>Pasajes y halls de al menos <b>0.90 m</b> libres. <span class="src">A.020 art. 13 + A.010 art. 20</span></li>
       <li>Las camas van con la cabecera contra un muro y apartadas del barrido de la puerta. <span class="src">Diseño</span></li>
-      <li>Un dormitorio sin fachada se ilumina por un <b>patio de luz</b> que deja al menos <b>2.00 m libres</b> frente a su ventana (1.80 m frente a la de la cocina). <span class="src">A.020 art. 11.4 a</span></li>
+      <li>Un dormitorio, sala o comedor sin fachada se ilumina por un <b>pozo de luz</b> que deja al menos <b>2.00 m libres</b> frente a su ventana; la cocina y el patio de servicio, por uno de <b>1.80 m</b>. Vale también para el patio del fondo cuando no es retiro. <span class="src">A.020 art. 11.4 a</span></li>
       <li>Parapetos de la azotea y muros de la terraza hacia los vecinos de <b>2.10 m</b>; baranda de 1.10 m en la azotea y de 1.00 m en terrazas, hacia la calle y el patio. <span class="src">A.020 art. 18.4 y 19.3 + A.010 art. 35</span></li>
     </ol>
 
     <h3>Cómo decide el generador</h3>
-    <ol start="26">
+    <ol start="29">
       <li>Entre todas las combinaciones en módulo de 25 cm elige la de <b>menor área techada</b> que pasa todas las verificaciones; cada aviso pesa como 4 m² más. <span class="src">Diseño</span></li>
       <li>1 dormitorio: el fondo del ala de dormitorios queda como comedor-estudio. 2 dormitorios: todo en planta baja. <span class="src">Diseño</span></li>
       <li>3 dormitorios en el 1.er piso: primero intenta <b>tres franjas</b>, luego la <b>casa larga</b> con patio de luz y, si nada entra, pasa uno al <b>2.º piso</b>. <span class="src">Diseño</span></li>
       <li>Los dormitorios del 2.º piso van <b>encima de los de abajo</b> (como máximo uno sobre cada uno); el resto del ala es terraza o estudio y lo demás, estar-hall con un baño sobre el de abajo. <span class="src">Manual + diseño</span></li>
       <li>La escalera al 2.º piso o a la azotea es exterior, en el patio, y la eliges: de un tramo, en L, en U o de caracol. Contrapaso ≤ 0.18 m, paso de 0.25 m, como máximo 17 pasos entre descansos y 0.90 m de ancho; la de caracol mide 1.60 m de diámetro para que el paso tenga 0.25 m a 0.50 m del eje. Llega a un <b>descanso</b> de 1.00 × 0.90 m pegado al muro posterior, frente al estar, y la puerta del 2.º piso abre sobre ese descanso. Lleva pasamanos a 1.00 m. <span class="src">A.010 art. 23 + A.020 art. 15.1 + diseño</span></li>
       <li>El suelo S3 se trata como blando: cimiento corrido de 0.60 × 1.00 m en vez de 0.40 × 0.80 m. <span class="src">Manual</span></li>
+    </ol>
+    <h3>Cómo decide el generador 2 (escalera dentro de la casa)</h3>
+    <ol start="35">
+      <li>Hay dos alas: la de dormitorios (más larga) y la de sala-comedor, cocina y baño. <span class="src">Diseño</span></li>
+      <li>Los dormitorios miden al menos <b>2.70 × 2.70 m</b> libres. <span class="src">Diseño</span></li>
+      <li>En el ala de dormitorios: el dormitorio 2 al frente, el <b>patio interior</b> y el dormitorio 1 al fondo, que toma luz y aire del patio. El patio mide lo mismo en el 1.er y el 2.º piso. <span class="src">Diseño + A.020 art. 11.4 a</span></li>
+      <li>La escalera va dentro del patio, pegada al eje B, al lado de la sala y el comedor, y deja un patio libre de <b>2.00 × 2.00 m</b>. Puede ser <b>de dos tramos</b> (descanso de 0.80 × 1.70 m), <b>de un tramo con tres pasos en abanico al inicio y al final</b> o <b>de caracol</b> metálica (pasos de 0.70 m). Contrapaso ≤ 0.18 m y paso de 0.25 m. <span class="src">A.010 art. 23 + A.020 art. 15.1 + diseño</span></li>
+      <li>Los dormitorios del 2.º piso van encima de los de abajo; el baño 2 sobre el baño. <span class="src">Manual + diseño</span></li>
     </ol>
   </section>
 
@@ -531,7 +542,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         <tr><td>A.020 art. 8.1 c</td><td>La vivienda progresiva parte de un módulo básico ampliable de 25 m² como mínimo.</td><td>Comprueba el área techada mínima (usa 35 m², el valor del anexo de vivienda de interés social, más exigente).</td></tr>
         <tr><td>A.020 art. 9.1</td><td>Altura libre mínima de 2.30 m entre piso terminado y cielo raso.</td><td>Los muros miden 2.40 m (24 hiladas), por encima del mínimo.</td></tr>
         <tr><td>A.020 art. 10</td><td>Las medidas de los ambientes salen del mobiliario y de la circulación, sin m² fijos.</td><td>Dibuja los muebles y fija medidas libres mínimas por antropometría (dormitorio 2.60 × 2.70, sala-comedor 2.70 × 3.60, cocina 1.50 × 1.80, baño 1.30 × 1.80).</td></tr>
-        <tr><td>A.020 art. 11.4 a</td><td>Pozo de luz de vivienda unifamiliar: 2.00 m libres frente a dormitorio, sala o comedor; 1.80 m frente a la cocina.</td><td>Verifica el patio de luz de la casa larga y solo genera pozos de 2.25 m entre ejes o más.</td></tr>
+        <tr><td>A.020 art. 11.4 a</td><td>Pozo de luz de vivienda unifamiliar: 2.00 m libres frente a dormitorio, sala o comedor; 1.80 m frente a la cocina.</td><td>Verifica el patio de luz de la casa larga, el patio interior con la escalera (generador 2) y el patio del fondo cuando no es retiro: 2.00 m frente a dormitorio, sala o comedor y 1.80 m frente a la cocina.</td></tr>
         <tr><td>A.020 art. 12.2</td><td>Puertas de 0.90 m en el ingreso, 0.80 m en dormitorios, estar y cocina, 0.70 m en baños; alto 2.10 m.</td><td>Usa 1.00 (ingreso), 0.80 (dormitorios y patio) y 0.70 (baño), todas de 2.10 m. Las puertas nunca barren un mueble.</td></tr>
         <tr><td>A.020 art. 12.4</td><td>Ventanas que iluminen al menos el 10 % y ventilen el 5 % del área del ambiente.</td><td>Calcula el vano de cada ambiente habitable y avisa si no llega.</td></tr>
         <tr><td>A.020 art. 12.5 c</td><td>Alféizar de 1.00 m como mínimo, o vidrio fijo o baranda debajo.</td><td>Ventanas con alféizar a 0.90 m y los 10 cm inferiores fijos.</td></tr>
@@ -619,6 +630,8 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Escalera dentro de la casa (generador 2)</b>: nueva opción «Dónde va la escalera» en Terreno. Con «Dentro de la casa» la planta tiene dos alas: la de dormitorios, más larga (dormitorio 2 al frente, <b>patio interior</b> y dormitorio 1 al fondo, que se ilumina por el patio), y la social (sala-comedor junto a la escalera, cocina frente al patio, hall y baño). La escalera va pegada al eje B, sube junto a la sala y el comedor, llega por una puerta al estar del 2.º piso y deja un <b>patio libre de 2.00 × 2.00 m</b>, igual en los dos pisos. Tres tipos: <b>de dos tramos</b> (descanso de 0.80 × 1.70 m), <b>de un tramo con tres pasos en abanico al inicio y al final</b> (la más angosta, entra en un lote de 6 m) y <b>de caracol</b> metálica (pasos de 0.70 m). Dormitorios de 2.70 × 2.70 m libres. Así no hace falta retiro posterior.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Retiros según el certificado</b>: el retiro frontal y el posterior pueden ser 0. Lo que queda al fondo sin retiro es un patio interior, y cada ventana que da a un patio se verifica como <b>pozo de luz</b>: 2.00 m libres frente a dormitorio, sala o comedor y 1.80 m frente a cocina y patio de servicio (A.020 art. 11.4 a). <b>La escalera ya no va nunca en el retiro frontal</b>: para independizar los pisos se pide entrada propia por la otra calle o por un pasaje lateral de 0.90 m. Nuevas verificaciones: <b>lote VIS</b> (DS 005-2025, art. 18: lote desde 66 m² y 5.50 m de frente, o lote reducido de 60 m² con casa de 2 pisos y 50 m² techados) y <b>crecimiento primero horizontal y luego vertical</b> (avisa si se sube al 2.º piso cuando todavía cabe un dormitorio abajo). El ochavo cita también la A.020 art. 17 (lotes en esquina).</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span>PREVI 1978 → 2003: <b>escaleras completas y delimitadas</b> (peldaños, contorno, caracoles y escaleras exteriores) y <b>muebles cerrados</b> (camas, mesas redondas, sillones, sanitarios) en los 11 casos; también las escaleras y trazos discontinuos que quedaban fuera del dibujo.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Plano para AutoCAD</b>: en Diseño Pro, el botón «Descargar plano CAD (.dxf → DWG)» baja la planta en metros y a escala real, con los dos pisos lado a lado si hay 2.º piso. Viene por capas: MUROS, TABIQUES, COLUMNAS, VENTANAS, PUERTAS, MUEBLES (si están visibles), COTAS, EJES, ESCALERA, CORTES, PISOS, TERRENO y TEXTOS. AutoCAD lo abre directamente y con «Guardar como» queda en DWG (el DWG es un formato cerrado de Autodesk, por eso se exporta en DXF).</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Acceso al patio según el nivel</b>: en el económico se sale por la cocina (lo más barato); desde el estándar, por un <b>pasillo de 0.90 m</b> junto a la cocina, separado con un tabique, y la cocina gana una ventana al patio. Si el frente no da para el pasillo y una cocina de 1.50 m, se queda por la cocina y la verificación dice cuánto falta. Se puede fijar a mano en «Acceso al patio».</span></li>
@@ -4353,7 +4366,7 @@ function render(){
   el('sis-hint').textContent = v.sis==='portante' ? 'Los muros de ladrillo King Kong cargan la losa y resisten el sismo; las columnas y vigas soleras solo los confinan. Es lo más económico en 1 y 2 pisos.' : 'Columnas y vigas cargan la losa; los muros son tabiques que se pueden mover. Más concreto y acero.';
   el('ndt').value = String(Math.min(6, Math.max(1, v.nd + v.nd2)));
   { const hasPz = r.typ === 'T3L' && r.rooms && r.rooms.pz, pz = hasPz ? r.rooms.pz : null;
-    el('pp-hint').innerHTML = hasPz ? `Este plano tiene un patio de luz de <b>${f2(v.a)} × ${f2(r.pp)} m</b> entre ejes (${f2(pz.cw)} × ${f2(pz.cd)} m libres, ${f1(Math.max(0,pz.cw*pz.cd))} m²) entre los dormitorios 1 y 2. Aquí eliges su largo; el ancho es la crujía de dormitorios, que se ajusta abajo.` : 'Este plano no tiene patio de luz: todos los ambientes dan a la calle o al patio posterior. Aparece en la casa larga (3 dormitorios en el 1.er piso en un lote angosto); el largo que elijas aquí se usará entonces.'; }
+    el('pp-hint').innerHTML = r.pi ? `Este plano tiene un <b>patio interior</b> de ${f2(v.a)} × ${f2(r.pp)} m entre ejes, con la escalera adentro, entre los dormitorios 2 y 1. Su largo lo fija la escalera; este selector no se usa aquí.` : hasPz ? `Este plano tiene un patio de luz de <b>${f2(v.a)} × ${f2(r.pp)} m</b> entre ejes (${f2(pz.cw)} × ${f2(pz.cd)} m libres, ${f1(Math.max(0,pz.cw*pz.cd))} m²) entre los dormitorios 1 y 2. Aquí eliges su largo; el ancho es la crujía de dormitorios, que se ajusta abajo.` : 'Este plano no tiene patio de luz: todos los ambientes dan a la calle o al patio posterior. Aparece en la casa larga (3 dormitorios en el 1.er piso en un lote angosto); el largo que elijas aquí se usará entonces.'; }
   el('tam-hint').textContent = v.tam === 'lote' ? `Si agrandas el lote (escribiendo las medidas o arrastrando los tiradores rojos de la planta), los ambientes crecen hacia el nivel ${NIV[nivel].toLowerCase()}; el nivel se cambia en la pestaña Cuadro de áreas.` : 'La planta es la más pequeña que cumple todo, sea cual sea el lote.';
   el('nd-hint').textContent = `${v.nd + v.nd2} dormitorios en total. ` + (v.nd===1 ? 'Abajo, el fondo del ala de dormitorios queda como comedor-estudio. ' : v.nd===3 ? 'Abajo la casa se alarga (tres franjas o casa larga con patio de luz). ' : '') + (v.nd2 ? `Arriba van ${v.nd2===1?'1 dormitorio':v.nd2+' dormitorios'} encima de los de abajo, con escalera exterior y descanso en el patio.` : 'Sin 2.º piso por ahora.');
   const nOk = r.checks.filter(c=>c.st==='ok').length, nBad = r.checks.filter(c=>c.st==='bad').length, nWarn = r.checks.length - nOk - nBad;
@@ -4607,7 +4620,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15l';
+const APP_VERSION = '2026-11-15m';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
