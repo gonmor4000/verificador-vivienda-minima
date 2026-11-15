@@ -558,6 +558,8 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos independientes</b>: nueva opción «Independizar los pisos en el futuro» (y pregunta en el asistente). La escalera va al <b>retiro frontal</b> con entrada propia desde la calle (A.010 art. 8.3 l): de un tramo junto a la fachada si no pasa sobre la puerta de la casa, si no de caracol; el descanso llega frente al estar del 2.º piso, que abre su puerta a la fachada. Si el retiro es corto, lo dice y deja la escalera en el patio.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Vivienda taller</b> (A.020 art. 4.1): opción «Taller o negocio en el 1.er piso», en una parte (la sala del frente pasa a taller o tienda) o en todo el piso (taller, depósito, atención, cocineta y baño del taller, sin camas, y la familia vive arriba). Verificaciones de dónde vive la familia, acceso sin cruzar el taller, zonificación, licencia y extintor. El asistente pregunta además el tamaño del terreno y muestra su área.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Asistente de inicio</b> al abrir la página: pregunta cuántas personas vivirán (y propone los dormitorios), la dirección y las medidas del lote, cuántas calles lo tocan y, al final y de forma opcional, nombre, correo y teléfono, que se quedan en el equipo y van dentro del plano guardado. Tiene botón <b>Pasar</b> en cada paso, se vuelve a abrir con «Asistente de inicio» y se puede desactivar.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Lotes en esquina, atravesantes y de tres frentes</b> (nuevo selector «Frentes del lote»): cada lado que da a una calle lleva su retiro (A.010 art. 8.1 a), con un retiro lateral propio; se dibujan la calle lateral y la posterior con su vereda, el <b>ochavo</b> de 3.00 m (A.010 art. 12) y un portón al patio. En esquina el eje D pasa a ser fachada y la sala gana una <b>ventana lateral</b>; Diseño Pro suma la elevación lateral y el 3D las calles. Nuevas verificaciones: retiro lateral, ochavo, fachadas y segundo ingreso, que permite subir al 2.º piso sin pasar por la casa.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span>Escalera de caracol: el descanso de llegada lleva ahora <b>dos guardacuerpos paralelos</b>, uno a cada lado, del muro al borde por donde se llega. Se ven en la planta, el 3D y la exportación a SketchUp.</span></li>
@@ -649,6 +651,8 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <div class="chk"><input type="checkbox" id="ter"><label for="ter">Terraza<br><span class="hint">En el 2.º piso sobre el dormitorio 2 o, si no, azotea transitable sobre el techo.</span></label></div>
       <div class="chk"><input type="checkbox" id="vol"><label for="vol">Volado hacia la calle<br><span class="hint">El 2.º piso sale 0.50 m sobre el retiro frontal (A.010 art. 13).</span></label></div>
       <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="auto">Automática: caracol si entra en el patio</option><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
+      <div class="ctl"><label for="tal">Taller o negocio en el 1.er piso</label><select id="tal"><option value="no">No</option><option value="parte">Sí, en una parte: la sala, al frente</option><option value="todo">Sí, todo el 1.er piso; la familia vive arriba</option></select><span class="hint" id="tal-hint">Vivienda taller (A.020 art. 4.1): la zonificación del lote tiene que permitir el uso y el taller necesita licencia de funcionamiento.</span></div>
+      <div class="chk"><input type="checkbox" id="ind"><label for="ind">Independizar los pisos en el futuro<br><span class="hint">La escalera va en el <b>retiro frontal</b>, con entrada propia desde la calle, para que el 2.º piso (y los que vengan) sea una vivienda aparte. La A.010 (art. 8.3 l) lo permite en ampliaciones de vivienda.</span></label></div>
       <div class="chk"><input type="checkbox" id="pmr"><label for="pmr">Hacer la vivienda accesible (opcional)<br><span class="hint">Giro de 1.50 m en cada ambiente, ba&ntilde;o accesible y puertas de 0.90 m. La A.120 (RM 075-2023) solo lo exige en las áreas comunes de edificios (art. 28); dentro de una casa unifamiliar es una decisión de diseño.</span></label></div>
       <button type="button" id="gen" class="gen">Generar plano para este terreno</button>
       <div class="inline" style="margin-top:8px"><button type="button" id="save-plan">Guardar plano</button><button type="button" id="open-plan">Abrir plano</button></div>
@@ -713,10 +717,10 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 
 <dialog class="wz" id="wz" aria-labelledby="wz-title">
   <form method="dialog" class="wz-in" id="wz-form">
-    <div class="wz-head"><h2 id="wz-title">Empecemos tu casa</h2><div class="wz-dots" id="wz-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></div></div>
+    <div class="wz-head"><h2 id="wz-title">Empecemos tu casa</h2><div class="wz-dots" id="wz-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="wz-body">
       <div class="wz-step" data-step="0">
-        <p>Te hago cuatro preguntas cortas y dibujo una casa que cumple el RNE en tu lote: cuántos viven, dónde está el lote, cuántas calles lo tocan y, al final, si quieres, tus datos.</p>
+        <p>Te hago cinco preguntas cortas y dibujo una casa que cumple el RNE en tu lote: cuántos viven, dónde está el lote, cuántas calles lo tocan, si piensas independizar los pisos o tener un taller y, al final, si quieres, tus datos.</p>
         <p class="hint">Si solo quieres mirar, pulsa <b>Pasar</b> y se abre la propuesta de ejemplo. Puedes volver aquí con el botón «Asistente de inicio» de arriba.</p>
       </div>
       <div class="wz-step" data-step="1" hidden>
@@ -728,8 +732,10 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         <p><b>¿Dónde está el lote?</b></p>
         <label>Dirección<input type="text" id="wz-dir" autocomplete="street-address" placeholder="Ej.: Mz. B Lt. 12, AA. HH. Las Flores"></label>
         <label>Distrito y provincia<input type="text" id="wz-dist" placeholder="Ej.: Villa El Salvador, Lima"></label>
-        <label>Tamaño del lote<select id="wz-lotpre"></select></label>
+        <p><b>¿De qué tamaño es el terreno?</b></p>
+        <label>Tamaño típico<select id="wz-lotpre"></select></label>
         <div class="inline"><label>Frente (m)<input type="number" id="wz-lote" min="4" max="12" step="0.05"></label><label>Fondo (m)<input type="number" id="wz-fondo" min="8" max="40" step="0.05"></label></div>
+        <p class="hint" id="wz-area"></p>
         <p class="hint">La dirección solo sirve para identificar tu proyecto; las medidas son las del título o la constancia de posesión.</p>
       </div>
       <div class="wz-step" data-step="3" hidden>
@@ -744,6 +750,21 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         <p class="hint" id="wz-fr-txt">Los retiros salen del certificado de parámetros urbanísticos de la municipalidad. Cada lado que da a una calle lleva retiro frontal (A.010 art. 8.1 a).</p>
       </div>
       <div class="wz-step" data-step="4" hidden>
+        <p><b>¿Piensas independizar los pisos en el futuro?</b></p>
+        <p class="hint">Por ejemplo, que el 2.º piso sea para un hijo que forma su familia o para alquilar. Si es así, conviene dejar desde ahora la <b>escalera en el retiro frontal</b>, con entrada propia desde la calle, para seguir subiéndola cuando crezcan los pisos.</p>
+        <div class="wz-fr" role="radiogroup" aria-label="Independizar los pisos">
+          <label><input type="radio" name="wz-ind" value="si"><span>Sí, quiero esa opción<br><span class="hint">escalera al frente, en el retiro</span></span></label>
+          <label><input type="radio" name="wz-ind" value="no" checked><span>No, o todavía no sé<br><span class="hint">escalera en el patio</span></span></label>
+        </div>
+        <p class="hint">La A.010 (art. 8.3 l) permite la escalera en el retiro frontal cuando es ampliación de vivienda. Lo puedes cambiar después en Terreno.</p>
+        <p style="margin-top:6px"><b>¿Tendrás un taller o negocio en el 1.er piso?</b></p>
+        <div class="wz-fr" role="radiogroup" aria-label="Taller en el primer piso">
+          <label><input type="radio" name="wz-tal" value="no" checked><span>No<br><span class="hint">todo el 1.er piso es casa</span></span></label>
+          <label><input type="radio" name="wz-tal" value="parte"><span>Sí, una parte<br><span class="hint">la sala del frente es taller o tienda</span></span></label>
+          <label><input type="radio" name="wz-tal" value="todo"><span>Sí, todo el 1.er piso<br><span class="hint">la familia vive arriba</span></span></label>
+        </div>
+      </div>
+      <div class="wz-step" data-step="5" hidden>
         <p><b>Tus datos</b> <span class="hint">(opcional)</span></p>
         <label>Nombre<input type="text" id="wz-nom" autocomplete="name"></label>
         <label>Correo<input type="email" id="wz-mail" autocomplete="email"></label>
@@ -764,11 +785,11 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 (function(){
 let T = 0.13; const H = 2.40, M = 0.25;
 const presets = {
-  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00},
-  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto',fr:'uno',rl:1.00},
-  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00}
+  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'},
+  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'},
+  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'}
 };
-const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc'];
+const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc','ind','tal'];
 const el = id => document.getElementById(id);
 const f2 = x => x.toFixed(2);
 const f1 = x => x.toFixed(1);
@@ -784,7 +805,7 @@ function read(){
   ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','rl','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
   v.fr = el('fr').value || 'uno';
   v.nd = parseInt(el('nd').value,10)||2; v.nd2 = parseInt(el('nd2').value,10)||0; v.pl = el('pl').value; v.pp = parseFloat(el('pp').value)||1.25; v.ty = el('ty').value; v.sis = el('sis').value; v.ap = el('ap').value; v.z = parseFloat(el('z').value); v.s = parseFloat(el('s').value); v.n = parseInt(el('n').value,10);
-  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto';
+  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto'; v.ind = el('ind').checked; v.tal = el('tal').value || 'no';
   return v;
 }
 
@@ -797,7 +818,7 @@ function terVol(v, W, built2, add, up){
   const terrPlan = built2 && up && up.free > 0;
   if(v.ter){
     if(terrPlan) add(G,'Terraza en el 2.º piso','ok', `En el 2.º piso, sobre el dormitorio que no se repite arriba, queda una terraza sin techar con baranda de 1.00 m hacia la calle o el patio (A.010 art. 35 a) y muro de 2.10 m hacia el vecino (A.020 art. 18.4 y 19.3).`);
-    else add(G,'Azotea-terraza','ok', `Azotea transitable sobre el último techo, a la que se llega por la escalera del patio: parapetos de <b>2.10 m</b> hacia los vecinos (A.020 art. 18.4, que en vivienda pide más que los 1.80 m de la A.010 art. 14.3), baranda de <b>1.10 m</b> hacia la calle y el patio (A.020 art. 18.4 y A.010 art. 35 a) y techo de como máximo el 50 % del área, retirado 2.50 m de la fachada (A.010 art. 14.2).`);
+    else add(G,'Azotea-terraza','ok', `Azotea transitable sobre el último techo, a la que se llega por la escalera exterior: parapetos de <b>2.10 m</b> hacia los vecinos (A.020 art. 18.4, que en vivienda pide más que los 1.80 m de la A.010 art. 14.3), baranda de <b>1.10 m</b> hacia la calle y el patio (A.020 art. 18.4 y A.010 art. 35 a) y techo de como máximo el 50 % del área, retirado 2.50 m de la fachada (A.010 art. 14.2).`);
   } else if(terrPlan) add(G,'Sin terraza','ok', `En el 2.º piso, sobre el dormitorio que no se repite arriba, va un estudio techado.`);
   if(v.vol){
     const ok = v.rf >= 0.50 - 1e-6;
@@ -1397,7 +1418,7 @@ function draw(r){
   if(vd>0) g += `<text x="${XL(L/2)}" y="${(YL(0)+YL(-vd))/2+4}" text-anchor="middle" font-size="11" fill="var(--ink)">Vereda ${f2(vd)} m</text>`;
   g += `<text x="${XL(L/2)}" y="${YL(-vd)+18}" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--muted)">Calle</text>`;
   if(v.rf>0){ g += `<rect x="${XL(0)}" y="${YL(v.rf)}" width="${L*s}" height="${v.rf*s}" fill="var(--ok-soft)"/>`;
-    g += `<text x="${XL(L/2)}" y="${(YL(0)+YL(v.rf))/2+4}" text-anchor="middle" font-size="11" fill="var(--ok)">Retiro frontal ${f2(v.rf)} m</text>`; }
+    { const sf = r.stair && r.stair.front, lx = sf ? (r.stair.box.x0 > L/2 ? L*0.25 : L*0.75) : L/2; g += `<text x="${XL(lx)}" y="${(YL(0)+YL(v.rf))/2+4}" text-anchor="middle" font-size="11" fill="var(--ok)">Retiro frontal ${f2(v.rf)} m</text>`; } }
   const patioY0 = v.rf + D + T, patio = F - patioY0;
   // patio-lavandería = retiro posterior: todo el fondo libre es un solo espacio; la línea punteada marca el mínimo exigido
   if(patio > 0.05){ g += `<rect x="${XL(0)}" y="${YL(F)}" width="${L*s}" height="${patio*s}" fill="var(--ok-soft)"/>`;
@@ -1664,6 +1685,35 @@ function makeStair(type, lx0, lx1, y0, y1, W, patio0, nR, H2, nt){
   st.vol = st.treads.reduce((s,t)=>s + polyA(t.poly)*(0.15*1.15 + cr/2),0) + st.lands.reduce((s,l)=>s + (l.x1-l.x0)*(l.y1-l.y0)*0.15,0);
   return st;
 }
+// Escalera en el retiro frontal (pisos independientes, A.010 art. 8.3 l): las mismas escaleras mínimas, armadas
+// como en el patio y reflejadas hacia la calle. Llega a un descanso frente al estar del 2.º piso y no pasa sobre la puerta de la casa.
+function frontStair(v, up, W, nR, H2){
+  const eps = 1e-6, segs = Object.values(up.rooms).filter(q=>q.grp==='estar' && Math.abs(q.y0)<eps).map(q=>[q.x0,q.x1]).sort((a,b)=>(b[1]-b[0])-(a[1]-a[0]));
+  if(!segs.length) return {why:'el 2.º piso no tiene un estar que dé a la fachada'};
+  const [s0,s1] = segs[0], y0 = T/2 + 0.02, y1 = y0 + 0.90, door = [v.a + 0.30, v.a + 1.30];
+  const mirror = st => { const fy = y => -y;
+    st.treads.forEach(t=>{ t.poly = t.poly.map(([x,y])=>[x,fy(y)]); if(t.sec) t.sec = {...t.sec, cy:fy(t.sec.cy), t0:-t.sec.t0, t1:-t.sec.t1}; });
+    st.lands.forEach(l=>{ const a = fy(l.y1), b = fy(l.y0); l.y0 = a; l.y1 = b; });
+    st.path = st.path.map(([x,y])=>[x,fy(y)]);
+    if(st.landRails) st.landRails = st.landRails.map(sg=>sg.map(([x,y])=>[x,fy(y)]));
+    if(st.spiral) st.spiral = {...st.spiral, cy:fy(st.spiral.cy)};
+    st.box = {x0:st.box.x0, x1:st.box.x1, y0:fy(st.box.y1), y1:fy(st.box.y0)}; st.ry1 = st.box.y1;
+    st.front = true; st.axis = 'f'; st.labTop = false; return st; };
+  // el paso por la puerta de la casa necesita 2.10 m libres bajo la escalera
+  const blocksDoor = st => st.treads.some(t=>{ const xs = t.poly.map(p=>p[0]); return t.z < 2.10 + 0.20 && Math.max(...xs) > door[0] - 0.05 && Math.min(...xs) < door[1] + 0.05; });
+  const L = [s0 + T/2 + 0.02, s0 + T/2 + 1.02], R = [s1 - T/2 - 1.02, s1 - T/2 - 0.02];
+  const cands = [];
+  for(const type of ['recta','caracol']) for(const [lx0,lx1] of [R, L]){
+    if(lx1 - lx0 < 0.90 - eps || lx0 < -eps) continue;
+    const st = makeStair(type, lx0, lx1, y0, y1, W, v.rf, nR, H2, null); if(!st) continue;
+    // en el retiro no hace falta el paso de 0.60 junto a la escalera que se deja en el patio: basta con que entre hasta el lindero
+    if(st.spiral){ st.need = 0.02 + st.gap + 2*st.spiral.R + 0.05; st.fits = v.rf >= st.need - 1e-6; }
+    mirror(st); st.blocks = blocksDoor(st); cands.push(st); }
+  const ok = cands.filter(q=>q.fits && !q.blocks && q.maxT <= 17);
+  if(ok.length) return {st: ok[0]};
+  const need = Math.min(...cands.filter(q=>!q.blocks).map(q=>q.need).concat([9]));
+  return {why: cands.some(q=>!q.blocks) ? `el retiro frontal de ${f2(v.rf)} m es corto: la escalera pide ${f2(need)} m` : 'en este frente la escalera tendría que pasar sobre la puerta de la casa'};
+}
 function etapa2(v, rooms, W, D, hL, add, gross){
   const nd2 = v.nd2 || 0;
   const slots = ['d1','d2','d3'].filter(k=>rooms[k]);
@@ -1710,7 +1760,14 @@ function etapa2(v, rooms, W, D, hL, add, gross){
       } else if(want === 'auto') stair.auto = true;
     }
   }
+  let frontWhy = null;
+  if(v.ind){ const fs = frontStair(v, up, W, nR, H2); if(fs.st){ fs.st.auto = false; stair = fs.st; } else frontWhy = fs.why; }
   if(stair) stair.built = nd2 > 0;
+  { const G = 'Pisos independientes';
+    if(v.ind && stair && stair.front) add(G,'Escalera en el retiro frontal', 'ok', `Escalera ${ESC_N[stair.type]} exterior en el retiro frontal, con entrada propia desde la calle: el 2.º piso puede ser una vivienda aparte sin pasar por la casa, y la escalera se prolonga cuando se construyan más pisos. La A.010 (art. 8.3 l) permite escaleras en el retiro frontal en ampliaciones de vivienda. <b>${stair.nR}</b> contrapasos de ${f2(stair.cr)} m, pasos de 0.25 m y 0.90 m de ancho (A.010 art. 23 y A.020 art. 15.1); el descanso llega frente al estar del 2.º piso${stair.type==='recta' ? ' y el tramo sube junto a la fachada sin tapar la puerta de la casa (2.10 m libres)' : ''}.`);
+    else if(v.ind) add(G,'Escalera en el retiro frontal', 'bad', `Pediste pisos independientes, pero ${frontWhy || 'no hay dónde llegar'}. Se deja la escalera en el patio${isEsq(v) || isAtr(v) ? ', que con el portón de la otra calle también da entrada propia al 2.º piso' : ''}. Opciones: un retiro frontal más hondo (la de caracol pide unos 1.80 m) o un frente más ancho para la de un tramo.`);
+    if(v.ind && stair && stair.front && v.vol) add(G,'Volado y escalera', 'warn', `El volado de 0.50 m queda encima del descanso de la escalera: hay que retirarlo en ese tramo o llevar el descanso al nivel del volado.`);
+    if(v.ind) add(G,'Independizar de verdad', 'ok', `Además de la escalera: medidores de luz y agua aparte, una cocineta arriba y, para venderlo o hipotecarlo por separado, licencia de ampliación (Ley 29090), reglamento interno e independización en SUNARP.`); }
   const patio = v.fondo - v.rf - D - T;
   let gross2 = 0;
   if(nd2 > 0){
@@ -1721,7 +1778,7 @@ function etapa2(v, rooms, W, D, hL, add, gross){
     add(G,'Dormitorios en el 2.º piso', fits ? 'ok':'bad', fits ? `${nd2===1?'El dormitorio va':'Los '+nd2+' dormitorios van'} exactamente encima de los dormitorios de abajo: mismos ejes, muros alineados de piso a piso y la misma losa (manual).${up.free?` Sobre el resto del ala queda ${v.ter?'una terraza':'un estudio'}.`:''}` : `Arriba solo caben <b>${slots.length}</b> dormitorios, uno sobre cada dormitorio de abajo, para que los muros queden alineados.`);
     { const okE = stair && stair.fits && stair.maxT <= 17, tN = stair ? ESC_N[stair.type] : '';
       const extra = stair ? (stair.type==='caracol' ? ` Caracol de ${f2(2*stair.spiral.R)} m de diámetro con pasos de 0.25 a 0.50 m del eje: la A.020 (art. 15.1 b) admite el caracol en vivienda si el paso tiene 0.25 m a 0.50 m del eje.` : stair.type==='U' ? ' Dos tramos paralelos al muro posterior con un descanso de media vuelta de 0.90 × 1.80 m.' : stair.type==='L' ? ' Un tramo desde el patio hacia el muro posterior, un descanso de esquina de 0.90 × 0.90 m y otro tramo pegado al muro.' : (stair.axis==='y' ? ' Perpendicular al muro posterior porque a lo ancho no entra.' : stair.axis==='n' ? ' Baja por el patio del escalón, pegada al muro del eje B, y gira al descanso: así casi no ocupa el retiro posterior.' : ' Pegada al muro posterior.')) : '';
-      add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra en el patio: se usa la ${ESC_N[stair.type]}, que sí entra. ` : stair.auto ? `Elegida sola entre las mínimas (caracol, un tramo, en U, en L): la primera que entra en el patio. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23.2), ancho de 0.90 m (A.020 art. 15.1 a), un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso, y pasamanos a 1.00 m en el lado abierto (A.020 art. 15.1 c).${extra}${stair.maxT > 17 ? ` <b>Un tramo tiene ${stair.maxT} pasos: la A.010 (art. 23.2 a) permite 17 como máximo entre descansos.</b>` : ''}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m. Ninguna de las mínimas entra (de un tramo pegada al muro: 1.80 m de fondo pero ${f2(run + 1.0)} m de muro libre a un lado del descanso; caracol: 2.22 m; en U o en L: 2.72 m). Opciones: un patio más hondo (menos fondo construido), una crujía de dormitorios más corta para que el tramo baje por el escalón (${f2(run + 0.10)} m de escalón), o la escalera en el retiro frontal, que la A.010 (art. 8.3 l) permite cuando es ampliación de vivienda.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
+      if(!(stair && stair.front)) add(G,'Escalera', okE ? 'ok':'bad', stair ? (stair.fallback ? `La escalera ${ESC_N[stair.fallback]} no entra en el patio: se usa la ${ESC_N[stair.type]}, que sí entra. ` : stair.auto ? `Elegida sola entre las mínimas (caracol, un tramo, en U, en L): la primera que entra en el patio. ` : '') + `Escalera ${tN} exterior en el patio: <b>${nR}</b> contrapasos de ${f2(stair.cr)} m y pasos de 0.25 m (A.010 art. 23.2), ancho de 0.90 m (A.020 art. 15.1 a), un descanso de ${f2(stair.lx1-stair.lx0)} × 0.90 m donde llega, frente a la puerta del 2.º piso, y pasamanos a 1.00 m en el lado abierto (A.020 art. 15.1 c).${extra}${stair.maxT > 17 ? ` <b>Un tramo tiene ${stair.maxT} pasos: la A.010 (art. 23.2 a) permite 17 como máximo entre descansos.</b>` : ''}${stair.fits ? '' : ` El patio de ${f2(patio)} m no deja 0.90 m de paso junto a la escalera: necesita ${f2(stair.need)} m. Ninguna de las mínimas entra (de un tramo pegada al muro: 1.80 m de fondo pero ${f2(run + 1.0)} m de muro libre a un lado del descanso; caracol: 2.22 m; en U o en L: 2.72 m). Opciones: un patio más hondo (menos fondo construido), una crujía de dormitorios más corta para que el tramo baje por el escalón (${f2(run + 0.10)} m de escalón), o la escalera en el retiro frontal, que la A.010 (art. 8.3 l) permite cuando es ampliación de vivienda.`}` : `No hay un tramo libre del muro posterior que dé al estar para poner el descanso y la puerta.`); }
     if(v.n < 2) add(G,'Pisos para el sismo', 'warn', `Con dormitorios en el 2.º piso la densidad de muros se verifica para 2 pisos.`);
     add(G,'Baño 2', 'ok', `Sobre el baño del 1.er piso: mismas montantes y desagües.`);
   }
@@ -1758,7 +1815,7 @@ function draw2(r){
   if(!r.gross2 || !up){ box.innerHTML = ''; el('p2').hidden = true; return; }
   el('p2').hidden = false;
   const vo = v.vol && v.rf >= 0.5 ? 0.50 : 0;
-  const ext = st ? Math.max(1.4, st.box.y1 - D + 0.6) : 1.4;
+  const ext = st && !st.front ? Math.max(1.4, st.box.y1 - D + 0.6) : 1.4;
   const pad = 40, s = Math.min(520/(W+1.4), 34);
   const X = x => pad + x*s, Y = y => pad + (D + ext - y)*s;
   const tw = Math.max(3, T*s), op = v.sis==='portico' ? .55 : 1, eps = 1e-6;
@@ -1786,7 +1843,7 @@ function draw2(r){
   R.forEach(([k,q])=>{
     if(q.sky) return;
     const isDorm = q.grp.startsWith('d') || (q.grp.startsWith('e') && q.grp !== 'estar');
-    if(!q.ter && Math.abs(q.y0)<eps && (isDorm || q.grp==='estar')){ const L = q.x1-q.x0-T, ww = Math.min(1.5, L-0.6); if(ww>0.4){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,yf,c+ww/2,yf,'win']); } }
+    if(!q.ter && Math.abs(q.y0)<eps && (isDorm || q.grp==='estar')){ let a0 = q.x0, a1 = q.x1; if(st && st.front && q.grp==='estar' && st.lx1 > a0 && st.lx0 < a1){ if(st.lx0 - a0 >= a1 - st.lx1) a1 = st.lx0 - 0.05; else a0 = st.lx1 + 0.05; } const L = a1-a0-T, ww = Math.min(1.5, L-0.6); if(ww>0.4){ const c = (a0+a1)/2; opens.push([c-ww/2,yf,c+ww/2,yf,'win']); } }
     if(!q.ter && Math.abs(q.y1-rearY(q.x0))<eps && (isDorm || q.wet)){ const L = q.x1-q.x0-T, ww = q.wet ? 0.5 : Math.min(1.2, L-0.6); if(ww>0.3){ const c = (q.x0+q.x1)/2; opens.push([c-ww/2,q.y1,c+ww/2,q.y1,'win']); } }
     if(q.grp==='estar') return;
     // ventana al patio de luz
@@ -1803,7 +1860,8 @@ function draw2(r){
       else { opens.push([t0,best.y,t1,best.y,'door']); doors.push([t1, best.y + best.ny*T/2, -1,0, 0,best.ny, t1-t0]); }
     }
   });
-  if(st){ const d0 = st.lx0 + 0.05, d1 = Math.min(st.lx1 - 0.05, d0 + dW); opens.push([d0,D,d1,D,'door']); doors.push([d0, D - T/2, 1,0, 0,-1, d1-d0]); }
+  if(st && st.front){ const d0 = st.lx0 + 0.05, d1 = Math.min(st.lx1 - 0.05, d0 + dW); opens.push([d0,yf,d1,yf,'door']); doors.push([d0, yf + T/2, 1,0, 0,1, d1-d0]); }
+  else if(st){ const d0 = st.lx0 + 0.05, d1 = Math.min(st.lx1 - 0.05, d0 + dW); opens.push([d0,D,d1,D,'door']); doors.push([d0, D - T/2, 1,0, 0,-1, d1-d0]); }
   // dibujar muros con sus aberturas
   walls.forEach(([x1,y1,x2,y2_,kind])=>{
     const hor = Math.abs(y2_-y1)<eps, L = hor ? x2-x1 : y2_-y1;
@@ -1833,7 +1891,7 @@ function draw2(r){
     g += `<text x="${cx}" y="${cy-2}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="${fs}" fill="${q.sky||q.ter?'var(--ok)':'var(--ink)'}">${q.n}</text>`;
     if(!q.sky) g += `<text x="${cx}" y="${cy+14}" text-anchor="middle" font-family="var(--f-mono)" font-size="${fs-1.5}" fill="var(--muted)">${q.ter?'sin techar':f1(A)+' m²'}</text>`; });
   g += `<text x="${X(W/2)}" y="${Y(yf)+26}" text-anchor="middle" font-size="10.5" fill="var(--muted)">fachada</text>`;
-  const vw = Math.round(2*pad + W*s + 50), vh = Math.round(Y(-0.9) + 20);
+  const vw = Math.round(2*pad + W*s + 50), vh = Math.round(Y(Math.min(-0.9, st && st.front ? st.box.y0 - 0.6 : 0)) + 20);
   box.innerHTML = `<svg viewBox="0 0 ${vw} ${vh}" role="img" aria-label="Planta del segundo piso">${g}</svg>`;
 }
 
@@ -1955,7 +2013,7 @@ function furnWet(r, X, Y, s){
   const R = r.rooms, co = R.co, W = r.W; if(!co) return '';
   FURN_HITS.length = 0;
   const P = swingPts(G3.d1);
-  let g = G3.beds.map(b=> bedSvg(placeBed(b, P), X, Y, s)).join('');
+  let g = (r.v.tal === 'todo' ? [] : G3.beds).map(b=> bedSvg(placeBed(b, P), X, Y, s)).join('');
   g += bathSvg(R.ba, G3.d1, X, Y, s);
   const strip = (r.typ === 'T3' || r.typ === 'T3L') ? [W-T/2-0.60, co.y0+T/2, W-T/2, co.y1-T/2] : [co.x0+T/2, co.y0+T/2, co.x0+T/2+0.60, co.y1-T/2];
   g += kitchenSvg(co, strip, X, Y, s);
@@ -3505,10 +3563,27 @@ function proRender(r){
 el('pro-furn').checked = proFurn; el('pro-furn').addEventListener('change', e=>{ proFurn = e.target.checked; try { localStorage.setItem('vvm-pro-muebles', proFurn ? '1' : '0'); } catch(_){} if(lastR) proPlan(lastR); });
 document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.addEventListener('click', ()=>{ if(b.disabled) return; proFloor = +b.dataset.pp; if(lastR) proRender(lastR); }));
 
+// Vivienda taller (A.020 art. 4.1): el taller en la sala (al frente) o en todo el 1.er piso, con la vivienda arriba
+const TAL_N = {d1:'Taller', d2:'Depósito', d3:'Depósito 2', sc:'Taller · atención', co:'Cocineta', ba:'Baño del taller', pa:'Pasaje'};
+function tallerApply(r, v){
+  if(!v.tal || v.tal === 'no') return;
+  const R = r.rooms, G = 'Vivienda taller', add = (t, st, d) => r.checks.push({g:G, t, st, d});
+  if(v.tal === 'parte'){
+    if(R.sc) R.sc.n = 'Taller / tienda';
+    add('Taller al frente', 'ok', `La sala-comedor del 1.er piso, que da a la calle, pasa a ser <b>taller o tienda</b> (${R.sc ? f1(R.sc.area) + ' m²' : ''}) con la puerta de la calle. Los dormitorios, la cocina y el baño siguen siendo de la casa: es una <b>vivienda taller</b> (A.020 art. 4.1).`);
+    add('Dónde vive la familia', r.gross2 > 0 ? 'ok' : 'warn', r.gross2 > 0 ? 'La sala de la familia es el estar del 2.º piso.' : 'Sin 2.º piso la familia se queda sin sala mientras el taller ocupe la del 1.er piso: conviene subir la sala en la etapa 3.');
+  } else {
+    for(const k in R) if(TAL_N[k]) R[k].n = TAL_N[k];
+    add('Todo el 1.er piso es taller', 'ok', `Los ambientes del 1.er piso se usan como taller, depósito, atención, cocineta y baño del taller, sin camas. Es una <b>vivienda taller</b> (A.020 art. 4.1): el taller abajo y la vivienda arriba.`);
+    add('La vivienda en el 2.º piso', r.gross2 > 0 ? (v.nd2 >= 2 ? 'warn' : 'bad') : 'bad', r.gross2 > 0 ? `Arriba hay ${v.nd2} ${v.nd2===1?'dormitorio':'dormitorios'}, el estar y el baño 2, pero <b>falta la cocina</b>: va una cocineta en el estar, con sus propias montantes. ${v.nd + v.nd2 > 0 && v.nd2 < 2 ? 'La VIS pide 2 dormitorios.' : ''}` : `Si todo el 1.er piso es taller, la familia vive en el 2.º piso: elige dormitorios en el 2.º piso.`);
+    add('Acceso a la vivienda', v.ind && r.stair && r.stair.front ? 'ok' : 'warn', v.ind && r.stair && r.stair.front ? 'La escalera del retiro frontal sube a la vivienda sin pasar por el taller.' : 'Para llegar arriba sin cruzar el taller, marca «Independizar los pisos»: la escalera va al retiro frontal con entrada propia.');
+  }
+  add('Permisos y seguridad', 'ok', `La zonificación del lote debe ser compatible con el taller (certificado de parámetros), con licencia de funcionamiento (Ley 28976) e inspección de seguridad (ITSE); en el área de taller va un extintor (A.020, cuadro de seguridad: NTP 350.043-1).`);
+}
 function render(){
   const v = read();
   ['a','b','d','ddr','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
-  const r = compute(v);
+  const r = compute(v); tallerApply(r, v);
   draw(r); draw2(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
   try { relRender(r); } catch(e){ console.error('relaciones', e); }
@@ -3675,7 +3750,7 @@ function applyPlan(text, flname){
     try {
       const data = JSON.parse(text);
       if(!data || data.app !== 'verificador-vivienda-minima' || !data.valores) throw new Error('formato');
-      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
+      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='ind') el('ind').checked = false; if(k==='tal') el('tal').value = 'no'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
       if(data.cliente){ try { localStorage.setItem('vvm-cliente', JSON.stringify(data.cliente)); } catch(e){} wzShowInfo(); }
       el('ppm').value = data.valores.ppm || 'auto'; if(!el('ppm').value) el('ppm').value = 'auto';
       if(NIV[data.nivel]){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
@@ -3692,7 +3767,7 @@ el('ppm').addEventListener('change', ()=>{ if(el('ppm').value !== 'auto') el('pp
 el('gen').addEventListener('click', ()=>{ el('gen-msg').textContent = 'Buscando…'; setTimeout(generate, 30); });
 
 // Los datos del terreno y del programa regeneran la planta solos; las cotas entre ejes solo redibujan.
-const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc'];
+const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc','ind'];
 let genTimer = null;
 const regen = () => {
   if(el('nd2').value!=='0' && parseInt(el('n').value,10) < 2) el('n').value = '2';
@@ -3745,7 +3820,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15b';
+const APP_VERSION = '2026-11-15c';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
@@ -3763,7 +3838,7 @@ el('upd-btn').addEventListener('click', async ()=>{
   location.replace(location.pathname + '?v=' + Date.now());
 });
 // ---------- Asistente de inicio: personas, dirección, frentes del lote y datos (todo se puede pasar) ----------
-const WZ_N = 5;
+const WZ_N = 6;
 let wzStep = 0, wzP = 4;
 const wzCli = () => { try { return JSON.parse(localStorage.getItem('vvm-cliente') || 'null') || {}; } catch(e){ return {}; } };
 // dormitorios: padres en el principal y hasta 2 por dormitorio secundario; la VIS pide 2 como mínimo
@@ -3778,13 +3853,14 @@ function wzShowInfo(){
 function wzRender(){
   document.querySelectorAll('#wz .wz-step').forEach(d=> d.hidden = +d.dataset.step !== wzStep);
   document.querySelectorAll('#wz-dots i').forEach((d,i)=> d.classList.toggle('on', i <= wzStep));
-  el('wz-title').textContent = ['Empecemos tu casa','Las personas','El lote','Las calles del lote','Tus datos'][wzStep];
+  el('wz-title').textContent = ['Empecemos tu casa','Las personas','El terreno','Las calles del lote','El futuro de la casa','Tus datos'][wzStep];
   el('wz-back').hidden = wzStep === 0;
   el('wz-next').textContent = wzStep === 0 ? 'Empezar' : wzStep === WZ_N - 1 ? 'Ver mi casa' : 'Siguiente';
   el('wz-p').textContent = wzP;
   const nd = wzDorm(wzP), up = nd > 3;
   el('wz-p-txt').innerHTML = `Para ${wzP} ${wzP==1?'persona':'personas'}: <b>${nd} dormitorios</b> (padres en el principal y hasta dos por dormitorio)${up ? `, ${SPLIT[nd][0]} abajo y ${SPLIT[nd][1]} en el 2.º piso` : ''}.${wzP <= 2 ? ' La vivienda VIS pide 2 dormitorios como mínimo: el segundo puede ser estudio.' : ''} Lo puedes cambiar después.`;
   const fr = (document.querySelector('input[name="wz-fr"]:checked') || {}).value || 'uno', e = fr==='esq'||fr==='tres', a = fr==='atr'||fr==='tres';
+  { const lo = parseFloat(el('wz-lote').value), fo = parseFloat(el('wz-fondo').value); el('wz-area').innerHTML = lo > 0 && fo > 0 ? `Terreno de <b>${f2(lo)} × ${f2(fo)} m = ${f1(lo*fo)} m²</b>.` : ''; }
   el('wz-rl-l').hidden = !e; el('wz-rp-t').textContent = a ? 'Retiro a la calle de atrás (m)' : 'Retiro posterior (m)';
 }
 function wzOpen(){
@@ -3794,6 +3870,8 @@ function wzOpen(){
   ['lote','fondo','rf','rl','rp'].forEach(k=> el('wz-'+k).value = el(k).value);
   el('wz-lotpre').value = el('lotpre').value;
   const fr = el('fr').value || 'uno'; document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.checked = r.value === fr);
+  document.querySelectorAll('input[name="wz-ind"]').forEach(r=> r.checked = r.value === (el('ind').checked ? 'si' : 'no'));
+  document.querySelectorAll('input[name="wz-tal"]').forEach(r=> r.checked = r.value === (el('tal').value || 'no'));
   el('wz-dir').value = c.dir || ''; el('wz-dist').value = c.dist || ''; el('wz-nom').value = c.nom || ''; el('wz-mail').value = c.mail || ''; el('wz-tel').value = c.tel || '';
   try { el('wz-off').checked = localStorage.getItem('vvm-asist-off') === '1'; } catch(e){}
   wzRender();
@@ -3807,9 +3885,12 @@ function wzFinish(){
   try { localStorage.setItem('vvm-cliente', JSON.stringify(c)); } catch(e){}
   [['lote',4,12],['fondo',8,40],['rf',0,10],['rl',0,6],['rp',0,10]].forEach(([k,lo,hi])=>{ const x = num('wz-'+k, lo, hi); if(x != null) el(k).value = f2(x); });
   el('fr').value = fr; syncLotPre();
+  el('ind').checked = ((document.querySelector('input[name="wz-ind"]:checked') || {}).value === 'si');
   wzClose(); wzShowInfo();
-  const nd = wzDorm(wzP), [a,b] = SPLIT[nd];
-  el('ndt').value = String(nd); wantTotal = nd; el('nd').value = String(a); el('nd2').value = String(b);
+  const tal = (document.querySelector('input[name="wz-tal"]:checked') || {}).value || 'no'; el('tal').value = tal;
+  const nd = wzDorm(wzP); let [a,b] = SPLIT[nd];
+  if(tal === 'todo'){ a = 2; b = 2; } // la vivienda sube: 2 dormitorios arriba, encima de los ambientes del taller
+  el('ndt').value = String(a + b); wantTotal = tal === 'todo' ? null : nd; el('nd').value = String(a); el('nd2').value = String(b);
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 }
@@ -3820,7 +3901,9 @@ el('wz-next').addEventListener('click', ()=>{ if(wzStep === WZ_N - 1) wzFinish()
 el('wz-pm').addEventListener('click', ()=>{ wzP = Math.max(1, wzP - 1); wzRender(); });
 el('wz-pp').addEventListener('click', ()=>{ wzP = Math.min(12, wzP + 1); wzRender(); });
 document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.addEventListener('change', ()=>{ const f = r.value; if((f==='atr'||f==='tres') && parseFloat(el('wz-rp').value) < parseFloat(el('wz-rf').value)) el('wz-rp').value = el('wz-rf').value; wzRender(); }));
-el('wz-lotpre').addEventListener('change', ()=>{ const v = el('wz-lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('wz-lote').value = f; el('wz-fondo').value = d; });
+el('wz-lotpre').addEventListener('change', ()=>{ const v = el('wz-lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('wz-lote').value = f; el('wz-fondo').value = d; wzRender(); });
+['wz-lote','wz-fondo'].forEach(id=> el(id).addEventListener('input', ()=>{ el('wz-lotpre').value = ''; wzRender(); }));
+document.querySelectorAll('input[name="wz-tal"]').forEach(r=> r.addEventListener('change', ()=>{ if(r.value !== 'no'){ const si = document.querySelector('input[name="wz-ind"][value="si"]'); if(si) si.checked = true; } }));
 el('wz-off').addEventListener('change', ()=>{ try { localStorage.setItem('vvm-asist-off', el('wz-off').checked ? '1' : '0'); } catch(e){} });
 el('wz').addEventListener('cancel', ()=>{}); // Esc = Pasar
 el('wz-form').addEventListener('submit', e=> e.preventDefault());
