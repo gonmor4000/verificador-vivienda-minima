@@ -77,7 +77,13 @@ select,input[type=number]{font:inherit;font-family:var(--f-mono);background:var(
 .tabs button{border:0;border-bottom:2px solid transparent;border-radius:0;background:none;padding:8px 14px;font-weight:600;color:var(--muted)}
 .tabs button.on{color:var(--ink);border-bottom-color:var(--brick);background:none}
 .rules{max-width:860px}
-#tab-par{max-width:1100px}#tab-par .tbl td,#tab-par .tbl th{text-align:left;font-family:var(--f-body);font-size:13px;vertical-align:top;padding:6px 8px}#tab-par .tbl td .pill{margin-right:4px}
+#tab-par{max-width:1100px}
+#tab-zon{max-width:1100px}#zon-map{height:460px;border:1px solid var(--line);border-radius:8px;margin-top:10px;background:var(--bg)}
+.zon-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}.zon-bar input{flex:1 1 260px;font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:7px 8px}
+.zon-cands{display:flex;flex-direction:column;gap:4px;margin-top:6px}.zon-cands button{text-align:left}
+.zon-res{margin-top:12px;border-left:4px solid var(--brick);background:var(--brick-soft);border-radius:0 8px 8px 0;padding:10px 14px}.zon-res h3{margin:0 0 4px;font-family:var(--f-display)}
+.zon-code{font-family:var(--f-mono);font-size:22px;font-weight:700}
+.zon-leg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;margin-top:8px}.zon-leg i{display:inline-block;width:12px;height:12px;border:1px solid rgba(0,0,0,.3);margin-right:4px;vertical-align:-2px}#tab-par .tbl td,#tab-par .tbl th{text-align:left;font-family:var(--f-body);font-size:13px;vertical-align:top;padding:6px 8px}#tab-par .tbl td .pill{margin-right:4px}
 .rules h3{font-family:var(--f-display);font-size:15px;margin:20px 0 6px}
 .rules ol{margin:0;padding-left:22px}
 .rules li{margin:6px 0;line-height:1.5}
@@ -277,6 +283,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <button type="button" role="tab" id="tab-btn-mat" aria-selected="false">Materiales</button>
     <button type="button" role="tab" id="tab-btn-eta" aria-selected="false">Etapas</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
+    <button type="button" role="tab" id="tab-btn-zon" aria-selected="false">Zonificación</button>
     <button type="button" role="tab" id="tab-btn-par" aria-selected="false">Parámetros</button>
     <button type="button" role="tab" id="tab-btn-rne" aria-selected="false">RNE</button>
     <button type="button" role="tab" id="tab-btn-cam" aria-selected="false">Cambios</button>
@@ -463,6 +470,17 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     </ol>
   </section>
 
+  <section id="tab-zon" class="card rules" hidden aria-label="Zonificación del lote">
+    <h2>¿Qué zonificación tiene mi lote?</h2>
+    <p class="hint" style="margin-top:0">Busca la dirección o toca el lote en el mapa y te digo su zonificación. Los datos salen del <b>plano de zonificación vigente de Lima Metropolitana</b> que publica el Instituto Metropolitano de Planificación (IMP) en su visor «Zonificación Urbana 2026», actualizado al 2 nov 2026. Solo cubre Lima Metropolitana.</p>
+    <div class="zon-bar"><input type="text" id="zon-q" placeholder="Ej.: Av. Túpac Amaru 1500, Comas" aria-label="Dirección del lote"><button type="button" id="zon-go">Buscar</button><button type="button" id="zon-gps">Estoy en el lote</button></div>
+    <div class="zon-cands" id="zon-cands"></div>
+    <p class="hint" id="zon-msg">En los asentamientos, la dirección con manzana y lote casi nunca aparece: busca la avenida o el parque más cercano y toca tu lote en el mapa.</p>
+    <div id="zon-map" role="application" aria-label="Mapa de zonificación"></div>
+    <div class="zon-leg" id="zon-leg"></div>
+    <div class="zon-res" id="zon-res" hidden></div>
+    <p class="hint">Es una consulta orientativa: el plano puede tener desfases de unos metros y las municipalidades aprueban cambios de zonificación cada año. <b>Lo que vale es el certificado de parámetros</b> de tu lote (ver la pestaña Parámetros). Fuente: <a href="https://experience.arcgis.com/experience/9bf8fbedd99c4b2daae0d421caa33583" target="_blank" rel="noopener">IMP, Zonificación Urbana 2026</a> · <a href="https://portal.imp.gob.pe/planos-de-zonificacion/" target="_blank" rel="noopener">planos de zonificación en PDF</a>. Mapa base © colaboradores de OpenStreetMap.</p>
+  </section>
   <section id="tab-par" class="card rules" hidden aria-label="Certificados de parámetros urbanísticos">
     <h2>Certificado de parámetros urbanísticos y edificatorios</h2>
     <p class="hint" style="margin-top:0">Es el papel de la municipalidad que dice qué se puede construir en <b>tu</b> lote. Todo lo demás (el RNE, este verificador) se aplica dentro de lo que permite el certificado. Valores buscados en internet el 15 nov 2026, con su fuente: son ejemplos para orientarse; el que vale es el certificado de tu lote.</p>
@@ -597,6 +615,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Zonificación</b>: buscas la dirección (o tocas el lote en el mapa, o pulsas «Estoy en el lote» con el teléfono) y dice la zonificación del lote según el plano vigente de Lima Metropolitana del IMP (visor Zonificación Urbana 2026), con su área de tratamiento normativo, la ordenanza y qué implica para la casa. La zonificación queda en la línea del proyecto.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Auto en casa</b>: nueva pregunta en el asistente y opción «Estacionar un auto en casa». El retiro frontal pasa a <b>5.00 m</b> y se dibuja el espacio del auto de 2.70 × 5.00 m (A.010 art. 54), a un lado de la puerta y sin chocar con la escalera del retiro; el estacionamiento en el retiro va sin techo o con techo ligero (art. 8.3 d). La pestaña Parámetros explica las siglas de zonificación (RDM, RDB, VT, CV…).</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Parámetros</b>: qué dice un certificado de parámetros urbanísticos y qué implica cada campo, valores reales encontrados por distrito con su fuente y estado (Lima Norte cambió con el PDU 2034), costo del trámite y un cotejo del plano con el certificado elegido. El asistente pregunta ahora también <b>cuántos dormitorios</b> (y dice cuántos duermen en cada uno) y el <b>presupuesto de la primera etapa</b> sin el terreno: al final dice qué etapas alcanza y cuánto falta. </span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Mensaje de inicio</b> corto, pensado para el celular y el maestro de obra: «Construye por etapas sin tener que romper después», qué da el plano, que es gratis y que los datos no salen del equipo, con un aviso de licencia y cálculo estructural. Al terminar el asistente, pantalla <b>Siguientes pasos para construir</b>: certificado de parámetros, estudio de suelos, cálculo estructural para todos los pisos previstos, expediente y licencia (Modalidad A de la Ley 29090 hasta 120 m²) y obra por etapas hasta la inscripción en SUNARP.</span></li>
@@ -3689,6 +3708,99 @@ function tallerApply(r, v){
   }
   add('Permisos y seguridad', 'ok', `La zonificación del lote debe ser compatible con el taller (certificado de parámetros), con licencia de funcionamiento (Ley 28976) e inspección de seguridad (ITSE); en el área de taller va un extintor (A.020, cuadro de seguridad: NTP 350.043-1).`);
 }
+// ---------- Zonificación: plano vigente de Lima Metropolitana (IMP, ArcGIS Online, consulta pública) ----------
+const ZON_URL = 'https://services5.arcgis.com/bHvzrGGxW8wP6Utm/arcgis/rest/services/Zonficacion_Urbana_Vigente_LM_13022026_project/FeatureServer/0';
+const ATN_URL = 'https://services5.arcgis.com/bHvzrGGxW8wP6Utm/arcgis/rest/services/ATNS_LIMA_2023/FeatureServer/210';
+const GEO_URL = 'https://geocode.arcgis.com/arcgis/rest/services/World/GeocodeServer/findAddressCandidates';
+// colores del plano del IMP para los códigos más comunes
+const ZON_COL = [[/^(ZDMB|RDMB)/,'#ffffbe'],[/^(ZDMA|RDMA)/,'#6d0909'],[/^(ZDA|RDA)/,'#b72020'],[/^ZDM-1/,'#ff5252'],[/^ZDM-2/,'#fc8135'],[/^(ZDM|RDM)/,'#f99e19'],[/^(ZDB|RDB)/,'#ffff00'],[/^(ZDMB|RDMB)/,'#ffffbe'],[/^VT/,'#d7b5d8'],[/^(CV|CZ|CM|ZC|CH)/,'#e31a1c'],[/^(I|IB|IM)/,'#9e9ac8'],[/^(E\d?|E-)/,'#6baed6'],[/^H\d?/,'#41ab5d'],[/^(ZRP|PZ|PTP|ZA|ZPA)/,'#74c476'],[/^OU/,'#bdbdbd'],[/^(ZRE|ZTE|ZHR|ZM|ZEU|ZArq)/,'#c994c7']];
+const zonCol = c => { for(const [re, col] of ZON_COL) if(re.test(c || '')) return col; return '#d9d9d9'; };
+const ZON_LEG = [['ZDM / RDM','RDM'],['ZDB / RDB','RDB'],['ZDMB / RDMB','RDMB'],['ZDA / RDA','RDA'],['VT','VT'],['Comercio','CV'],['Industria','I1'],['Educación','E1'],['Salud','H1'],['Recreación','ZRP'],['Otros usos','OU'],['Reglamentación especial','ZRE']];
+// qué implica cada familia de códigos para una casa que crece por etapas
+function zonDice(c){
+  const t = c || '', mod = [];
+  if(/-C\b|-C$/.test(t)) mod.push('<b>Condicionada</b>: la altura o la densidad dependen de condiciones extra (por ejemplo frente mínimo o acumulación de lotes).');
+  if(/-R\b|-R$/.test(t)) mod.push('<b>Riesgo</b>: zona con peligro identificado (ladera, cauce, suelo): pide el estudio de suelos y pregunta qué restricciones hay.');
+  if(/ZEIS/.test(t)) mod.push('<b>ZEIS</b>: zona especial de interés social, pensada para vivienda social: suele tener parámetros más flexibles.');
+  let d;
+  if(/^(ZDMB|RDMB)/.test(t)) d = 'Residencial de densidad muy baja: casas en lotes grandes y de pocos pisos. Tu casa unifamiliar entra; dividirla en varias viviendas suele estar limitado.';
+  else if(/^(ZDB|RDB)/.test(t)) d = 'Residencial de densidad baja: casas unifamiliares o bifamiliares de 2 o 3 pisos. Tu casa entra; revisa en el certificado cuántos pisos y viviendas permite.';
+  else if(/^(ZDM|RDM)/.test(t)) d = 'Residencial de densidad media: la zona típica de los barrios que crecen por pisos. Permite casas y edificios de unos 3 a 5 pisos según el lote y el ancho de la calle. Tu casa por etapas encaja bien.';
+  else if(/^(ZDA|RDA|ZDMA|RDMA)/.test(t)) d = 'Residencial de densidad alta: zona de edificios. Una casa se permite, pero el lote vale más para varios pisos: conviene prever la estructura para crecer.';
+  else if(/^VT/.test(t)) d = 'Vivienda taller: casa con taller o pequeña industria. Es la zona ideal si tendrás un taller en el 1.er piso.';
+  else if(/^(CV|CZ|CM|CH|ZC)/.test(t)) d = 'Comercial: la vivienda casi siempre es compatible, a menudo con comercio en el 1.er piso. Revisa en el certificado los usos y la altura.';
+  else if(/^(I\d|IB|IM|IA|IE|I2E|IMEA)/.test(t)) d = 'Industrial: <b>la vivienda en general no se permite</b>. Consulta a la municipalidad antes de construir.';
+  else if(/^E/.test(t)) d = 'Educación: el lote está reservado para un colegio o instituto. <b>No es para vivienda.</b>';
+  else if(/^H/.test(t)) d = 'Salud: reservado para posta, clínica u hospital. <b>No es para vivienda.</b>';
+  else if(/^(ZRP|PZ|PTP|ZA|ZPA|ANPM)/.test(t)) d = 'Recreación pública, protección o área natural: parque, playa o ladera protegida. <b>No es para vivienda.</b>';
+  else if(/^OU/.test(t)) d = 'Otros usos: equipamientos (iglesias, comisarías, servicios). <b>No es para vivienda.</b>';
+  else if(/^(ZRE|ZTE|ZHR|ZM|ZEU|ZArq|ZONA)/.test(t)) d = 'Zona de reglamentación o tratamiento especial: tiene su propio reglamento. Pide el certificado y pregunta qué se puede hacer.';
+  else d = 'Revisa el significado en el certificado de parámetros.';
+  return d + (mod.length ? '<br>' + mod.join('<br>') : '');
+}
+let zonMap = null, zonMk = null, zonLoading = null;
+const zonLoad = () => zonLoading || (zonLoading = new Promise((ok, no)=>{
+  if(window.L && L.esri) return ok();
+  const css = document.createElement('link'); css.rel = 'stylesheet'; css.href = 'https://unpkg.com/leaflet@1.9.4/dist/leaflet.css'; document.head.appendChild(css);
+  const add = src => new Promise((a, b)=>{ const sc = document.createElement('script'); sc.src = src; sc.onload = a; sc.onerror = b; document.head.appendChild(sc); });
+  add('https://unpkg.com/leaflet@1.9.4/dist/leaflet.js').then(()=>add('https://unpkg.com/esri-leaflet@3.0.12/dist/esri-leaflet.js')).then(ok, no);
+}));
+function zonOpen(){
+  if(!el('zon-leg').innerHTML) el('zon-leg').innerHTML = ZON_LEG.map(([n,c])=>`<span><i style="background:${zonCol(c)}"></i>${n}</span>`).join('');
+  if(!el('zon-q').value){ const c = wzCli(); el('zon-q').value = [c.dir, c.dist].filter(Boolean).join(', '); }
+  if(zonMap){ setTimeout(()=>zonMap.invalidateSize(), 50); return; }
+  zonLoad().then(()=>{
+    zonMap = L.map('zon-map', {zoomControl:true}).setView([-12.03, -77.03], 11);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {maxZoom:19, attribution:'© OpenStreetMap'}).addTo(zonMap);
+    L.esri.featureLayer({url: ZON_URL, minZoom: 14, simplifyFactor: 0.4, precision: 6, fields:['OBJECTID','simb_zoni','sclas_zoni'],
+      style: f => ({color:'#333', weight:0.6, fillColor: zonCol(f.properties.simb_zoni), fillOpacity:0.45})})
+      .bindTooltip(l => `${l.feature.properties.simb_zoni} · ${l.feature.properties.sclas_zoni || ''}`, {sticky:true}).addTo(zonMap);
+    zonMap.on('click', e => zonAt(e.latlng.lat, e.latlng.lng));
+    zonMap.on('zoomend', ()=>{ if(zonMap.getZoom() < 14) zonMsg('Acerca el mapa para ver los colores de la zonificación.'); });
+    const c = wzCli(); if(c.zon && c.zon.lat) zonAt(c.zon.lat, c.zon.lng, true);
+  }).catch(()=> zonMsg('No se pudo cargar el mapa (sin internet). La búsqueda por «Estoy en el lote» sigue funcionando.'));
+}
+const zonMsg = t => { el('zon-msg').innerHTML = t; };
+const zonQ = (url, prm) => fetch(url + '?' + new URLSearchParams(Object.assign({f:'json'}, prm))).then(r=>r.json());
+async function zonSearch(){
+  const q = el('zon-q').value.trim(); if(!q) return;
+  zonMsg('Buscando la dirección…'); el('zon-cands').innerHTML = '';
+  try {
+    const j = await zonQ(GEO_URL, {SingleLine: /lima|callao/i.test(q) ? q : q + ', Lima', countryCode:'PER', maxLocations:5, outFields:'Match_addr', location:'-77.03,-12.03', searchExtent:'-77.35,-12.55,-76.6,-11.55'});
+    const cs = (j.candidates || []).filter(c=>c.score >= 70);
+    if(!cs.length){ zonMsg('No encontré esa dirección. Prueba con la avenida o un lugar conocido cercano, o toca tu lote en el mapa.'); return; }
+    el('zon-cands').innerHTML = cs.map((c,i)=>`<button type="button" data-i="${i}">${c.address}</button>`).join('');
+    el('zon-cands').querySelectorAll('button').forEach(b=> b.addEventListener('click', ()=>{ const c = cs[+b.dataset.i]; zonAt(c.location.y, c.location.x); }));
+    zonAt(cs[0].location.y, cs[0].location.x);
+    zonMsg(cs.length > 1 ? 'Elegí la primera coincidencia; si no es, elige otra de la lista. Luego <b>toca tu lote exacto en el mapa</b>.' : 'Ahora <b>toca tu lote exacto en el mapa</b> para afinar.');
+  } catch(e){ zonMsg('No se pudo buscar (¿sin internet?). Toca tu lote en el mapa o usa «Estoy en el lote».'); }
+}
+async function zonAt(lat, lng, quiet){
+  if(zonMap){ if(zonMk) zonMk.setLatLng([lat, lng]); else zonMk = L.circleMarker([lat, lng], {radius:8, color:'#fff', weight:3, fillColor:'#b5462a', fillOpacity:1}).addTo(zonMap); if(zonMap.getZoom() < 17) zonMap.setView([lat, lng], 17); }
+  const box = el('zon-res'); box.hidden = false; box.innerHTML = 'Consultando el plano de zonificación…';
+  try {
+    const geo = {geometry:`${lng},${lat}`, geometryType:'esriGeometryPoint', inSR:4326, spatialRel:'esriSpatialRelIntersects', returnGeometry:false};
+    const [z, a] = await Promise.all([zonQ(ZON_URL + '/query', Object.assign({outFields:'simb_zoni,sclas_zoni,ordenanza,anio_ordenanza,nombdist,nom_aim,observ'}, geo)), zonQ(ATN_URL + '/query', Object.assign({outFields:'ATN'}, geo)).catch(()=>({}))]);
+    const f = (z.features || [])[0], at = ((a.features || [])[0] || {}).attributes;
+    const gm = `https://www.google.com/maps?q=${lat.toFixed(6)},${lng.toFixed(6)}`;
+    if(!f){ box.innerHTML = `Ese punto no tiene zonificación en el plano (puede ser una calle o estar fuera de Lima Metropolitana). Toca dentro de tu lote. <a href="${gm}" target="_blank" rel="noopener">Ver en Google Maps</a>`; return; }
+    const p = f.attributes, cod = (p.simb_zoni || '').trim() || '—', esc = t => String(t || '').replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
+    const norma = p.ordenanza ? `Ordenanza ${esc(p.ordenanza)}${p.anio_ordenanza ? ' (' + esc(p.anio_ordenanza) + ')' : ''}` : 'ordenanza no indicada en el plano';
+    box.innerHTML = `<h3><span class="zon-code">${esc(cod)}</span> · ${esc(p.sclas_zoni)}</h3>`
+      + `<p style="margin:4px 0">${zonDice(cod)}</p>`
+      + `<p class="hint" style="margin:6px 0 0">${p.nombdist ? 'Distrito: <b>' + esc(p.nombdist) + '</b> · ' : ''}${p.nom_aim ? 'Lima ' + esc(p.nom_aim.replace(/^LIMA\s*/i,'')).toLowerCase() + ' · ' : ''}${at && at.ATN ? 'Área de tratamiento normativo <b>' + esc(at.ATN) + '</b> · ' : ''}${norma}${(p.observ || '').trim() ? ' · ' + esc(p.observ) : ''}</p>`
+      + `<p class="hint" style="margin:6px 0 0">Punto: ${lat.toFixed(5)}, ${lng.toFixed(5)} · <a href="${gm}" target="_blank" rel="noopener">ver en Google Maps</a> · los números (altura, área libre, retiros) van en la pestaña <a href="#" id="zon-par">Parámetros</a> y en tu certificado.</p>`;
+    el('zon-par').addEventListener('click', e=>{ e.preventDefault(); showTab('par'); });
+    if(!quiet){ const c = wzCli(); c.zon = {cod, n:p.sclas_zoni || '', lat, lng}; try { localStorage.setItem('vvm-cliente', JSON.stringify(c)); } catch(e){} wzShowInfo(); }
+  } catch(e){ box.innerHTML = 'No se pudo consultar el plano de zonificación (¿sin internet?).'; }
+}
+el('zon-go').addEventListener('click', zonSearch);
+el('zon-q').addEventListener('keydown', e=>{ if(e.key === 'Enter') zonSearch(); });
+el('zon-gps').addEventListener('click', ()=>{
+  if(!navigator.geolocation){ zonMsg('Este equipo no da la ubicación.'); return; }
+  zonMsg('Buscando tu ubicación…');
+  navigator.geolocation.getCurrentPosition(p=>{ zonMsg('Ubicación del teléfono (precisión de unos ' + Math.round(p.coords.accuracy) + ' m): si no cae en tu lote, tócalo en el mapa.'); zonAt(p.coords.latitude, p.coords.longitude); }, ()=> zonMsg('No se pudo leer la ubicación: da permiso al navegador o toca tu lote en el mapa.'), {enableHighAccuracy:true, timeout:15000});
+});
 // ---------- Certificados de parámetros: valores reales encontrados y cotejo con el plano ----------
 const PARQ = [
   {k:'ate', d:'Ate (Área de Tratamiento Normativo I)', z:'RDM unifamiliar', lote:90, fr:6, p:3, al:30, est:'1 por vivienda', n:'Certificado modelo de la municipalidad de Ate; Ord. 1099 y 1015-MML. PDU Lima Este en camino.', url:'https://muniate.gob.pe/ate/files/licenciaEdificacion/PROCEDIMIENTO/4_Par.pdf', st:'warn'},
@@ -3937,7 +4049,7 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('tab-par').hidden = k!=='par'; el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','mat','eta','reg','par','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('tab-par').hidden = k!=='par'; el('tab-zon').hidden = k!=='zon'; if(k==='zon') zonOpen(); el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','mat','eta','reg','zon','par','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 // Exportar el 3D a SketchUp: COLLADA 1.4.1 en metros, con lo que se ve en el visor (etapa, techos, 1.er piso)
 el('v3-dae').addEventListener('click', async ()=>{
   const msg = el('v3-dae-msg');
@@ -3960,9 +4072,9 @@ el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d'
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15g';
+const APP_VERSION = '2026-11-15h';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
@@ -3987,7 +4099,7 @@ const wzCli = () => { try { return JSON.parse(localStorage.getItem('vvm-cliente'
 const wzDorm = p => Math.min(6, Math.max(2, 1 + Math.ceil(Math.max(0, p - 2)/2)));
 function wzShowInfo(){
   const c = wzCli(), box = el('proj-info'), esc = t => String(t).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
-  const parts = [c.nom && `<b>${esc(c.nom)}</b>`, (c.dir || c.dist) && esc([c.dir, c.dist].filter(Boolean).join(', ')), c.p && `${c.p} ${c.p == 1 ? 'persona' : 'personas'}${c.d ? `, ${c.d} dorm.` : ''}`, c.pres > 0 && `presupuesto etapa 1: S/ ${nf(c.pres)}`].filter(Boolean);
+  const parts = [c.nom && `<b>${esc(c.nom)}</b>`, (c.dir || c.dist) && esc([c.dir, c.dist].filter(Boolean).join(', ')), c.p && `${c.p} ${c.p == 1 ? 'persona' : 'personas'}${c.d ? `, ${c.d} dorm.` : ''}`, c.pres > 0 && `presupuesto etapa 1: S/ ${nf(c.pres)}`, c.zon && c.zon.cod && `zonificación ${esc(c.zon.cod)}`].filter(Boolean);
   box.hidden = !parts.length;
   box.innerHTML = parts.length ? `Proyecto: ${parts.join(' · ')} <button type="button" id="proj-edit">Editar</button>` : '';
   const b = el('proj-edit'); if(b) b.addEventListener('click', ()=>wzOpen());
