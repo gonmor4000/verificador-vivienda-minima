@@ -618,6 +618,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Acceso al patio según el nivel</b>: en el económico se sale por la cocina (lo más barato); desde el estándar, por un <b>pasillo de 0.90 m</b> junto a la cocina, separado con un tabique, y la cocina gana una ventana al patio. Si el frente no da para el pasillo y una cocina de 1.50 m, se queda por la cocina y la verificación dice cuánto falta. Se puede fijar a mano en «Acceso al patio».</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Objetivo con la casa</b>: el asistente pregunta si es para vivir cómodos, vivir y alquilar una parte, o sacarle el máximo provecho. Eso fija el nivel de los ambientes (amplio, estándar o económico), propone independizar los pisos cuando hay alquiler y suma una verificación con lo que conviene prever.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos de la etapa 2</b>: nueva opción «Piso de la sala y los dormitorios» (vinílico en rollo, el más barato; vinílico SPC en clic; cerámico; porcelanato; o quedarse con el cemento pulido) y el botón <b>«Elegir acabados»</b> de la etapa 2 (pestaña Etapas y barra de proyección), aparte del asistente inicial para no cargarlo. La cocina y el baño llevan cerámico antideslizante. Se ve en Diseño Pro (trama y rótulo en cada ambiente y un cuadro de acabados con m² y costo), en el 3D y en el costo de las etapas 2 y 3.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Etapas 3 y 4 juntas y 3D coherente con las etapas</b>: ahora son 4 etapas. 1 casco, 2 acabados del 1.er piso, 3 el 2.º piso terminado con la fachada y la azotea (antes eran dos etapas) y 4 diversificación. En el 3D la etapa 1 es todo casco (ladrillo visto, piso pulido, sin puertas interiores); en la etapa 2 el 1.er piso queda tarrajeado y pintado por dentro, con pisos, enchape en el baño y la cocina y puertas interiores, pero la fachada sigue en ladrillo, como en el presupuesto; la etapa 3 sube y termina el 2.º piso y pinta la fachada. Las medianeras quedan en ladrillo (el vecino las tapa). En las etapas 2 y 3 el 3D se abre sin techo para que se vean los acabados.</span></li>
@@ -719,6 +720,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <div class="chk"><input type="checkbox" id="vol"><label for="vol">Volado hacia la calle<br><span class="hint">El 2.º piso sale 0.50 m sobre el retiro frontal (A.010 art. 13).</span></label></div>
       <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="auto">Automática: caracol si entra en el patio</option><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
       <div class="ctl"><label for="obj">Objetivo con la casa</label><select id="obj"><option value="vivir">Vivir cómodos</option><option value="ambos">Vivir y alquilar una parte</option><option value="renta">Sacarle el máximo provecho</option></select></div>
+      <div class="ctl"><label for="pat">Acceso al patio</label><select id="pat"><option value="auto">Según el nivel: por la cocina en el económico, por un pasillo en el estándar y el amplio</option><option value="coc">Por la cocina (lo más barato)</option><option value="pas">Por un pasillo, sin cruzar la cocina</option></select></div>
       <div class="ctl"><label for="pis">Piso de la sala y los dormitorios (etapa 2)</label><select id="pis"><option value="vinr">Vinílico en rollo (lámina de PVC): el más barato</option><option value="vin">Vinílico SPC en clic: resiste agua y golpes</option><option value="cer">Cerámico 60 × 60</option><option value="por">Porcelanato 60 × 60</option><option value="pul">Cemento pulido con sellador (se queda el de la etapa 1)</option></select><span class="hint">La cocina y el baño llevan siempre cerámico antideslizante. Se ve en Diseño Pro, en el 3D y en el costo de la etapa 2.</span></div>
       <div class="ctl"><label for="tal">Taller o negocio en el 1.er piso</label><select id="tal"><option value="no">No</option><option value="parte">Sí, en una parte: la sala, al frente</option><option value="todo">Sí, todo el 1.er piso; la familia vive arriba</option></select><span class="hint" id="tal-hint">Vivienda taller (A.020 art. 4.1): la zonificación del lote tiene que permitir el uso y el taller necesita licencia de funcionamiento.</span></div>
       <div class="chk"><input type="checkbox" id="auto"><label for="auto">Estacionar un auto en casa<br><span class="hint">El retiro frontal pasa a <b>5.00 m</b> para que entre un auto (cajón de 2.70 × 5.00 m, A.010 art. 54); el estacionamiento sin techo o con techo ligero se permite en el retiro (art. 8.3 d).</span></label></div>
@@ -916,7 +918,7 @@ const presets = {
   pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'},
   chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'}
 };
-const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc','ind','tal','auto','pis','obj'];
+const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc','ind','tal','auto','pis','obj','pat'];
 const el = id => document.getElementById(id);
 const f2 = x => x.toFixed(2);
 const f1 = x => x.toFixed(1);
@@ -932,7 +934,7 @@ function read(){
   ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','rl','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
   v.fr = el('fr').value || 'uno';
   v.nd = parseInt(el('nd').value,10)||2; v.nd2 = parseInt(el('nd2').value,10)||0; v.pl = el('pl').value; v.pp = parseFloat(el('pp').value)||1.25; v.ty = el('ty').value; v.sis = el('sis').value; v.ap = el('ap').value; v.z = parseFloat(el('z').value); v.s = parseFloat(el('s').value); v.n = parseInt(el('n').value,10);
-  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto'; v.ind = el('ind').checked; v.auto = el('auto').checked; v.pis = el('pis').value || 'vinr'; v.obj = el('obj').value || 'vivir'; v.tal = el('tal').value || 'no';
+  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto'; v.ind = el('ind').checked; v.auto = el('auto').checked; v.pis = el('pis').value || 'vinr'; v.obj = el('obj').value || 'vivir'; v.pat = el('pat').value || 'auto'; v.tal = el('tal').value || 'no';
   return v;
 }
 
@@ -960,6 +962,8 @@ function terVol(v, W, built2, add, up){
 const FR_N = {uno:'un frente, entre medianeras', esq:'dos frentes, en esquina', atr:'dos frentes, atravesante (calle a calle)', tres:'tres frentes: esquina y atravesante'};
 const isEsq = v => v.fr === 'esq' || v.fr === 'tres', isAtr = v => v.fr === 'atr' || v.fr === 'tres';
 // frente del lote que no ocupa la casa entre ejes: muros fuera de eje y retiro a la calle lateral
+// acceso al patio: «auto» sigue el nivel (económico por la cocina; estándar y amplio por un pasillo)
+const patMode = v => v.pat === 'coc' || v.pat === 'pas' ? v.pat : (nivel === 'eco' ? 'coc' : 'pas');
 const sideUse = v => isEsq(v) ? Math.max(0, v.rl || 0) + (v.med ? T/2 : T) : (v.med ? 0 : T);
 const OCH = 3.00/Math.SQRT2; // ochavo de 3.00 m en esquina a 90°: 2.12 m sobre cada lindero
 // ventana lateral de la sala hacia la calle (solo en esquina, plantas de dos crujías): en el tramo más largo del eje D entre columnas
@@ -1333,7 +1337,12 @@ function compute(v){
     ba:{n:'Baño', x0:W-c, y0:D-w, x1:W, y1:D, wet:true}
   };
   if(v.nd === 1) rooms.d2 = {n:'Comedor-estudio', x0:0, y0:y2, x1:v.a, y1:dd, open:true};
+  // acceso al patio: por la cocina (económico) o por un pasillo de 0.90 junto a la cocina, separado con un tabique (estándar y amplio)
+  const patWant = patMode(v) === 'pas', kitMin = v.pmr ? 2.10 : 1.50, bayClr = (W - c) - v.a - T, pasNeed = 0.90 + T*0.6 + kitMin;
+  const pas = patWant && bayClr >= pasNeed - 1e-6 ? v.a + T/2 + 0.90 + T*0.3 : 0;
+  if(pas){ rooms.pa = {n:'Pasillo', x0:v.a, y0:D-w, x1:pas, y1:D, open:true, pas:true}; rooms.co.x0 = pas; }
   for(const k in rooms){ const r = rooms[k]; r.cw = r.x1-r.x0-T; r.cd = r.y1-r.y0-T; r.area = Math.max(0,r.cw*r.cd); }
+  if(rooms.pa){ rooms.pa.cw = rooms.pa.x1 - rooms.pa.x0 - T/2 - T*0.3; rooms.pa.area = rooms.pa.cw*rooms.pa.cd; rooms.co.cw = rooms.co.x1 - rooms.co.x0 - T/2 - T*0.3; rooms.co.area = rooms.co.cw*rooms.co.cd; }
   const gross = (v.med ? W : W + T)*(D+T) - v.a*nt; // A.010 art. 9.1 a: a eje de muros con otra unidad
   const util = Object.values(rooms).reduce((s,r)=>s+r.area,0);
   const checks = [];
@@ -1343,6 +1352,8 @@ function compute(v){
   add('Norma','Área techada mínima VIS', gross>=35?'ok':'bad', `<b>${f1(gross)} m²</b> frente a 35 m² para vivienda unifamiliar con crecimiento (Anexo 1 VIS; la A.020 art. 8.1 c pide 25 m² para el módulo básico).`);
   add('Norma','Altura libre', 'ok', `Muro de <b>2.40 m</b> (24 hiladas) frente a 2.30 m de la A.020.`);
   const frenteNec = W + sideUse(v);
+  if(patWant) add('Circulación','Acceso al patio', pas ? 'ok' : 'warn', pas ? `Se sale al patio por un <b>pasillo de 0.90 m</b> junto a la cocina, separado con un tabique: no se cruza la zona de trabajo. La cocina queda de ${f2(rooms.co.cw)} m libres, con su ventana al patio.` : `Con este nivel el patio iría por un pasillo, pero entre la crujía de dormitorios (${f2(v.a)} m) y el baño (${f2(c)} m) quedan ${f2(bayClr)} m libres y el pasillo con la cocina pide ${f2(pasNeed)} m. Se sale por la cocina. Entra con unos ${f2(pasNeed - bayClr)} m más de frente o en el nivel económico.`);
+  else add('Circulación','Acceso al patio', 'ok', `Se sale al patio por la <b>cocina</b>, la opción más barata: no hay pasillo ni tabique extra.`);
   add('Norma','Cabe en el lote', frenteNec <= v.lote + 1e-6 ? 'ok':'bad', `Necesita <b>${f2(frenteNec)} m</b> de frente ${isEsq(v) ? `(${f2(v.rl)} m de retiro a la calle lateral${v.med?', medianero solo del otro lado':''})` : v.med?'(medianeros compartidos)':'(muros dentro del lote)'}; el lote tiene <b>${f2(v.lote)} m</b>.`);
   const patio = v.fondo - v.rf - D - T;
   add('Terreno','Retiro frontal', 'ok', `La fachada queda a <b>${f2(v.rf)} m</b> del límite del lote; detrás de la vereda de ${f2(v.vd)} m.`);
@@ -1499,7 +1510,7 @@ function compute(v){
   const wallPct = (gross-util)/gross*100;
   terVol(v, W, gross2 > 0, add, E2.up);
   frentes(v, W, D, gross2 > 0, add, typeof latW !== 'undefined' ? latW : null);
-  return {latW,dd,nt,W,D,c,w,y2,rooms,gross,gross2,util,checks,wallLen,wallNet,bricks,perM2,losa,bloques,cost,cost2,wallPct,hL,v,wD1,wSC,wD2,dDoor,cols,nCols,hv,cim,conc,fl,up:E2.up,stair:E2.stair};
+  return {pas, patMiss: patWant && !pas, latW,dd,nt,W,D,c,w,y2,rooms,gross,gross2,util,checks,wallLen,wallNet,bricks,perM2,losa,bloques,cost,cost2,wallPct,hL,v,wD1,wSC,wD2,dDoor,cols,nCols,hv,cim,conc,fl,up:E2.up,stair:E2.stair};
 }
 
 function draw(r){
@@ -1638,12 +1649,17 @@ function draw(r){
   wall(0,0,W,0,[[d1w0,d1w0+wD1],[scDoor0,scDoor0+1.0],[scw0,scw0+wSC]]);
   win(d1w0,0,d1w0+wD1,0); win(scw0,0,scw0+wSC,0);
   // back y=D
-  const d2w0 = (v.a - wD2)/2; bd0 = v.a + T/2 + 0.60; const bw0 = W - c/2 - 0.25, dd = r.dd || D;
+  const d2w0 = (v.a - wD2)/2; bd0 = r.pas ? v.a + T/2 + 0.05 : v.a + T/2 + 0.60; const bw0 = W - c/2 - 0.25, dd = r.dd || D;
+  const pDW = r.pas ? 0.80 : dW, kw = r.pas ? Math.min(0.80, (W - c) - r.pas - T - 0.30) : 0, kw0 = r.pas ? r.pas + ((W - c) - r.pas - kw)/2 : 0;
+  const backG = [[bd0,bd0+pDW],[bw0,bw0+0.5]].concat(kw > 0.3 ? [[kw0,kw0+kw]] : []);
   if(r.nt){ // planta escalonada: el ala de dormitorios termina en dd
     wall(0,dd,v.a,dd,[[d2w0,d2w0+wD2]]); win(d2w0,dd,d2w0+wD2,dd);
-    wall(v.a,D,W,D,[[bd0-v.a,bd0-v.a+dW],[bw0-v.a,bw0-v.a+0.5]]);
-  } else { wall(0,D,W,D,[[d2w0,d2w0+wD2],[bd0,bd0+dW],[bw0,bw0+0.5]]); win(d2w0,D,d2w0+wD2,D); }
-  win(bw0,D,bw0+0.5,D);
+    wall(v.a,D,W,D,backG.map(([a,b])=>[a-v.a,b-v.a]).sort((p,q)=>p[0]-q[0]));
+  } else { wall(0,D,W,D,[[d2w0,d2w0+wD2]].concat(backG).sort((p,q)=>p[0]-q[0])); win(d2w0,D,d2w0+wD2,D); }
+  win(bw0,D,bw0+0.5,D); if(kw > 0.3) win(kw0,D,kw0+kw,D);
+  if(r.pas){ // tabique entre el pasillo al patio y la cocina
+    g += `<line x1="${X(r.pas)}" y1="${Y(D-w)}" x2="${X(r.pas)}" y2="${Y(D)}" stroke="var(--wall)" stroke-width="${Math.max(2,tw*0.6)}"/>`;
+    G3.f1.push({x1:r.pas,y1:D-w,x2:r.pas,y2:D,gaps:[],kind:'tab'}); }
   // medianeras (en esquina, el eje D es fachada a la calle lateral y la sala lleva ventana)
   wall(0,0,0,dd); if(r.latW){ wall(W,0,W,D,[r.latW]); win(W,r.latW[0],W,r.latW[1]); } else wall(W,0,W,D);
   // B axis x=a, doors to dorms
@@ -1675,7 +1691,7 @@ function draw(r){
   door(scDoor0, T/2, 1,0, 0,1, 1.0);
   door(v.a-T/2, y2-0.10, 0,-1, -1,0, dW);
   if(v.nd >= 2) door(v.a-T/2, y2+0.10, 0,1, -1,0, dW);
-  door(bd0, D-T/2, 1,0, 0,-1, dW);
+  door(bd0, D-T/2, 1,0, 0,-1, r.pas ? 0.80 : dW);
   door(W-c+baDoor, D-w+T/2, 1,0, 0,1, v.pmr?0.90:0.70);
   }
   }
@@ -3631,7 +3647,7 @@ function proPlan(r){
     const yy0 = f2nd && Math.abs(q.y0) < 1e-6 ? -vo : q.y0, cw = q.x1-q.x0-T, cd = q.y1-yy0-T, cx = (q.x0+q.x1)/2, cy = (yy0+q.y1)/2;
     g += `<text x="${X(cx)}" y="${Y(cy)+2}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="${cw*s < 90 ? 10.5 : 12}" fill="var(--ink)">${q.n}</text>`;
     if(!q.ter) g += `<text x="${X(cx)}" y="${Y(cy)+15}" text-anchor="middle" font-family="var(--f-mono)" font-size="9.5" fill="var(--muted)">${f1(Math.max(0,cw*cd))} m²</text>`;
-    if(!q.ter && !q.sky) g += `<text x="${X(cx)}" y="${Y(cy)+27}" text-anchor="middle" font-size="9" fill="var(--muted)">piso: ${q.wet ? 'cerámico antidesl.' : pisOf(v).l}</text>`;
+    if(!q.ter && !q.sky && cw >= 1.6) g += `<text x="${X(cx)}" y="${Y(cy)+27}" text-anchor="middle" font-size="9" fill="var(--muted)">piso: ${q.wet ? 'cerámico antidesl.' : pisOf(v).l}</text>`;
     if(!q.open && cw > 1.0 && cd > 1.3) g += dimH(X, Y, q.x0+T/2, q.x1-T/2, yy0 + T/2 + Math.min(0.45, cd*0.2), f2(cw), 'var(--brick)');
     if(!q.open && cd > 1.0 && cw > 1.3) g += dimV(X, Y, yy0+T/2, q.y1-T/2, q.x0 + T/2 + Math.min(0.40, cw*0.18), f2(cd), 'var(--brick)');
   });
@@ -4040,7 +4056,7 @@ function generate(){
         const r = compute(v);
         if(r.checks.some(q=>q.st==='bad')) continue;
         const warns = r.checks.filter(q=>q.st==='warn').length;
-        const score = fill ? warns*4 + fitScore(r, tg) + r.gross*0.02 : r.gross + warns*4;
+        const score = (fill ? warns*4 + fitScore(r, tg) + r.gross*0.02 : r.gross + warns*4) + (r.patMiss ? 12 : 0);
         if(!best || score < best.score - 1e-9) best = {score, v, r};
       }
     }
@@ -4124,7 +4140,7 @@ function applyPlan(text, flname){
     try {
       const data = JSON.parse(text);
       if(!data || data.app !== 'verificador-vivienda-minima' || !data.valores) throw new Error('formato');
-      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='ind') el('ind').checked = false; if(k==='auto') el('auto').checked = false; if(k==='pis') el('pis').value = 'cer'; if(k==='obj') el('obj').value = 'vivir'; if(k==='tal') el('tal').value = 'no'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
+      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='ind') el('ind').checked = false; if(k==='auto') el('auto').checked = false; if(k==='pis') el('pis').value = 'cer'; if(k==='obj') el('obj').value = 'vivir'; if(k==='pat') el('pat').value = 'auto'; if(k==='tal') el('tal').value = 'no'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
       if(data.cliente){ try { localStorage.setItem('vvm-cliente', JSON.stringify(data.cliente)); } catch(e){} wzShowInfo(); }
       el('ppm').value = data.valores.ppm || 'auto'; if(!el('ppm').value) el('ppm').value = 'auto';
       if(NIV[data.nivel]){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
@@ -4141,7 +4157,7 @@ el('ppm').addEventListener('change', ()=>{ if(el('ppm').value !== 'auto') el('pp
 el('gen').addEventListener('click', ()=>{ el('gen-msg').textContent = 'Buscando…'; setTimeout(generate, 30); });
 
 // Los datos del terreno y del programa regeneran la planta solos; las cotas entre ejes solo redibujan.
-const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc','ind','auto'];
+const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc','ind','auto','pat'];
 let genTimer = null;
 const regen = () => {
   if(el('nd2').value!=='0' && parseInt(el('n').value,10) < 2) el('n').value = '2';
@@ -4200,7 +4216,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15j';
+const APP_VERSION = '2026-11-15k';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
