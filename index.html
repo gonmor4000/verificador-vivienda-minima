@@ -474,14 +474,14 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 
     <h3>Qué dice un certificado y qué significa para tu casa</h3>
     <table class="tbl"><thead><tr><th>Campo</th><th>Qué es</th><th>Qué implica al construir por etapas</th></tr></thead><tbody>
-      <tr><td>Zonificación</td><td>El uso principal de la zona: RDB, RDM, RDA (residencial de densidad baja, media, alta), CV, CZ (comercio), ZRE…</td><td>Una casa unifamiliar entra en zonas residenciales y, casi siempre, en las comerciales (uso compatible).</td></tr>
+      <tr><td>Zonificación</td><td>El uso principal de la zona. <b>RDMB</b>, <b>RDB</b>, <b>RDM</b>, <b>RDA</b>: residencial de densidad muy baja, baja, media y alta (RDM es la más común en los barrios de autoconstrucción). <b>VT</b>: vivienda taller. <b>CV</b>, <b>CZ</b>, <b>CM</b>: comercio vecinal, zonal y metropolitano. <b>I1</b>, <b>I2</b>: industria. <b>E</b>: educación. <b>H</b>: salud. <b>ZRP</b>: zona de recreación pública. <b>OU</b>: otros usos. <b>ZRE</b>: zona de reglamentación especial.</td><td>Una casa unifamiliar entra en zonas residenciales y, casi siempre, en las comerciales (uso compatible).</td></tr>
       <tr><td>Usos compatibles</td><td>Otros usos que se permiten en la zona.</td><td>Decide si puedes tener <b>taller o tienda</b> abajo (vivienda taller): si no está, no habrá licencia de funcionamiento.</td></tr>
       <tr><td>Lote mínimo y frente mínimo</td><td>El lote más chico permitido para ese uso (por ejemplo 90 m² con 6 m de frente).</td><td>Los lotes más chicos ya existentes siguen siendo válidos, pero <b>no se pueden subdividir</b>. Para independizar los pisos se divide la propiedad por pisos, no el lote.</td></tr>
       <tr><td>Altura máxima</td><td>En pisos o metros; a veces con fórmula 1.5 (a + r): ancho de la calle más los retiros.</td><td>Es el techo de tu crecimiento: si dice 3 pisos, el cálculo estructural se hace para 3 desde la etapa 1.</td></tr>
       <tr><td>Coeficiente de edificación</td><td>Área techada total permitida dividida entre el área del lote.</td><td>Limita cuánto puede sumar la casa terminada, con todos sus pisos.</td></tr>
       <tr><td>Área libre</td><td>Parte del lote sin techar, en %; incluye los retiros y el patio.</td><td>Fija el tamaño mínimo del patio. En esquina la municipalidad puede reducirla (A.020 art. 17).</td></tr>
       <tr><td>Retiros</td><td>Distancia libre del límite del lote a la fachada, por cada calle (más en avenida que en calle o pasaje). A veces viene como «alineamiento de fachada» medido desde el eje de la vía.</td><td>En esquina o atravesante hay un retiro por cada calle. Allí pueden ir la escalera de una ampliación y el volado de 0.50 m (A.010 art. 8.3 y 13).</td></tr>
-      <tr><td>Estacionamientos</td><td>Plazas exigidas (por ejemplo 1 por vivienda, o 1 cada 2 o 3 en programas sociales).</td><td>En unifamiliar suele pedirse 1; si el retiro no alcanza para un auto, pregunta si se puede exonerar o pagar.</td></tr>
+      <tr><td>Estacionamientos</td><td>Plazas exigidas (por ejemplo 1 por vivienda, o 1 cada 2 o 3 en programas sociales).</td><td>En unifamiliar suele pedirse 1. El auto puede ir en el retiro frontal, sin techo o con techo ligero (A.010 art. 8.3 d), en un espacio de 2.70 × 5.00 m (art. 54): el retiro tiene que medir 5.00 m. Si no alcanza, pregunta si se puede exonerar o pagar.</td></tr>
       <tr><td>Densidad</td><td>Habitantes por hectárea.</td><td>Limita cuántas viviendas caben en el lote: importa si el 2.º piso será otra vivienda (bifamiliar).</td></tr>
       <tr><td>Vigencia</td><td>36 meses desde que se emite.</td><td>Pídelo cuando vayas a tramitar la licencia, no años antes.</td></tr>
     </tbody></table>
@@ -597,6 +597,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Auto en casa</b>: nueva pregunta en el asistente y opción «Estacionar un auto en casa». El retiro frontal pasa a <b>5.00 m</b> y se dibuja el espacio del auto de 2.70 × 5.00 m (A.010 art. 54), a un lado de la puerta y sin chocar con la escalera del retiro; el estacionamiento en el retiro va sin techo o con techo ligero (art. 8.3 d). La pestaña Parámetros explica las siglas de zonificación (RDM, RDB, VT, CV…).</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Parámetros</b>: qué dice un certificado de parámetros urbanísticos y qué implica cada campo, valores reales encontrados por distrito con su fuente y estado (Lima Norte cambió con el PDU 2034), costo del trámite y un cotejo del plano con el certificado elegido. El asistente pregunta ahora también <b>cuántos dormitorios</b> (y dice cuántos duermen en cada uno) y el <b>presupuesto de la primera etapa</b> sin el terreno: al final dice qué etapas alcanza y cuánto falta. </span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Mensaje de inicio</b> corto, pensado para el celular y el maestro de obra: «Construye por etapas sin tener que romper después», qué da el plano, que es gratis y que los datos no salen del equipo, con un aviso de licencia y cálculo estructural. Al terminar el asistente, pantalla <b>Siguientes pasos para construir</b>: certificado de parámetros, estudio de suelos, cálculo estructural para todos los pisos previstos, expediente y licencia (Modalidad A de la Ley 29090 hasta 120 m²) y obra por etapas hasta la inscripción en SUNARP.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos independientes</b>: nueva opción «Independizar los pisos en el futuro» (y pregunta en el asistente). La escalera va al <b>retiro frontal</b> con entrada propia desde la calle (A.010 art. 8.3 l): de un tramo junto a la fachada si no pasa sobre la puerta de la casa, si no de caracol; el descanso llega frente al estar del 2.º piso, que abre su puerta a la fachada. Si el retiro es corto, lo dice y deja la escalera en el patio.</span></li>
@@ -693,6 +694,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <div class="chk"><input type="checkbox" id="vol"><label for="vol">Volado hacia la calle<br><span class="hint">El 2.º piso sale 0.50 m sobre el retiro frontal (A.010 art. 13).</span></label></div>
       <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="auto">Automática: caracol si entra en el patio</option><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
       <div class="ctl"><label for="tal">Taller o negocio en el 1.er piso</label><select id="tal"><option value="no">No</option><option value="parte">Sí, en una parte: la sala, al frente</option><option value="todo">Sí, todo el 1.er piso; la familia vive arriba</option></select><span class="hint" id="tal-hint">Vivienda taller (A.020 art. 4.1): la zonificación del lote tiene que permitir el uso y el taller necesita licencia de funcionamiento.</span></div>
+      <div class="chk"><input type="checkbox" id="auto"><label for="auto">Estacionar un auto en casa<br><span class="hint">El retiro frontal pasa a <b>5.00 m</b> para que entre un auto (cajón de 2.70 × 5.00 m, A.010 art. 54); el estacionamiento sin techo o con techo ligero se permite en el retiro (art. 8.3 d).</span></label></div>
       <div class="chk"><input type="checkbox" id="ind"><label for="ind">Independizar los pisos en el futuro<br><span class="hint">La escalera va en el <b>retiro frontal</b>, con entrada propia desde la calle, para que el 2.º piso (y los que vengan) sea una vivienda aparte. La A.010 (art. 8.3 l) lo permite en ampliaciones de vivienda.</span></label></div>
       <div class="chk"><input type="checkbox" id="pmr"><label for="pmr">Hacer la vivienda accesible (opcional)<br><span class="hint">Giro de 1.50 m en cada ambiente, ba&ntilde;o accesible y puertas de 0.90 m. La A.120 (RM 075-2023) solo lo exige en las áreas comunes de edificios (art. 28); dentro de una casa unifamiliar es una decisión de diseño.</span></label></div>
       <button type="button" id="gen" class="gen">Generar plano para este terreno</button>
@@ -798,6 +800,12 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
           <label><input type="radio" name="wz-fr" value="tres"><svg viewBox="0 0 54 54" aria-hidden="true"><rect x="10" y="10" width="30" height="34" fill="var(--ok-soft)" stroke="var(--ink)" stroke-width="1.2" stroke-dasharray="4 2"/><rect x="0" y="46" width="54" height="8" fill="var(--line)"/><rect x="0" y="0" width="54" height="8" fill="var(--line)"/><rect x="46" y="0" width="8" height="54" fill="var(--line)"/><rect x="16" y="20" width="16" height="16" fill="var(--wall)"/></svg><span>Tres frentes<br><span class="hint">esquina y atravesante</span></span></label>
         </div>
         <div class="inline"><label>Retiro frontal (m)<input type="number" id="wz-rf" min="0" max="10" step="0.05"></label><label id="wz-rl-l">Retiro a la calle lateral (m)<input type="number" id="wz-rl" min="0" max="6" step="0.05"></label><label id="wz-rp-l"><span id="wz-rp-t">Retiro posterior (m)</span><input type="number" id="wz-rp" min="0" max="10" step="0.05"></label></div>
+        <p style="margin-top:6px"><b>¿Tienes auto o piensas tenerlo, y quieres estacionarlo en tu casa?</b></p>
+        <div class="wz-fr" role="radiogroup" aria-label="Estacionar un auto">
+          <label><input type="radio" name="wz-auto" value="si"><span>Sí<br><span class="hint">el retiro frontal pasa a 5.00 m</span></span></label>
+          <label><input type="radio" name="wz-auto" value="no" checked><span>No<br><span class="hint">el retiro queda como dice el certificado</span></span></label>
+        </div>
+        <p class="hint">Un auto pide un espacio de 2.70 × 5.00 m (A.010 art. 54). Cada metro de retiro de más es un metro menos de casa, así que conviene decidirlo desde el inicio.</p>
         <p class="hint" id="wz-fr-txt">Los retiros salen del certificado de parámetros urbanísticos de la municipalidad. Cada lado que da a una calle lleva retiro frontal (A.010 art. 8.1 a).</p>
       </div>
       <div class="wz-step" data-step="4" hidden>
@@ -858,7 +866,7 @@ const presets = {
   pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'},
   chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',fr:'uno',rl:1.00,ind:false,tal:'no'}
 };
-const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc','ind','tal'];
+const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc','ind','tal','auto'];
 const el = id => document.getElementById(id);
 const f2 = x => x.toFixed(2);
 const f1 = x => x.toFixed(1);
@@ -874,7 +882,7 @@ function read(){
   ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','rl','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
   v.fr = el('fr').value || 'uno';
   v.nd = parseInt(el('nd').value,10)||2; v.nd2 = parseInt(el('nd2').value,10)||0; v.pl = el('pl').value; v.pp = parseFloat(el('pp').value)||1.25; v.ty = el('ty').value; v.sis = el('sis').value; v.ap = el('ap').value; v.z = parseFloat(el('z').value); v.s = parseFloat(el('s').value); v.n = parseInt(el('n').value,10);
-  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto'; v.ind = el('ind').checked; v.tal = el('tal').value || 'no';
+  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto'; v.ind = el('ind').checked; v.auto = el('auto').checked; v.tal = el('tal').value || 'no';
   return v;
 }
 
@@ -1487,7 +1495,8 @@ function draw(r){
   if(vd>0) g += `<text x="${XL(L/2)}" y="${(YL(0)+YL(-vd))/2+4}" text-anchor="middle" font-size="11" fill="var(--ink)">Vereda ${f2(vd)} m</text>`;
   g += `<text x="${XL(L/2)}" y="${YL(-vd)+18}" text-anchor="middle" font-size="11.5" font-weight="600" fill="var(--muted)">Calle</text>`;
   if(v.rf>0){ g += `<rect x="${XL(0)}" y="${YL(v.rf)}" width="${L*s}" height="${v.rf*s}" fill="var(--ok-soft)"/>`;
-    { const sf = r.stair && r.stair.front, lx = sf ? (r.stair.box.x0 > L/2 ? L*0.25 : L*0.75) : L/2; g += `<text x="${XL(lx)}" y="${(YL(0)+YL(v.rf))/2+4}" text-anchor="middle" font-size="11" fill="var(--ok)">Retiro frontal ${f2(v.rf)} m</text>`; } }
+    { const sf = r.stair && r.stair.front, lx = r.car ? (r.car.x0 + ox > L/2 ? (r.car.x0 + ox)/2 : (r.car.x1 + ox + L)/2) : sf ? (r.stair.box.x0 > L/2 ? L*0.25 : L*0.75) : L/2; g += `<text x="${XL(lx)}" y="${(YL(0)+YL(v.rf))/2+4}" text-anchor="middle" font-size="11" fill="var(--ok)">Retiro frontal ${f2(v.rf)} m</text>`; }
+    if(r.car) g += carSvg(r.car, X, Y, s); }
   const patioY0 = v.rf + D + T, patio = F - patioY0;
   // patio-lavandería = retiro posterior: todo el fondo libre es un solo espacio; la línea punteada marca el mínimo exigido
   if(patio > 0.05){ g += `<rect x="${XL(0)}" y="${YL(F)}" width="${L*s}" height="${patio*s}" fill="var(--ok-soft)"/>`;
@@ -3419,7 +3428,7 @@ function proPlan(r){
   // terreno: vereda, retiros, patio y límite del lote
   { const lab = (x, y, t, c='var(--ok)', fs=11) => `<text x="${X(x)}" y="${Y(y)}" text-anchor="middle" font-size="${fs}" fill="${c}">${t}</text>`;
     if(vd > 0){ g += `<rect x="${X(lx0-0.4)}" y="${Y(ly0)}" width="${(lx1-lx0+0.8)*s}" height="${vd*s}" fill="var(--line)" opacity=".55"/>` + lab((lx0+lx1)/2, ly0 - vd/2 + 0.05, `Vereda ${f2(vd)} m · calle`, 'var(--muted)', 10); }
-    if(v.rf > 0.05){ g += `<rect x="${X(lx0)}" y="${Y(-T/2)}" width="${(lx1-lx0)*s}" height="${(-T/2-ly0)*s}" fill="var(--ok-soft)"/>` + lab((lx0+lx1)/2, (ly0-T/2)/2 - 0.08, `Retiro frontal ${f2(v.rf)} m`); }
+    if(v.rf > 0.05){ g += `<rect x="${X(lx0)}" y="${Y(-T/2)}" width="${(lx1-lx0)*s}" height="${(-T/2-ly0)*s}" fill="var(--ok-soft)"/>` + lab(r.car ? (r.car.x0 > (lx0+lx1)/2 ? (lx0 + r.car.x0)/2 : (r.car.x1 + lx1)/2) : (lx0+lx1)/2, (ly0-T/2)/2 - 0.08, `Retiro frontal ${f2(v.rf)} m`) + (r.car && !f2nd ? carSvg(r.car, X, Y, s) : ''); }
     if(isEsq(v)){ const xw = W + T/2; // retiro lateral y vereda de la calle lateral
       if(lx1 - xw > 0.05){ g += `<rect x="${X(xw)}" y="${Y(D + T/2)}" width="${(lx1-xw)*s}" height="${(D+T)*s}" fill="var(--ok-soft)"/>` + `<text transform="translate(${X((xw+lx1)/2)+4},${Y(D/2)}) rotate(-90)" text-anchor="middle" font-size="10" fill="var(--ok)">retiro lateral ${f2(lx1-xw)} m</text>`; }
       if(vd > 0) g += `<rect x="${X(lx1)}" y="${Y(ly1 + (isAtr(v) ? vd : 0.4))}" width="${vd*s}" height="${(ly1 - ly0 + vd + (isAtr(v) ? vd : 0.4))*s}" fill="var(--line)" opacity=".55"/>` + `<text transform="translate(${X(lx1+vd/2)+4},${Y((ly0+ly1)/2)}) rotate(-90)" text-anchor="middle" font-size="10" fill="var(--muted)">Vereda ${f2(vd)} m · calle lateral</text>`;
@@ -3634,6 +3643,37 @@ document.querySelectorAll('.seg button[data-pp]').forEach(b=> b.addEventListener
 
 // Vivienda taller (A.020 art. 4.1): el taller en la sala (al frente) o en todo el 1.er piso, con la vivienda arriba
 const TAL_N = {d1:'Taller', d2:'Depósito', d3:'Depósito 2', sc:'Taller · atención', co:'Cocineta', ba:'Baño del taller', pa:'Pasaje'};
+// Auto en el retiro frontal: cajón individual de 2.70 × 5.00 m (A.010 art. 54.1, cuadro 3), permitido en el retiro sin techo o con techo ligero (art. 8.3 d)
+const CAR_W = 2.70, CAR_L = 5.00;
+function carApply(r, v){
+  r.car = null; if(!v.auto) return;
+  const G = 'Estacionamiento', add = (t, st, d) => r.checks.push({g:G, t, st, d});
+  const ox = v.med ? 0 : T/2, lx0 = -ox, lx1 = v.lote - ox, ly0 = -(v.rf + T/2), door = [v.a + 0.30, v.a + 1.30];
+  if(v.rf < CAR_L - 1e-6){ add('Retiro para el auto','bad', `El cajón de un auto mide <b>2.70 × 5.00 m</b> (A.010 art. 54.1, cuadro 3) y el retiro frontal tiene ${f2(v.rf)} m: súbelo a 5.00 m (se hace solo al marcar la opción). Al crecer el retiro, la casa pierde ${f2(CAR_L - v.rf)} m de fondo.`); return; }
+  const st = r.stair && r.stair.front ? r.stair.box : null, ov = (a0,a1,b0,b1) => a1 > b0 + 1e-6 && b1 > a0 + 1e-6;
+  const sides = isEsq(v) ? [[lx0, 'izquierda'], [lx1 - CAR_W, 'derecha']] : [[lx1 - CAR_W, 'derecha'], [lx0, 'izquierda']];
+  let why = '';
+  for(const [x0, lado] of sides){
+    const c = {x0, x1:x0 + CAR_W, y0:ly0, y1:ly0 + CAR_L, lado};
+    if(ov(c.x0, c.x1, door[0], door[1])){ why = 'el cajón tapa la puerta de la casa'; continue; }
+    if(st && ov(c.x0, c.x1, st.x0, st.x1) && ov(c.y0, c.y1, st.y0, st.y1)){ why = `choca con la escalera del retiro: haría falta un retiro de ${f2(CAR_L + (-T/2 - st.y0))} m`; continue; }
+    r.car = c; break; }
+  if(!r.car){ add('Cajón del auto','bad', `No entra el auto en el retiro: ${why}. Opciones: un frente más ancho, quitar la escalera del retiro o hacer más hondo el retiro.`); return; }
+  const libre = (lx1 - lx0) - CAR_W;
+  add('Cajón del auto','ok', `Cajón de <b>2.70 × 5.00 m</b> a la ${r.car.lado} del retiro frontal (A.010 art. 54.1, cuadro 3, estacionamiento individual), con altura libre de 2.10 m. Al lado quedan ${f2(libre)} m para entrar caminando a la casa${r.stair && r.stair.front ? ' y a la escalera' : ''}.`);
+  add('Techo y portón','ok', `En el retiro el estacionamiento va sin techo o con un techo ligero (A.010 art. 8.3 d). El portón puede ir en el límite del lote si al abrirse no invade la vereda: corredizo o que abra hacia adentro (art. 53.1 b).`);
+  add('Lo que cuesta','warn', `Con ${f2(v.rf)} m de retiro quedan <b>${f2(Math.max(0, v.fondo - v.rf - v.rp - T))} m</b> de fondo para construir. Si el certificado de parámetros pide menos retiro, ese metraje extra es el precio del auto: cada metro de retiro de más es un metro menos de casa en cada piso.`);
+}
+// dibujo del auto: cajón punteado y la silueta del coche (coordenadas de la casa)
+function carSvg(c, X, Y, s){
+  const bw = 1.80, bl = 4.40, cx = (c.x0 + c.x1)/2, cy = (c.y0 + c.y1)/2;
+  const bx = X(cx - bw/2), by = Y(cy + bl/2), w = bw*s, h = bl*s, rr = 0.35*s;
+  return `<g class="car"><rect x="${X(c.x0)}" y="${Y(c.y1)}" width="${CAR_W*s}" height="${CAR_L*s}" fill="none" stroke="var(--muted)" stroke-width="1" stroke-dasharray="5 3"/>`
+    + `<rect x="${bx}" y="${by}" width="${w}" height="${h}" rx="${rr}" fill="var(--panel)" stroke="var(--ink)" stroke-width="1.1"/>`
+    + `<rect x="${bx + 0.18*s}" y="${by + 1.10*s}" width="${w - 0.36*s}" height="${2.0*s}" rx="${0.2*s}" fill="none" stroke="var(--ink)" stroke-width=".8"/>`
+    + `<line x1="${bx + 0.18*s}" y1="${by + 1.60*s}" x2="${bx + w - 0.18*s}" y2="${by + 1.60*s}" stroke="var(--ink)" stroke-width=".6"/>`
+    + `<text x="${X(cx)}" y="${Y(c.y0) - 6}" text-anchor="middle" font-size="10" fill="var(--muted)">auto 2.70 × 5.00</text></g>`;
+}
 function tallerApply(r, v){
   if(!v.tal || v.tal === 'no') return;
   const R = r.rooms, G = 'Vivienda taller', add = (t, st, d) => r.checks.push({g:G, t, st, d});
@@ -3680,7 +3720,7 @@ function parRender(r){
 function render(){
   const v = read();
   ['a','b','d','ddr','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
-  const r = compute(v); tallerApply(r, v);
+  const r = compute(v); tallerApply(r, v); carApply(r, v);
   draw(r); draw2(r);
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
   try { relRender(r); } catch(e){ console.error('relaciones', e); }
@@ -3848,7 +3888,7 @@ function applyPlan(text, flname){
     try {
       const data = JSON.parse(text);
       if(!data || data.app !== 'verificador-vivienda-minima' || !data.valores) throw new Error('formato');
-      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='ind') el('ind').checked = false; if(k==='tal') el('tal').value = 'no'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
+      ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='ind') el('ind').checked = false; if(k==='auto') el('auto').checked = false; if(k==='tal') el('tal').value = 'no'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
       if(data.cliente){ try { localStorage.setItem('vvm-cliente', JSON.stringify(data.cliente)); } catch(e){} wzShowInfo(); }
       el('ppm').value = data.valores.ppm || 'auto'; if(!el('ppm').value) el('ppm').value = 'auto';
       if(NIV[data.nivel]){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
@@ -3865,7 +3905,7 @@ el('ppm').addEventListener('change', ()=>{ if(el('ppm').value !== 'auto') el('pp
 el('gen').addEventListener('click', ()=>{ el('gen-msg').textContent = 'Buscando…'; setTimeout(generate, 30); });
 
 // Los datos del terreno y del programa regeneran la planta solos; las cotas entre ejes solo redibujan.
-const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc','ind'];
+const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc','ind','auto'];
 let genTimer = null;
 const regen = () => {
   if(el('nd2').value!=='0' && parseInt(el('n').value,10) < 2) el('n').value = '2';
@@ -3873,6 +3913,10 @@ const regen = () => {
   genTimer = setTimeout(()=>{ generate(); checkTotal(); }, 350);
 };
 ids.forEach(k=> el(k).addEventListener('input', ()=>{ document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on')); if(autoKeys.includes(k)) regen(); else render(); }));
+// al marcar el auto el retiro frontal sube a 5.00 m; al desmarcarlo vuelve al que había
+el('auto').addEventListener('change', ()=>{ const rf = el('rf'), x = parseFloat(rf.value) || 0;
+  if(el('auto').checked){ if(x < CAR_L){ rf.dataset.prev = rf.value; rf.value = f2(CAR_L); } }
+  else if(rf.dataset.prev != null && Math.abs(x - CAR_L) < 1e-6){ rf.value = f2(parseFloat(rf.dataset.prev) || 0); delete rf.dataset.prev; } });
 ids.forEach(k=> el(k).addEventListener('change', ()=>{ if(autoKeys.includes(k)) regen(); else render(); }));
 el('lotpre').addEventListener('change', ()=>{ const v = el('lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('lote').value = f; el('fondo').value = d; document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on')); regen(); });
 function syncLotPre(){ const k = `${+parseFloat(el('lote').value)}x${+parseFloat(el('fondo').value)}`; el('lotpre').value = [...el('lotpre').options].some(o=>o.value===k) ? k : ''; }
@@ -3918,7 +3962,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15f';
+const APP_VERSION = '2026-11-15g';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
@@ -3977,6 +4021,7 @@ function wzOpen(){
   el('wz-lotpre').value = el('lotpre').value;
   const fr = el('fr').value || 'uno'; document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.checked = r.value === fr);
   document.querySelectorAll('input[name="wz-ind"]').forEach(r=> r.checked = r.value === (el('ind').checked ? 'si' : 'no'));
+  document.querySelectorAll('input[name="wz-auto"]').forEach(r=> r.checked = r.value === (el('auto').checked ? 'si' : 'no'));
   document.querySelectorAll('input[name="wz-tal"]').forEach(r=> r.checked = r.value === (el('tal').value || 'no'));
   el('wz-dir').value = c.dir || ''; el('wz-dist').value = c.dist || ''; el('wz-nom').value = c.nom || ''; el('wz-mail').value = c.mail || ''; el('wz-tel').value = c.tel || '';
   try { el('wz-off').checked = localStorage.getItem('vvm-asist-off') === '1'; } catch(e){}
@@ -4002,6 +4047,8 @@ function wzFinish(){
   try { localStorage.setItem('vvm-cliente', JSON.stringify(c)); } catch(e){}
   [['lote',4,12],['fondo',8,40],['rf',0,10],['rl',0,6],['rp',0,10]].forEach(([k,lo,hi])=>{ const x = num('wz-'+k, lo, hi); if(x != null) el(k).value = f2(x); });
   el('fr').value = fr; syncLotPre();
+  el('auto').checked = ((document.querySelector('input[name="wz-auto"]:checked') || {}).value === 'si');
+  if(el('auto').checked && (parseFloat(el('rf').value) || 0) < CAR_L) el('rf').value = f2(CAR_L);
   el('ind').checked = ((document.querySelector('input[name="wz-ind"]:checked') || {}).value === 'si');
   wzShowInfo();
   const tal = (document.querySelector('input[name="wz-tal"]:checked') || {}).value || 'no'; el('tal').value = tal;
@@ -4022,6 +4069,9 @@ el('wz-pm').addEventListener('click', ()=>{ wzP = Math.max(1, wzP - 1); wzRender
 el('wz-pp').addEventListener('click', ()=>{ wzP = Math.min(12, wzP + 1); wzRender(); });
 el('wz-dm').addEventListener('click', ()=>{ wzDauto = false; wzD = Math.max(1, wzD - 1); wzRender(); });
 el('wz-dp').addEventListener('click', ()=>{ wzDauto = false; wzD = Math.min(6, wzD + 1); wzRender(); });
+document.querySelectorAll('input[name="wz-auto"]').forEach(r=> r.addEventListener('change', ()=>{ const rf = el('wz-rf'), x = parseFloat(rf.value) || 0;
+  if(r.value === 'si' && r.checked && x < CAR_L){ rf.dataset.prev = rf.value; rf.value = f2(CAR_L); }
+  if(r.value === 'no' && r.checked && rf.dataset.prev != null){ rf.value = rf.dataset.prev; delete rf.dataset.prev; } }));
 document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.addEventListener('change', ()=>{ const f = r.value; if((f==='atr'||f==='tres') && parseFloat(el('wz-rp').value) < parseFloat(el('wz-rf').value)) el('wz-rp').value = el('wz-rf').value; wzRender(); }));
 el('wz-lotpre').addEventListener('change', ()=>{ const v = el('wz-lotpre').value; if(!v) return; const [f,d] = v.split('x').map(Number); el('wz-lote').value = f; el('wz-fondo').value = d; wzRender(); });
 ['wz-lote','wz-fondo'].forEach(id=> el(id).addEventListener('input', ()=>{ el('wz-lotpre').value = ''; wzRender(); }));
