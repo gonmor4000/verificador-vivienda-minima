@@ -1,6 +1,6 @@
 # RNE consultable
 
-`rne.html` (en la raíz) muestra el Reglamento Nacional de Edificaciones, Título III.1 Arquitectura (A.010 a A.130).
+`rne.html` (en la raíz) muestra el Reglamento Nacional de Edificaciones completo: Título III.1 Arquitectura (A.010 a A.130, en `rne-data.js`) y el resto de normas de los Títulos I, II y III (en `normas/`, una por archivo, cargadas al abrirlas o al buscar).
 
 ## Enlaces estables
 
@@ -20,6 +20,14 @@ El verificador (`index.html`) convierte solo cada cita «A.0x0 art. N…» en un
 - `RNE_ilustrado.pdf`: RNE ilustrado (edición 2012; A.010 y A.020 de 2006 y parte de la A.030).
 - `oficial/A010.pdf` … `A130.pdf`: PDF oficiales de cada norma; `oficial-data.js` dice en qué página empieza cada artículo (si falta uno, la página usa la del artículo anterior).
 - `herramientas/`: `RNE.txt` (texto de las separatas de El Peruano), `parse.py`, `tablas.py` (tablas rearmadas a mano), `ilu.py` y `oficial.py`.
+
+## Otras normas (`normas/`)
+
+- `normas/indice.js`: lista (código, título, versión, grupo, páginas). `normas/<ID>.js`: texto de cada norma (G010, GH020, TH010, CE040, OS090, EC040, GE020, A011, A140, E070, IS010, EM110…).
+- Anclas: normas por artículos como `rne.html#E070-art-8.3`; normas por numerales como `rne.html#E060-21.4.2` o `rne.html#OS030-3`; definiciones de la G.040 como `rne.html#G040-def-area-techada`.
+- `oficial/<ID>.pdf`: PDF oficial; cada sección guarda su página («PDF oficial p. N»).
+- Faltan en la carpeta de origen: E.031 (el archivo traía la E.040), E.050 (traía la EM.020) y la parte inicial de la G.020. La E.030, la E.080 y la EM.040 son escaneos: su texto sale de OCR (tesseract, español).
+- Regenerar: `pdftotext <pdf> txt/<ID>.txt` (OCR para los escaneados, páginas separadas por \f) y `python3 rne/herramientas/otras.py txt rne/normas`.
 
 ## Versiones
 

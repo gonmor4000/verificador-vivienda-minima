@@ -263,6 +263,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <button type="button" id="p-chica">Lote de 5.50 m</button>
     </div>
     <div class="upd">
+      <a href="rne.html" class="rne-home" target="_blank" rel="noopener" title="Reglamento Nacional de Edificaciones completo, con buscador y PDF oficial de cada norma">RNE consultable →</a>
       <a href="multifamiliar.html">Vivienda multifamiliar →</a>
       <a href="referentes.html">Referentes (PREVI y más) →</a>
       <a href="tiempo-construye.html">PREVI 1978 → 2003 →</a>
@@ -619,6 +620,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>RNE consultable completo</b> y con enlace arriba a la derecha («RNE consultable →»): además de la A.010 a la A.130 ahora trae las <b>55 normas que faltaban</b> de los Títulos I, II y III (G.010–G.050, GH, TH, CE, OS, EC, GE, A.011, A.140, E.010–E.100, IS.010, IS.020, EM.010–EM.110), agrupadas como el índice del RNE, con índice por artículo o numeral, buscador en todas las normas y el botón «PDF oficial p. N» en cada sección. La E.030, la E.080 y la EM.040 venían escaneadas y se leyeron con OCR.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span>PREVI 1978 → 2003: <b>escaleras completas y delimitadas</b> (peldaños, contorno, caracoles y escaleras exteriores) y <b>muebles cerrados</b> (camas, mesas redondas, sillones, sanitarios) en los 11 casos; también las escaleras y trazos discontinuos que quedaban fuera del dibujo.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Plano para AutoCAD</b>: en Diseño Pro, el botón «Descargar plano CAD (.dxf → DWG)» baja la planta en metros y a escala real, con los dos pisos lado a lado si hay 2.º piso. Viene por capas: MUROS, TABIQUES, COLUMNAS, VENTANAS, PUERTAS, MUEBLES (si están visibles), COTAS, EJES, ESCALERA, CORTES, PISOS, TERRENO y TEXTOS. AutoCAD lo abre directamente y con «Guardar como» queda en DWG (el DWG es un formato cerrado de Autodesk, por eso se exporta en DXF).</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Acceso al patio según el nivel</b>: en el económico se sale por la cocina (lo más barato); desde el estándar, por un <b>pasillo de 0.90 m</b> junto a la cocina, separado con un tabique, y la cocina gana una ventana al patio. Si el frente no da para el pasillo y una cocina de 1.50 m, se queda por la cocina y la verificación dice cuánto falta. Se puede fijar a mano en «Acceso al patio».</span></li>
@@ -4324,7 +4326,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15l';
+const APP_VERSION = '2026-11-15m';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
