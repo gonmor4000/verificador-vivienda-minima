@@ -224,7 +224,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 .wz-head h2{font-family:var(--f-display);font-size:18px;margin:0}
 .wz-dots{display:flex;gap:5px}.wz-dots i{width:8px;height:8px;border-radius:50%;background:var(--line)}.wz-dots i.on{background:var(--brick)}
 .wz-body{padding:16px 20px;overflow:auto;display:flex;flex-direction:column;gap:12px}
-.wz-body p{margin:0}.wz-body .hint{font-size:12.5px;color:var(--muted)}
+.wz-body p{margin:0}.wz-note{font-size:12.5px;border-left:3px solid var(--brick);background:var(--brick-soft);padding:8px 10px;border-radius:0 6px 6px 0}.wz-body .hint{font-size:12.5px;color:var(--muted)}
 .wz-body label{font-weight:500;display:flex;flex-direction:column;gap:4px}
 .wz-body input[type=text],.wz-body input[type=email],.wz-body input[type=tel]{font:inherit;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:5px;padding:7px 8px;width:100%}
 .wz-step{display:flex;flex-direction:column;gap:12px}
@@ -558,6 +558,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Mensaje de inicio</b> en el asistente: explica para qué sirve la herramienta (una casa ordenada que crece por etapas sin romper lo construido, con presupuesto aproximado y respetando el RNE) y recomienda certificado de parámetros, estudio de suelos, ingeniero civil, arquitecto e ingenieros para el expediente y licencia municipal.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos independientes</b>: nueva opción «Independizar los pisos en el futuro» (y pregunta en el asistente). La escalera va al <b>retiro frontal</b> con entrada propia desde la calle (A.010 art. 8.3 l): de un tramo junto a la fachada si no pasa sobre la puerta de la casa, si no de caracol; el descanso llega frente al estar del 2.º piso, que abre su puerta a la fachada. Si el retiro es corto, lo dice y deja la escalera en el patio.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Vivienda taller</b> (A.020 art. 4.1): opción «Taller o negocio en el 1.er piso», en una parte (la sala del frente pasa a taller o tienda) o en todo el piso (taller, depósito, atención, cocineta y baño del taller, sin camas, y la familia vive arriba). Verificaciones de dónde vive la familia, acceso sin cruzar el taller, zonificación, licencia y extintor. El asistente pregunta además el tamaño del terreno y muestra su área.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Asistente de inicio</b> al abrir la página: pregunta cuántas personas vivirán (y propone los dormitorios), la dirección y las medidas del lote, cuántas calles lo tocan y, al final y de forma opcional, nombre, correo y teléfono, que se quedan en el equipo y van dentro del plano guardado. Tiene botón <b>Pasar</b> en cada paso, se vuelve a abrir con «Asistente de inicio» y se puede desactivar.</span></li>
@@ -720,7 +721,9 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <div class="wz-head"><h2 id="wz-title">Empecemos tu casa</h2><div class="wz-dots" id="wz-dots" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
     <div class="wz-body">
       <div class="wz-step" data-step="0">
-        <p>Te hago cinco preguntas cortas y dibujo una casa que cumple el RNE en tu lote: cuántos viven, dónde está el lote, cuántas calles lo tocan, si piensas independizar los pisos o tener un taller y, al final, si quieres, tus datos.</p>
+        <p><b>Una casa ordenada desde el primer día, que pueda crecer sin romper lo que ya construiste.</b> Muchas casas se amplían sin plan: el baño nuevo queda lejos de los desagües, hay que picar una viga para pasar un tubo, la escalera no tiene sitio. Aquí recibes un esquema que deja previsto dónde va cada cosa en cada etapa, un presupuesto aproximado por etapa y una arquitectura que respeta el Reglamento Nacional de Edificaciones.</p>
+        <p>Te hago cinco preguntas cortas y dibujo la casa en tu lote: cuántos viven, dónde está el lote, cuántas calles lo tocan, si piensas independizar los pisos o tener un taller y, al final, si quieres, tus datos.</p>
+        <p class="wz-note">Esto no reemplaza a los profesionales. Antes de construir te recomendamos: pedir a la municipalidad el <b>certificado de parámetros</b> de tu lote, hacer un <b>estudio de suelos</b>, contratar a un <b>ingeniero civil</b> para el cálculo estructural y a un <b>arquitecto e ingenieros</b> para el expediente, y sacar la <b>licencia</b> de la municipalidad antes de empezar la obra.</p>
         <p class="hint">Si solo quieres mirar, pulsa <b>Pasar</b> y se abre la propuesta de ejemplo. Puedes volver aquí con el botón «Asistente de inicio» de arriba.</p>
       </div>
       <div class="wz-step" data-step="1" hidden>
@@ -3820,7 +3823,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15c';
+const APP_VERSION = '2026-11-15d';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
