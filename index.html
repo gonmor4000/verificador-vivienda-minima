@@ -256,6 +256,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <div class="upd">
       <a href="multifamiliar.html">Vivienda multifamiliar →</a>
       <a href="referentes.html">Referentes (PREVI y más) →</a>
+      <a href="tiempo-construye.html">PREVI 1978 → 2003 →</a>
       <span class="ver" id="ver"></span>
       <button type="button" id="wz-open">Asistente de inicio</button>
       <button type="button" id="upd-btn">Actualizar</button>
@@ -558,7 +559,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
-      <li><time datetime="2026-11-15">15 nov 2026</time><span>Referentes: <b>11 casas PREVI en 1978 y en 2003</b>, redibujadas a partir del libro «¡El tiempo construye!» (Kikutake-Maki-Kurokawa, Esguerra y otros, Atelier 5 ×2, Van Eyck, Korhonen, Svenssons, Crousse-Páez-Pérez León, Alexander, Llanos-Mazzarri y Correa). Cada ficha muestra el plano original y la transformación de las plantas, con lo agregado por la familia en rojo, muebles, cotas generales de la parcela y m² por etapa, con cita y página.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span>Nueva página <b>PREVI 1978 → 2003</b> (tiempo-construye.html, enlace arriba junto a Referentes): <b>11 casas PREVI en 1978 y en 2003</b>, redibujadas a partir del libro «¡El tiempo construye!» (Kikutake-Maki-Kurokawa, Esguerra y otros, Atelier 5 ×2, Van Eyck, Korhonen, Svenssons, Crousse-Páez-Pérez León, Alexander, Llanos-Mazzarri y Correa). Cada caso muestra el plano original y la transformación de las plantas, con lo agregado por la familia en rojo, muebles, cotas generales de la parcela y m² por etapa, con cita y página.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Asistente de inicio</b> al abrir la página: pregunta cuántas personas vivirán (y propone los dormitorios), la dirección y las medidas del lote, cuántas calles lo tocan y, al final y de forma opcional, nombre, correo y teléfono, que se quedan en el equipo y van dentro del plano guardado. Tiene botón <b>Pasar</b> en cada paso, se vuelve a abrir con «Asistente de inicio» y se puede desactivar.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Lotes en esquina, atravesantes y de tres frentes</b> (nuevo selector «Frentes del lote»): cada lado que da a una calle lleva su retiro (A.010 art. 8.1 a), con un retiro lateral propio; se dibujan la calle lateral y la posterior con su vereda, el <b>ochavo</b> de 3.00 m (A.010 art. 12) y un portón al patio. En esquina el eje D pasa a ser fachada y la sala gana una <b>ventana lateral</b>; Diseño Pro suma la elevación lateral y el 3D las calles. Nuevas verificaciones: retiro lateral, ochavo, fachadas y segundo ingreso, que permite subir al 2.º piso sin pasar por la casa.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span>Escalera de caracol: el descanso de llegada lleva ahora <b>dos guardacuerpos paralelos</b>, uno a cada lado, del muro al borde por donde se llega. Se ven en la planta, el 3D y la exportación a SketchUp.</span></li>
@@ -3746,7 +3747,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15c';
+const APP_VERSION = '2026-11-15d';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
