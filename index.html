@@ -619,7 +619,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Objetivo con la casa</b>: el asistente pregunta si es para vivir cómodos, vivir y alquilar una parte, o sacarle el máximo provecho. Eso fija el nivel de los ambientes (amplio, estándar o económico), propone independizar los pisos cuando hay alquiler y suma una verificación con lo que conviene prever.</span></li>
-      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos de la etapa 2</b>: nueva opción «Piso de la sala y los dormitorios» (vinílico en rollo, el más barato; vinílico SPC en clic; cerámico; porcelanato; o quedarse con el cemento pulido) y pregunta en el asistente. La cocina y el baño llevan cerámico antideslizante. Se ve en Diseño Pro (trama y rótulo en cada ambiente y un cuadro de acabados con m² y costo), en el 3D y en el costo de las etapas 2 y 3.</span></li>
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pisos de la etapa 2</b>: nueva opción «Piso de la sala y los dormitorios» (vinílico en rollo, el más barato; vinílico SPC en clic; cerámico; porcelanato; o quedarse con el cemento pulido) y el botón <b>«Elegir acabados»</b> de la etapa 2 (pestaña Etapas y barra de proyección), aparte del asistente inicial para no cargarlo. La cocina y el baño llevan cerámico antideslizante. Se ve en Diseño Pro (trama y rótulo en cada ambiente y un cuadro de acabados con m² y costo), en el 3D y en el costo de las etapas 2 y 3.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Etapas 3 y 4 juntas y 3D coherente con las etapas</b>: ahora son 4 etapas. 1 casco, 2 acabados del 1.er piso, 3 el 2.º piso terminado con la fachada y la azotea (antes eran dos etapas) y 4 diversificación. En el 3D la etapa 1 es todo casco (ladrillo visto, piso pulido, sin puertas interiores); en la etapa 2 el 1.er piso queda tarrajeado y pintado por dentro, con pisos, enchape en el baño y la cocina y puertas interiores, pero la fachada sigue en ladrillo, como en el presupuesto; la etapa 3 sube y termina el 2.º piso y pinta la fachada. Las medianeras quedan en ladrillo (el vecino las tapa). En las etapas 2 y 3 el 3D se abre sin techo para que se vean los acabados.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Zonificación</b>: buscas la dirección (o tocas el lote en el mapa, o pulsas «Estoy en el lote» con el teléfono) y dice la zonificación del lote según el plano vigente de Lima Metropolitana del IMP (visor Zonificación Urbana 2026), con su área de tratamiento normativo, la ordenanza y qué implica para la casa. La zonificación queda en la línea del proyecto.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Auto en casa</b>: nueva pregunta en el asistente y opción «Estacionar un auto en casa». El retiro frontal pasa a <b>5.00 m</b> y se dibuja el espacio del auto de 2.70 × 5.00 m (A.010 art. 54), a un lado de la puerta y sin chocar con la escalera del retiro; el estacionamiento en el retiro va sin techo o con techo ligero (art. 8.3 d). La pestaña Parámetros explica las siglas de zonificación (RDM, RDB, VT, CV…).</span></li>
@@ -860,14 +860,6 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         <p><b>¿Cuánto tienes para la primera etapa de la obra?</b></p>
         <label>Presupuesto en soles, solo para construir (sin el terreno)<input type="number" id="wz-pres" min="0" step="500" inputmode="numeric" placeholder="Ej.: 40000"></label>
         <p class="hint">Lo que tienes ahorrado o el crédito que puedes sacar (por ejemplo, el bono de Techo Propio más tu ahorro). Al final te digo qué etapas alcanzas con eso y cuánto falta. Puedes dejarlo vacío.</p>
-        <p style="margin-top:6px"><b>¿Qué piso quieres en la sala y los dormitorios?</b> <span class="hint">(se pone en la etapa 2)</span></p>
-        <div class="wz-fr" role="radiogroup" aria-label="Piso de la sala y los dormitorios">
-          <label><input type="radio" name="wz-pis" value="vinr" checked><span>Vinílico en rollo<br><span class="hint">lámina de PVC, el más barato · unos S/ 35 el m²</span></span></label>
-          <label><input type="radio" name="wz-pis" value="vin"><span>Vinílico SPC en clic<br><span class="hint">parece madera y aguanta agua y golpes · unos S/ 60 el m²</span></span></label>
-          <label><input type="radio" name="wz-pis" value="cer"><span>Cerámico<br><span class="hint">60 × 60, el de siempre · unos S/ 65 el m²</span></span></label>
-          <label><input type="radio" name="wz-pis" value="pul"><span>Me quedo con el cemento pulido<br><span class="hint">solo un sellador · unos S/ 12 el m²</span></span></label>
-        </div>
-        <p class="hint">La cocina y el baño llevan cerámico antideslizante, que se limpia con agua. Precios con instalación, de referencia.</p>
       </div>
       <div class="wz-step" data-step="6" hidden>
         <p><b>Tus datos</b> <span class="hint">(opcional)</span></p>
@@ -896,6 +888,23 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <button type="button" id="wz-next" class="wz-next">Siguiente</button>
       <label class="chk2"><input type="checkbox" id="wz-off"> No mostrar el asistente al abrir la página</label>
     </div>
+  </form>
+</dialog>
+<dialog class="wz" id="wz2" aria-labelledby="wz2-title">
+  <form method="dialog" class="wz-in">
+    <div class="wz-head"><h2 id="wz2-title">Acabados de la etapa 2</h2></div>
+    <div class="wz-body">
+      <p class="hint">Estas decisiones se toman cuando el casco (etapa 1) ya está hecho y la familia vive en la casa. Se ven en Diseño Pro, en el 3D y en el costo de la etapa 2; los mismos acabados se usan en el 2.º piso (etapa 3).</p>
+        <p><b>¿Qué piso quieres en la sala y los dormitorios?</b></p>
+        <div class="wz-fr" role="radiogroup" aria-label="Piso de la sala y los dormitorios">
+          <label><input type="radio" name="wz-pis" value="vinr" checked><span>Vinílico en rollo<br><span class="hint">lámina de PVC, el más barato · unos S/ 35 el m²</span></span></label>
+          <label><input type="radio" name="wz-pis" value="vin"><span>Vinílico SPC en clic<br><span class="hint">parece madera y aguanta agua y golpes · unos S/ 60 el m²</span></span></label>
+          <label><input type="radio" name="wz-pis" value="cer"><span>Cerámico<br><span class="hint">60 × 60, el de siempre · unos S/ 65 el m²</span></span></label>
+          <label><input type="radio" name="wz-pis" value="pul"><span>Me quedo con el cemento pulido<br><span class="hint">solo un sellador · unos S/ 12 el m²</span></span></label>
+        </div>
+        <p class="hint">La cocina y el baño llevan cerámico antideslizante, que se limpia con agua. Precios con instalación, de referencia.</p>
+    </div>
+    <div class="wz-foot"><span class="sp"></span><button type="button" id="wz2-cancel">Cancelar</button><button type="button" id="wz2-ok" class="wz-next">Guardar</button></div>
   </form>
 </dialog>
 
@@ -3415,10 +3424,11 @@ function etapas(r){
       return `<div class="lb"><b>Etapa ${k} · ${ET_N[k]}</b><span>${a} meses de ahorro + ${f1(o)} de obra · año ${f1(y0)} a ${f1(y1)}</span></div><div class="bar" title="Etapa ${k}"><div class="gap" style="flex:${pre}"></div><div class="sv" style="flex:${a}"></div><div class="ob" style="flex:${o}"></div><div class="gap" style="flex:${Tt - t0}"></div></div>`; }).join(''); }
   el('et-note').innerHTML = `Cada fila es una etapa sobre la misma línea de tiempo: rayado, meses ahorrando; color, meses de obra. Total: unos <b>${Math.round(yrs*2)/2} años</b> desde que se tiene el lote, frente a los 16 años típicos de la autoconstrucción en Lima (GRADE).` + (has2 ? '' : ` <b>Tu plano no tiene 2.º piso</b>: la etapa 3 supone un 2.º piso del mismo tamaño con 2 dormitorios y baño. Elige dormitorios arriba en la pestaña Diseño para calcularla con tu plano.`) + ` La pestaña Diseño calcula la casa a S/ ${nf(r.v.cm2)}/m², un precio de constructora con gastos generales; aquí se suma partida por partida.`;
   box.innerHTML = [1,2,3].map(k=>{ const s = E[k];
-    return `<section class="card et-card"><div class="et-h"><h2>Etapa ${k} · ${ET_N[k]}</h2><span class="et-c">${soles(s.cost)}</span><span class="hint">${s.sav} meses de ahorro · unos ${f1(s.ob)} meses de obra · ${f1(s.A)} m²${(k>2 && !has2)?' supuestos':''}</span><button type="button" data-pjgo="${k}">Ver en planta y 3D</button></div>
+    return `<section class="card et-card"><div class="et-h"><h2>Etapa ${k} · ${ET_N[k]}</h2><span class="et-c">${soles(s.cost)}</span><span class="hint">${s.sav} meses de ahorro · unos ${f1(s.ob)} meses de obra · ${f1(s.A)} m²${(k>2 && !has2)?' supuestos':''}</span><button type="button" data-pjgo="${k}">Ver en planta y 3D</button>${k === 2 ? '<button type="button" class="wz-next" data-acab="1">Elegir acabados</button>' : ''}</div>
       <p class="hint" style="margin:6px 0 0">${s.why}</p>
       <div class="et-cols"><div><h3>Qué incluye</h3><ul>${s.inc.map(x=>`<li>${x}</li>`).join('')}</ul>${s.no.length?`<h3 style="margin-top:8px">Qué queda para después</h3><ul>${s.no.map(x=>`<li>${x}</li>`).join('')}</ul>`:''}</div>
       <div style="min-width:0"><h3>Costo estimado por partida</h3><div class="ca-wrap"><table class="ca et-t"><tbody>${s.it.map(([n,c])=>`<tr><td>${n}</td><td class="n">${soles(c)}</td></tr>`).join('')}<tr class="tot"><td>Total etapa ${k}</td><td class="n">${soles(s.cost)}</td></tr></tbody></table></div></div></div></section>`; }).join('');
+  box.querySelectorAll('[data-acab]').forEach(b=> b.addEventListener('click', wz2Open));
   box.querySelectorAll('[data-pjgo]').forEach(b=> b.addEventListener('click', ()=>{ setProj(true, +b.dataset.pjgo); showTab('3d'); }));
   const lo = x => soles(Math.round(x/500)*500);
   el('et-opts').innerHTML = [
@@ -3456,7 +3466,8 @@ function applyProj(r){
   if(!on){ cap(c1); cap(c2); el('pj-txt').textContent = 'Actívala para ver la casa como queda al final de cada etapa, en la planta y en el 3D.'; return; }
   cap(c1, st===1 ? 'Etapa 1 · casco: ladrillo sin tarrajeo, piso pulido; ya se puede vivir' : 'Terminado en la etapa 2 (acabados)');
   cap(c2, !has2 ? '' : st<3 ? 'Todavía no existe: se construye en la etapa 3' : 'Construido y terminado en la etapa 3');
-  el('pj-txt').innerHTML = `<b>Etapa ${st} · ${ET_N[st]}.</b> ` + (st===4 ? 'La casa terminada con los fierros listos para crecer. Las opciones están en la pestaña Etapas.' : (!has2 && st>=3 ? 'Tu plano no tiene 2.º piso: elige dormitorios arriba en Diseño para verlo.' : 'Detalle y costo en la pestaña Etapas.'));
+  el('pj-txt').innerHTML = `<b>Etapa ${st} · ${ET_N[st]}.</b> ` + (st===2 ? 'Los pisos y demás acabados se eligen con <a href="#" id="pj-acab">Elegir acabados</a>. Detalle y costo en la pestaña Etapas.' : st===4 ? 'La casa terminada con los fierros listos para crecer. Las opciones están en la pestaña Etapas.' : (!has2 && st>=3 ? 'Tu plano no tiene 2.º piso: elige dormitorios arriba en Diseño para verlo.' : 'Detalle y costo en la pestaña Etapas.'));
+  { const a = el('pj-acab'); if(a) a.addEventListener('click', e=>{ e.preventDefault(); wz2Open(); }); }
 }
 el('pj-on').addEventListener('change', ()=> setProj(el('pj-on').checked));
 document.querySelectorAll('#pj-seg button').forEach(b=> b.addEventListener('click', ()=> setProj(true, +b.dataset.pj)));
@@ -4239,6 +4250,11 @@ function wzRender(){
   { const lo = parseFloat(el('wz-lote').value), fo = parseFloat(el('wz-fondo').value); el('wz-area').innerHTML = lo > 0 && fo > 0 ? `Terreno de <b>${f2(lo)} × ${f2(fo)} m = ${f1(lo*fo)} m²</b>.` : ''; }
   el('wz-rl-l').hidden = !e; el('wz-rp-t').textContent = a ? 'Retiro a la calle de atrás (m)' : 'Retiro posterior (m)';
 }
+// acabados de la etapa 2: se eligen aparte, cuando la etapa 1 ya está validada
+function wz2Open(){ document.querySelectorAll('input[name="wz-pis"]').forEach(r=> r.checked = r.value === (el('pis').value || 'vinr')); const d = el('wz2'); if(d.showModal) d.showModal(); else d.setAttribute('open',''); }
+function wz2Close(){ const d = el('wz2'); if(d.close) d.close(); else d.removeAttribute('open'); }
+el('wz2-cancel').addEventListener('click', wz2Close);
+el('wz2-ok').addEventListener('click', ()=>{ el('pis').value = (document.querySelector('input[name="wz-pis"]:checked') || {}).value || 'vinr'; wz2Close(); render(); });
 function wzOpen(){
   const c = wzCli();
   wzDauto = !c.d; wzD = c.d || 2; el('wz-pres').value = c.pres || '';
@@ -4249,7 +4265,6 @@ function wzOpen(){
   const fr = el('fr').value || 'uno'; document.querySelectorAll('input[name="wz-fr"]').forEach(r=> r.checked = r.value === fr);
   document.querySelectorAll('input[name="wz-ind"]').forEach(r=> r.checked = r.value === (el('ind').checked ? 'si' : 'no'));
   document.querySelectorAll('input[name="wz-auto"]').forEach(r=> r.checked = r.value === (el('auto').checked ? 'si' : 'no'));
-  document.querySelectorAll('input[name="wz-pis"]').forEach(r=> r.checked = r.value === (el('pis').value || 'vinr'));
   document.querySelectorAll('input[name="wz-obj"]').forEach(r=> r.checked = r.value === (el('obj').value || 'vivir'));
   document.querySelectorAll('input[name="wz-tal"]').forEach(r=> r.checked = r.value === (el('tal').value || 'no'));
   el('wz-dir').value = c.dir || ''; el('wz-dist').value = c.dist || ''; el('wz-nom').value = c.nom || ''; el('wz-mail').value = c.mail || ''; el('wz-tel').value = c.tel || '';
@@ -4277,7 +4292,6 @@ function wzFinish(){
   [['lote',4,12],['fondo',8,40],['rf',0,10],['rl',0,6],['rp',0,10]].forEach(([k,lo,hi])=>{ const x = num('wz-'+k, lo, hi); if(x != null) el(k).value = f2(x); });
   el('fr').value = fr; syncLotPre();
   el('auto').checked = ((document.querySelector('input[name="wz-auto"]:checked') || {}).value === 'si');
-  el('pis').value = (document.querySelector('input[name="wz-pis"]:checked') || {}).value || 'vinr';
   const obj = (document.querySelector('input[name="wz-obj"]:checked') || {}).value || 'vivir'; el('obj').value = obj;
   { const niv = {vivir:'amp', ambos:'est', renta:'eco'}[obj]; if(niv && niv !== nivel){ nivel = niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} } }
   if(el('auto').checked && (parseFloat(el('rf').value) || 0) < CAR_L) el('rf').value = f2(CAR_L);
