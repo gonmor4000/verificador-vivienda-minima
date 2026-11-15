@@ -1,0 +1,1655 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Preguntas del proyecto</title>
+<meta name="description" content="Todas las preguntas que salieron en el proyecto (normativa, diseño, verificador, costos, negocio, doctorado, referentes, clima y herramientas), con su respuesta, su fecha y el hilo donde se respondió.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --bg:#eef0ee; --panel:#f9faf9; --ink:#1d2320; --muted:#5d6762; --line:#cfd5d1;
+  --brick:#a94a26; --brick-soft:rgba(169,74,38,.10);
+  --ok:#2f7d4f; --ok-soft:rgba(47,125,79,.12); --no:#b03a2e; --no-soft:rgba(176,58,46,.11); --warn:#a46a0c; --warn-soft:rgba(164,106,12,.13);
+  --f-display:"Archivo",system-ui,sans-serif; --f-mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --no:#ec8a7e; --no-soft:rgba(236,138,126,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#151917; --panel:#1d2220; --ink:#e4e8e5; --muted:#9aa49f; --line:#333a36;
+  --brick:#e0805a; --brick-soft:rgba(224,128,90,.14);
+  --ok:#6cc08e; --ok-soft:rgba(108,192,142,.14); --no:#ec8a7e; --no-soft:rgba(236,138,126,.14); --warn:#e0a83e; --warn-soft:rgba(224,168,62,.15); color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-display);font-size:15px;line-height:1.55}
+a{color:var(--brick)}
+.top{display:flex;flex-wrap:wrap;align-items:end;justify-content:space-between;gap:10px;padding:16px 16px 12px;border-bottom:1px solid var(--line);background:var(--panel)}
+.top h1{font-size:22px;margin:0;letter-spacing:-.01em}
+.top p{margin:2px 0 0;color:var(--muted);font-size:13.5px;max-width:80ch}
+.top nav{display:flex;gap:8px;flex-wrap:wrap}
+.top nav a{font-size:13.5px;text-decoration:none;border:1px solid var(--line);border-radius:6px;padding:6px 11px;color:var(--ink);background:var(--bg)}
+.top nav a:hover{border-color:var(--brick)}
+main{max-width:900px;margin:0 auto;padding:16px 16px 60px}
+.tools{position:sticky;top:0;background:var(--bg);padding:8px 0 10px;z-index:2}
+input[type=search]{width:100%;font:inherit;padding:9px 12px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink)}
+input:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--brick);outline-offset:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tags button{font:inherit;font-size:12.5px;border:1px solid var(--line);background:var(--panel);color:var(--ink);border-radius:12px;padding:2px 10px;cursor:pointer}
+.tags button.on{background:var(--brick);border-color:var(--brick);color:var(--panel)}
+.count{font-size:12.5px;color:var(--muted);margin:6px 0 0}
+details.q{background:var(--panel);border:1px solid var(--line);border-radius:8px;margin:10px 0}
+details.q[open]{border-color:var(--brick)}
+details.q summary{cursor:pointer;list-style:none;padding:12px 16px;display:flex;gap:10px;align-items:baseline}
+details.q summary::-webkit-details-marker{display:none}
+summary .t{font-weight:600;font-size:16px;flex:1}
+summary .v{font-size:12px;font-weight:600;border-radius:10px;padding:1px 9px;white-space:nowrap}
+@media (max-width:600px){details.q summary{flex-direction:column;gap:4px} summary .v{white-space:normal}}
+.v.si{background:var(--ok-soft);color:var(--ok)} .v.no{background:var(--no-soft);color:var(--no)} .v.dep{background:var(--warn-soft);color:var(--warn)}
+.body{padding:0 16px 14px;border-top:1px solid var(--line)}
+.body p,.body li{max-width:75ch}
+.body ul{padding-left:20px}
+.meta{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:12.5px;color:var(--muted);margin-top:10px}
+.meta .tg{background:var(--bg);border-radius:10px;padding:0 8px}
+a.cit{font-family:var(--f-mono);font-size:13px;white-space:nowrap;text-decoration:none;background:var(--brick-soft);border-radius:4px;padding:0 4px}
+a.cit:hover{text-decoration:underline}
+.add{margin-top:28px;font-size:13.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+mark{background:rgba(224,168,62,.35);color:inherit;border-radius:2px}
+</style>
+<style>
+.row{display:flex;gap:8px;flex-wrap:wrap}
+.row input[type=search]{flex:1;min-width:200px}
+select{font:inherit;font-size:13.5px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;background:var(--panel);color:var(--ink);max-width:100%}
+.tags button .n{color:var(--muted);font-size:11.5px;margin-left:3px}
+.tags button.on .n{color:inherit;opacity:.8}
+.cat{font-size:11.5px;font-weight:600;color:var(--brick);background:var(--brick-soft);border-radius:10px;padding:1px 8px;white-space:nowrap}
+summary .d{font-size:12px;color:var(--muted);white-space:nowrap;font-family:var(--f-mono)}
+@media (max-width:600px){summary .d{order:-1}}
+.meta a.src{font-weight:600}
+.legend{font-size:13px;color:var(--muted);margin:0 0 4px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div>
+    <h1>Preguntas del proyecto</h1>
+    <p>Todo lo que preguntaste y se respondió en el proyecto: normativa, diseño, verificador, costos, negocio, doctorado, referentes, clima y herramientas. Cada respuesta tiene su fecha y el hilo donde salió.</p>
+  </div>
+  <nav><a href="./">← Verificador</a><a href="preguntas.html">Solo normativa</a><a href="rne.html">RNE consultable</a></nav>
+</header>
+<main>
+  <div class="tools">
+    <div class="row">
+      <input id="q" type="search" placeholder="Buscar: escalera, presupuesto, CIFRE, PREVI, lote…" autocomplete="off" aria-label="Buscar en las preguntas">
+      <select id="src" aria-label="Filtrar por hilo"></select>
+    </div>
+    <div class="tags" id="tags"></div>
+    <p class="count" id="count"></p>
+  </div>
+  <div id="list"></div>
+  <p class="add">Resúmenes de las respuestas dadas en el chat y los hilos del proyecto. Las de normativa con artículo citado vienen del <a href="preguntas.html">tablón de normativa</a>. Las cifras marcadas «de memoria» o «por verificar» en su respuesta original siguen pendientes de confirmar con la fuente. Los enlaces a los hilos abren el proyecto en Claude y solo funcionan con tu cuenta.</p>
+</main>
+<script>
+const C = (txt, anchor) => `<a class="cit" href="rne.html#${anchor}">${txt}</a>`;
+const Q = [
+{ id:'area-libre', fecha:'2026-11-14', tags:['Lote','Parámetros'],
+  q:'¿Quién decide el área libre mínima de un lote?',
+  v:'dep', vt:'La municipalidad, no el RNE',
+  a:`<p>La fija la <b>municipalidad provincial</b> en su plan urbano y reglamento de zonificación (en Lima, las ordenanzas de la Municipalidad Metropolitana por área de tratamiento: 1015, 1076 y 1099-MML), y la <b>municipalidad distrital</b> la aplica a cada lote en el <b>certificado de parámetros urbanísticos y edificatorios</b> (Ley 29090), que es el documento que manda.</p>
+  <p>El RNE no da un porcentaje para vivienda: define qué es área libre, la que no tiene proyección de área techada (${C('A.010 art. 9.3','A010-art-9.3')}), y obliga a dejar patios y pozos con medidas mínimas para iluminar y ventilar (A.020 art. 11.4), que a veces piden más que el porcentaje municipal.</p>
+  <p>Valores encontrados en ordenanzas y certificados: densidad media (RDM) unifamiliar <b>30 %</b> en Lima (Ate; Comas, SMP, Los Olivos, Barranco, Surquillo) y en Arequipa; multifamiliar 30 a 35 %; Mi Vivienda 30 % (25 % en esquina).</p>` },
+{ id:'lote-tipico', fecha:'2026-11-14', tags:['Lote','Parámetros'],
+  q:'¿Cuál es el tamaño mínimo y el típico de un lote de vivienda en Lima?',
+  v:'dep', vt:'Mínimo 90 o 120 m² según la zona · típico 120 a 160 m²',
+  a:`<p><b>Mínimo legal</b> en densidad media (RDM), unifamiliar: <b>90 m² con 6 m de frente</b> en el Área de Tratamiento I (por ejemplo Ate, Ord. 1099-MML) y <b>120 m² con 6 m</b> en el Área de Tratamiento II (Comas, SMP, Independencia, Los Olivos, Barranco, Surquillo; Ord. 1015 y 1076-MML). Lo fija la zonificación, no el RNE, y lo confirma el certificado de parámetros de cada lote.</p>
+  <p><b>Tamaños habituales</b> (por verificar con fuentes): 7 × 20 = 140 m² en Villa El Salvador y lotizaciones populares; 8 × 20 = 160 m² en urbanizaciones populares; 10 × 20 = 200 m² en urbanizaciones de clase media. El verificador los ofrece en «Lote típico».</p>` },
+{ id:'escalera-retiros', fecha:'2026-11-14', tags:['Escalera','Retiros'],
+  q:'¿La escalera puede ir en el retiro frontal? ¿Y en el posterior?',
+  v:'dep', vt:'Frontal solo en casos puntuales · posterior no',
+  a:`<p><b>Retiro frontal:</b> solo en tres casos que la norma permite expresamente (${C('A.010 art. 8.3','A010-art-8.3')}):</p>
+  <ul><li>Gradas o rampas para subir o bajar <b>hasta 1.50 m</b> desde el nivel de la vereda (${C('8.3 a','A010-art-8.3-a')}).</li>
+  <li>Escaleras <b>abiertas</b> a pisos superiores <b>independientes</b>, cuando son una <b>ampliación</b> de la edificación original y <b>solo para vivienda</b> (${C('8.3 l','A010-art-8.3-l')}). Es el caso típico de la casa que luego suma un departamento arriba con acceso propio.</li>
+  <li>Escaleras que <b>bajan</b> a niveles inferiores, como un semisótano (${C('8.3 m','A010-art-8.3-m')}).</li></ul>
+  <p>La escalera interior de una casa nueva hacia su 2.º piso <b>no</b> entra en esa lista: va dentro del área edificable.</p>
+  <p><b>Retiro posterior:</b> no. La lista de lo permitido en retiros laterales y posteriores (${C('A.010 art. 8.2','A010-art-8.2')}) no incluye escaleras: solo cercos, piscinas, equipos de ventilación y estacionamiento de bicicletas. El retiro es una «distancia mínima libre» (${C('8.1 c','A010-art-8.1-c')}).</p>
+  <p><b>Ojo con el área libre:</b> si el lote no tiene retiro posterior pero sí un área libre mínima, la escalera tampoco es gratis: se computa como área techada, contando el área bajo ella (${C('A.010 art. 9.1 c','A010-art-9.1-c')}), y el área libre es la que no tiene proyección de área techada (${C('9.3','A010-art-9.3')}). Una escalera en el patio le resta área libre y, si está frente a ventanas, puede romper la medida del pozo de luz (${C('A.020 art. 11.4 a','A020-art-11.4-a')}).</p>
+  <p>Siempre revisa el <b>certificado de parámetros</b> de la municipalidad: fija los retiros y puede ser más estricto.</p>` },
+{ id:'pisos-unifamiliar', fecha:'2026-11-14', tags:['Altura','Unifamiliar'],
+  q:'¿Hay un límite de pisos para la vivienda unifamiliar?',
+  v:'dep', vt:'Lo fija la municipalidad',
+  a:`<p>La A.020 no pone un límite de pisos. La altura máxima la da el <b>certificado de parámetros urbanísticos</b> de la municipalidad, en metros; si viene en pisos, en zona residencial cada piso cuenta como <b>3.00 m como máximo</b> (${C('A.010 art. 10.1 a','A010-art-10.1-a')}). La altura se mide desde el punto más alto de la vereda (${C('10.1 c','A010-art-10.1-c')}).</p>
+  <p>El otro límite es <b>estructural</b>: la albañilería confinada (E.070) tiene su propio tope, que no está en los documentos subidos y conviene verificar con el texto de la E.070.</p>` },
+{ id:'pmr', fecha:'2026-11-14', tags:['Accesibilidad','Unifamiliar','Multifamiliar'],
+  q:'¿Una vivienda unifamiliar tiene que ser accesible (baño PMR)?',
+  v:'no', vt:'No en unifamiliar',
+  a:`<p>La A.120 de 2023 exige accesibilidad en las <b>áreas de circulación comunes</b> de multifamiliares, bifamiliares, uso colectivo, conjuntos residenciales y quintas: vestíbulo de ingreso con rampa o medio mecánico, y rampas o ascensor en las circulaciones comunes cuando se exige ascensor (${C('A.120 art. 28 a','A120-art-28-a')}). Puertas principales de 1.00 m e interiores de 0.90 m en esas áreas (${C('28 b','A120-art-28-b')}).</p>
+  <p>Dentro de una vivienda unifamiliar no se exige baño PMR. En el verificador la versión accesible es opcional (son unos 10 m² más).</p>` },
+{ id:'escalera-ancho', fecha:'2026-11-14', tags:['Escalera','Multifamiliar','Bifamiliar'],
+  q:'¿Qué ancho debe tener la escalera?',
+  v:'dep', vt:'0.90 · 1.00 · 1.20 m',
+  a:`<ul><li><b>Dentro de la vivienda:</b> 0.90 m libres entre muros; 0.80 m si un lado es abierto o son dos tramos sin muro intermedio (${C('A.020 art. 15.1 a','A020-art-15.1-a')}). Puede ser caracol si el paso mide al menos 0.25 m a 0.50 m del eje (${C('15.1 b','A020-art-15.1-b')}). Pasamanos a 1.00 m (${C('15.1 c','A020-art-15.1-c')}).</li>
+  <li><b>Bifamiliar, o escalera exterior que da acceso a dos viviendas en el piso siguiente:</b> 1.00 m entre muros (${C('15.2 g','A020-art-15.2-g')}).</li>
+  <li><b>Escalera común de multifamiliares y conjuntos:</b> 1.20 m entre muros (${C('15.2 b','A020-art-15.2-b')}).</li></ul>
+  <p>Paso y contrapaso, y máximo de pasos por tramo: ${C('A.010 art. 23.2','A010-art-23.2')}.</p>` },
+{ id:'bifamiliar', fecha:'2026-11-14', tags:['Bifamiliar','Unifamiliar'],
+  q:'¿Cuándo una casa deja de ser unifamiliar y pasa a ser bifamiliar?',
+  v:'dep', vt:'Con una 2.ª vivienda independiente',
+  a:`<p>Cuando en el mismo lote hay <b>dos unidades de vivienda independientes</b>, por ejemplo un 2.º piso con su propia cocina, baño y acceso. La A.020 las clasifica como tipologías distintas (${C('A.020 art. 4','A020-art-4')}).</p>
+  <p>Consecuencias: la escalera exterior que sirve a la segunda vivienda pasa a 1.00 m (${C('15.2 g','A020-art-15.2-g')}), y el vestíbulo de ingreso común debe ser accesible (${C('A.120 art. 28 a','A120-art-28-a')}). Si la segunda vivienda es una ampliación con acceso propio, su escalera abierta puede ir en el retiro frontal (${C('A.010 art. 8.3 l','A010-art-8.3-l')}).</p>` },
+{ id:'vigencia', fecha:'2026-11-14', tags:['Vigencia'],
+  q:'¿Las normas del RNE que usamos son las últimas?',
+  v:'si', vt:'Sí, a nov 2026',
+  a:`<p>Revisado el 14 nov 2026: A.010 (RM 191-2021), A.020 (RM 188-2021), A.070 (RM 061-2021), A.120 (RM 075-2023), A.040 (RM 068-2020) y A.030 (RM 005-2019) son las vigentes; el resto sigue con el texto de 2006 y sus cambios de 2012 y 2014.</p>
+  <p>Hay dos <b>proyectos en consulta, sin aprobar</b>:</p>
+  <ul><li><a href="https://www.gob.pe/institucion/vivienda/normas-legales/7086219-214-2025-vivienda" target="_blank" rel="noopener">RM 214-2025</a> (ago 2025), A.020 y G.040: áreas mínimas de 25 m² unifamiliar (como ahora), 40 m² multifamiliar y 16 m² vivienda colectiva.</li>
+  <li><a href="https://www.elperuano.pe/noticia/300415-cambios-en-las-normas-de-seguridad-vivienda-abre-consulta-publica-sobre-la-norma-a130" target="_blank" rel="noopener">RM 264-2026</a> (jul 2026), A.130 Requisitos de seguridad.</li></ul>
+  <p>Lo único aprobado en 2026 es la <a href="https://elperuano.pe/noticia/301148-construyes-o-disenas-cambian-las-reglas-del-reglamento-nacional-de-edificaciones-conoce-las-novedades" target="_blank" rel="noopener">RM 278-2026</a>, que cambia los principios generales (G.010 y G.020), no las normas A.</p>` },
+{ id:'em110-ccs', fecha:'2026-11-14', tags:['Sostenibilidad','Vigencia'],
+  q:'¿Son obligatorios la EM.110 y el Código Técnico de Construcción Sostenible?',
+  v:'dep', vt:'Voluntarios salvo casos',
+  a:`<p><b>EM.110</b> (Confort térmico y lumínico con eficiencia energética, incorporada al RNE por el D.S. 006-2014-VIVIENDA): es de <b>aplicación voluntaria</b> en nuevas construcciones.</p>
+  <p><b>Código Técnico de Construcción Sostenible</b> (D.S. 014-2021-VIVIENDA, modificado por la RM 299-2024-VIVIENDA): es <b>obligatorio</b> para los proyectos de vivienda sostenible del <b>Fondo MIVIVIENDA</b> (Nuevo Crédito MIVIVIENDA) y para edificaciones y habilitaciones urbanas nuevas <b>promovidas por el sector público</b>. Para el resto es opcional.</p>
+  <p>Para una casa autoconstruida con financiamiento propio, ninguno de los dos es exigible; sirven como buena práctica (orientación, ventilación cruzada, aislamiento del techo).</p>` },
+];
+const P = [
+{
+"id": "p1",
+"f": "2026-11-12",
+"s": "C",
+"c": [
+"Investigación"
+],
+"q": "¿Un traje para 10-15 personas o varias tallas? (módulo repetido)",
+"a": "Guardado como línea de investigación 2; argumento a favor de la repetición de módulo; variante traje adaptable en el tiempo."
+},
+{
+"id": "p2",
+"f": "2026-11-12",
+"s": "C",
+"c": [
+"Investigación",
+"Normativa"
+],
+"q": "¿Cuánto dinero hace perder la acumulación de normas (baño PMR)? ¿Mandar al PMR al RDC?",
+"a": "Idea fuerte y medible (m² × costo/m²). Mandar a la planta baja choca con inclusión y movilidad sobrevenida (edad, accidente, visitas). Plantear como adaptabilidad: baño con muros no portantes convertible a PMR. Francia ley ELAN: 20% accesibles, 80% evolutivas."
+},
+{
+"id": "p3",
+"f": "2026-11-12",
+"s": "C",
+"c": [
+"Diseño"
+],
+"q": "Tabla de superficies (económico/estándar/amplio)",
+"a": "Pestaña Cuadro de áreas; recomendado vs RNE en columnas; 6×15 2 dorm: nivel económico pide 58 m² vs 36.8 m² de la casa mínima RNE."
+},
+{
+"id": "p4",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Puede mi papá modificar la aplicación?",
+"a": "Sí; artefacto: copia propia (Personalizar/Remix). Para trabajar en una misma versión: repositorio GitHub compartido + GitHub Pages. Lo que él cambie lo ves en la página siempre al día y Claude trabaja sobre la última versión."
+},
+{
+"id": "p5",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Cómo conecto GitHub?",
+"a": "Claude.ai/connect-github, entrar con gonmor4000, autorizar app, All repositories. Invitar al papá: Settings → Collaborators → Add people con su correo."
+},
+{
+"id": "p6",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Tiene que instalar la aplicación Claude?",
+"a": "No, basta el navegador; sí aceptar la app de Claude en GitHub (Install &amp; Authorize). Pasos: aceptar invitación, connect-github, instalar app, All repositories, volver."
+},
+{
+"id": "p7",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "Plan gratuito no basta",
+"a": "Plan Pro (~20 USD/mes) incluye Claude Code; no Team (empresas)."
+},
+{
+"id": "p8",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Lo pago yo desde Francia y luego él en soles/dólares?",
+"a": "Sí; él cancela y se suscribe con tarjeta peruana; probablemente en dólares. Pagado desde Francia: euros con IVA francés (21.24 € y después 20 USD + impuestos). Identificación fiscal: opcional, dejar vacío; Perú no aparece en la lista (probablemente tampoco desde Perú)."
+},
+{
+"id": "p9",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Puede deducir Claude de sus impuestos?",
+"a": "Si factura como empresa (3ra categoría) en principio sí como gasto; con recibos por honorarios (4ta) no (deducción fija 20 %). Factura sin RUC. Confirmar con contador. Datos de facturación y nombre de empresa se cambian después en Configuración → Facturación, solo para facturas siguientes. Él decide si usa la factura."
+},
+{
+"id": "p10",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Puedes instalar la app de Claude en mi GitHub desde aquí?",
+"a": "No, requiere tu inicio de sesión: connect-github, elegir gonmor4000, marcar repo, Install. Prompt para Claude en Chrome dado."
+},
+{
+"id": "p11",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Puede mi papá conectarse con mi cuenta gonmor4000?",
+"a": "No recomendado: acceso a todos tus repos, cambios firmados por ti, GitHub no permite compartir cuentas. Que use WAMOR555."
+},
+{
+"id": "p12",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Qué le digo a su Claude para que vea lo mismo que yo?",
+"a": "Prompt: agregar repo, vista previa, explicar, traer main antes de cada cambio, subir a main si aprueba, español y arquitectura."
+},
+{
+"id": "p13",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Por qué mi papá ve un navegador dentro de Claude y yo no?",
+"a": "App de escritorio, sesión Claude Code (pestaña Code), ícono globo arriba a la derecha; actualizar app; puede no estar activado aún para tu cuenta."
+},
+{
+"id": "p14",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Quién puede ver la aplicación? ¿Clave simbólica?",
+"a": "Cualquiera con el enlace; repo público. Opinión: sin clave (falsa seguridad); visibilidad conviene para empresas e Instagram; lo delicado fuera de la web."
+},
+{
+"id": "p15",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Se puede hacer privado para solo papá y yo?",
+"a": "1) repo privado (gratis) pero se pierde GitHub Pages gratis; 2) Cloudflare Pages + Access (gratis, login por correo, ~20 min). Recomendado 1 ahora, 2 si quieren enlace fuera de Claude."
+},
+{
+"id": "p16",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿La ventaja de GitHub es acceder a versiones anteriores?",
+"a": "Sí; cada cambio con fecha, autor; se puede volver a cualquier versión; ver Commits (github.com/gonmor4000/verificador-vivienda-minima/commits/main)."
+},
+{
+"id": "p17",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Es necesaria la pestaña Cambios si GitHub ya guarda todo?",
+"a": "Para ustedes no; sirve para que empresas/jurado/seguidores vean la evolución en palabras de arquitecto. Consume casi nada de tokens (una línea por mejora). Lo que gasta es una revisión automática diaria (no activada; tampoco en la cuenta del papá)."
+},
+{
+"id": "p18",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Verificador"
+],
+"q": "¿Qué daría como resultado una pestaña 3D?",
+"a": "Maqueta volumétrica desde la planta: muros, losas, puertas, ventanas, escalera; girar y acercar; se actualiza con el lote."
+},
+{
+"id": "p19",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Por qué mi papá no ve la nueva pestaña?",
+"a": "Solo estaba en la vista previa, no subida a GitHub; al subirla aparece en la página (Ctrl+F5)."
+},
+{
+"id": "p20",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Lo subes automáticamente a GitHub y no consume muchos tokens?",
+"a": "De acuerdo; paso corto al final."
+},
+{
+"id": "p21",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "¿Con una cuenta Team sería más fácil?",
+"a": "Un poco (misma organización, proyecto compartido), pero GitHub sigue siendo mejor para historial; mínimo 2 puestos ~25 €/mes c/u con IVA, convierte cuentas en empresa. No cambiar por ahora."
+},
+{
+"id": "p22",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Herramientas"
+],
+"q": "Actualicé y no aparece el cambio, ¿por qué?",
+"a": "Caché; esperar 3-5 min, ventana de incógnito (Ctrl+Shift+N) o Ctrl+F5; en celular cerrar y reabrir pestaña."
+},
+{
+"id": "p23",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Negocio"
+],
+"q": "¿Cómo capitalizar y difundir el programa (es IA o programa)?",
+"a": "Programa de reglas, no IA (ventaja: verificable). Freemium: verificación gratis, cobrar expediente firmado; B2B cementeras/acero/ferreterías (UNACEM, Pacasmayo, Aceros Arequipa, Promart, Sodimac); público: MiVivienda/Techo Propio, municipalidades, SENCICO. Primero llamar a cementera y SENCICO con demo de 5 min. Difusión Instagram/TikTok + LinkedIn. Pasar repo a privado antes de vender."
+},
+{
+"id": "p24",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Negocio"
+],
+"q": "Olvidando la investigación: si el programa da un plano listo para construir, ¿cómo capitalizarlo?",
+"a": "Vender el plano listo para licencia, no el programa. Paquete con ingeniero (estructura) y laboratorio (suelos); papá firma arquitectura; expediente a precio fijo 1 500-3 000 soles; vender por ferreterías y maestros con comisión; escalar con cementera que regale el plano; validar con 10 familias en un distrito. (Nota posterior 15 nov: el papá no hará expedientes de cada casa.)"
+},
+{
+"id": "p25",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Negocio"
+],
+"q": "¿Y si es gratuita y la financia la publicidad de cementeras/ladrilleras según dónde se hizo el plano?",
+"a": "Banners necesitan cientos de miles de visitas; lo valioso es saber qué y dónde se construye: metrado → cotización automática con ferretería cercana; cobrar por contacto (lead), patrocinio exclusivo por zona («En Arequipa, los planos son gratis gracias a Ladrillos Y»). Plano gratis + expediente aparte."
+},
+{
+"id": "p26",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Negocio"
+],
+"q": "¿Cuánto es autoconstrucción en Lima/Perú (60-70 %)?",
+"a": "71 % de la vivienda urbana del Perú y 69 % de Lima (GRADE para ADI Perú, 2024). Cliente real = maestro de obra (&gt;90 % construye con uno). ~80 % del cemento va a autoconstrucción. Expediente = nicho. Siguiente paso: metrado por etapa."
+},
+{
+"id": "p27",
+"f": "2026-11-13",
+"s": "C",
+"c": [
+"Verificador"
+],
+"q": "Metrado por etapa",
+"a": "Pestaña Materiales: cemento, ladrillo King Kong, acero, arena, piedra; lista de compra editable en soles, copiable a WhatsApp; etapa 1 casa base ~S/ 16 000 en materiales."
+},
+{
+"id": "p28",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "Analiza los documentos del RNE subidos",
+"a": "El «RNE ilustrado» es de 2012; se usó texto completo (A.010 2021, A.020 2021, A.120 2023). Cambios: patio de luz 2.00 m (1.80 frente a cocina) — antes 1.00, en 6×15 la casa larga ya no entra; parapeto al vecino 2.10 m (antes 1.80); escalera máx 17 pasos por tramo y pasamanos 1.00 m; versión accesible opcional."
+},
+{
+"id": "p29",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "¿Qué artículos aplican a la vivienda unifamiliar? ¿Hasta cuántos pisos?",
+"a": "A.020 8.1c módulo básico 25 m²; art. 9 altura libre 2.30 (2.10 baños); art. 10 no fija m² por ambiente (salen de muebles); art. 11-13 pozos de luz, puertas, ventanas (10 % iluminación, 5 % ventilación), pasajes 0.90; art. 15 escalera; art. 18 azotea; A.010 art. 13 volados sobre retiro. Pisos: RNE sin límite; lo fija certificado de parámetros; cada piso ≤3 m; E.070 tope estructural (a verificar). Si el 2.º piso es independiente → bifamiliar, escalera exterior 1.00 m."
+},
+{
+"id": "p30",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "Índice útil del RNE cruzado con el ilustrado",
+"a": "Rne.html con índice por artículo, buscador, página del ilustrado al costado; reglas del verificador enlazan al numeral; pestaña RNE con 21 artículos."
+},
+{
+"id": "p31",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "¿Qué tablas no se ven bien?",
+"a": "A.070 cuadro 27 (seguridad comercio), A.130 tablas de seguridad y evacuación (versión 2006), A.070 cuadro 22 fila «Comercio distrital» (falta valor en original). Con fotos se rearmaron las tablas 1-3 de la A.130 (art. 47-49)."
+},
+{
+"id": "p32",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "¿Qué páginas del documento necesitas para las tablas?",
+"a": "A.070 art. 19 cuadro 27; A.130 cap. XI Almacenes: tabla 01 (art. 169), 03-05 (art. 181, 185, 186), 06 (art. 190). El anexo 02 (materiales peligrosos) no toca vivienda. Mejor el PDF original que el .txt; con los PDF oficiales se rearmaron todas las tablas y cada artículo tiene botón «PDF oficial p. N»."
+},
+{
+"id": "p33",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "¿Los PDF son lo último o hay normas más recientes?",
+"a": "Sí, última versión aprobada: A.010 2021, A.020 2021, A.120 2023. Proyectos en consulta: A.020 RM 214-2025 (mantiene 25 m²), A.130 RM 264-2026. Aprobado 2026: RM 278-2026 (solo G.010 y G.020)."
+},
+{
+"id": "p34",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "¿Usaste el RNE ilustrado (dibujado)?",
+"a": "Solo como referencia visual: etiquetas naranjas con página del ilustrado, «Índice del ilustrado» que relaciona artículo antiguo con vigente (ilustrado 2006/2012). Reglas salen del texto vigente. Gráficos no redibujados; se ven en el PDF."
+},
+{
+"id": "p35",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "¿Accesibilidad PMR obligatoria en unifamiliar o solo multifamiliar?",
+"a": "No en unifamiliar; A.120 (RM 075-2023) art. 28: áreas comunes de multifamiliares y conjuntos. Versión PMR en el verificador opcional (~47 m², +26 %). Si el 2.º piso es otra vivienda → bifamiliar y escalera compartida = área común."
+},
+{
+"id": "p36",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Verificador"
+],
+"q": "Programita multifamiliar con parámetros y cotejo con certificados reales",
+"a": "Multifamiliar.html: zonificaciones de certificados reales (Surquillo, Barranco, Ate, Bustamante y Rivero Arequipa); escalera 1.20, ascensor desde 6 pisos, pozo de luz según altura, deptos amueblados, corte, 3D, RNE. Ej. Surquillo 10×25, 5 pisos → 9 deptos de 72 m². Cotejo unifamiliar 6×15 cumple altura, área libre, coeficiente; choca el lote mínimo (120 m² Lima, 8 m frente Arequipa)."
+},
+{
+"id": "p37",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Costos y etapas"
+],
+"q": "Proyección de la casa en el tiempo, 3-5 etapas",
+"a": "Propuesta (GRADE, PREVI, Elemental): 1 Casco habitable ~S/40 000, 2-3 años (estructura, baño y cocina con instalaciones, puertas y ventanas, piso cemento, sin tarrajeo, fierros para 2.º piso); 2 Acabados 1.er piso ~S/20 000, 1 año; 3 Casco 2.º piso con escalera ~S/30 000, 2-3 años; 4 Acabados 2.º piso, fachada, azotea ~S/20 000, 1-2 años → terminada en 8-10 años vs 16 típicos; 5 Diversificación (escalera independiente, tienda, 3.er piso). Estimación S/1 500/m²."
+},
+{
+"id": "p38",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "Selección de artículos para multifamiliar",
+"a": "A.020: 8.1b depto ≥40 m²; art. 7 densidad 2/3/4 personas según dorm.; 11.4b pozo de luz 30 % o 35 % de la altura, mín 2.10; 11.3 baño por ducto; 12.2 puerta ingreso edificio 1.20, depto 0.90; art. 13 pasajes comunes 1.20; 15.2 escalera común 1.20 (1.00 solo bifamiliar); art. 16 ascensor ~6 pisos (5.º piso &gt;12 m); art. 18 azotea techada hasta 50 %, parapeto 2.10; 19.4 muros entre deptos 60 min fuego; art. 21 1 estac. cada 3 viviendas si la municipalidad no fija; 24-26 ductos, medidores, basura; 27.2 desde 15 m escalera protegida, alarma, red de agua. A.010: art. 10 altura por parámetros, piso ≤3 m; art. 9 área libre; 8.3 retiro; art. 13 volados 0.50 (0.80 balcones); 23-29 escaleras; 51-54 estacionamientos 2.50×5.00, maniobra 6 m. A.120: art. 28 ingreso y circulaciones accesibles; art. 8a ascensor 1.00×1.25; art. 6 rampas 10 %. A.130: 66-67 &gt;5 niveles red contra incendio, extintores, alarma; art. 69 10-20 niveles red presurizada."
+},
+{
+"id": "p39",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Clima y lugar"
+],
+"q": "¿Hay reglas locales según costa, sierra, selva? ¿Norma de energía nueva?",
+"a": "EM.110 (2014) confort térmico, 9 zonas bioclimáticas, referencia no exigencia en vivienda privada; Código Técnico de Construcción Sostenible (DS 014-2021, RM 299-2024 renovables) obligatorio solo Mivivienda sostenible (bono verde) y obra pública; lo que cambia según el lugar: parámetros municipales y zona sísmica E.030; adobe E.080. Ninguna norma de energía de 2025-2026."
+},
+{
+"id": "p40",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Referentes"
+],
+"q": "Programita con PREVI y otros referentes peruanos",
+"a": "Referentes.html: 26 proyectos PREVI + PP2 Barranco, Construye para Crecer, Villa El Salvador, Sumaq Wasi, Quinta Monroy; filtro; «Qué tomar para tu casa». Planos originales no copiados (derechos), esquema redibujado en 12. Fuente completa: libro «¡El tiempo construye!» (Gustavo Gili, 2008)."
+},
+{
+"id": "p41",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Referentes"
+],
+"q": "Plantas interiores de PREVI",
+"a": "Redibujadas con ambientes nombrados: Kikutake-Maki-Kurokawa (1.º y 2.º piso, plano acotado, la más fiel), Stirling (etapa inicial, final, desarrollada, aproximadas), Ohl (premiado no construido). Filtro «Con planta interior». Internet no tiene plantas legibles de los otros 23; fuentes PDF: Gutiérrez y Pérez (core.ac.uk), TFG UPM, Torres PUCP; o libro ¡El tiempo construye! Zip privado con planos originales por proyecto."
+},
+{
+"id": "p42",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Costos y etapas"
+],
+"q": "¿Qué es la diversificación?",
+"a": "Etapa en la que la casa terminada genera ingresos o da espacio a otra familia: escalera independiente en el retiro frontal para alquilar el 2.º piso o dárselo a un hijo (pasa a bifamiliar), bodega/tienda al frente, o 3.er piso. Como en PREVI."
+},
+{
+"id": "p43",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Costos y etapas"
+],
+"q": "Pestaña Etapas con contenido y precio",
+"a": "Casco ~S/ 40 500, casa terminada ~S/ 109 000, ~7 años ahorrando S/ 1 550/mes; botón «Proyección en el tiempo» en 3D y planta; precios supuestos Lima 2026 ajustables."
+},
+{
+"id": "p44",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Negocio"
+],
+"q": "¿Maestros, cliente final, fabricantes o municipalidades? ¿Los cuatro en paralelo? ¿Web, Instagram? ¿Marca propia o la agencia del papá?",
+"a": "Elegir uno: el maestro de obra (&gt;90 % construye con uno, decide la compra). Fabricante paga cuando haya 50-100 maestros activos en un distrito. Cliente final llega por el maestro. Municipalidad lenta y política: después, como piloto. Orden: probar con 5-10 maestros en un distrito de Lima; luego ferretería o UNACEM/Pacasmayo con números. Web = el verificador + portada; Instagram/TikTok (20+ capturas); LinkedIn para empresas y doctorado. Marca propia del producto respaldada por la firma del papá."
+},
+{
+"id": "p45",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Negocio"
+],
+"q": "¿Organizaciones de base lejos de Lima; cliente final elige plano y el maestro lo construye?",
+"a": "Buena idea: familia elige plano → maestro construye con metrado. Un solo producto con dos usuarios; el plano debe servirle al maestro. Asociaciones de vivienda y organizaciones de base para llegar a muchas familias."
+},
+{
+"id": "p46",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "¿El RNE fija tamaño mínimo por tipo de vivienda o por ambiente?",
+"a": "Por vivienda sí (A.020 art. 8.1: depto multifamiliar ≥40 m²; unifamiliar 25 m² módulo básico; art. 7 personas por dormitorios); por ambiente no (2021: sale del amoblamiento). Mínimos fijos: altura libre, ancho de pasajes, puertas, escaleras, iluminación y ventilación."
+},
+{
+"id": "p47",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Diseño"
+],
+"q": "Matriz de relaciones y tabla de superficies mín/óptima/máx",
+"a": "Pestañas Relaciones y Diagrama de bolas; casa por defecto cumple 6/6 superficies y 12/13 relaciones (aviso: dormitorio 2 comparte muro con cocina)."
+},
+{
+"id": "p48",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Referentes"
+],
+"q": "¿Cuánto medían los lotes en PREVI?",
+"a": "No había lote único; cada equipo diseñó el suyo; de memoria lotes angostos y profundos ~4.5-8 m de frente, 80-150 m² (más chicos que 6×20 de Lima). Por verificar en los PDF."
+},
+{
+"id": "p49",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Diseño"
+],
+"q": "Escalera caracol como el modelo enviado",
+"a": "Descanso cuadrado contra el muro, pasos trapezoidales, baranda; tu modelo da 3/4 de vuelta pero para subir 2.57 m cumpliendo A.020 hace falta algo más de una vuelta."
+},
+{
+"id": "p50",
+"f": "2026-11-14",
+"s": "C",
+"c": [
+"Investigación"
+],
+"q": "Asistente de inicio (datos, personas, dirección, frentes: uno, esquina, atravesante, tres)",
+"a": "Idea 6; los frentes cambian retiros, ingresos, fachadas; pedir mail y teléfono al final para descargar el plano."
+},
+{
+"id": "p51",
+"f": "2026-11-15",
+"s": "C",
+"c": [
+"Investigación"
+],
+"q": "¿Dónde encuentro las ideas guardadas?",
+"a": "En la memoria del proyecto: 1 vivienda mínima RNE + antropometría; 2 módulo único vs tipologías (el traje); 3 costo de la acumulación normativa (PMR); 4 IA para la espacialidad; 5 capitalizar el verificador; 6 asistente de inicio."
+},
+{
+"id": "p52",
+"f": "2026-11-15",
+"s": "C",
+"c": [
+"Verificador"
+],
+"q": "Asistente de inicio y lotes en esquina/atravesante",
+"a": "Publicado con «Pasar»; esquina: retiro lateral 1.00 m por defecto, ochavo 3 m; en lote de 6 m en esquina no entran 2 dorm. en el 1.er piso (hace falta ~7 m)."
+},
+{
+"id": "p53",
+"f": "2026-11-15",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "¿Hasta cuántos pisos según el manual de Aceros Arequipa de albañilería confinada?",
+"a": "De memoria hasta 2-3 pisos; E.070 permite más con cálculo de ingeniero. Propuesta: 3 pisos máximo, el 3.º con aviso de verificación estructural. (Ver hilo Fijar límite de pisos.)"
+},
+{
+"id": "p54",
+"f": "2026-11-15",
+"s": "C",
+"c": [
+"Normativa"
+],
+"q": "Límite de pisos: confirmación del manual Aceros Arequipa + ¿otra norma limita pisos en unifamiliar?",
+"a": "El manual no fija máximo pero sus cimientos valen para casas de 1-2 pisos → verificador 2 pisos, 3.º con aviso «con ingeniero». Ninguna norma limita los pisos por ser unifamiliar; tope = certificado de parámetros; E.070 albañilería confinada hasta 5 pisos o 15 m con cálculo. Ojo: E.070 — muchos King Kong de 18 huecos cuentan como «huecos» (verificador los llamaba macizos)."
+},
+{
+"id": "p55",
+"f": "2026-11-15",
+"s": "C",
+"c": [
+"Verificador"
+],
+"q": "Preguntas del asistente: independizar pisos, taller, tamaño del terreno",
+"a": "Independizar: escalera en retiro frontal con entrada propia (en 6×15 con retiro 2 m sale de caracol); taller parte o todo el 1.er piso (si todo, familia arriba); tamaño de terreno con área en m²."
+},
+{
+"id": "p56",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Investigación"
+],
+"q": "Estudiar vivienda mínima según RNE y antropometría",
+"a": "Estudio: casa progresiva de 37.6 m² en lote de 6 m, módulo 25 cm (ladrillo King Kong + junta). Traje: repetir la pieza, no la casa (tallas 37, 75 m², lote ancho). PMR: A.120 no obliga en vivienda (sobrecosto cero en Perú); Francia ELAN lo exige con modelo évolutif."
+},
+{
+"id": "p57",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "¿El input es el tamaño del terreno y el output el plano simple?",
+"a": "Exacto: frente y fondo → «Generar plano» revisa ~30 000 combinaciones y dibuja la planta más chica que cumple todo, en módulos de 25 cm; ~20 verificaciones; metrados, ladrillos, costo. Lote de 5.50 m: con dos franjas no entra nada, mínimo 6.00 m (para lotes angostos otra tipología en fila). Versión accesible mínima 47.3 m² en frente de 7 m: +10 m² (26 %), no 4.5 m² como se estimó antes."
+},
+{
+"id": "p58",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Vereda, retiro frontal y posterior",
+"a": "Parámetros del terreno (ej. 2.00, 3.00 y vereda 1.20); los fija cada municipio en el certificado de parámetros; verificaciones nuevas: retiros, escalera futura, % área libre."
+},
+{
+"id": "p59",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Diseño"
+],
+"q": "¿Lavadero y patio serían lo mismo?",
+"a": "Sí en esta propuesta: lavadero en el patio sin techar (lo permite la VIS); ahorra un ambiente; «Patio-lavandería», resto libre para la escalera de la etapa 2."
+},
+{
+"id": "p60",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Normativa"
+],
+"q": "Explícame la A.010",
+"a": "Reglas generales de diseño. Casi todo por desempeño: art. 17 cada ambiente con dimensiones necesarias para función y mobiliario (puerta legal para la antropometría); art. 5 soluciones innovadoras equivalentes. Medidas fijas: altura libre 2.30 (vigas 2.10), puertas ≥2.10 alto, pasajes 0.90, escalera paso ≥0.25 contrapaso ≤0.18 máx 17 pasos entre descansos, ventilación ≥5 %, pisos ≤3.00, volados 0.50 sobre retiro, azotea techada hasta 50 % con retranque 2.50. Sorpresas: no fija ancho de puertas en vivienda (0.90/0.80/0.70 es costumbre); área techada hasta eje del muro medianero (36.8 m², no 37.6); escalera de ampliación puede ir en retiro frontal (8.3 l); caracol vale si une solo dos pisos. Calculadora A.010 (Ambiente, Escalera, Edificio en el lote)."
+},
+{
+"id": "p61",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Normativa"
+],
+"q": "¿Muro portante o columna-viga? (manual)",
+"a": "Lógica del manual: King Kong en muros portantes, pandereta solo en tabiques; muros en las dos direcciones; 120 cm² de muro por m² techado y por piso; columnas a ≤3.50 m en soga o ≤5.00 m en cabeza; no picar muros para tuberías; cimiento corrido según suelo. Hallazgo: con muros de cabeza (24 cm) los mismos ejes dejan ambientes bajo mínimos (el muro grueso se come área útil)."
+},
+{
+"id": "p62",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "¿Cuántos dormitorios?",
+"a": "1: fondo como comedor-estudio (VIS pide 2); 2: en planta baja; 3-4: el 3.º y 4.º en el 2.º piso sobre los primeros (muros continuos), escalera exterior en patio."
+},
+{
+"id": "p63",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "¿Por qué al cambiar dormitorios no se adapta?",
+"a": "Solo al pulsar Generar; ahora se regenera solo (~1.5 s). Ej. 7×15 → 42.9 m²; 7×11 → 41.2 m²; 5×11 avisa que hace falta frente ≥6.25 m. Con 3-4 dorm. sube a 2 pisos para cálculo sísmico."
+},
+{
+"id": "p64",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "¿Puedes tomar capturas del proceso para Instagram?",
+"a": "Sí, carpeta instagram/proceso con fecha y una línea de descripción."
+},
+{
+"id": "p65",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Diseño"
+],
+"q": "¿3 dormitorios en un piso?",
+"a": "Tres franjas (dorm 1 + sala adelante, baño con ducto y cocina al centro, dorm 2-3 atrás con pasaje 1.25); pide frente ≥6.75 m; 7×15 → 56.9 m² vs 42.9 con 2 dorm. 4 dorm siempre 2.º piso."
+},
+{
+"id": "p66",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Diseño"
+],
+"q": "¿Patio-lavandería y retiro posterior no deberían ser el mismo espacio?",
+"a": "Sí, unificados «Patio-lavandería = retiro posterior», con línea punteada del mínimo municipal. Si 3 dorm no entran en un piso, pasa solo al 2.º."
+},
+{
+"id": "p67",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Diseño"
+],
+"q": "¿O agrandar la parte construida al máximo?",
+"a": "Casa larga de un piso: en 6×15 usa todo el fondo edificable (9.75 m), 54.8 m², 3 dorm en fila con patio de luz de 1.50 entre dorm 1 y 2 (A.010 38.3 no fijaba medida en esa lectura; ojo: luego se corrigió a 2.00 m con A.020 vigente). Orden: tres franjas (7 m) → casa larga (fondo) → 3.º dorm al 2.º piso. Cocina sin ventana propia: campana/extractor."
+},
+{
+"id": "p68",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Pestaña de reglas implícitas (ej. muros alineados entre pisos), terraza y volado",
+"a": "Pestaña «Reglas» con 31 reglas implícitas con fuente; opción de terraza (2.º piso o azotea) y volado hacia la calle."
+},
+{
+"id": "p69",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "N dormitorios en 1.er y 2.º piso; escalera con descanso y puerta al descanso",
+"a": "Selectores 1-3 abajo, 0-3 arriba; escalera exterior recta en el patio, dibujada en ambos pisos; descanso de llegada 1.00×0.90, puerta del 2.º piso sobre el descanso; si no cabe a lo largo gira perpendicular. Arriba cada dormitorio sobre uno de abajo (muros alineados): con 2 abajo máx 2 arriba. 6×15: 2+2 → 36.8 m² por piso; 3+0 casa larga 54.8; 3+2 no deja patio para escalera."
+},
+{
+"id": "p70",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Diseño"
+],
+"q": "Cuadro de áreas: cómo funciona",
+"a": "Nivel económico/estándar/amplio; circulación 8/12/15 %; muros con % real; escalera una sola vez; 2.º piso ≤ 1.º; si no entra, reducción proporcional hasta mínimo funcional o alternativas. Obligatorio: iluminación, ventilación, altura 2.30, pasajes, escalera y 35 m² VIS; A.010/A.020 no fijan m² por ambiente. Dato: 6×15 2 dorm económico pide 58 m² vs 36.8; estándar 76.8 m² y el lote deja 59.2 m² edificables."
+},
+{
+"id": "p71",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Estirar el lote manualmente y que los espacios se acomoden",
+"a": "Tiradores rojos en frente y fondo; antes no crecía porque buscaba siempre la casa mínima; selector «Tamaño de los ambientes»: se acomodan al lote (hacia el nivel del cuadro) o mínimo RNE. Columna intermedia automática si muro &gt;3.50 m; ventanas para 10 %. Ej. económico 2 dorm: 6×15 de 36.8 a 48.8 m²; frente 6.70 → 52.8 m² (sala 18.5). Lote más profundo no agranda en económico; &gt;9 m de frente la casa queda en 9 m."
+},
+{
+"id": "p72",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "¿Puedes pasarlo a una página web o GitHub para compartir?",
+"a": "1) botón Compartir del artefacto; 2) archivo .html único por correo/WhatsApp; 3) dirección pública: GitHub Pages (repo público para Pages gratis) o Netlify Drop. Recomendado 3 para CV e Instagram. Activar Pages: Settings → Pages → Deploy from a branch → main / (root) → Save."
+},
+{
+"id": "p73",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Total de dormitorios en general",
+"a": "1 a 6; reparto: 1-3 abajo; 4 = 2+2; 5 = 3+2; 6 = 3+3. En 6×15 caben máx 4; con 7 m salen 5 y 6."
+},
+{
+"id": "p74",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "¿Los cambios aparecen solos en GitHub o cuando digo? ¿Consume mucho?",
+"a": "Los sube Claude al terminar cada mejora; casi nada de tokens (un comando); lo que gasta es programar y probar."
+},
+{
+"id": "p75",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "La página da 404",
+"a": "Pages no activado o recién activado; Settings → Pages → Deploy from a branch, main, / (root), Save; esperar 1-2 min."
+},
+{
+"id": "p76",
+"f": "2026-11-12",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "Pages «is currently being built»",
+"a": "Bien configurado; se subió .nojekyll; ver progreso en pestaña Actions (círculo verde)."
+},
+{
+"id": "p77",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "Mi papá hizo un cambio, ¿aparecerá aquí?",
+"a": "En la página pública sí (subió a main), pero no llega solo a la versión de Claude; Claude trae lo último de GitHub antes de cada mejora. Su cambio: pestaña «Cambios»."
+},
+{
+"id": "p78",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "¿Debo pedirte actualizar todo el tiempo?",
+"a": "No; antes de cada mejora se trae lo último. Usar el enlace de GitHub Pages como principal. Revisión automática diaria posible pero gasta tokens (no activada)."
+},
+{
+"id": "p79",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Qué muestra el 3D",
+"a": "La misma casa en volumen: muros 2.40, ventanas alféizar 0.90 dintel 2.10, columnas, losas 17-20 cm, 2.º piso alineado, volado, terraza con muros 1.80 y baranda 1.10, escalera 15 pasos, lote; girar, vistas Calle/Patio/Arriba, quitar techos. No es BIM (sin muebles ni texturas al inicio)."
+},
+{
+"id": "p80",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "¿Un vínculo con la última versión de GitHub?",
+"a": "Https://gonmor4000.github.io/verificador-vivienda-minima/ siempre al día (1-2 min tras cada subida); marcador Ctrl+D o acceso directo .url (web/Verificador vivienda minima.url). El enlace de claude.ai solo se actualiza cuando Claude trabaja."
+},
+{
+"id": "p81",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Modo dron en 3D; guardar y abrir plano",
+"a": "Flechas/WASD, ratón para mirar, Q/E subir y bajar, Mayús rápido, accesos rápidos, cruceta táctil; avanzar sigue la dirección de la cámara. Guardar plano → .json con terreno, dormitorios, estructura, opciones, cotas; Abrir plano lo recupera idéntico. Solo descarga en la página pública (no dentro de Claude)."
+},
+{
+"id": "p82",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Diseño"
+],
+"q": "Muebles: WC, lavabo, cocina 120×60, cama simple para hijos",
+"a": "Ducha 0.80×0.80, inodoro y lavatorio en fila; cocina 4 hornillas + lavadero 1.20×0.60; cama doble 1.40 (padres) y simple 0.90 (hijos). Regla: la puerta nunca interfiere con muebles → comprobación del giro, recoloca muebles; verificación «Puertas libres de muebles»."
+},
+{
+"id": "p83",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Costos y etapas"
+],
+"q": "Metrado por etapa",
+"a": "Etapa 1 (cimentación, muros, columnas, vigas, techo), etapa 2 (2.º piso, escalera); cemento, arena, hormigón, piedra, King Kong, ladrillo de techo, varillas 3/8 y 1/2, alambrón, alambre con desperdicio; precios editables; copiar a WhatsApp. Casa base 48.8 m² etapa 1: ~151 bolsas de cemento, 3 227 King Kong, 513 kg de acero ≈ S/ 16 000. Anteproyecto: sin encofrado, acabados ni mano de obra."
+},
+{
+"id": "p84",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Normativa"
+],
+"q": "¿Qué parte del RNE habla de la vivienda unifamiliar? Páginas o vínculo",
+"a": "A.020 «Vivienda» (Título III.1), RM 188-2021-VIVIENDA (El Peruano 7 jul 2021); enlaces: PDF prcp.com.pe, vLex, PPU; oficial busquedas.elperuano.pe «188-2021-VIVIENDA». Trae: tipologías; densidad (más de 3 dorm +1 persona por dorm extra); altura libre ≥2.30 (2.10 baños); cuadro de protección contra incendios por altura; no fija m² por ambiente en unifamiliar (16 m² solo vivienda colectiva sin ampliación). Cruzan: A.010 (RM 191-2021), A.120 (PDF gob.pe), E.070 albañilería."
+},
+{
+"id": "p85",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "Compartí el artefacto y la otra persona hizo cambios, ¿por qué no los veo?",
+"a": "Sus cambios crean un artefacto nuevo en su cuenta; tu artefacto no se toca. Opciones: que pase el .html para integrarlo, o agregarlo como colaborador en GitHub."
+},
+{
+"id": "p86",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Herramientas"
+],
+"q": "¿Entonces de nada sirve compartir el artefacto?",
+"a": "Sirve para mostrar (director, cementera, amigo), no para editar entre varios; para eso GitHub."
+},
+{
+"id": "p87",
+"f": "2026-11-13",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Diseño Pro, plano simple, tipos de escalera",
+"a": "Diseño Pro: planta con ejes y burbujas, cotas entre ejes y totales, cotas libres en rojo, vanos P y V, cortes A-A y B-B arrastrables, elevaciones. Diseño sin líneas de corte (para quien construye). Escaleras: un tramo, L, U, caracol 1.60; pasos 0.25, contrapasos ≤0.18, ancho 0.90."
+},
+{
+"id": "p88",
+"f": "2026-11-14",
+"s": "T1",
+"c": [
+"Normativa"
+],
+"q": "Correcciones del verificador según RNE (detalle)",
+"a": "Patio de luz 2.00 frente a dormitorio, 1.80 frente a cocina (A.020 11.4 a); parapetos de azotea y muros de terraza al vecino 2.10 (A.020 18.4 y 19.3; A.020 pide más que A.010); escalera ≤17 pasos por tramo (A.010 23.2 a), pasamanos 1.00 (A.020 15.1 c); caracol paso 0.25 a 0.50 m del eje (15.1 b). Artículos unifamiliar: A.020 8.1 c módulo 25 m²; art. 9 y A.010 art. 18 altura 2.30 (2.10 baños), vigas ≥2.10; art. 10 sin m² por ambiente, plano con muebles; art. 12 puertas 0.90 ingreso, 0.80, 0.70 baño; ventanas 10 % luz, 5 % ventilación; alféizar 1.00 o vidrio fijo debajo; art. 13 pasajes 0.90; 15.1 y A.010 23 escalera 0.90, paso 0.25, contrapaso ≤0.18, ≤17 pasos; 18.4 baranda azotea 1.10, muro al vecino 2.10; A.010 art. 13 volado 0.50 sobre retiro frontal desde 2.30 de altura (0.80 en terrazas sin techo); A.010 8.3 l escalera de ampliación en retiro frontal. Unifamiliar sin exigencias contra incendio (A.020 cuadro 9); ascensor solo multifamiliar (art. 16)."
+},
+{
+"id": "p89",
+"f": "2026-11-14",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Pestaña RNE con artículos enlazados",
+"a": "21 artículos (A.020 11, A.010 8, A.120 2); columnas artículo, qué dice, cómo lo aplica; enlace al numeral en rne.html."
+},
+{
+"id": "p90",
+"f": "2026-11-14",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Mover el bloque construido y crujías; muebles opcionales y ventanas en Diseño Pro",
+"a": "Tiradores verdes eje B (crujía dormitorios), eje D (sala, cocina, baño), muro posterior (fondo construido); módulos 25 cm. Diseño Pro: «Mostrar muebles»; ventanas V-n ancho×alto+alféizar (ej. 1.50×1.20 a0.90), cuadro de vanos con artículo. Tiradores para muro entre dorm 1 y 2 y entre sala y cocina-baño. Planta escalonada: cada crujía con su propio fondo."
+},
+{
+"id": "p91",
+"f": "2026-11-14",
+"s": "T1",
+"c": [
+"Diseño"
+],
+"q": "La escalera no entra en el retiro de atrás: ¿dos tramos o helicoidal?",
+"a": "Opción «Automática: la que entre en el patio»: prueba un tramo, luego U o L, luego caracol. Planta escalonada: tramo por el patio del escalón (escalón ~3.60 m, 15 pasos de 0.25). Fondos mínimos: un tramo 1.80 m de fondo pero ~4.50 m de muro libre; caracol 2.22 m; dos tramos 2.72 m. Si no entra: más patio, escalón más hondo o escalera en retiro frontal (A.010 8.3 l)."
+},
+{
+"id": "p92",
+"f": "2026-11-14",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "Etapas en vertical y botones de etapa en el 3D",
+"a": "Línea de tiempo una fila por etapa, tabla de costos completa; botones Sin etapas / Etapa 1-5 en el 3D, rótulo «Etapa 1 · Casco habitable», sincronizados con Proyección en el tiempo."
+},
+{
+"id": "p93",
+"f": "2026-11-14",
+"s": "T1",
+"c": [
+"Verificador"
+],
+"q": "¿No me habías puesto la escalera caracol?",
+"a": "Sigue; selector en «Automática» prueba un tramo antes; elegir «De caracol (1.60 m)» en «Escalera al 2.º piso»; necesita 1.60 libres junto al descanso y ~2.22 m de fondo. El caracol metálico del modelo estaba en la PR #1 (luego fusionada)."
+},
+{
+"id": "p94",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿Hay investigaciones de arquitectura financiadas (CNAM, escuelas)?",
+"a": "Contrato doctoral Ministerio de Cultura en ENSA: 2 300 € brutos/mes 3 años, vivienda prioritaria; convocatoria 2026 cerró 18 sep, próxima abr-sep 2027. CIFRE: empresa te contrata, subvencionado, todo el año. CNAM: doctorado en arquitectura y urbanismo sin sueldo (contratos por concurso en primavera). Perú: beca Bicentenario PRONABEC suspendida en 2026; PROCIENCIA franco-peruano pide vivir en Perú. Beca Eiffel: plazos internos nov 2026 (depende de nacionalidad y edad)."
+},
+{
+"id": "p95",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿Cuál se acomoda mejor a mi proyecto (espacialidad + IA, demostrar gráficamente qué es posible)?",
+"a": "CIFRE primero (contrato ≥27 600 € brutos/año, sin convocatoria, 3-6 meses), plan B contrato del Ministerio de Cultura 2027. Proyecto: «Diseño generativo asistido por IA para evaluar la viabilidad espacial de la vivienda mínima». Empresas: constructora modular, bailleur social, startup de diseño generativo/BIM, agencia con I+D (recuperan costo con subvención y CIR). Laboratorios IA: MAP-MAACC (La Villette), GSA (Malaquais), MAP-CRAI (Nancy), MAP-ARIA (Lyon). Eiffel si no francés y ≤35 años."
+},
+{
+"id": "p96",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿Qué empresa podría contratarme? ¿Cómo funciona el CIFRE? ¿Empresas, estudiantes o laboratorios?",
+"a": "Tú entras por el espacio «Doctorants». Tres piezas: tú (máster + proyecto), laboratorio con director HDR, empresa en Francia que deposita el dossier en la ANRT (3-6 meses). En el CIFRE francés usar norma francesa (superficies mínimas de vivienda digna, PMR, Code de la construction); Perú como 2.º caso. Frentes: CV en ANRT, ofertas en ABG y ADUM; ir primero al laboratorio; proponer a empresas: Bouygues Construction, Vinci (Leonard), Eiffage, Cougnaud, Algeco, Paris Habitat, CDC Habitat, 3F, CSTB, agencias con diseño computacional. Estar desempleado no impide; no haber trabajado &gt;9 meses en esa empresa."
+},
+{
+"id": "p97",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿Tengo que pasar por una escuela doctoral y por una escuela de arquitectura?",
+"a": "Escuela doctoral obligatoria (se inscribe vía director y laboratorio); escuela de arquitectura no: laboratorio de ENSA (ligado a ED universitaria), CNAM (ED Abbé Grégoire) o laboratorio de informática/ingeniería. CIFRE exige laboratorio público reconocido. Llegar con algo hecho: demo (Grasshopper o Python) con variantes en verde/rojo, 2-3 láminas y video de 1 min."
+},
+{
+"id": "p98",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿A qué laboratorio ir? ¿Hay fecha para entrar?",
+"a": "Sin fecha fija para contactar a un director; inscripción en ED en otoño (sep-dic); financiamiento con sus fechas (salvo CIFRE). Muchas ED no inscriben sin financiamiento: director → financiamiento → inscripción. El diploma de arquitecto (DEA) tiene grado de máster; HMONP es un plus. Laboratorios: LéaV (ENSA Versailles), MAP-MAACC (La Villette), GSA (Malaquais), LAVUE/CRH (Val de Seine). Buscar directores en theses.fr."
+},
+{
+"id": "p99",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿Qué tipo de proyecto se presenta? ¿Tendré que leer mucho?",
+"a": "En CIFRE el tema nace de un problema de la empresa; mitad empresa, mitad laboratorio. Ej.: «Herramienta de IA para generar y evaluar distribuciones de vivienda: superficie útil, cumplimiento normativo, costo y adaptabilidad». Sí hay que leer y escribir (tesis 200-300 p., estado del arte: shape grammars, Christopher Alexander, ArchiGAN 2019, House-GAN). Alternativa: «recherche par le projet» en ENSA; o puesto de computational designer/I+D sin tesis."
+},
+{
+"id": "p100",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿Qué es la «recherche par le projet»? ¿Dónde? ¿Qué significan GSA y MAP-MAACC?",
+"a": "Lo que diseñas/construyes es el centro; hay documento escrito y defensa, menos teoría pura. Existe en la EUR «Humanités, Création, Patrimoine» de CY Cergy Paris Université con ENSA Versailles (mención arquitectura). Financiación: contrato doctoral de la EUR, CIFRE, o tiempo parcial hasta 6 años; convocatoria vista de 2018 (mayo-junio), confirmar fechas 2027 con LéaV. MAP-MAACC: «Modèles et simulations pour l'Architecture et le Patrimoine» / «Modélisation pour l'Assistance à l'Activité Cognitive de la Conception» (herramientas digitales de asistencia al diseño). GSA: «Géométrie, Structure, Architecture». Recomendación: empezar por LéaV."
+},
+{
+"id": "p101",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿En el LéaV hay ese tipo de investigación?",
+"a": "Sí (evaluación HCERES): ED 628 de CY Cergy dedicada a investigación por el proyecto (18 de 29 doctorandos a fines de 2023) y ED 629 Paris-Saclay; tesis con herramienta digital (atlas de huella ambiental con ETH Zúrich); CIFRE: 4 en curso en agencias, 1 sustentada 2023; trabaja con Immobilière 3F; ejes «matière à expérimentation» y «espaces, corps, sensibilités». En contra: no menciona IA ni diseño computacional, vivienda no central, método aún poco definido. Ideal: director LéaV + codirector MAP-MAACC o GSA."
+},
+{
+"id": "p102",
+"f": "2026-11-12",
+"s": "T2",
+"c": [
+"Doctorado"
+],
+"q": "¿Financiación/incubación en La Villette, concurso del CNAM? ¿Qué proyectos han salido del doctorado por el proyecto?",
+"a": "1) «1000 doctorants pour les territoires» (HESAM): CIFRE con colectividad o asociación, 42 000 € de subvención por 3 años. 2) Grand Prix Charles-Henri Besnard (Fundación CNAM): 25 000 € innovación en el arte de construir + 6 becas de 2 500 €; edición 2025 del 2 dic al 28 feb. 3) Incubadora La Villette: no encontrada. Tesis por el proyecto: muy pocas (nació en 2018, ninguna sustentada 2018-2023); ejemplo «Atlas numérique de l'architecture post-carbone». Contacto EUR arquitectura: Gabriele Pierluisi (ENSA Versailles)."
+},
+{
+"id": "p103",
+"f": "2026-11-13",
+"s": "T3",
+"c": [
+"Negocio"
+],
+"q": "Autoconstrucción 60-70 %: investigar bien",
+"a": "GRADE para ADI Perú (datos 2022, publicado jun 2024): 71 % vivienda urbana Perú, 69 % Lima. El 80 % que circula es declaración de ADI y Capeco, no estudio. 92-94 % construye con maestro, solo 1 de 5 contrata profesional. Familia gasta ~S/ 146 000 en 22 etapas de ~S/ 6 700 a lo largo de 16 años. ~80 % del cemento a autoconstrucción. 95 % de habilitaciones urbanas informales, municipalidades casi no fiscalizan → expediente es nicho. Pacasmayo «Construye Experto» (calculadora), UNACEM «Progresol» (red de ferreterías): no tienen planos. Cuentas: contacto con metrado S/ 15-30; S/ 10 000/mes ≈ 2 000 planos/mes por contacto o ~1 200 con patrocinio por zona."
+},
+{
+"id": "p104",
+"f": "2026-11-14",
+"s": "T3",
+"c": [
+"Negocio"
+],
+"q": "¿Cuál de los cuatro (maestros, fabricantes, municipalidades, familia)?",
+"a": "Uno a la vez: 1 maestros (probar), 2 cementeras y ferreterías (pagan, con números), 3 municipalidades (piloto gratuito, ene-mar 2027 con nuevos alcaldes), 4 familia por redes (no paga). Modelo familia elige plano → maestro construye: muy bueno; decir «revísalo con tu maestro» (sin estructura). Organizaciones fuera de Lima: asociaciones de vivienda, grupos de Techo Propio, cooperativas, sindicatos con fondo de vivienda, ONG Hábitat; charla de 20 min por Zoom; probar en celular sencillo."
+},
+{
+"id": "p105",
+"f": "2026-11-14",
+"s": "T3",
+"c": [
+"Negocio"
+],
+"q": "¿Dónde encontrar maestros de obra para enviarles la página? ¿Interesa a municipalidades?",
+"a": "No hay directorio público; vías: red del papá (lo más rápido), ferreterías de barrio, programas de cementeras (UNACEM Cantera capacitó &gt;8 500 maestros en 2023; club de Etex &gt;55 000 inscritos) — pedirles que difundan el enlace, no teléfonos (ley 29733 de datos personales); grupos de Facebook con permiso del administrador. Mensajes de primer contacto en negocio/encontrar-maestros-y-municipalidades.md. Resumen vivo en negocio/DECISIONES.md."
+},
+{
+"id": "p106",
+"f": "2026-11-14",
+"s": "T3",
+"c": [
+"Negocio"
+],
+"q": "¿Le interesaría a las municipalidades? (detalle doc)",
+"a": "Sí, como aliadas, no clientes que paguen al inicio. Por qué: riesgo sísmico (CENEPRED: SJL, Comas, SMP, VES, VMT); licencias Modalidad A Ley 29090 (aprobación automática) con «planos tipo» firmados; Política Nacional de Vivienda y Urbanismo 2021 pide asistencia técnica a la autoconstrucción; bonos: Bono de Protección de Viviendas Vulnerables (S/ 21 000-22 600) y Techo Propio sitio propio (~S/ 33 000), Entidades Técnicas necesitan planos. Por qué no primero: licitación, cambian de equipo, no fiscalizan. Áreas: Gerencia de Desarrollo Urbano / Subgerencia de Obras Privadas y Licencias; Gestión del Riesgo de Desastres; desarrollo social/vivienda. Propuesta: piloto gratuito 3 meses con datos anónimos. Alcaldes elegidos 4 oct 2026 asumen 1 ene 2027."
+},
+{
+"id": "p107",
+"f": "2026-11-13",
+"s": "T3",
+"c": [
+"Negocio"
+],
+"q": "Decisión: no vender banners",
+"a": "Los banners pagan &lt;100 USD/mes con 10 000 visitas; ingreso por contactos calificados con metrado, patrocinio por zona o licencia de uso a una cementera."
+},
+{
+"id": "p108",
+"f": "2026-11-14",
+"s": "T4",
+"c": [
+"Costos y etapas"
+],
+"q": "¿Cómo evolucionan normalmente las casas? (investigación)",
+"a": "GRADE 2024: familia en Lima ahorra ~S/1 550/mes, vive ~6 años en casa precaria, tarda ~16 años en terminar; primero el piso de abajo con columnas con fierros arriba. PREVI 40 años después (Torres, PUCP): instalarse → densificar (más dormitorios y baños) → dividir en departamentos o alquilar; una casa pasó de 61 a 172 m². Elemental: se entrega «la mitad difícil» (estructura, baño, cocina, escalera, techo). Fachadas sin pintar (BBC 2026): la fachada se deja al final porque el vecino puede construir más alto y taparla."
+},
+{
+"id": "p109",
+"f": "2026-11-14",
+"s": "T4",
+"c": [
+"Costos y etapas"
+],
+"q": "Etapa 1 casco habitable: qué incluye",
+"a": "Cimientos, muros, techo aligerado, baño y cocina con agua, desagüe y luz empotradas, puerta de calle, ventanas, piso de cemento; columnas con acero de empalme; sin tarrajeo ni pintura. Etapa 2: tarrajeo, enchape, cerámico, pintura, puertas interiores (sin fachada). Etapa 3: casco del 2.º piso con escalera. Etapa 4: acabados 2.º piso, fachada, azotea. Etapa 5: diversificación. Acabados del 1.er piso antes del 2.º piso (familia vive mejor antes; la obra de arriba ensucia)."
+},
+{
+"id": "p110",
+"f": "2026-11-14",
+"s": "T7",
+"c": [
+"Referentes"
+],
+"q": "Catálogo PREVI y referentes peruanos",
+"a": "26 proyectos PREVI (13 internacionales: Stirling, Van Eyck, Correa, Alexander, Atelier 5, Kikutake-Maki-Kurokawa…; 13 peruanos: Crousse-Páez-Pérez León, Morales-Montagne, Mazzarri-Llanos…). Otros: PP2 Barranco, Construye para Crecer (2017 Iquitos, 2021, 2024), Villa El Salvador, Sumaq Wasi, GRADE, Torres PUCP, Quinta Monroy. Filtros por tipo, estado, sistema, premiados. Metabolistas pasó de 97 a 344 m². Plantas interiores de 9 proyectos; la misma casa en 1978 y 2003: Stirling (casa Zamora: abajo consultorios y negocio, familia arriba), Morales-Montagne (casa Arnao 61 → 172 m²), Miró Quesada-Williams-Núñez (casa Frías 92 → 191 m²); Atelier 5, Correa, Svenssons, propuesta española (tipo P 105 m² con caracol en lugar de un dormitorio; tipo G 132 m²)."
+},
+{
+"id": "p111",
+"f": "2026-11-14",
+"s": "T7",
+"c": [
+"Referentes"
+],
+"q": "¿Es posible mostrar fotos de los planos?",
+"a": "Botones «Ver plano original» que abren el PDF de la fuente en la página exacta."
+},
+{
+"id": "p112",
+"f": "2026-11-14",
+"s": "T7",
+"c": [
+"Referentes"
+],
+"q": "¿No puedo poner esas páginas en mi web? ¿Y si es visible solo para mí?",
+"a": "La página de GitHub es pública; publicar imágenes de planos con derechos de autor es lo delicado (estudiarlas no). Repo privado no lo arregla (Pages gratis deja de funcionar; de pago sigue público). Solución: álbum privado en la cuenta de Claude, o carpeta descargable organizada (lo que se eligió: previ-planos.zip). En tesis o artículo se puede reproducir citando la fuente (derecho de cita con fines de investigación); licencias CC BY permiten publicar."
+},
+{
+"id": "p113",
+"f": "2026-11-14",
+"s": "T7",
+"c": [
+"Referentes"
+],
+"q": "Medidas reales de los PREVI al redibujar",
+"a": "Con escala gráfica Atelier 5, Correa y Svenssons salen más chicos: casa en hilera Atelier 5 ~4.6 × 21.5 m (no 6 × 27). Muebles añadidos donde la fuente solo trae programa."
+},
+{
+"id": "p114",
+"f": "2026-11-14",
+"s": "T7",
+"c": [
+"Referentes"
+],
+"q": "¿Otras referencias además de PREVI para esquemas precisos?",
+"a": "Con planos acotados públicos: Elemental (Quinta Monroy, Lo Espejo, Villa Verde, Monterrey; planos liberados en 2016), Sumaq Wasi (módulo rural MVCS), Techo Propio / MiVivienda (~35 m²), Villa El Salvador (lote original 7 × 20). Idea: pasarlas por el verificador contra el RNE de hoy."
+},
+{
+"id": "p115",
+"f": "2026-11-14",
+"s": "T7",
+"c": [
+"Referentes"
+],
+"q": "Planos acotados de otros referentes encontrados",
+"a": "Elemental 1:50 (Quinta Monroy, Lo Barnechea, Monterrey, Villa Verde; paquete libre de Aravena sacado del archivo de Internet); Techo Propio folleto JICA (Huaraz): misma casa 6.25 × 8.20 m en 4 etapas de 16 a 53 m², ninguna con baño dentro; Villa El Salvador: lote 7 × 20 (Romero Sotelo) y casa real densificada 2 pisos 5 dormitorios 1:100; Sumaq Wasi: módulo de adobe 6.30 × 5.25 m, muros 0.40, área tapón. No se encontró el prototipo oficial de 35 m² de MiVivienda. Comparador referentes-comparador-2.html (pendiente de validar)."
+},
+{
+"id": "p116",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Diseño"
+],
+"q": "¿De dónde salen las superficies mínima/óptima/máxima de la pestaña Relaciones?",
+"a": "Mínima: mueble + circulación (Panero-Zelnik, Neufert), la A.020 no fija m² por ambiente. Óptima: propuesta cruzada con NTC CDMX (recámara 7, adicional 6, estancia-comedor 13.6, cocina 3, lavado 1.68; por verificar) y decreto francés 2002-120 (9 m²). Máxima: criterio propio, sin fuente. Luego se unificó con la tabla de Gonzalo."
+},
+{
+"id": "p117",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Diseño"
+],
+"q": "¿Qué es la columna «Referencia económico» del cuadro de áreas?",
+"a": "Superficie recomendable por ambiente según el nivel elegido (Económico/Estándar/Amplio): dorm. ppal 11/13/16, sec. 8/10/12, sala 12/16/22, comedor 8/10/14, cocina 6/8/11, baño 3/4/5, lavandería 2/3.5/5; + circulación 8/12/15 %. No es norma. La tabla la dio Gonzalo el 12 nov."
+},
+{
+"id": "p118",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Diseño"
+],
+"q": "¿La referencia de sala-comedor era espacio único o separado?",
+"a": "En Relaciones, espacio único (mín. 10 = sofá 4.3 + mesa 4 personas 5.4); el cuadro de áreas los trata separados (12 + 8 = 20). Integradas comparten circulación: propuesta de fila propia = suma −15/20 %."
+},
+{
+"id": "p119",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Diseño"
+],
+"q": "Proporciones aceptables entre superficies",
+"a": "Ppal/sec 1.0-1.5 (1.2); ppal/sala-comedor 0.45-0.90; cocina/sala-comedor 0.20-0.50; baño/dormitorios 0.10-0.30 y 1 baño cada 3 dorm.; zonas: privada 40-55 %, social 25-40 %, servicio 12-25 %, circulación ≤15 % (propuesta, sin norma)."
+},
+{
+"id": "p120",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Diseño"
+],
+"q": "¿Cómo quedaron unificados mínimo/óptimo/máximo?",
+"a": "Mínimo = mueble + circulación; óptimo = tabla de Gonzalo según nivel; máximo = nivel Amplio; sala-comedor integrada = sala + comedor −15 % (17 m² en económico). CDMX y Francia quedan como comparación «por verificar»."
+},
+{
+"id": "p121",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Verificador"
+],
+"q": "¿Qué escalera propone por defecto?",
+"a": "Caracol de 1.60 m en el patio posterior primero (≈2.6 m² vs ≈4 m² del tramo recto); si no entra, tramo, U, L. Elegido por Gonzalo."
+},
+{
+"id": "p122",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Verificador"
+],
+"q": "¿Por qué la cocina no se unía a la sala-comedor en el diagrama de bolas?",
+"a": "Solo dibujaba puertas; ahora une bordes compartidos sin muro (≥0.40 m) con línea doble."
+},
+{
+"id": "p123",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Normativa"
+],
+"q": "¿Tamaño de terreno típico en Lima y Perú?",
+"a": "Mínimos por zonificación: R1 450 m² (frente 15), R2 300 (10), R3 160 (8), R4/RDM 90 (6). RDM: 90 m² frente 6 en Área de Tratamiento I (Ate) pero 120 m² frente 6 en Área II (Comas, SMP, Independencia, Los Olivos; Ord. 1015 y 1076-MML). Periferia/COFOPRI: 7×20, 8×20, 6×20; VES 7×20; clase media 160-200 m²; provincias 8-10 × 20-30. Típico autoconstrucción: 120-160 m², 6-8 m de frente, ~20 m de fondo. Presets 6×15, 6×20, 7×20, 8×20, 10×20 añadidos."
+},
+{
+"id": "p124",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Normativa"
+],
+"q": "¿Quién decide el área libre mínima de un lote?",
+"a": "La municipalidad provincial (plan urbano y reglamento de zonificación; en Lima ordenanzas 1015, 1076, 1099-MML) y la distrital la aplica con el Certificado de Parámetros (Ley 29090). El RNE no fija % para vivienda, solo patios/pozos (A.020 art. 11.4). RDM unifamiliar: 30 % (Ate, Comas, SMP, Los Olivos, Arequipa); multifamiliar 30-35 %; MiVivienda hasta 30 % (25 % esquina). Casa por defecto deja ~46 %."
+},
+{
+"id": "p125",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Verificador"
+],
+"q": "¿Cómo es la escalera de caracol del verificador?",
+"a": "Metálica, pasos trapezoidales soldados a tubo central, baranda helicoidal, holgura 0.15 m al muro, descanso cuadrado desde el tubo; S/ 3 500 referencial sin cotizar. Con 3/4 de vuelta no cumple: para 2.57 m hacen falta 14 pasos de ~29° (algo más de una vuelta; paso 0.25-0.50 del eje A.020 art. 15.1, contrapaso ≤0.18)."
+},
+{
+"id": "p126",
+"f": "2026-11-14",
+"s": "T8",
+"c": [
+"Herramientas"
+],
+"q": "¿Cómo paso el modelo a SketchUp?",
+"a": "Pestaña 3D, botón «Exportar a SketchUp (.dae)»; en SketchUp Archivo &gt; Importar &gt; COLLADA. Necesita internet la primera vez."
+},
+{
+"id": "p127",
+"f": "2026-11-15",
+"s": "TP",
+"c": [
+"Normativa"
+],
+"q": "¿Hasta cuántos pisos según el manual de Aceros Arequipa y otras normas?",
+"a": "Manual: no fija máximo, pero sus cimientos son «válidos solo para viviendas de 1 ó 2 pisos» (sec. 1.3.1, fig. 6). Ninguna norma limita pisos por ser unifamiliar: A.020 no pone tope; manda el certificado de parámetros (cada piso ≤3.00 m, A.010 art. 10.1 a); E.070 (2006, vigente): albañilería confinada hasta 5 pisos o 15 m (art. 27) con ingeniero; densidad de muros crece con pisos (art. 19.2 b); Tabla 2 restringe ladrillos. Propuesta SENCICO 2021 (3 pisos/7.50 m) no aprobada. Verificador: límite 3 pisos, aviso de ingeniero desde el 3.º."
+},
+{
+"id": "p128",
+"f": "2026-11-15",
+"s": "TP",
+"c": [
+"Normativa"
+],
+"q": "¿Ladrillo King Kong de 18 huecos es macizo?",
+"a": "E.070 llama hueca a la unidad con &lt;70 % de área neta; muchos KK 18 huecos están por debajo: revisar ficha técnica."
+},
+{
+"id": "p129",
+"f": "2026-11-15",
+"s": "TP",
+"c": [
+"Normativa"
+],
+"q": "¿Sistema columna-viga (pórticos) tiene límite de pisos?",
+"a": "No hay máximo normativo (E.030 admite cualquier sistema en vivienda). Pero no es menos problema: deriva ≤0.007 (concreto), columnas mayores o placas; todo con ingeniero (E.060); riesgo de columna corta con tabiques sin junta. Para 1-3 pisos la albañilería confinada suele ser más barata."
+},
+{
+"id": "p130",
+"f": "2026-11-15",
+"s": "TP",
+"c": [
+"Normativa"
+],
+"q": "¿Quién firma el expediente municipal, arquitecto o ingeniero?",
+"a": "Ley 29090: cada especialidad la firma su profesional colegiado. Arquitectura solo arquitecto (Ley 28966); estructuras ingeniero civil; sanitarias y eléctricas sus ingenieros. Hasta 120 m² techados: modalidad A; 3 pisos suele pasar a B (confirmar reglamento y TUPA del distrito)."
+},
+{
+"id": "p131",
+"f": "2026-11-15",
+"s": "TP",
+"c": [
+"Negocio"
+],
+"q": "¿Qué falta en la recomendación de trámites?",
+"a": "Certificado de parámetros como primer paso; título inscrito en SUNARP; ingenieros de instalaciones; responsable de obra; conformidad de obra y declaratoria de fábrica. Paquete: suelos + estructura + expediente + licencia. El papá NO hará expedientes de cada casa."
+},
+{
+"id": "p132",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Verificador"
+],
+"q": "¿Cómo funciona el asistente de inicio y los lotes con varios frentes?",
+"a": "Asistente con «Pasar»: personas→dormitorios, dirección y lote, frentes, datos opcionales al final (solo en el equipo). Esquina/atravesante/tres frentes: retiro por cada calle (A.010 art. 8.1 a), lateral 1.00 por defecto, ochavo 3.00 m (A.010 art. 12), portón al patio. En 6 m de esquina con 1 m lateral no entran 2 dorm. abajo (falta frente ~7.06 m)."
+},
+{
+"id": "p133",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Verificador"
+],
+"q": "¿Cómo se independizan los pisos y el taller?",
+"a": "Escalera en retiro frontal con entrada propia (A.010 art. 8.3 l): tramo junto a fachada si no pasa sobre la puerta (2.10 libres), si no caracol; en 6×15 con retiro 2 m sale caracol. Taller: no / una parte (sala→taller) / todo el piso (familia arriba). Vivienda taller A.020 art. 4.1."
+},
+{
+"id": "p134",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Negocio"
+],
+"q": "¿Cómo escribir el mensaje de inicio para autoconstructores?",
+"a": "Corto, para celular y maestro: «Construye por etapas sin tener que romper después», 3 viñetas, gratis, datos no salen del celular, «enséñaselo a tu maestro» (92 % construye con maestro); advertencia en positivo (licencia = casa vale más, se puede inscribir, vender, hipotecar); lista de profesionales al final en «Siguientes pasos»."
+},
+{
+"id": "p135",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Normativa"
+],
+"q": "¿Qué dice un certificado de parámetros y qué cambió en Lima Norte?",
+"a": "Pestaña Parámetros con valores reales de Ate, Barranco/Surquillo, San Borja, Miraflores, JLByR (Arequipa). Lima Norte (Comas, Los Olivos, SMP, Puente Piedra, Carabayllo, Independencia, Ancón, Santa Rosa): Ord. 1015 ya no rige; PDU Lima Norte 2034 (Ord. 2757-MML 2025, actualizada oct. 2026), siglas nuevas ZDM, ZDB."
+},
+{
+"id": "p136",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Diseño",
+"Clima y lugar"
+],
+"q": "¿Ventajas y desventajas de un patio interior en Lima?",
+"a": "+ luz y aire a cuartos del medio en lotes profundos, ventilación cruzada contra humedad y moho, privacidad, permite separar dos viviendas, Lima casi sin lluvia. − cuesta m² techados, parte la casa, más muro exterior, con 3 pisos y patio estrecho se vuelve pozo húmedo, ruido y olores. Para 6×15 mejor patio adelante y atrás; desde 18-20 m de fondo gana el central."
+},
+{
+"id": "p137",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Clima y lugar"
+],
+"q": "¿La implantación depende del clima (costa, sierra, selva)? ¿Dónde se construye más?",
+"a": "Costa: templada, húmeda, sin lluvia: ventilar y evitar humedad, techos planos para crecer. Sierra: noches frías, sol fuerte: compacta, muros gruesos, ventanas al norte, techo inclinado, patio «trampa de sol». Selva: calor, humedad, lluvia: elevada, abierta, aleros grandes, techo inclinado. Más de la mitad de los peruanos vive en la costa; Lima ~1/3 del país: empezar por la costa."
+},
+{
+"id": "p138",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Verificador"
+],
+"q": "¿Y si estaciono un auto?",
+"a": "Pregunta en el asistente; retiro frontal 5.00 m y cajón 2.70 × 5.00 m (A.010 art. 54); estacionar en retiro sin techo o techo ligero (A.010 art. 8.3 d). En 6×15 la casa queda con 6 m de fondo."
+},
+{
+"id": "p139",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Normativa"
+],
+"q": "¿Qué significa RDM y las otras siglas?",
+"a": "RDM Residencial de Densidad Media (la más común en barrios de autoconstrucción, 3 a 5 pisos según lote); RDB baja; RDA alta; RDMB muy baja; VT vivienda taller; CV/CZ comercio vecinal/zonal; OU otros usos. Lima Norte: ZDM, ZDB."
+},
+{
+"id": "p140",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Herramientas"
+],
+"q": "¿Se puede saber la zonificación desde la dirección?",
+"a": "Pestaña Zonificación: dirección, toque en el mapa o «Estoy en el lote»; da zona, distrito, área de tratamiento, ordenanza. Datos: plano vigente del IMP de Lima Metropolitana (al 2 nov 2026). En asentamientos «Mz. B Lt. 12» casi nunca se encuentra: buscar la avenida."
+},
+{
+"id": "p141",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Verificador"
+],
+"q": "Presupuesto de la 1.ª etapa",
+"a": "El asistente lo pide (solo construcción, sin terreno) y dice qué etapas alcanza a cubrir; también personas y dormitorios por separado."
+},
+{
+"id": "p142",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Negocio"
+],
+"q": "¿Qué negocios comunes se podrían poner en el 1.er piso?",
+"a": "Bodega/minimarket (12-20 m², enrollable 2.50-3.00, depósito); restaurante/menú/pollería (cocina con campana y ducto, trampa de grasa, baño clientes, salón 25-40 m²); taller mecánico/llantería/lavado (portón 3.00, auto 3.00×5.50, piso reforzado; casi nunca permitido en RDM/ZDM); peluquería/barbería (10-15 m²); consultorio (espera, lavadero, baño accesible); costura/confección (cuarto con ventana grande, puede ir al fondo); ferretería/bazar; local para alquilar (medidores propios); otro. Pendiente de validar."
+},
+{
+"id": "p143",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Verificador"
+],
+"q": "¿Cómo se ven los acabados por etapa en el 3D?",
+"a": "Etapas fusionadas a 4: 1 casco (ladrillo visto, piso pulido), 2 acabados 1.er piso, 3 2.º piso terminado + fachada + azotea, 4 crece. Pisos sala/dormitorios: vinílico en rollo ~S/35/m², SPC clic S/60, cerámico S/65, porcelanato S/95 o pulido; cocina y baño cerámico antideslizante. Cuadro de acabados en Diseño Pro."
+},
+{
+"id": "p144",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Verificador"
+],
+"q": "¿Objetivo de la casa: rentabilizar o vivir cómodo?",
+"a": "Pregunta del asistente: vivir cómodos (amplio), vivir y alquilar una parte (estándar + independizar pisos, medidores aparte), máximo provecho (económico)."
+},
+{
+"id": "p145",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Diseño"
+],
+"q": "¿Acceso al patio por la cocina o independiente?",
+"a": "1 por la cocina (más barato); 2 por el pasillo (~1 m² de cocina o baño); 3 pasaje lateral desde la calle (~8 m² por piso en 6×15, solo frente ≥7 m); 4 portón en esquina/atravesante. Propuesta: preguntar y programar 2 y 3. Pendiente de decisión."
+},
+{
+"id": "p146",
+"f": "2026-11-15",
+"s": "TA",
+"c": [
+"Costos y etapas",
+"Negocio"
+],
+"q": "¿Presupuesto medio para construir la primera casa en la costa?",
+"a": "No hay dato solo para la costa. GRADE para ADI Perú (2024, datos urbanos 2022, sobre todo Lima): ~22 etapas en 16 años, ~S/146 000 total, ~S/6 700 por etapa, ahorro ~S/1 550/mes. La etapa 1 del verificador (casco ~S/40 000) = ~2 años de ahorro; conviene decir qué se hace con S/6 000-10 000 (cimientos y baño)."
+}
+];
+const SRC = {"C": {"n": "Chat del proyecto", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y"}, "T1": {"n": "Proponer vivienda mínima según RNE", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5Y7rJQHKEVM8VLkHsTxyxt4g"}, "T2": {"n": "Buscar financiamiento para doctorado", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YACsxf8qF4xVF454AUfrnkE"}, "T3": {"n": "Hacer viable el negocio del verificador", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YQGQZjWhXkXBxE5vkcAGhtP"}, "T4": {"n": "Etapas de crecimiento de la casa", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YBnc5HH31sA7KJBHN2nkXPx"}, "T5": {"n": "RNE consultable", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YBVpuUtJWt9V3rRTu1Qzoha"}, "T6": {"n": "Verificador multifamiliar", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YMSqqe4SKo8734vwP8exfGF"}, "T7": {"n": "Catálogo de referentes", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YVXGpkCCb82dNY4HLzYG5NE"}, "T8": {"n": "Matriz de relaciones y superficies", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YYFuHNq8j2L5dae7UQRuLmb"}, "TA": {"n": "Asistente de inicio del verificador", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YPrvs5JcoLYPDagS53AKjQ4"}, "TP": {"n": "Límite de pisos del verificador", "u": "https://claude.ai/code/project/chan_01VudZHHDWXqdhYkPfRvGg5Y?thread=cmsg_01VudZHHDWXqdhYkPfRvGg5YFChQbsDyVoLkyjbycd3BPF"}};
+SRC.TN = {n:'Tablón de normativa', u:'preguntas.html'};
+const ALL = P.concat(Q.map(x => ({id:'n-'+x.id, f:x.fecha, s:'TN', c:['Normativa'], q:x.q, a:x.a, v:x.v, vt:x.vt, ref:x.id})))
+  .sort((a,b) => b.f.localeCompare(a.f));
+const CATS = ['Normativa','Diseño','Verificador','Costos y etapas','Negocio','Doctorado','Referentes','Clima y lugar','Investigación','Herramientas'];
+const $ = s => document.querySelector(s);
+const fold = s => s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const strip = h => h.replace(/<[^>]+>/g,' ');
+const body = x => x.a.startsWith('<') ? x.a : `<p>${x.a}</p>`;
+let cat = null;
+$('#tags').innerHTML = CATS.map(t => `<button type="button" data-t="${t}">${t}<span class="n">${ALL.filter(x=>x.c.includes(t)).length}</span></button>`).join('');
+$('#tags').onclick = e => { const b = e.target.closest('button'); if(!b) return; cat = cat === b.dataset.t ? null : b.dataset.t; render(); };
+const used = Object.keys(SRC).filter(k => ALL.some(x => x.s === k));
+$('#src').innerHTML = '<option value="">Todos los hilos</option>' + used.map(k => `<option value="${k}">${SRC[k].n} (${ALL.filter(x=>x.s===k).length})</option>`).join('');
+$('#src').onchange = () => render();
+$('#q').oninput = () => render();
+function fmt(d){ const [y,m,dd] = d.split('-'); return `${+dd} ${['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'][m-1]} ${y}`; }
+function render(){
+  document.querySelectorAll('#tags button').forEach(b => b.classList.toggle('on', b.dataset.t === cat));
+  const words = fold($('#q').value.trim()).split(/\s+/).filter(Boolean);
+  const s = $('#src').value, open = location.hash.slice(1);
+  const list = ALL.filter(x => (!cat || x.c.includes(cat)) && (!s || x.s === s) && words.every(w => fold(x.q + ' ' + strip(x.a) + ' ' + x.c.join(' ') + ' ' + SRC[x.s].n).includes(w)));
+  $('#list').innerHTML = list.map(x => {
+    const src = SRC[x.s], href = x.ref ? `${src.u}#${x.ref}` : src.u;
+    return `<details class="q" id="${x.id}" ${open === x.id || (words.length && list.length <= 3) ? 'open' : ''}>
+    <summary><span class="t">${x.q}</span>${x.vt ? `<span class="v ${x.v}">${x.vt}</span>` : `<span class="cat">${x.c[0]}</span>`}<span class="d">${fmt(x.f)}</span></summary>
+    <div class="body">${body(x)}<div class="meta"><span>Respondida el ${fmt(x.f)}</span>${x.c.map(t=>`<span class="tg">${t}</span>`).join('')}<a class="src" href="${href}" ${x.s==='TN'?'':'target="_blank" rel="noopener"'}>${x.s==='C'?'':'Hilo: '}${src.n}</a><a href="#${x.id}">Enlace</a></div></div></details>`;
+  }).join('') || '<p>No hay preguntas con esas palabras.</p>';
+  $('#count').textContent = `${list.length} de ${ALL.length} preguntas`;
+}
+render();
+const go = () => { const d = document.getElementById(location.hash.slice(1)); if(d){ d.open = true; d.scrollIntoView(); } };
+if(location.hash) go();
+addEventListener('hashchange', go);
+</script>
+</body>
+</html>
