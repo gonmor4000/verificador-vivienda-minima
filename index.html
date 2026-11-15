@@ -615,6 +615,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-15">15 nov 2026</time><span><b>3D coherente con las etapas</b>: en la etapa 1 todo es casco (ladrillo visto, piso pulido, sin puertas interiores). En la etapa 2 el 1.er piso queda tarrajeado y pintado por dentro, con cerámico en los pisos, enchape en el baño y la cocina y puertas interiores, pero la fachada sigue en ladrillo, como en el presupuesto. La etapa 3 levanta el 2.º piso en casco y la etapa 4 lo termina y pinta la fachada. Las medianeras quedan en ladrillo (el vecino las tapa). En las etapas 2 y 4 el 3D se abre sin techo para que se vean los acabados.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Zonificación</b>: buscas la dirección (o tocas el lote en el mapa, o pulsas «Estoy en el lote» con el teléfono) y dice la zonificación del lote según el plano vigente de Lima Metropolitana del IMP (visor Zonificación Urbana 2026), con su área de tratamiento normativo, la ordenanza y qué implica para la casa. La zonificación queda en la línea del proyecto.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Auto en casa</b>: nueva pregunta en el asistente y opción «Estacionar un auto en casa». El retiro frontal pasa a <b>5.00 m</b> y se dibuja el espacio del auto de 2.70 × 5.00 m (A.010 art. 54), a un lado de la puerta y sin chocar con la escalera del retiro; el estacionamiento en el retiro va sin techo o con techo ligero (art. 8.3 d). La pestaña Parámetros explica las siglas de zonificación (RDM, RDB, VT, CV…).</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Pestaña Parámetros</b>: qué dice un certificado de parámetros urbanísticos y qué implica cada campo, valores reales encontrados por distrito con su fuente y estado (Lima Norte cambió con el PDU 2034), costo del trámite y un cotejo del plano con el certificado elegido. El asistente pregunta ahora también <b>cuántos dormitorios</b> (y dice cuántos duermen en cada uno) y el <b>presupuesto de la primera etapa</b> sin el terreno: al final dice qué etapas alcanza y cuánto falta. </span></li>
@@ -2278,8 +2279,16 @@ function view3D(k){
 // Volúmenes de la casa como cajas (x a lo ancho, y hacia el fondo desde el eje de fachada, z altura): los usan el 3D, los cortes y las elevaciones
 function houseBoxes(r, o){
   const out = [], v = r.v, W = r.W, D = r.D;
-  const B = (x0,x1,y0,y1,z0,z1,m,e=true) => { if(x1-x0<=0.005 || y1-y0<=0.005 || z1-z0<=0.005) return; out.push({x0,x1,y0,y1,z0,z1,m,e}); };
+  const B = (x0,x1,y0,y1,z0,z1,m,e=true) => { if(x1-x0<=0.005 || y1-y0<=0.005 || z1-z0<=0.005) return null; const b = {x0,x1,y0,y1,z0,z1,m,e}; out.push(b); return b; };
   const e = r.hL || 0.20, H2 = H + e, built2 = o.built2, noRoof = o.noRoof;
+  // qué hay al otro lado de cada cara de un muro o columna: un ambiente seco, uno húmedo (baño, cocina) o el exterior
+  // (calle, patio o vecino). Sirve para pintar por dentro y dejar la fachada en ladrillo hasta su etapa.
+  const inR = (RM, x, y) => RM.find(q=> x > q.x0 + 1e-6 && x < q.x1 - 1e-6 && y > q.y0 + 1e-6 && y < q.y1 - 1e-6);
+  const extK = (dir, x, y) => dir==='ny' && y < 0.02 ? 'street' : dir==='py' && y > D - 0.02 ? (isAtr(v) ? 'street' : 'patio') : dir==='nx' && x < 0.02 ? 'med' : dir==='px' && x > W - 0.02 ? (isEsq(v) ? 'street' : 'med') : 'patio';
+  const sidesOf = (b, RM) => { const cx = (b.x0+b.x1)/2, cy = (b.y0+b.y1)/2, k = 0.06, sd = {};
+    [['px', b.x1+k, cy], ['nx', b.x0-k, cy], ['py', cx, b.y1+k], ['ny', cx, b.y0-k]].forEach(([d, x, y])=>{ const q = inR(RM, x, y); sd[d] = q ? (q.wet ? 'wet' : 'dry') : extK(d, x, y); });
+    return sd; };
+  const tag = (b, fl, RM) => { if(b){ b.fl = fl; b.sides = sidesOf(b, RM); } return b; };
   const vo = v.vol && v.rf >= 0.5 && r.gross2 > 0 ? 0.50 : 0;
   // pisos de los ambientes (techados, sin el patio de luz)
   const rooms1 = Object.values(r.rooms).filter(q=>!q.sky);
@@ -2291,16 +2300,20 @@ function houseBoxes(r, o){
     if(!hor && Math.abs(x1-w.x1)<1e-6 && Math.abs(x2-w.x1)<1e-6){ const ga = Math.min(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)), gb = Math.max(w.y1+a*Math.sign(w.y2-w.y1), w.y1+b*Math.sign(w.y2-w.y1)); return Math.min(gb, Math.max(y1,y2)) - Math.max(ga, Math.min(y1,y2)) > 0.05; }
     return false;
   });
-  const walls = (list, z0, floor) => list.forEach(w=>{
+  const walls = (list, z0, floor, RM) => list.forEach(w=>{
     const Lw = Math.hypot(w.x2-w.x1, w.y2-w.y1); if(Lw < 0.02) return;
     const ux = (w.x2-w.x1)/Lw, uy = (w.y2-w.y1)/Lw, t = w.kind==='wall' ? T : T*0.6, m = w.kind==='wall' ? 'wall' : 'tab';
     const hor = Math.abs(uy) < 1e-6;
     const piece = (a, b, h0, h1, mm=m, tt=t) => {
       if(b - a < 0.01 || h1 - h0 < 0.01) return;
       const a2 = a <= 1e-6 ? -t/2 : a, b2 = b >= Lw - 1e-6 ? Lw + t/2 : b;
-      const px0 = w.x1 + ux*a2, px1 = w.x1 + ux*b2, py0 = w.y1 + uy*a2, py1 = w.y1 + uy*b2;
-      if(hor) B(Math.min(px0,px1), Math.max(px0,px1), w.y1 - tt/2, w.y1 + tt/2, z0+h0, z0+h1, mm);
-      else B(w.x1 - tt/2, w.x1 + tt/2, Math.min(py0,py1), Math.max(py0,py1), z0+h0, z0+h1, mm);
+      // se parte en los encuentros con otros ambientes para pintar cada tramo según el ambiente que tiene delante
+      const cuts = [a2]; if(mm !== 'glass') RM.forEach(q=> (hor ? [q.x0, q.x1] : [q.y0, q.y1]).forEach(c=>{ const tc = (c - (hor ? w.x1 : w.y1))/(hor ? ux : uy); if(tc > a2 + 0.05 && tc < b2 - 0.05) cuts.push(tc); }));
+      const ts = [...new Set(cuts.map(c=>Math.round(c*1000)/1000))].sort((p,q)=>p-q).concat([b2]);
+      for(let i = 0; i < ts.length - 1; i++){ const s0 = ts[i], s1 = ts[i+1]; if(s1 - s0 < 0.005) continue;
+        const px0 = w.x1 + ux*s0, px1 = w.x1 + ux*s1, py0 = w.y1 + uy*s0, py1 = w.y1 + uy*s1;
+        const bb = hor ? B(Math.min(px0,px1), Math.max(px0,px1), w.y1 - tt/2, w.y1 + tt/2, z0+h0, z0+h1, mm) : B(w.x1 - tt/2, w.x1 + tt/2, Math.min(py0,py1), Math.max(py0,py1), z0+h0, z0+h1, mm);
+        if(mm !== 'glass') tag(bb, floor, RM); }
     };
     const gs = (w.gaps||[]).filter(q=>q[1]>q[0]).map(q=>[Math.max(0,q[0]), Math.min(Lw,q[1]), q[2] || (floor===1 && winLike(w, q[0], q[1]) ? 'win' : 'door')]).sort((p,q)=>p[0]-q[0]);
     let t0 = 0;
@@ -2312,14 +2325,22 @@ function houseBoxes(r, o){
     });
     piece(t0, Lw, 0, H);
   });
-  walls(G3.f1, 0, 1);
+  walls(G3.f1, 0, 1, rooms1);
+  // hojas de puerta, abiertas a 90° como en la planta: la de la calle y la del patio desde la etapa 1, las interiores con los acabados
+  const leaves = (list, z0, fl, RM) => list.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
+    const ext = !inR(RM, hx - nx*(T+0.10) + ux*wd/2, hy - ny*(T+0.10) + uy*wd/2), L_ = wd - 0.03;
+    const xs = [hx, hx + nx*L_, hx + ux*0.04], ys = [hy, hy + ny*L_, hy + uy*0.04];
+    const b = B(Math.min(...xs), Math.max(...xs), Math.min(...ys), Math.max(...ys), z0, z0 + 2.08, ext ? 'dext' : 'wood');
+    if(b){ b.fl = fl; b.leaf = ext ? 'ext' : 'int'; } });
+  leaves(G3.d1, 0, 1, rooms1);
   // columnas de confinamiento y losa del 1.er piso
   const cs = 0.25 + 0.012;
-  const colAt = (x, y, z0, z1, list) => {
-    if(v.sis === 'portico') B(x-cs/2, x+cs/2, y-cs/2, y+cs/2, z0, z1, 'conc');
-    else colRects(x, y, list).forEach(([x0,y0,x1,y1])=> B(x0-0.006, x1+0.006, y0-0.006, y1+0.006, z0, z1, 'conc'));
+  const U2 = built2 ? Object.values(r.up.rooms).filter(q=>!q.sky && !q.ter) : [];
+  const colAt = (x, y, z0, z1, list, fl, RM) => {
+    if(v.sis === 'portico') tag(B(x-cs/2, x+cs/2, y-cs/2, y+cs/2, z0, z1, 'conc'), fl, RM);
+    else colRects(x, y, list).forEach(([x0,y0,x1,y1])=> tag(B(x0-0.006, x1+0.006, y0-0.006, y1+0.006, z0, z1, 'conc'), fl, RM));
   };
-  (r.cols||[]).forEach(([x,y])=>{ colAt(x, y, 0, H, G3.f1); if(built2) colAt(x, y, H2, H2+H, G3.f2); });
+  (r.cols||[]).forEach(([x,y])=>{ colAt(x, y, 0, H, G3.f1, 1, rooms1); if(built2) colAt(x, y, H2, H2+H, G3.f2, 2, U2); });
   const roof1 = !(noRoof && !built2);
   if(roof1 || built2){
     rooms1.forEach(q=> B(q.x0-T/2, q.x1+T/2, q.y0-T/2, q.y1+T/2, H, H2, 'slab'));
@@ -2343,7 +2364,7 @@ function houseBoxes(r, o){
   if(built2){
     const z2 = H2, U = Object.values(r.up.rooms);
     U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; B(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2-0.0, z2+0.02, q.wet ? 'wet' : 'floor', false); });
-    walls(G3.f2, z2, 2);
+    walls(G3.f2, z2, 2, U2); leaves(G3.d2, z2, 2, U2);
     if(!noRoof) U.filter(q=>!q.sky && !q.ter).forEach(q=>{ const yy0 = Math.abs(q.y0) < 1e-6 ? -vo : q.y0; B(q.x0-T/2, q.x1+T/2, yy0-T/2, q.y1+T/2, z2+H, z2+H+e, 'slab'); });
     // terraza del 2.º piso: barandas donde da a la calle o al patio, muro de 2.10 hacia el vecino (A.020 art. 18.4 y 19.3)
     U.filter(q=>q.ter).forEach(q=>{
@@ -2390,7 +2411,27 @@ function build3D(r){
   const mat = (c, o={}) => new THREE.MeshLambertMaterial(Object.assign({color:c}, o));
   const M = {wall: mat(0xe9e2d6), tab: mat(0xf1ece4), conc: mat(0xa9a49c), slab: mat(0xc9c3b9), floor: mat(0xf7f4ef), glass: mat(0x9fc3d6, {transparent:true, opacity:0.45, depthWrite:false}),
     green: mat(0xc9dcc4), walk: mat(0xd2cfca), street: mat(0x9a9894), stair: mat(0xc47a55), rail: mat(0x55504a), wet: mat(0xdfe8ef),
-    brick: mat(0xb8664a), cem: mat(0xbdb8b0), rebar: mat(0x4a3428)};
+    brick: mat(0xb8664a), cem: mat(0xbdb8b0), rebar: mat(0x4a3428),
+    paint: mat(0xf5f0e6), fach: mat(0xe4c58e), ench: mat(0xdde9ef), wood: mat(0x9a6a45), dext: mat(0x4a5056)};
+  // cerámico: textura de losetas con su junta, repetida según el tamaño de cada piso
+  const tileTex = (base, line) => { const c = document.createElement('canvas'); c.width = c.height = 64; const x = c.getContext('2d');
+    x.fillStyle = base; x.fillRect(0,0,64,64); x.strokeStyle = line; x.lineWidth = 3; x.strokeRect(0,0,64,64); const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; };
+  const TX = d3.tx || (d3.tx = {floor: tileTex('#e9dcc6', '#b9a98f'), wet: tileTex('#e8eef1', '#a9b8c0')});
+  const floorMat = (b, k, size) => { const t = TX[k].clone(); t.needsUpdate = true; t.repeat.set((b.x1-b.x0)/size, (b.y1-b.y0)/size); return new THREE.MeshLambertMaterial({map:t}); };
+  // material de cada caja según la etapa: cada cara de un muro mira a un ambiente o al exterior
+  const FACE = ['px','nx','top','bot','ny','py']; // orden de las caras de BoxGeometry: +x, -x, +y, -y, +z (planta -y) y -z (planta +y)
+  const matFor = b => {
+    const fl = b.fl || (b.z0 >= H2 - 0.01 ? 2 : 1), f = pjFin(fl);
+    if(b.m === 'floor' || b.m === 'wet') return f === 0 ? M.cem : floorMat(b, b.m, b.m === 'wet' ? 0.30 : 0.60);
+    if(b.leaf === 'int' && f === 0) return null; // sin puertas interiores en el casco: se usan cortinas
+    if(!b.sides) return (b.m === 'wall' || b.m === 'tab') && f === 0 ? M.brick : M[b.m];
+    const bare = b.m === 'conc' ? M.conc : M.brick;
+    if(f === 0) return bare;
+    const face = k => { const sd = b.sides[k]; if(!sd) return b.m === 'conc' ? M.paint : M.paint;
+      if(sd === 'dry') return M.paint; if(sd === 'wet') return M.ench;
+      if(sd === 'street') return f === 2 ? M.fach : bare; if(sd === 'patio') return f === 2 ? M.paint : bare; return bare; };
+    return FACE.map(face);
+  };
   const edgeM = new THREE.LineBasicMaterial({color:0x3a3530, transparent:true, opacity:0.45});
   const ox = v.med ? 0 : T/2, oy = v.rf + T/2;
   // caja en coordenadas de planta: x a lo ancho, y hacia el fondo desde el eje de fachada, z altura
@@ -2420,7 +2461,7 @@ function build3D(r){
     if(b.poly){ const sh = new THREE.Shape(); b.poly.forEach(([x,y],i)=> i ? sh.lineTo(x,y) : sh.moveTo(x,y));
       const g = new THREE.ExtrudeGeometry(sh, {depth: b.z1-b.z0, bevelEnabled:false}), me = new THREE.Mesh(g, M[b.m]); me.rotation.x = -Math.PI/2; me.position.set(ox, b.z0, -oy); grp.add(me);
       if(b.e){ const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), edgeM); l.rotation.x = -Math.PI/2; l.position.copy(me.position); grp.add(l); } return; }
-    if(!b.rot) return box(b.x0, b.x1, b.y0, b.y1, b.z0, b.z1, M[b.m], b.e);
+    if(!b.rot){ const mm = matFor(b); if(mm) box(b.x0, b.x1, b.y0, b.y1, b.z0, b.z1, mm, b.e); return; }
     const g = new THREE.BoxGeometry(b.rot.len, b.z1-b.z0, b.rot.wid), me = new THREE.Mesh(g, M[b.m]);
     me.position.set(ox + b.rot.cx, (b.z0+b.z1)/2, -(oy + b.rot.cy)); me.rotation.y = b.rot.ang; grp.add(me);
     const l = new THREE.LineSegments(new THREE.EdgesGeometry(g), edgeM); l.position.copy(me.position); l.rotation.y = b.rot.ang; grp.add(l);
@@ -3358,6 +3399,8 @@ function etapas(r){
 }
 function setProj(on, st){
   pj = {on, st: st || pj.st};
+  // en las etapas de acabados (2 y 4) el 3D se ve sin techo, para mirar los acabados por dentro; en las de casco, con techo
+  if(on && st){ if(st === 2 || st === 4) el('v3-techo').checked = true; else if(st === 1 || st === 3) el('v3-techo').checked = false; }
   try { localStorage.setItem('vvm-proy', JSON.stringify(pj)); } catch(e){}
   if(lastR){ applyProj(lastR); if(!el('tab-3d').hidden && d3) try { build3D(lastR); } catch(e){ console.error('3D', e); } }
 }
@@ -3387,10 +3430,15 @@ function pjBox(b, H2, r){
   const st = pj.st, upper = b.z0 >= H2 - 0.01;
   // antes de la etapa 3, si el plano tiene 2.º piso, el techo queda libre: sin parapetos de azotea ni escalera
   if(st < 3 && r && r.gross2 > 0 && ((upper && b.m !== 'slab') || b.m === 'stair' || b.esc)) return null;
-  const casco = st===1 || ((st===2 || st===3) && upper);
-  if(!casco) return b;
-  const m = b.m==='wall' || b.m==='tab' ? 'brick' : b.m==='floor' || b.m==='wet' ? 'cem' : b.m;
-  return m===b.m ? b : Object.assign({}, b, {m});
+  return b;
+}
+// acabado de cada piso según la etapa: 0 casco (ladrillo y piso pulido), 1 acabados por dentro (la fachada sigue en ladrillo), 2 terminado
+function pjFin(fl){
+  if(!pj.on) return 2;
+  const st = pj.st;
+  if(st >= 4) return 2;
+  if(st === 1) return 0;
+  return fl === 1 ? 1 : 0;
 }
 // fierros de empalme que asoman sobre las columnas: la casa queda lista para crecer
 function pjRebar(r, built2, H2){
@@ -3578,7 +3626,7 @@ function bindProCuts(){
 function proSection(r, axis, pos, look, title){
   const v = r.v, W = r.W, D = r.D, e = r.hL || 0.20, H2 = H + e, built2 = r.gross2 > 0 && !!r.up;
   const L = Math.max(v.lote, W + (v.med?0:T)), F = Math.max(v.fondo, v.rf + D + T), vd = Math.max(0, v.vd), ox = v.med ? 0 : T/2, oy = v.rf + T/2;
-  const bx = houseBoxes(r, {built2, noRoof:false}).filter(b=> !b.seg && b.m !== 'floor' && b.m !== 'wet');
+  const bx = houseBoxes(r, {built2, noRoof:false}).filter(b=> !b.seg && !b.leaf && b.m !== 'floor' && b.m !== 'wet');
   // cimientos bajo los muros del 1.er piso
   G3.f1.forEach(w=>{ if(w.kind !== 'wall') return; const hor = Math.abs(w.y2-w.y1) < 1e-6, a0 = hor ? Math.min(w.x1,w.x2) : Math.min(w.y1,w.y2), a1 = hor ? Math.max(w.x1,w.x2) : Math.max(w.y1,w.y2);
     const an = v.sis==='portante' ? r.cim.an : 0.40, zb = v.sis==='portante' ? -r.cim.za : -0.70;
@@ -4074,7 +4122,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15h';
+const APP_VERSION = '2026-11-15i';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
