@@ -427,7 +427,7 @@ const R = [
   sist:'—', idea:'71 % de la vivienda urbana es autoconstruida; la familia gasta unos S/ 146 000 en 22 etapas a lo largo de 16 años.',
   crece:'Datos para calibrar las etapas y su costo.', q:'GRADE autoconstruccion Peru ADI', f:['grade','habitat']},
  // --- Fuera del Perú ---
- {id:'monroy', g:'ex', cod:'2003', t:'Quinta Monroy, Iquique (Chile)', a:'ELEMENTAL (Alejandro Aravena)', y:2003, est:'c', fam:'alb', esq:'monroy',
+ {id:'monroy', g:'ex', cod:'2003', t:'Quinta Monroy, Iquique (Chile)', a:'ELEMENTAL (Alejandro Aravena)', pais:'Chile', y:2003, est:'c', fam:'alb', esq:'monroy',
   sist:'Albañilería y concreto; la familia completa con lo que puede.',
   idea:'«Media casa buena»: el Estado paga la mitad difícil y la familia hace la otra. McGuirk la presenta como heredera directa de PREVI.',
   crece:'Las familias llenaron los vacíos en pocos años.', q:'Quinta Monroy Elemental plan section', f:['monroy','domus'],
@@ -587,12 +587,18 @@ function bboxNivel(L){
   let a=[Infinity,Infinity,-Infinity,-Infinity]; const add=(x,y)=>{a[0]=Math.min(a[0],x);a[1]=Math.min(a[1],y);a[2]=Math.max(a[2],x);a[3]=Math.max(a[3],y)};
   for(const r of L.r||[]){add(r[1],r[2]);add(r[1]+r[3],r[2]+r[4]);}
   for(const [,p] of L.pol||[]) p.forEach(([x,y])=>add(x,y));
-  for(const k of ['W','M','P','V','L']) for(const s of L[k]||[]){add(s[0],s[1]);add(s[2],s[3]);}
+  for(const k of ['A','W','M','P','V','L']) for(const s of L[k]||[]){add(s[0],s[1]);add(s[2],s[3]);}
+  for(const k of ['wp','wn','fm','fr','fd','frd']) for(const r of L[k]||[]) r.forEach(([x,y])=>add(x,y));
   return a;
 }
 function drawPlano(L){
-  const [x0,y0,x1,y1]=bboxNivel(L), pad=0.6, W=x1-x0+2*pad, H=y1-y0+2*pad;
-  let o=`<svg viewBox="${x0-pad} ${y0-pad} ${W} ${H}" role="img" aria-label="Planta ${esc(L.n)}">`;
+  const [x0,y0,x1,y1]=bboxNivel(L), pad=0.6, ex=L.cot?1.0:0, W=x1-x0+2*pad+ex, H=y1-y0+2*pad+ex;
+  let o=`<svg viewBox="${x0-pad} ${y0-pad-ex} ${W} ${H}" role="img" aria-label="Planta ${esc(L.n)}">`;
+  let cotS='';
+  if(L.cot){ const [x0,y0,x1,y1]=L.cotr||(L.dim?[0,0,L.dim[0],L.dim[1]]:bboxNivel(L)); const f=v=>v.toFixed(2).replace('.',','), yc=y0-0.6, xc=x1+0.6, t=0.12, st='stroke="var(--ink)" stroke-width="0.03"', tx='font-size="0.42" font-weight="600" fill="var(--ink)" font-family="Archivo,system-ui,sans-serif" text-anchor="middle"';
+    cotS+=`<g ${st}><line x1="${x0}" y1="${yc}" x2="${x1}" y2="${yc}"/><line x1="${x0-t}" y1="${yc+t}" x2="${x0+t}" y2="${yc-t}"/><line x1="${x1-t}" y1="${yc+t}" x2="${x1+t}" y2="${yc-t}"/><line x1="${x0}" y1="${yc-0.15}" x2="${x0}" y2="${y0-0.05}" stroke-width="0.015"/><line x1="${x1}" y1="${yc-0.15}" x2="${x1}" y2="${y0-0.05}" stroke-width="0.015"/>`+
+       `<line x1="${xc}" y1="${y0}" x2="${xc}" y2="${y1}"/><line x1="${xc-t}" y1="${y0+t}" x2="${xc+t}" y2="${y0-t}"/><line x1="${xc-t}" y1="${y1+t}" x2="${xc+t}" y2="${y1-t}"/><line x1="${x1+0.05}" y1="${y0}" x2="${xc+0.15}" y2="${y0}" stroke-width="0.015"/><line x1="${x1+0.05}" y1="${y1}" x2="${xc+0.15}" y2="${y1}" stroke-width="0.015"/></g>`+
+       `<text x="${(x0+x1)/2}" y="${yc-0.15}" ${tx}>${f(x1-x0)} m</text><text transform="translate(${xc+0.15} ${(y0+y1)/2}) rotate(90)" ${tx}>${f(y1-y0)} m</text>`; }
   for(const [t,x,y,w,h] of L.r||[]) o+=`<rect x="${x}" y="${y}" width="${w}" height="${h}" fill="${FILL[t]}"/>`;
   for(const [t,p] of L.pol||[]){ const pts=p.map(q=>q.join(',')).join(' ');
     o+=`<polygon points="${pts}" fill="${FILL[t]}"/>`;
@@ -601,8 +607,14 @@ function drawPlano(L){
       o+=`<polygon points="${pts}" fill="none" stroke="var(--muted)" stroke-width="0.03" stroke-dasharray="0.15 0.1"/>`; } }
   for(const f of L.f||[]) o+=mueble(f);
   const seg=(k,sw,col,extra='')=>(L[k]||[]).map(s=>`<line x1="${s[0]}" y1="${s[1]}" x2="${s[2]}" y2="${s[3]}" stroke="${col}" stroke-width="${sw}" stroke-linecap="square" ${extra}/>`).join('');
-  o+=seg('L',0.05,'var(--muted)')+seg('V',0.05,'var(--muted)')+seg('P',0.08,'var(--ink)')+seg('M',0.14,'var(--ink)')+seg('W',0.22,'var(--ink)');
-  for(const [t,x,y] of L.num||[]) o+=`<text x="${x}" y="${y}" font-size="0.5" font-weight="700" text-anchor="middle" dominant-baseline="middle" fill="var(--ink)" stroke="var(--panel)" stroke-width="0.12" paint-order="stroke" font-family="Archivo,system-ui,sans-serif">${esc(t)}</text>`;
+  o+=seg('L',0.05,'var(--muted)')+seg('V',0.05,'var(--muted)')+seg('P',0.08,'var(--ink)')+seg('M',0.14,'var(--ink)')+seg('W',0.22,'var(--ink)')+seg('A',0.40,'var(--ink)');
+  const ring=r=>'M'+r.map(q=>q.join(',')).join('L')+'Z';
+  if(L.wp&&L.wp.length) o+=`<path d="${L.wp.map(ring).join('')}" fill="var(--ink)" fill-rule="evenodd"/>`;
+  if(L.wn&&L.wn.length) o+=`<path d="${L.wn.map(ring).join('')}" fill="var(--nuevo,#d6342b)" fill-rule="evenodd"/>`;
+  const pl=(k,col,da)=>(L[k]&&L[k].length)?`<path d="${L[k].map(r=>'M'+r.map(q=>q.join(',')).join('L')).join('')}" fill="none" stroke="${col}" stroke-width="0.025" stroke-linejoin="round"${da?' stroke-dasharray="0.12 0.08"':''}/>`:'';
+  o+=pl('fm','var(--ink)')+pl('fr','var(--nuevo,#d6342b)')+pl('fd','var(--ink)',1)+pl('frd','var(--nuevo,#d6342b)',1)+((L.eo&&L.eo.length)?`<path d="${L.eo.map(r=>'M'+r.map(q=>q.join(',')).join('L')).join('')}" fill="none" stroke="var(--ink)" stroke-width="0.06"/>`:'');
+  for(const [t,x,y,nv] of L.num||[]) o+=`<text x="${x}" y="${y}" font-size="0.5" font-weight="700" text-anchor="middle" dominant-baseline="middle" fill="${nv?'var(--nuevo,#d6342b)':'var(--ink)'}" stroke="var(--panel)" stroke-width="0.12" paint-order="stroke" font-family="Archivo,system-ui,sans-serif">${esc(t)}</text>`;
+  o+=cotS;
   // escala gráfica 0-1-2 m
   const sx=x0, sy=y1+0.35; o+=`<g stroke="var(--ink)" stroke-width="0.04"><line x1="${sx}" y1="${sy}" x2="${sx+2}" y2="${sy}"/>${[0,1,2].map(i=>`<line x1="${sx+i}" y1="${sy-0.1}" x2="${sx+i}" y2="${sy+0.1}"/>`).join('')}</g><text x="${sx+2.15}" y="${sy}" font-size="0.28" dominant-baseline="middle" fill="var(--muted)" font-family="system-ui,sans-serif">2 m</text>`;
   return o+'</svg>';
@@ -912,6 +924,36 @@ PLANO.p7 = {nota:'Casa Frías redibujada sobre los planos de Torres a 1:250 (± 
 
 PLANO.i1 = {nota: PLANO.i1t.nota+' '+PLANO.i1d.nota, nomen: PLANO.i1t.nomen, niveles: PLANO.i1t.niveles.concat(PLANO.i1d.niveles)};
 
+
+// ---------- Quinta Monroy (ELEMENTAL, Iquique 2004): redibujo propio de las láminas A5 y A6 (1:50) ----------
+const NOMEN_EL={E:'estar',C:'comedor',K:'cocina',B:'baño',D:'dormitorio',L:'lavandería',P:'patio',A:'ampliación futura',T:'terraza'};
+PLANO.monroy = {nomen:NOMEN_EL, nota:"Redibujo propio sobre las láminas de arquitectura A5 y A6 que ELEMENTAL liberó en 2016 (1:50, acotadas; ± 0.02 m). Trama de ejes de 3.00 m. Casa (1.er piso): 6.00 × 6.05 m a ejes = 36.3 m², interior libre 5.86 × 5.77 m, muros de 0.14 m; cocina en línea de 3.00 m y baño de 1.29 × 2.11 m. Al lado, la bahía de futura ampliación de 3.00 × 6.05 m (18.2 m²), con tabique removible. Dúplex (2.º y 3.er piso): 3.00 × 6.05 m por piso = 36.3 m² en dos pisos; crece en el vacío de 3.00 × 6.05 m de al lado hasta 72.6 m². Se sube por una escalera exterior de 0.80 m desde la calle; la interior es de dos tramos. Frente de la agrupación casa + dúplex: 9.00 m. Detrás, un patio de 3.00 m de fondo (medido a escala; no lleva cota): la casa con su patio ocupa 9.00 × 9.05 m.",
+ niveles:[
+ {n:'Casa · 1.er piso', r:[['patio',0,-3,9,3],['sala',0,0,6,6.05],['coc',3.85,0,0.8,3.1],['ban',4.65,0,1.35,2.15],['amp',6,0,3,6.05]],
+  W:[[0,-3,9,-3],[0,-3,0,6.05],[0,6.05,0.5,6.05],[2.05,6.05,3.04,6.05],[5.07,6.05,6,6.05],[0,0,0.93,0],[2.87,0,3.08,0],[5.1,0,6,0],[6,0,6,2.2],[6,3.8,6,6.05]],
+  M:[],P:[[4.65,0,4.65,3.1],[5.28,2.15,6,2.15]],
+  V:[[0.5,6.05,2.05,6.05],[3.04,6.05,4.27,6.05],[3.85,0,5.1,0],[0.93,0,2.87,0],[6,2.2,6,3.8]],
+  L:[[6,0,9,0],[6,6.05,9,6.05],[9,-3,9,6.05],[3.05,6.05,3.05,9.5],[3.85,6.05,3.85,9.5]],
+  f:[['esc',3.05,6.05,0.8,3.45],['mesa',0.76,0.95,1.48,0.65],['sofa',0.63,2.92,2.0,0.7],['sillon',0.13,3.95,0.7,0.6],['mesar',1.52,4.2,0.7,0.7],['sillon',3.0,3.95,0.65,0.55,90],['sillon',3.0,4.55,0.65,0.55,90],['coc',3.9,0.12,0.62,0.62],['mueble',3.9,0.8,0.62,1.4],['mueble',3.9,2.3,0.62,0.6],['duch',4.95,0.12,0.65,0.65],['wc',5.3,1.0,0.45,0.55],['lav',5.3,1.65,0.45,0.4],['cama2',6.9,3.65,1.95,1.5],['cama',6.15,0.15,0.85,1.95]],
+  num:[['P',4.5,-1.5],['C',1.5,0.5],['K',4.25,3.4],['B',5.4,1.85],['E',1.6,4.0],['A',7.5,2.3]]},
+ {n:'Dúplex · 2.º piso', r:[['sala',0,0,3,6.05],['coc',0,0,3,1.4],['esc',0.15,1.45,1.35,1.05],['amp',3,0,3,6.05]],
+  W:[[0,0,0,6.05],[0,0,1.0,0],[1.78,0,3,0],[0,6.05,1.33,6.05],[2.1,6.05,3,6.05]],
+  M:[[3,0,3,2.35],[3,3.1,3,6.05]],
+  V:[[1.0,0,1.78,0],[1.33,6.05,2.1,6.05]],
+  L:[[3,0,6,0],[3,6.05,6,6.05],[6,0,6,6.05]],
+  f:[['coc',0.17,0.12,0.95,0.55],['esc',0.15,1.45,1.35,1.05],['mesa',0.9,3.9,1.2,0.75]],
+  num:[['K',1.8,1.1],['C',1.5,5.2],['T',4.5,3]]},
+ {n:'Dúplex · 3.er piso', r:[['ban',0,0,3,1.45],['dorm',0,2.35,3,3.7],['circ',0,1.45,3,0.9]],
+  pol:[['vacio',[[3,0],[6,0],[6,6.05],[3,6.05]]]],
+  W:[[0,0,0,6.05],[0,0,0.94,0],[1.73,0,3,0],[0,6.05,1.28,6.05],[2.1,6.05,3,6.05],[3,0,3,6.05]],
+  P:[[0,1.45,2.33,1.45],[0,2.35,2.5,2.35]],
+  V:[[0.94,0,1.73,0],[1.28,6.05,2.1,6.05]],
+  f:[['duch',0.1,0.15,0.68,0.68],['wc',1.11,0.15,0.5,0.62],['lav',1.67,0.15,0.6,0.4],['esc',0.1,1.5,2.2,0.8],['cama2',0.6,3.6,1.5,1.95]],
+  num:[['B',1.5,1.1],['D',2.3,4.6]]}
+ ]};
+PLANO.monroy.niveles[0].cot=1; PLANO.monroy.niveles[0].cotr=[0,-3,9,6.05];
+PLANO.monroy.niveles[1].cot=1; PLANO.monroy.niveles[1].cotr=[0,0,6,6.05];
+PLANO.monroy.niveles[2].cot=1; PLANO.monroy.niveles[2].cotr=[0,0,6,6.05];
 function plantaHTML(id){
   const Q = PLANO[id], P = PLANTA[id];
   if(Q){
