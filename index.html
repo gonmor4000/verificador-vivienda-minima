@@ -321,8 +321,8 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
   <div id="tab-are" class="areas" hidden aria-label="Cuadro de áreas">
     <section class="card">
       <h2>Programa de áreas</h2>
-      <p class="hint" style="margin-top:0">Superficies de referencia por nivel para el lote, los dormitorios y las opciones de la pestaña Diseño. Son <b>recomendaciones de diseño, no mínimos normativos</b>: el RNE (A.010, A.020) no fija m² por ambiente, pide que entren los muebles y que el ambiente esté iluminado y ventilado. Por eso cada fila tiene tres medidas: el mínimo funcional (mueble y circulación, el mismo que verifica el plano), la referencia del nivel y la superficie ajustada a lo que cabe en el lote.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 12px"><span class="hint">Nivel</span><div class="seg" role="group" aria-label="Nivel"><button type="button" data-niv="eco">Económico</button><button type="button" data-niv="est">Estándar</button></div></div>
+      <p class="hint" style="margin-top:0">Superficies de referencia por nivel para el lote, los dormitorios y las opciones de la pestaña Diseño. Son <b>recomendaciones de diseño, no mínimos normativos</b>: el RNE (A.010, A.020) no fija m² por ambiente, pide que entren los muebles y que el ambiente esté iluminado y ventilado. Hay dos niveles: <b>mínimo funcional</b> (mueble y circulación, el mismo que verifica el plano) y <b>estándar</b> (la tabla de referencia del estudio). Cada fila muestra el mínimo funcional, la superficie del nivel elegido y la ajustada a lo que cabe en el lote.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 12px"><span class="hint">Nivel</span><div class="seg" role="group" aria-label="Nivel"><button type="button" data-niv="min">Mínimo funcional</button><button type="button" data-niv="est">Estándar</button></div></div>
       <div class="kpis" id="ca-kpis"></div>
     </section>
     <section class="card"><h2>Cuadro de áreas</h2><div class="ca-wrap"><table class="ca" id="ca-tbl"></table></div>
@@ -333,8 +333,8 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     </div>
     <section class="card"><h2>Cómo se calcula</h2>
       <ol class="how">
-        <li>Cada ambiente del programa (dormitorios por piso, sala, comedor, cocina, baños, lavandería y escalera) toma la superficie del nivel elegido.</li>
-        <li>Se suma la <b>circulación</b> (8 % económico, 12 % estándar sobre el área de los ambientes) y los <b>muros y la estructura</b>, con el porcentaje real del plano actual (cambia con soga o cabeza y con pórticos).</li>
+        <li>Cada ambiente del programa (dormitorios por piso, sala, comedor, cocina, baños, lavandería y escalera) toma la superficie del nivel elegido: su mínimo funcional o la del estándar (nunca menos que el mínimo).</li>
+        <li>Se suma la <b>circulación</b> (8 % sobre el área de los ambientes) y los <b>muros y la estructura</b>, con el porcentaje real del plano actual (cambia con soga o cabeza y con pórticos).</li>
         <li>Se compara con el <b>área edificable</b> de cada piso: frente útil × (fondo − retiro frontal − retiro posterior), más el volado en el 2.º piso si lo marcas.</li>
         <li>Si no entra, todas las superficies bajan en la misma proporción <b>hacia su mínimo funcional</b>, nunca por debajo.</li>
         <li>La lavandería y la escalera van en el patio, sin techar (la VIS lo permite), y la escalera se cuenta <b>una sola vez</b>: arriba solo llega su descanso.</li>
@@ -590,12 +590,12 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
   <div id="tab-rel" class="areas" hidden aria-label="Relaciones">
     <section class="card">
       <h2>Matriz de relaciones y superficies</h2>
-      <p class="hint" style="margin-top:0">La A.020 (2021) no fija m² por ambiente (art. 10): pide que entren los muebles y la circulación. Por eso el <b>mínimo</b> sale del mueble (el mismo que verifica la pestaña Diseño) y el <b>óptimo</b> sale de la tabla de referencia del estudio, la misma del Cuadro de áreas, según el nivel elegido (económico o estándar). La sala y el comedor en un solo espacio piden un 15 % menos que la suma de los dos, porque comparten la circulación. Los valores de otros países van solo para comparar. Todo se compara con el plano actual.</p>
-      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 12px"><span class="hint">Nivel</span><div class="seg" role="group" aria-label="Nivel"><button type="button" data-niv="eco">Económico</button><button type="button" data-niv="est">Estándar</button></div><span class="hint">el mismo del Cuadro de áreas</span></div>
+      <p class="hint" style="margin-top:0">La A.020 (2021) no fija m² por ambiente (art. 10): pide que entren los muebles y la circulación. Por eso el <b>mínimo</b> sale del mueble (el mismo que verifica la pestaña Diseño) y el <b>estándar</b> sale de la tabla de referencia del estudio, la misma del Cuadro de áreas. La sala y el comedor en un solo espacio piden un 15 % menos que la suma de los dos, porque comparten la circulación. Los valores de otros países van solo para comparar. Todo se compara con el plano actual.</p>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:6px 0 12px"><span class="hint">Nivel</span><div class="seg" role="group" aria-label="Nivel"><button type="button" data-niv="min">Mínimo funcional</button><button type="button" data-niv="est">Estándar</button></div><span class="hint">el mismo del Cuadro de áreas</span></div>
       <div class="kpis" id="rl-kpis"></div>
     </section>
     <section class="card"><h2>Superficie por ambiente</h2><div class="ca-wrap"><table class="ca" id="rl-sup"></table></div>
-      <p class="hint" style="margin:8px 0 0">Superficie útil (libre de muros) en m². La barra va de 0 al doble del óptimo: rojo por debajo del mínimo y verde desde el mínimo; la raya verde marca el óptimo y el punto, el plano.</p></section>
+      <p class="hint" style="margin:8px 0 0">Superficie útil (libre de muros) en m². La barra va de 0 al doble del estándar: rojo por debajo del mínimo funcional y verde desde el mínimo; la raya verde marca el estándar y el punto, el plano.</p></section>
     <div class="rl-cols">
       <section class="card checks"><h2>Proporciones entre superficies</h2><div id="rl-pro"></div></section>
       <section class="card checks"><h2>Zonas: privada, social y servicio</h2><div id="rl-zon"></div></section>
@@ -630,6 +630,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-16">16 nov 2026</time><span><b>Dos niveles: mínimo funcional y estándar</b>. El antiguo «económico» se llama ahora <b>estándar</b> (mismas superficies de la tabla del estudio) y el otro nivel es el <b>mínimo funcional</b> (mueble y circulación). En Cuadro de áreas y Relaciones las columnas se llaman así. «Sacarle el máximo provecho» usa el mínimo funcional; vivir, el estándar. El acceso al patio va por la cocina salvo que se elija el pasillo.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Puertas verificadas en el cuadro de vanos</b> (A.020 art. 12.2, cuadro 6): cada puerta de Diseño Pro dice qué ambientes une, su mínimo (0.90 acceso principal, 0.80 dormitorios, estar, comedor y cocina, 0.70 baños y servicios, todas de 2.10 de alto) y si cumple. El ingreso sigue en 1.00 m. La puerta del 2.º piso pasa a 0.90 cuando los pisos se independizan, y la de la escalera interior ya no se recorta a 0.75.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Solo dos niveles: económico y estándar</b>. Se quitan el nivel amplio y la superficie máxima de la pestaña Relaciones: cada ambiente tiene su mínimo funcional y su óptimo. «Vivir cómodos» y «Vivir y alquilar una parte» usan el estándar; «Sacarle el máximo provecho», el económico. Un plano guardado con el nivel amplio se abre en estándar.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Escalera dentro de la casa (generador 2)</b>: nueva opción «Dónde va la escalera» en Terreno. Con «Dentro de la casa» la planta tiene dos alas: la de dormitorios, más larga (dormitorio 2 al frente, <b>patio interior</b> y dormitorio 1 al fondo, que se ilumina por el patio), y la social (sala-comedor junto a la escalera, cocina frente al patio, hall y baño). La escalera va pegada al eje B, sube junto a la sala y el comedor, llega por una puerta al estar del 2.º piso y deja un <b>patio libre de 2.00 × 2.00 m</b>, igual en los dos pisos. Tres tipos: <b>de dos tramos</b> (descanso de 0.80 × 1.70 m), <b>de un tramo con tres pasos en abanico al inicio y al final</b> (la más angosta, entra en un lote de 6 m) y <b>de caracol</b> metálica (pasos de 0.70 m). Dormitorios de 2.70 × 2.70 m libres. Así no hace falta retiro posterior.</span></li>
@@ -740,7 +741,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <div class="ctl"><label for="eloc">Dónde va la escalera</label><select id="eloc"><option value="ext">En el patio del fondo (exterior)</option><option value="int">Dentro de la casa, en un patio interior (generador 2)</option></select><span class="hint">Dentro de la casa: dos alas, la de dormitorios más larga, con un patio interior que ilumina el dormitorio del fondo y deja un patio libre de 2.00 × 2.00 m junto a la escalera. No hace falta retiro posterior. Hasta 2 dormitorios abajo.</span></div>
       <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="auto">Automática: la primera que entra</option><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option><option value="abanico">De un tramo con abanicos (solo dentro de la casa)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
       <div class="ctl"><label for="obj">Objetivo con la casa</label><select id="obj"><option value="vivir">Vivir cómodos</option><option value="ambos">Vivir y alquilar una parte</option><option value="renta">Sacarle el máximo provecho</option></select></div>
-      <div class="ctl"><label for="pat">Acceso al patio</label><select id="pat"><option value="auto">Según el nivel: por la cocina en el económico, por un pasillo en el estándar</option><option value="coc">Por la cocina (lo más barato)</option><option value="pas">Por un pasillo, sin cruzar la cocina</option></select></div>
+      <div class="ctl"><label for="pat">Acceso al patio</label><select id="pat"><option value="auto">Por la cocina, salvo que elijas el pasillo</option><option value="coc">Por la cocina (lo más barato)</option><option value="pas">Por un pasillo, sin cruzar la cocina</option></select></div>
       <div class="ctl"><label for="pis">Piso de la sala y los dormitorios (etapa 2)</label><select id="pis"><option value="vinr">Vinílico en rollo (lámina de PVC): el más barato</option><option value="vin">Vinílico SPC en clic: resiste agua y golpes</option><option value="cer">Cerámico 60 × 60</option><option value="por">Porcelanato 60 × 60</option><option value="pul">Cemento pulido con sellador (se queda el de la etapa 1)</option></select><span class="hint">La cocina y el baño llevan siempre cerámico antideslizante. Se ve en Diseño Pro, en el 3D y en el costo de la etapa 2.</span></div>
       <div class="ctl"><label for="tal">Taller o negocio en el 1.er piso</label><select id="tal"><option value="no">No</option><option value="parte">Sí, en una parte: la sala, al frente</option><option value="todo">Sí, todo el 1.er piso; la familia vive arriba</option></select><span class="hint" id="tal-hint">Vivienda taller (A.020 art. 4.1): la zonificación del lote tiene que permitir el uso y el taller necesita licencia de funcionamiento.</span></div>
       <div class="chk"><input type="checkbox" id="auto"><label for="auto">Estacionar un auto en casa<br><span class="hint">El retiro frontal pasa a <b>5.00 m</b> para que entre un auto (cajón de 2.70 × 5.00 m, A.010 art. 54); el estacionamiento sin techo o con techo ligero se permite en el retiro (art. 8.3 d).</span></label></div>
@@ -862,7 +863,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
         <div class="wz-fr" role="radiogroup" aria-label="Objetivo con la casa">
           <label><input type="radio" name="wz-obj" value="vivir" checked><span>Vivir cómodos<br><span class="hint">ambientes de nivel estándar y la casa para la familia</span></span></label>
           <label><input type="radio" name="wz-obj" value="ambos"><span>Vivir y alquilar una parte<br><span class="hint">ambientes estándar y un piso independiente</span></span></label>
-          <label><input type="radio" name="wz-obj" value="renta"><span>Sacarle el máximo provecho<br><span class="hint">construir lo más posible para alquilar o vender</span></span></label>
+          <label><input type="radio" name="wz-obj" value="renta"><span>Sacarle el máximo provecho<br><span class="hint">ambientes al mínimo funcional para construir lo más posible y alquilar o vender</span></span></label>
         </div>
         <p style="margin-top:6px"><b>¿Piensas independizar los pisos en el futuro?</b></p>
         <p class="hint">Por ejemplo, que el 2.º piso sea para un hijo que forma su familia o para alquilar. Si es así, conviene prever desde ahora una <b>entrada propia hasta la escalera</b> (por la otra calle o por un pasaje lateral de 0.90 m), sin pasar por la casa.</p>
@@ -982,8 +983,8 @@ function terVol(v, W, built2, add, up){
 const FR_N = {uno:'un frente, entre medianeras', esq:'dos frentes, en esquina', atr:'dos frentes, atravesante (calle a calle)', tres:'tres frentes: esquina y atravesante'};
 const isEsq = v => v.fr === 'esq' || v.fr === 'tres', isAtr = v => v.fr === 'atr' || v.fr === 'tres';
 // frente del lote que no ocupa la casa entre ejes: muros fuera de eje y retiro a la calle lateral
-// acceso al patio: «auto» sigue el nivel (económico por la cocina; estándar por un pasillo)
-const patMode = v => v.pat === 'coc' || v.pat === 'pas' ? v.pat : (nivel === 'eco' ? 'coc' : 'pas');
+// acceso al patio: «auto» va por la cocina (lo más barato); el pasillo se elige a mano
+const patMode = v => v.pat === 'pas' ? 'pas' : 'coc';
 const sideUse = v => isEsq(v) ? Math.max(0, v.rl || 0) + (v.med ? T/2 : T) : (v.med ? 0 : T);
 const OCH = 3.00/Math.SQRT2; // ochavo de 3.00 m en esquina a 90°: 2.12 m sobre cada lindero
 // ventana lateral de la sala hacia la calle (solo en esquina, plantas de dos crujías): en el tramo más largo del eje D entre columnas
@@ -1621,7 +1622,7 @@ function compute(v){
     ba:{n:'Baño', x0:W-c, y0:D-w, x1:W, y1:D, wet:true}
   };
   if(v.nd === 1) rooms.d2 = {n:'Comedor-estudio', x0:0, y0:y2, x1:v.a, y1:dd, open:true};
-  // acceso al patio: por la cocina (económico) o por un pasillo de 0.90 junto a la cocina, separado con un tabique (estándar)
+  // acceso al patio: por la cocina (lo más barato) o por un pasillo de 0.90 junto a la cocina, separado con un tabique (a elección)
   const patWant = patMode(v) === 'pas', kitMin = v.pmr ? 2.10 : 1.50, bayClr = (W - c) - v.a - T, pasNeed = 0.90 + T*0.6 + kitMin;
   const pas = patWant && bayClr >= pasNeed - 1e-6 ? v.a + T/2 + 0.90 + T*0.3 : 0;
   if(pas){ rooms.pa = {n:'Pasillo', x0:v.a, y0:D-w, x1:pas, y1:D, open:true, pas:true}; rooms.co.x0 = pas; }
@@ -2943,21 +2944,22 @@ function roomTargets(v){
 const fitScore = (r, t) => { let e = 0; for(const k in t){ const q = r.rooms[k]; if(q && t[k]) e += Math.pow((q.area - t[k])/t[k], 2); } return e*40; };
 
 // ---- Cuadro de áreas: superficies de referencia (recomendaciones de diseño, no mínimos del RNE) ----
-const NIV = {eco:'Económico', est:'Estándar'}; // el nivel amplio se quitó el 15 nov 2026 (pedido de Gonzalo)
+const NIV = {min:'Mínimo funcional', est:'Estándar'}; // 16 nov 2026 (Gonzalo): solo dos niveles; el estándar es la antigua referencia económica
+const nivFix = g => g === 'min' ? 'min' : (NIV[g] || g === 'eco' || g === 'amp') ? 'est' : null; // planos y navegadores con niveles viejos
 const REFT = {
-  dp:{n:'Dormitorio principal', eco:11, est:13},
-  ds:{n:'Dormitorio secundario', eco:8, est:10},
-  bc:{n:'Baño completo', eco:3, est:4},
-  mb:{n:'Medio baño', eco:1.5, est:2},
-  co:{n:'Cocina', eco:6, est:8},
-  sa:{n:'Sala', eco:12, est:16},
-  cm:{n:'Comedor', eco:8, est:10},
-  la:{n:'Lavandería', eco:2, est:3.5},
-  es:{n:'Escalera', eco:4, est:6}
+  dp:{n:'Dormitorio principal', est:11},
+  ds:{n:'Dormitorio secundario', est:8},
+  bc:{n:'Baño completo', est:3},
+  mb:{n:'Medio baño', est:1.5},
+  co:{n:'Cocina', est:6},
+  sa:{n:'Sala', est:12},
+  cm:{n:'Comedor', est:8},
+  la:{n:'Lavandería', est:2},
+  es:{n:'Escalera', est:4}
 };
-const CIRC = {eco:0.08, est:0.12};
-let nivel = 'eco';
-try { let g = localStorage.getItem('vvm-nivel'); if(g === 'amp') g = 'est'; if(NIV[g]) nivel = g; } catch(e){}
+const CIRC = {min:0.08, est:0.08};
+let nivel = 'est';
+try { const g = nivFix(localStorage.getItem('vvm-nivel')); if(g) nivel = g; } catch(e){}
 function fmin(k, v){ // mínimo funcional: mueble + circulación, el mismo criterio que verifica la pestaña Diseño
   const p = v.pmr;
   switch(k){
@@ -2998,7 +3000,7 @@ function programa(v, niv, nd, nd2){
 }
 function evalProg(v, r, niv, nd, nd2){
   const L = programa(v, niv, nd, nd2);
-  L.forEach(x=>{ const m = fmin(x.k, v); x.min = m.a; x.minT = m.t; x.ref = REFT[x.k][niv]; x.target = Math.max(x.ref, x.min); });
+  L.forEach(x=>{ const m = fmin(x.k, v); x.min = m.a; x.minT = m.t; x.ref = niv === 'min' ? x.min : REFT[x.k].est; x.target = Math.max(x.ref, x.min); });
   const wallF = Math.min(0.30, Math.max(0.08, r && r.gross > 0 ? (r.gross - r.util)/r.gross : (T > 0.2 ? 0.20 : 0.12)));
   const circ = CIRC[niv];
   const Wmax = v.lote - sideUse(v);
@@ -3068,17 +3070,17 @@ function relaciones(r){
 // ---------- Relaciones: superficies mínimas, óptimas y máximas, proporciones, zonas y matriz ----------
 const SC_INT = 0.15; // sala y comedor en un solo espacio: comparten la circulación, se descuenta 15 % de la suma
 function rlsRows(v){ // una sola tabla para Cuadro de áreas y Relaciones: mín = mueble (fmin), ópt = nivel elegido (sin máximo desde el 15 nov 2026)
-  const T_ = 'Referencia del estudio (tabla de Gonzalo), nivel ', N = NIV[nivel].toLowerCase();
-  const row = (k, n, cmp) => { const m = fmin(k, v); return {k, n, min:m.a, opt:Math.max(REFT[k][nivel], m.a), src:`Mín.: ${m.t}. Ópt.: ${T_}${N}.${cmp?' Para comparar: '+cmp:''}`}; };
+  const T_ = 'Tabla de referencia del estudio (de Gonzalo)', N = '';
+  const row = (k, n, cmp) => { const m = fmin(k, v); return {k, n, min:m.a, opt:Math.max(REFT[k].est, m.a), src:`Mín. funcional: ${m.t}. Estándar: ${T_}.${cmp?' Para comparar: '+cmp:''}`}; };
   const sMin = fmin('sa',v).a + fmin('cm',v).a;
   return [
     row('dp','Dormitorio principal','NTC CDMX 7.0 m² (por verificar).'),
     row('ds','Dormitorio secundario','NTC CDMX 6.0 m²; Francia, pieza principal ≥ 9 m² (por verificar).'),
-    {k:'sc', n:'Sala-comedor (un solo espacio)', min:sMin, opt:Math.max(sMin,(REFT.sa[nivel]+REFT.cm[nivel])*(1-SC_INT)), src:`Mín.: sofá y paso más mesa de 4 (${f1(fmin('sa',v).a)} + ${f1(fmin('cm',v).a)}). Ópt.: sala + comedor de la tabla menos ${Math.round(SC_INT*100)} % porque comparten la circulación. NTC CDMX: estancia-comedor 13.6 m² (por verificar).`},
+    {k:'sc', n:'Sala-comedor (un solo espacio)', min:sMin, opt:Math.max(sMin,(REFT.sa.est+REFT.cm.est)*(1-SC_INT)), src:`Mín. funcional: sofá y paso más mesa de 4 (${f1(fmin('sa',v).a)} + ${f1(fmin('cm',v).a)}). Estándar: sala + comedor de la tabla menos ${Math.round(SC_INT*100)} % porque comparten la circulación. NTC CDMX: estancia-comedor 13.6 m² (por verificar).`},
     row('co','Cocina','NTC CDMX 3.0 m² (por verificar).'),
     row('bc','Baño completo'),
     row('la','Lavandería','NTC CDMX 1.68 m² (por verificar). En VIS puede ir en el patio, sin techar.'),
-    {k:'ci', n:'Circulaciones', min:0, opt:CIRC[nivel]*100, pct:true, src:`% del área útil. Ópt.: ${T_}${N}. Pasajes ≥ 0.90 m (A.020 art. 13, A.010 art. 20).`}
+    {k:'ci', n:'Circulaciones', min:0, opt:CIRC.est*100, pct:true, src:`% del área útil. Estándar: ${T_}. Pasajes ≥ 0.90 m (A.020 art. 13, A.010 art. 20).`}
   ];
 }
 const RLP = [ // proporciones aceptables [mín, máx] y óptimo
@@ -3136,7 +3138,7 @@ function relRender(r){
     la: all.filter(q=>q.c==='la').map(q=>({n:q.n, a:q.a})),
     ci: [{n:cirA > 0.05 ? 'halls y pasajes' : 'sin pasillo: reparte la sala', a: util ? cirA/util*100 : 0}]
   };
-  let h = '<thead><tr><th>Ambiente</th><th class="n">Mínima</th><th class="n">Óptima</th><th class="n">En el plano</th><th>Posición</th><th>De dónde sale</th></tr></thead><tbody>';
+  let h = '<thead><tr><th>Ambiente</th><th class="n">Mínimo funcional</th><th class="n">Estándar</th><th class="n">En el plano</th><th>Posición</th><th>De dónde sale</th></tr></thead><tbody>';
   const RLS = rlsRows(r.v);
   RLS.forEach(x=>{
     const u = x.pct ? ' %' : '', fx = a => x.pct ? Math.round(a) : f1(a);
@@ -3373,7 +3375,7 @@ function cuadro(r){
   const P = evalProg(v, r, nivel, v.nd, v.nd2);
   document.querySelectorAll('.seg button[data-niv]').forEach(b=>b.classList.toggle('on', b.dataset.niv===nivel));
   const cls = (a, x) => a == null ? '' : (a >= x.adj - 0.05 ? 'ok' : (a >= x.min - 0.05 ? 'warn' : 'bad'));
-  let html = `<thead><tr><th>Ambiente</th><th class="n">Mínimo funcional</th><th class="n">Referencia ${NIV[nivel].toLowerCase()}</th><th class="n">Ajustada al lote</th><th class="n">En el plano</th><th>Exigencia del RNE (obligatoria)</th></tr></thead><tbody>`;
+  let html = `<thead><tr><th>Ambiente</th><th class="n">Mínimo funcional</th><th class="n">${NIV[nivel]}</th><th class="n">Ajustada al lote</th><th class="n">En el plano</th><th>Exigencia del RNE (obligatoria)</th></tr></thead><tbody>`;
   P.floors.forEach(F=>{
     html += `<tr class="fl"><td colspan="6">${F.p===1?'1.er piso':'2.º piso'}</td></tr>`;
     const rows = P.L.filter(x=>x.piso===F.p);
@@ -3431,7 +3433,7 @@ function cuadro(r){
   // Alternativas
   if(!allFull){
     const alts = [];
-    const order = ['eco','est'];
+    const order = ['min','est'];
     for(let i = order.indexOf(nivel)-1; i >= 0; i--){ const Q = evalProg(v, r, order[i], v.nd, v.nd2); if(fitsAll(Q)){ alts.push(`Bajar a nivel <b>${NIV[order[i]].toLowerCase()}</b>: entra completo (${f1(Q.floors.reduce((s,f)=>s+f.grossT,0))} m²).`); break; } }
     const maxUp = v.nd2 + 1 <= (v.nd - 1 === 3 ? 3 : 2);
     if(v.nd > 1 && maxUp){ const Q = evalProg(v, r, nivel, v.nd-1, v.nd2+1); alts.push(`Pasar un dormitorio al 2.º piso (${v.nd-1} abajo + ${v.nd2+1} arriba): ${fitsAll(Q)?'<b>entra completo</b>':'el 1.er piso baja a '+f1(Q.floors[0].gross)+' m²'}.`); }
@@ -4206,7 +4208,7 @@ function carSvg(c, X, Y, s){
 // objetivo de la familia: qué cambia en el plano y qué conviene prever
 function objApply(r, v){
   const G = 'Objetivo', add = (t, st, d) => r.checks.push({g:G, t, st, d}), sep = v.ind && r.stair && r.stair.front;
-  if(v.obj === 'renta') add('Sacarle el máximo provecho', sep ? 'ok' : 'warn', `Ambientes al nivel <b>económico</b> del cuadro de áreas para que entren más, la casa al fondo máximo que dejan los retiros y ${sep ? 'la escalera al frente, con entrada propia, para alquilar o vender cada piso por separado' : '<b>conviene marcar «Independizar los pisos»</b> para alquilar cada piso por separado'}. Pide en el certificado de parámetros la <b>altura máxima</b>: la estructura de la etapa 1 se calcula para todos esos pisos. Cada departamento aparte necesita medidores propios y su cocina.`);
+  if(v.obj === 'renta') add('Sacarle el máximo provecho', sep ? 'ok' : 'warn', `Ambientes al <b>mínimo funcional</b> para que entren más, la casa al fondo máximo que dejan los retiros y ${sep ? 'la escalera al frente, con entrada propia, para alquilar o vender cada piso por separado' : '<b>conviene marcar «Independizar los pisos»</b> para alquilar cada piso por separado'}. Pide en el certificado de parámetros la <b>altura máxima</b>: la estructura de la etapa 1 se calcula para todos esos pisos. Cada departamento aparte necesita medidores propios y su cocina.`);
   else if(v.obj === 'ambos') add('Vivir y alquilar una parte', sep ? 'ok' : 'warn', `Ambientes al nivel <b>estándar</b>. ${sep ? 'El 2.º piso tiene entrada propia por la escalera del retiro: se puede alquilar sin pasar por la casa.' : '<b>Marca «Independizar los pisos»</b> para que el piso que alquiles tenga entrada propia.'} Deja previstos medidores de luz y agua aparte.`);
   else add('Vivir cómodos', 'ok', `Ambientes al nivel <b>estándar</b> del cuadro de áreas, con el patio y la luz pensados para la familia. Si más adelante quieres alquilar una parte, la opción «Independizar los pisos» pone la escalera al frente.`);
 }
@@ -4565,7 +4567,7 @@ function applyPlan(text, flname){
       ids.forEach(k=>{ if(!(k in data.valores)){ if(k==='ddr') el('ddr').value = '0'; if(k==='fr') el('fr').value = 'uno'; if(k==='ind') el('ind').checked = false; if(k==='auto') el('auto').checked = false; if(k==='pis') el('pis').value = 'cer'; if(k==='obj') el('obj').value = 'vivir'; if(k==='pat') el('pat').value = 'auto'; if(k==='tal') el('tal').value = 'no'; if(k==='rl') el('rl').value = '1.00'; return; } const e = el(k); if(e.type==='checkbox') e.checked = !!data.valores[k]; else e.value = data.valores[k]; });
       if(data.cliente){ try { localStorage.setItem('vvm-cliente', JSON.stringify(data.cliente)); } catch(e){} wzShowInfo(); }
       el('ppm').value = data.valores.ppm || 'auto'; if(!el('ppm').value) el('ppm').value = 'auto';
-      if(data.nivel === 'amp') data.nivel = 'est'; if(NIV[data.nivel]){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
+      data.nivel = nivFix(data.nivel); if(data.nivel){ nivel = data.nivel; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} }
       clearTimeout(genTimer); wantTotal = null;
       document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on'));
       render();
@@ -4588,7 +4590,7 @@ const regen = () => {
 };
 ids.forEach(k=> el(k).addEventListener('input', ()=>{ document.querySelectorAll('.presets button').forEach(b=>b.classList.remove('on')); if(autoKeys.includes(k)) regen(); else render(); }));
 // el objetivo fija el nivel de los ambientes (como los botones del cuadro de áreas)
-el('obj').addEventListener('change', ()=>{ const niv = {vivir:'est', ambos:'est', renta:'eco'}[el('obj').value]; if(niv && niv !== nivel){ nivel = niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); } });
+el('obj').addEventListener('change', ()=>{ const niv = {vivir:'est', ambos:'est', renta:'min'}[el('obj').value]; if(niv && niv !== nivel){ nivel = niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); } });
 // al marcar el auto el retiro frontal sube a 5.00 m; al desmarcarlo vuelve al que había
 el('auto').addEventListener('change', ()=>{ const rf = el('rf'), x = parseFloat(rf.value) || 0;
   if(el('auto').checked){ if(x < CAR_L){ rf.dataset.prev = rf.value; rf.value = f2(CAR_L); } }
@@ -4638,7 +4640,7 @@ document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', (
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
 document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-15n';
+const APP_VERSION = '2026-11-16a';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
@@ -4731,7 +4733,7 @@ function wzFinish(){
   el('fr').value = fr; syncLotPre();
   el('auto').checked = ((document.querySelector('input[name="wz-auto"]:checked') || {}).value === 'si');
   const obj = (document.querySelector('input[name="wz-obj"]:checked') || {}).value || 'vivir'; el('obj').value = obj;
-  { const niv = {vivir:'est', ambos:'est', renta:'eco'}[obj]; if(niv && niv !== nivel){ nivel = niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} } }
+  { const niv = {vivir:'est', ambos:'est', renta:'min'}[obj]; if(niv && niv !== nivel){ nivel = niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} } }
   if(el('auto').checked && (parseFloat(el('rf').value) || 0) < CAR_L) el('rf').value = f2(CAR_L);
   el('ind').checked = ((document.querySelector('input[name="wz-ind"]:checked') || {}).value === 'si');
   wzShowInfo();
