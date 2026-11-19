@@ -127,6 +127,16 @@ h3.cap.sub{font-size:12.5px;margin-top:22px}
 .iluidx th{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;background:var(--bg)}
 .iluidx td.m{font-family:var(--f-mono);white-space:nowrap}
 .intro{max-width:900px}
+.tema{max-width:900px}
+.tema .tlink{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px;font-size:13.5px}
+.tema .tlink code{font-family:var(--f-mono);font-size:12.5px;background:var(--bg);border:1px solid var(--line);border-radius:5px;padding:3px 7px;word-break:break-all}
+.tema .why{font-size:13.5px;color:var(--muted);margin:4px 0 2px;max-width:80ch}
+.tema .skip{font-size:12.5px;color:var(--muted);margin:4px 0}
+.tema .art{border-left:4px solid var(--brick)}
+.tema .art.rel{border-left-color:var(--line)}
+.tema mark{padding:0 2px}
+.chips a.tm{border-color:var(--brick);color:var(--brick)}
+.chips a.tm.on{background:var(--brick);color:var(--panel)}
 .intro .art{padding:14px 18px}
 .menu{display:none}
 @media (max-width:900px){
@@ -155,6 +165,8 @@ h3.cap.sub{font-size:12.5px;margin-top:22px}
     <div class="collapsible">
       <div id="results" hidden></div>
       <div id="browse">
+        <div class="lbl">Temas reunidos</div>
+        <div class="chips" id="temas"></div>
         <div class="lbl">Vivienda unifamiliar</div>
         <div class="chips" id="chips"></div>
         <div class="lbl">Normas <span style="text-transform:none;letter-spacing:0;font-weight:400">(• vigente actualizada)</span></div>
@@ -209,6 +221,27 @@ const TEMAS = [
   ['Muros y cercos','A020-art-19'],['Volados','A010-art-13'],['Retiros','A010-art-8'],['Área techada','A010-art-9'],['Altura de edificación','A010-art-10'],
   ['Vigas ≥ 2.10','A010-art-18.3'],['Ventilación','A010-art-38'],['Accesibilidad (A.120)','A120-art-2'],['Contra incendio','A020-art-27']
 ];
+// Temas reunidos: artículos de varias normas en una sola vista (rne.html#tema-<clave>).
+// Cada parte: [id del artículo, índices de bloques a mostrar (null = todo), por qué aplica].
+const TEMAS_R = {
+  bifamiliar: {
+    title: 'Vivienda bifamiliar', re: /bifamiliar(?:es)?/gi,
+    intro: 'Artículos del RNE vigente que nombran la <b>vivienda bifamiliar</b> (A.020, RM 188-2021, y A.120, RM 075-2023). La A.010 no la nombra. La A.020 la pone como tipología en el cuadro 01, pero no la define. La palabra va resaltada en cada artículo.',
+    parts: [
+      ['A020-art-4', [0,1], 'Tipología: la bifamiliar es una de las edificaciones residenciales para grupos familiares.'],
+      ['A020-art-11', [3,6,7,8,9,10,15], 'Pozo de luz: la bifamiliar sigue el literal b) y la nota v. fija los mínimos (2.00 m dormitorio, sala y comedor; 1.80 m cocina y patio de servicio techado).'],
+      ['A020-art-15', [5,12], 'Escalera: la exterior que sirve a la vivienda del piso siguiente puede tener 1.00 m entre muros.'],
+      ['A020-art-25', [2], 'Medidores: se pueden poner en áreas de uso común.'],
+      ['A020-art-27', [1,2,3], 'Contra incendio (cuadro 09, fila Bifamiliar): señalética e iluminación de emergencia (nota 1) y escalera integrada o protegida (notas 11, 12 o 13).'],
+      ['A120-art-28', [0], 'Accesibilidad: solo en las áreas de circulación común y el vestíbulo de ingreso, cuando se exige ascensor.']
+    ],
+    rel: [
+      ['A010-art-8', [11,23], 'No dice «bifamiliar», pero permite en el retiro frontal la escalera abierta al piso superior independiente cuando es ampliación de vivienda.'],
+      ['A020-art-30', null, 'No dice «bifamiliar»: densificación urbana, circulaciones verticales de las nuevas viviendas en retiros o áreas libres.']
+    ]
+  }
+};
+$('#temas').innerHTML = Object.entries(TEMAS_R).map(([k,t]) => `<a class="tm" href="#tema-${k}">${esc(t.title)}</a>`).join('');
 $('#chips').innerHTML = TEMAS.map(([t,h]) => `<a href="#${h}">${esc(t)}</a>`).join('');
 $('#norms').innerHTML = N.map(n => `<a href="#${n.id}" data-n="${n.id}" class="${n.vigente?'vig':''}" title="${esc(n.code+' '+n.title)}">${n.code}</a>`).join('');
 
@@ -298,6 +331,7 @@ function renderHelp(){
   $('#main').innerHTML = `<div class="intro" id="ayuda"><div class="art"><div class="ahead"><h4>Cómo se usa</h4></div>
   <p><b>Buscar.</b> Escribe en la caja de la izquierda palabras («pozo de luz», «contrapaso») o un número («A.020 11.4», «23.2»). Los resultados muestran la norma, el artículo y el párrafo.</p>
   <p><b>Recorrer.</b> Elige una norma (A.010 … A.130) y usa su índice por capítulos y artículos. Los temas de vivienda unifamiliar llevan directo al numeral.</p>
+  <p><b>Temas reunidos.</b> Juntan en una sola vista los artículos de varias normas sobre un tema, con la palabra resaltada. Por ejemplo, <a href="#tema-bifamiliar">rne.html#tema-bifamiliar</a> reúne todo lo que el RNE vigente dice de la vivienda bifamiliar.</p>
   <p><b>Enlazar.</b> Cada artículo (#) y cada numeral o literal (11.4, a) …) tiene un enlace estable, por ejemplo <a href="#A020-art-11.4-a">rne.html#A020-art-11.4-a</a>. Al hacer clic en la etiqueta se copia el enlace. La pestaña «Reglas» del verificador usa estos enlaces.</p>
   <p><b>RNE ilustrado.</b> Las etiquetas naranjas abren el PDF ilustrado en la página donde aparece el mismo tema. En pantalla ancha se abre al costado para leer los dos a la vez; en el celular, en otra pestaña.</p>
   <p><b>Ojo con las versiones.</b> El ilustrado es de 2012 y dibuja la A.010 y la A.020 de 2006. Las vigentes son la A.010 (RM 191-2021), la A.020 (RM 188-2021) y la A.120 (RM 075-2023), que cambiaron la numeración y varias medidas. Por eso cada etiqueta dice el artículo antiguo al que corresponde: sirve para ver el dibujo, pero manda el texto vigente. Las normas sin «•» (A.050, A.060, A.080 a A.110, A.130) están aquí como vienen en el archivo, en su texto de 2006.</p>
@@ -325,11 +359,48 @@ function renderIlu(){
   $('#toc').innerHTML = toc; $('#toclbl').textContent = 'Ilustrado';
 }
 
+function markIn(root, re){
+  const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); const nodes = [];
+  while(w.nextNode()){ re.lastIndex = 0; if(re.test(w.currentNode.nodeValue)) nodes.push(w.currentNode); }
+  for(const t of nodes){
+    const f = document.createDocumentFragment(); let pos = 0, m; const v = t.nodeValue; re.lastIndex = 0;
+    while((m = re.exec(v))){ f.append(v.slice(pos, m.index)); const mk = document.createElement('mark'); mk.textContent = m[0]; f.append(mk); pos = m.index + m[0].length; }
+    f.append(v.slice(pos)); t.replaceWith(f);
+  }
+}
+function renderTema(key){
+  const T = TEMAS_R[key]; if(!T){ renderHelp(); return; }
+  curNorm = null;
+  document.querySelectorAll('#norms a').forEach(a => a.classList.remove('on'));
+  const url = location.href.split('#')[0] + '#tema-' + key;
+  let h = `<div class="tema" id="tema-${key}"><div class="nhead"><h2><small>Tema</small>${esc(T.title)}</h2><p class="why" style="margin-top:8px">${T.intro}</p>
+    <div class="tlink">Enlace a esta selección: <code>${esc(url)}</code> <button type="button" id="tcopy">Copiar enlace</button></div></div>`;
+  let toc = '';
+  const part = ([id, idx, why], rel) => {
+    const nid = id.split('-')[0], n = byId[nid], s = n.secs.find(x => x.id === id); if(!s) return '';
+    const bl = idx ? idx.map(i => s.b[i]).filter(Boolean) : s.b;
+    const hidden = s.b.length - bl.length;
+    toc += `<li><a href="#${id}" title="Abrir en la ${n.code}"><span class="n">${s.n}</span>${n.code} · ${esc(s.title||'')}</a></li>`;
+    return `<article class="art${rel?' rel':''}"><div class="ahead"><h4><span class="an">${n.code} art. ${s.n}</span>${esc(s.title||'')}</h4><a class="link" href="#${id}" title="Ver el artículo completo en la ${n.code}">ver en la norma →</a>${ofLink(nid, s.n)}</div><p class="why">${esc(why)}</p><div class="tx">${bl.map(block).join('')}</div>${hidden ? `<p class="skip">Se muestran solo las partes que tocan el tema (${bl.length} de ${s.b.length}). <a href="#${id}">Artículo completo</a>.</p>` : ''}</article>`;
+  };
+  h += `<h3 class="cap">Artículos que la nombran (${T.parts.length})</h3>` + T.parts.map(p => part(p)).join('');
+  toc = '<li class="h1"><a href="#tema-' + key + '">La nombran</a></li>' + toc;
+  if(T.rel && T.rel.length){ const before = toc; toc = ''; const r = T.rel.map(p => part(p, true)).join(''); h += `<h3 class="cap">Relacionados</h3>` + r; toc = before + '<li class="h1"><a href="#tema-' + key + '">Relacionados</a></li>' + toc; }
+  $('#main').innerHTML = h + '</div>';
+  document.querySelectorAll('#main .tx').forEach(x => markIn(x, T.re));
+  $('#toc').innerHTML = toc; $('#toclbl').textContent = 'Tema: ' + T.title;
+  $('#tcopy').onclick = () => { if(navigator.clipboard) navigator.clipboard.writeText(url).then(() => { $('#tcopy').textContent = 'Enlace copiado ✓'; setTimeout(() => $('#tcopy').textContent = 'Copiar enlace', 1600); }).catch(()=>{}); };
+  document.querySelectorAll('#temas a').forEach(a => a.classList.toggle('on', a.getAttribute('href') === '#tema-' + key));
+  scrollTo(0,0);
+}
+
 // ---------- navegación por ancla ----------
 function go(){
   const hash = decodeURIComponent(location.hash.slice(1));
   if(!hash || hash === 'ayuda'){ renderHelp(); if(hash) scrollTo(0,0); return; }
   if(hash === 'ilustrado' || hash.startsWith('ilu-')){ renderIlu(); const el = document.getElementById(hash); if(el) el.scrollIntoView(); return; }
+  if(hash.startsWith('tema-')){ renderTema(hash.slice(5)); if(innerWidth <= 900) $('#side').classList.add('closed'), $('#menu').textContent = 'Mostrar índice'; return; }
+  document.querySelectorAll('#temas a.on').forEach(a => a.classList.remove('on'));
   const nid = hash.split('-')[0];
   if(!byId[nid]){ renderHelp(); return; }
   if(curNorm !== nid) renderNorm(nid);
