@@ -633,7 +633,6 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <div style="display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:0 0 10px">
       <label class="v3-chk"><input type="checkbox" id="imp-mir"> Columna de servicio a la izquierda (espejo)</label>
       <label class="v3-chk"><input type="checkbox" id="imp-r2" checked> Fila 2 fija en 4.00</label>
-      <label class="v3-chk"><input type="checkbox" id="imp-rf"> Respetar el retiro frontal del Terreno (la Solución 4 usa todo el fondo)</label>
       <label class="v3-chk">Área libre mínima <input type="number" id="imp-lib" value="30" min="0" max="90" step="1" style="width:56px"> %</label>
     </div>
     <div class="kpis" id="imp-kpis"></div>
@@ -656,6 +655,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-19">19 nov 2026</time><span><b>Lógica de la planta: Implantación</b> (prueba, sin publicar). Nueva opción en Terreno. Con «Implantación: grilla y damero», <b>Diseño, Diseño Pro, 3D</b> y los cuadros dibujan la misma planta de la pestaña Implantación (Solución 4): ejes en las líneas de la grilla, muros solo en el borde de lo construido y entre ambientes, puertas al pasaje (0.80 dormitorios, 0.70 baño, 0.90 ingreso por la franja de la calle), ventanas a los patios o a la calle, escalera de ida y vuelta en el patio de la calle, cocina de 0.60 y baño en la columna de servicio, y las verificaciones de las dos lógicas juntas. Al elegirla, los retiros pasan a 0 (la Solución 4 usa todo el lote); se pueden volver a poner. Por ahora, solo el 1.er piso.</span></li>
       <li><time datetime="2026-11-19">19 nov 2026</time><span><b>Pestaña «Implantación» (prueba, sin publicar)</b>: las reglas de la Solución 4 del estudio «Soluciones de implantación» (columna de servicio de 2.00 desde la derecha, franja de 1.00, tramo variable de 2.50 a 4.50; fila de la calle de 3.50, fila 2 de 4.00 y las demás de 3.50 a 5.00; damero; escalera de ida y vuelta en el vacío de la calle, baño y cocina en la columna de servicio; área libre mínima 30 %) aplicadas al lote de Diseño y revisadas con las reglas del verificador: dormitorios, luz por los vacíos (A.020 art. 11.4 a), ventilación de la cocina, baño, escalera, área techada VIS. Muestra lo que cumple y lo que no, y lo compara con el plano de Diseño.</span></li>
       <li><time datetime="2026-11-18">18 nov 2026</time><span><b>RNE: tema «Vivienda bifamiliar»</b>: en el RNE consultable, el enlace <a href="rne.html#tema-bifamiliar">rne.html#tema-bifamiliar</a> reúne los artículos vigentes que nombran la vivienda bifamiliar (A.020 art. 4, 11.4 b y nota v, 15.2 g, 25.3, 27 cuadro 09; A.120 art. 28) con la palabra resaltada, más dos relacionados (A.010 art. 8.3 l y A.020 art. 30).</span></li>
       <li><time datetime="2026-11-16">16 nov 2026</time><span><b>Dos niveles: mínimo funcional y estándar</b>. El antiguo «económico» se llama ahora <b>estándar</b> (mismas superficies de la tabla del estudio) y el otro nivel es el <b>mínimo funcional</b> (mueble y circulación). En Cuadro de áreas y Relaciones las columnas se llaman así. «Sacarle el máximo provecho» usa el mínimo funcional; vivir, el estándar. El acceso al patio va por la cocina salvo que se elija el pasillo.</span></li>
@@ -766,6 +766,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
       <input type="hidden" id="pl" value="uno">
       <div class="chk"><input type="checkbox" id="ter"><label for="ter">Terraza<br><span class="hint">En el 2.º piso sobre el dormitorio 2 o, si no, azotea transitable sobre el techo.</span></label></div>
       <div class="chk"><input type="checkbox" id="vol"><label for="vol">Volado hacia la calle<br><span class="hint">El 2.º piso sale 0.50 m sobre el retiro frontal (A.010 art. 13).</span></label></div>
+      <div class="ctl"><label for="logi">Lógica de la planta</label><select id="logi"><option value="gen">Generador: crujías y patio al fondo</option><option value="imp">Implantación: grilla y damero (Solución 4)</option></select><span class="hint">Con «Implantación», Diseño, Diseño Pro y 3D dibujan la misma planta que la pestaña Implantación.</span></div>
       <div class="ctl"><label for="eloc">Dónde va la escalera</label><select id="eloc"><option value="ext">En el patio del fondo (exterior)</option><option value="int">Dentro de la casa, en un patio interior (generador 2)</option></select><span class="hint">Dentro de la casa: dos alas, la de dormitorios más larga, con un patio interior que ilumina el dormitorio del fondo y deja un patio libre de 2.00 × 2.00 m junto a la escalera. No hace falta retiro posterior. Hasta 2 dormitorios abajo.</span></div>
       <div class="ctl"><label for="esc">Escalera al 2.º piso</label><select id="esc"><option value="auto">Automática: la primera que entra</option><option value="recta">De un tramo</option><option value="L">En L, con descanso de esquina</option><option value="U">En U, con descanso de media vuelta</option><option value="caracol">De caracol (1.60 m de diámetro)</option><option value="abanico">De un tramo con abanicos (solo dentro de la casa)</option></select><span class="hint">Todas son las mínimas para subir: pasos de 0.25 m, contrapasos de hasta 0.18 m y 0.90 m de ancho (A.010 art. 23). Van en el patio, junto al muro posterior.</span></div>
       <div class="ctl"><label for="obj">Objetivo con la casa</label><select id="obj"><option value="vivir">Vivir cómodos</option><option value="ambos">Vivir y alquilar una parte</option><option value="renta">Sacarle el máximo provecho</option></select></div>
@@ -963,11 +964,11 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
 (function(){
 let T = 0.13; const H = 2.40, M = 0.25;
 const presets = {
-  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',eloc:'ext',fr:'uno',rl:1.00,ind:false,tal:'no'},
-  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto',eloc:'ext',fr:'uno',rl:1.00,ind:false,tal:'no'},
-  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',eloc:'ext',fr:'uno',rl:1.00,ind:false,tal:'no'}
+  base:  {a:2.75,b:3.25,d:6.00,y2:3.00,w:2.00,c:1.50,lote:6.00,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',eloc:'ext',logi:'gen',fr:'uno',rl:1.00,ind:false,tal:'no'},
+  pmr:   {a:3.25,b:4.50,d:6.00,y2:3.00,w:2.00,c:2.25,lote:7.75,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:true,tam:'lote',esc:'auto',eloc:'ext',logi:'gen',fr:'uno',rl:1.00,ind:false,tal:'no'},
+  chica: {a:2.75,b:2.75,d:7.00,y2:3.00,w:2.00,c:1.50,lote:5.50,fondo:15,rf:2.00,rp:3.00,vd:1.20,nd:'2',nd2:'0',pl:'uno',pp:2.25,ty:'franjas',ter:true,vol:false,med:true,sis:'portante',ap:'soga',z:'0.45',s:'1.05',n:'2',cm2:1500,pmr:false,tam:'lote',esc:'auto',eloc:'ext',logi:'gen',fr:'uno',rl:1.00,ind:false,tal:'no'}
 };
-const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc','eloc','ind','tal','auto','pis','obj','pat'];
+const ids = ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pl','pp','ty','ter','vol','med','sis','ap','z','s','n','cm2','pmr','tam','esc','eloc','logi','ind','tal','auto','pis','obj','pat'];
 const el = id => document.getElementById(id);
 const f2 = x => x.toFixed(2);
 const f1 = x => x.toFixed(1);
@@ -983,7 +984,7 @@ function read(){
   ['a','b','d','ddr','y2','w','c','lote','fondo','rf','rp','vd','rl','cm2'].forEach(k=> v[k] = parseFloat(el(k).value)||0);
   v.fr = el('fr').value || 'uno';
   v.nd = parseInt(el('nd').value,10)||2; v.nd2 = parseInt(el('nd2').value,10)||0; v.pl = el('pl').value; v.pp = parseFloat(el('pp').value)||1.25; v.ty = el('ty').value; v.sis = el('sis').value; v.ap = el('ap').value; v.z = parseFloat(el('z').value); v.s = parseFloat(el('s').value); v.n = parseInt(el('n').value,10);
-  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto'; v.eloc = el('eloc').value || 'ext'; v.ind = el('ind').checked; v.auto = el('auto').checked; v.pis = el('pis').value || 'vinr'; v.obj = el('obj').value || 'vivir'; v.pat = el('pat').value || 'auto'; v.tal = el('tal').value || 'no';
+  v.tam = el('tam').value || 'lote'; v.ter = el('ter').checked; v.vol = el('vol').checked; v.med = el('med').checked; v.pmr = el('pmr').checked; v.esc = el('esc').value || 'auto'; v.eloc = el('eloc').value || 'ext'; v.logi = el('logi').value || 'gen'; v.ind = el('ind').checked; v.auto = el('auto').checked; v.pis = el('pis').value || 'vinr'; v.obj = el('obj').value || 'vivir'; v.pat = el('pat').value || 'auto'; v.tal = el('tal').value || 'no';
   return v;
 }
 
@@ -1630,7 +1631,211 @@ function computePI(v){
   return {typ:'T3L',pi:true,pp,yp,yd:yp,yh:yp,ys,bd,W,D,c,w,y2,rooms,gross,gross2,util,checks,wallLen,wallNet,bricks,perM2,losa,bloques,cost,cost2,wallPct,hL,v,wD1,wSC,wD2,wD3:0,dDoor,cols,nCols,hv,cim,conc,fl,walls,doors,cb,up:E2.up,stair:E2.stair};
 }
 
+// ---------- Planta con la lógica de Implantación (Solución 4): la misma grilla y damero de la pestaña Implantación, como plano de Diseño, Diseño Pro y 3D ----------
+function computeImp(v){
+  T = (v.sis === 'portante' && v.ap === 'cabeza') ? 0.24 : 0.13;
+  const P = impPlan(v, {mir:impMir, r2:impR2, lib:impLib});
+  const dW = v.pmr ? 0.90 : 0.80, baW = v.pmr ? 0.90 : 0.70;
+  // ejes: en las medianeras el muro va a eje (o hacia adentro si no se construye sobre la medianera); en la calle y el fondo, hacia adentro
+  const ox = v.med ? 0 : T/2, Hs = P.rows.length ? P.rows[P.rows.length-1].y1 : P.B, W = Math.max(1, P.F - 2*ox), D = Math.max(1, Hs - T);
+  const mx = x => Math.min(W, Math.max(0, x - ox)), my = y => Math.min(D, Math.max(0, y - T/2));
+  const RR = q => ({x0:mx(q.x0), x1:mx(q.x1), y0:my(q.y0), y1:my(q.y1)});
+  const rooms = {}; let iv = 0, id = 0, ip = 0;
+  P.cells.filter(q=>!q.built).forEach(q=>{ const isEst = P.est && q === P.cell(0,0); rooms['p'+(iv++)] = {n: isEst ? 'Patio de la escalera' : 'Patio', ...RR(q), open:true, sky:true, est:isEst}; });
+  P.rooms.forEach(z=>{ const q = z.q, base = {...RR({x0:z.x0, x1:z.x1, y0:q.y0, y1:q.y1})};
+    if(z.k === 'sc'){ if(!rooms.sc) rooms.sc = {n:z.n, ...base}; else rooms['e'+(ip++)] = {n:z.n, ...base}; }
+    else if(z.k === 'd'){ rooms['d'+(++id)] = {n:z.n, ...base}; }
+    else if(z.k === 'cb' || z.k === 'co'){ rooms.co = {n:'Cocina', ...base, wet:true, cb:z.k==='cb'}; }
+    else if(z.k === 'bc'){ rooms.ba = {n:'Baño', ...base, wet:true}; }
+  });
+  if(P.bath){ const b = RR({x0:P.bath.cell.x0, x1:P.bath.cell.x1, y0:P.bath.y0 - T/2, y1:P.bath.y1 + T/2});
+    if(P.bath.inVoid || (rooms.co && rooms.co.cb) || !rooms.ba) rooms.ba = {n:'Baño', ...b, wet:true}; }
+  if(P.kit && P.kit.far && rooms.sc){ rooms.co = {n:'Cocina', x0:rooms.sc.x0, x1:rooms.sc.x1, y0:Math.max(rooms.sc.y0, rooms.sc.y1 - 1.50 - T), y1:rooms.sc.y1, wet:true, inSc:true}; }
+  // franjas que no se sumaron a un ambiente: pasaje
+  P.strips.forEach((st, si)=>{ const free = P.rows.filter(rr=> !P.rooms.some(z=>z.absorbed===st && z.q.r===rr.r)); if(!free.length) return;
+    let a = free[0].y0, b = free[0].y1; const push = () => rooms['pa'+si+'_'+Math.round(a*100)] = {n:'Pasaje', ...RR({x0:st.x0, x1:st.x1, y0:a, y1:b}), open:true};
+    for(let i=1;i<free.length;i++){ if(Math.abs(free[i].y0 - b) < 1e-6) b = free[i].y1; else { push(); a = free[i].y0; b = free[i].y1; } } push(); });
+  for(const k in rooms){ const q = rooms[k]; q.cw = q.x1-q.x0-T; q.cd = q.y1-q.y0-T; q.area = Math.max(0,q.cw*q.cd); }
+  if(rooms.co && rooms.ba && rooms.ba.x0 >= rooms.co.x0 - 1e-6 && rooms.ba.x1 <= rooms.co.x1 + 1e-6 && rooms.ba.y0 >= rooms.co.y0 - 1e-6 && rooms.ba.y1 <= rooms.co.y1 + 1e-6) rooms.co.area = Math.max(0, rooms.co.area - rooms.ba.area - rooms.ba.cw*T);
+  if(rooms.co && rooms.co.inSc && rooms.sc) rooms.sc.area = Math.max(0, rooms.sc.area - rooms.co.area);
+  // etiqueta de un punto: ambiente, calle, vecino o vacío (patio)
+  const roofed = Object.entries(rooms).filter(([k,q])=>!q.sky);
+  const inR = (q, x, y) => x > q.x0 + 1e-6 && x < q.x1 - 1e-6 && y > q.y0 + 1e-6 && y < q.y1 - 1e-6;
+  const lab = (x, y) => { if(x < 0 || x > W) return 'nb'; if(y < 0) return 'st'; if(y > D) return v.rp > 0.005 ? 'vo' : 'nb';
+    if(rooms.ba && inR(rooms.ba, x, y)) return 'ba'; if(rooms.co && rooms.co.inSc && inR(rooms.co, x, y)) return 'co';
+    const f = roofed.find(([k,q])=> k !== 'ba' && !(k==='co' && q.inSc) && inR(q, x, y)); return f ? f[0] : 'vo'; };
+  const OUT = k => k==='st' || k==='nb' || k==='vo', OPEN = k => /^(sc|pa|co|e)/.test(k);
+  const xs = [...new Set([0, W, ...Object.values(rooms).flatMap(q=>[q.x0,q.x1])].map(x=>Math.round(x*1000)/1000))].sort((a,b)=>a-b);
+  const ys = [...new Set([0, D, ...Object.values(rooms).flatMap(q=>[q.y0,q.y1])].map(y=>Math.round(y*1000)/1000))].sort((a,b)=>a-b);
+  const segs = []; // {h, c (y o x fijo), t0, t1, a (abajo/izq.), b (arriba/der.)}
+  const need = (a, b) => a !== b && !(OUT(a) && OUT(b)) && !(OPEN(a) && OPEN(b));
+  ys.forEach(y=>{ for(let i=0;i<xs.length-1;i++){ const xm = (xs[i]+xs[i+1])/2, a = lab(xm, y-0.01), b = lab(xm, y+0.01); if(need(a,b)) segs.push({h:true, c:y, t0:xs[i], t1:xs[i+1], a, b}); } });
+  xs.forEach(x=>{ for(let j=0;j<ys.length-1;j++){ const ym = (ys[j]+ys[j+1])/2, a = lab(x-0.01, ym), b = lab(x+0.01, ym); if(need(a,b)) segs.push({h:false, c:x, t0:ys[j], t1:ys[j+1], a, b}); } });
+  // muros: tramos colineales seguidos, con sus partes (para ubicar puertas y ventanas)
+  const walls = [], WL = [];
+  [true,false].forEach(h=>{ const L = segs.filter(s=>s.h===h).sort((p,q)=>p.c-q.c || p.t0-q.t0); let cur = null;
+    L.forEach(s=>{ if(cur && Math.abs(cur.c-s.c)<1e-6 && Math.abs(cur.t1-s.t0)<1e-6){ cur.t1 = s.t1; cur.parts.push(s); } else { cur = {h, c:s.c, t0:s.t0, t1:s.t1, parts:[s], gaps:[]}; WL.push(cur); } }); });
+  const doors = [], took = new Set();
+  const addGap = (w, a, b, kind) => w.gaps.push([a - w.t0, b - w.t0, kind]);
+  const side = (p, k) => p.b === k ? 1 : -1; // hacia dónde queda el ambiente k (1 = arriba/derecha)
+  const door = (w, p, k, g0, wd) => { addGap(w, g0, g0 + wd, 'door'); const sg = side(p, k);
+    if(w.h) doors.push([g0, w.c + sg*T/2, 1,0, 0,sg, wd]); else doors.push([w.c + sg*T/2, g0, 0,1, sg,0, wd]); };
+  // ingreso: en la fachada, en la franja de la fila de la calle (o donde haya muro de la sala a la calle)
+  let ingX = null;
+  { const st0 = P.strips[0] ? RR({x0:P.strips[0].x0, x1:P.strips[0].x1, y0:0, y1:0}) : null;
+    for(const w of WL.filter(w=>w.h && Math.abs(w.c)<1e-6)) for(const p of w.parts){ const k = p.a==='st' ? p.b : p.a; if(!OPEN(k) || ingX !== null) continue;
+      const lo = st0 ? Math.max(p.t0, st0.x0) : p.t0, hi = st0 ? Math.min(p.t1, st0.x1) : p.t1, wd = Math.min(1.00, Math.max(0.90, hi - lo - 0.10));
+      const g0 = hi - lo >= 0.90 + 0.05 - 1e-6 ? lo + Math.max(0.05, (hi - lo - wd)/2) : (p.t1 - p.t0 >= 1.10 ? p.t0 + 0.10 : null);
+      if(g0 !== null){ door(w, p, k, g0, hi - lo >= 0.95 ? wd : 0.90); ingX = g0; } } }
+  // puertas de dormitorios y baño: al pasaje (o a la sala), en el primer tramo donde entre la hoja
+  const dk = Object.keys(rooms).filter(k=>/^d\d/.test(k)).concat(rooms.ba ? ['ba'] : []);
+  dk.forEach(k=>{ const wd = k==='ba' ? baW : dW; let best = null;
+    WL.forEach(w=> w.parts.forEach(p=>{ const o = p.a===k ? p.b : p.b===k ? p.a : null; if(!o || !OPEN(o)) return; const L = p.t1-p.t0; if(L < wd + 0.20 - 1e-6) return;
+      const sc = (/^pa/.test(o) ? 3 : o==='co' ? 2 : 1) + L/100; if(!best || sc > best.sc) best = {w, p, sc, o}; }));
+    if(best){ const {w, p} = best, g0 = p.t0 + 0.10; door(w, p, k, g0, wd); took.add(k); }
+    else if(rooms[k]) rooms[k].fail = true; });
+  // ventanas: cada ambiente al vacío o a la calle por su tramo más largo; el baño, ventana alta si da a un vacío
+  const winOf = {};
+  Object.keys(rooms).filter(k=>/^(d\d|sc|co|ba|e)/.test(k)).forEach(k=>{ let best = null;
+    const qA = (rooms[k].x1-rooms[k].x0)*(rooms[k].y1-rooms[k].y0), maxW = k==='ba' ? 0.50 : Math.max(1.50, Math.ceil(qA*0.10/1.20*20)/20 + 0.05);
+    WL.forEach(w=> w.parts.forEach(p=>{ const o = p.a===k ? p.b : p.b===k ? p.a : null; if(o !== 'vo' && o !== 'st') return;
+      // tramo libre más largo de esta parte del muro (sin puertas ni ventanas, 0.30 de las esquinas)
+      const G = w.gaps.map(g=>[g[0]+w.t0-0.15, g[1]+w.t0+0.15]).sort((x,y)=>x[0]-y[0]); let s0 = p.t0 + 0.30, iv = null;
+      G.concat([[p.t1 - 0.30, 1e9]]).forEach(g=>{ const e = Math.min(g[0], p.t1 - 0.30); if(e - s0 > (iv ? iv[1]-iv[0] : 0)) iv = [s0, e]; s0 = Math.max(s0, g[1]); });
+      if(!iv || iv[1]-iv[0] < 0.40) return; const ww = Math.min(maxW, iv[1]-iv[0]);
+      const sc_ = ww + (o==='st' && /^(sc|e)/.test(k) && ww >= Math.min(maxW, 1.00) ? 10 : 0); if(!best || sc_ > best.sc_) best = {w, p, iv, ww, o, sc_}; }));
+    if(!best) return; const {w, iv, ww} = best, a = (iv[0] + iv[1])/2 - ww/2;
+    addGap(w, a, a + ww, 'win'); winOf[k] = {ww, to: best.o}; });
+  WL.forEach(w=> walls.push(w.h ? [w.t0, w.c, w.t1, w.c, w.gaps.sort((p,q)=>p[0]-q[0])] : [w.c, w.t0, w.c, w.t1, w.gaps.sort((p,q)=>p[0]-q[0])]));
+  // áreas
+  const gross = P.builtA + (P.bath && P.bath.inVoid ? P.bA : 0); // a cara exterior, igual que la pestaña Implantación (sin la escalera, que va al aire libre)
+  const util = Object.entries(rooms).filter(([k,q])=>!q.sky).reduce((s,[k,q])=>s+q.area,0);
+  const checks = [], add = (g,t,s_,d) => checks.push({g,t,st:s_,d});
+  impChecks(P, v).forEach(c=> add('Implantación', c.t, c.s, c.d));
+  add('Norma','Área techada mínima VIS', gross>=35?'ok':'bad', `<b>${f1(gross)} m²</b> techados (a eje, sin los patios) frente a 35 m² (Anexo 1 VIS).`);
+  add('Norma','Altura libre', 'ok', `Muro de <b>2.40 m</b> frente a 2.30 m de la A.020.`);
+  if(v.nd2 > 0) add('Norma','2.º piso', 'warn', `El 2.º piso todavía no se arma con la lógica de implantación: por ahora la planta es solo el 1.er piso. La escalera ya queda en el vacío de la calle para subir sin pasar por la casa.`);
+  // antropometría e iluminación de cada ambiente, con las ventanas reales
+  Object.entries(rooms).filter(([k])=>/^(d\d|sc|co|ba|e)/.test(k)).forEach(([k,q])=>{
+    const wi = winOf[k], aw = wi ? wi.ww*(k==='ba' ? 0.50 : 1.20) : 0, need = 0.10*q.area;
+    if(k==='ba'){ add('Ventilación','Baño', wi ? 'ok' : 'warn', wi ? `Ventana alta de ${f2(wi.ww)} m al patio.` : `Sin ventana a un patio: ventila por un ducto (A.020 art. 11.3 lo admite en baños; solo el baño).`); return; }
+    if(k==='co' && q.inSc) return;
+    add('Iluminación', q.n, aw >= need - 1e-6 ? 'ok':'bad', wi ? `Ventana ${wi.to==='st'?'a la calle':'al patio'} de <b>${f2(wi.ww)} × 1.20 m</b> = ${f2(aw)} m² frente a ${f2(need)} m² (10 % del piso, A.020 art. 12.4).` : `No tiene muro a un patio ni a la calle para la ventana.`);
+    add('Ventilación', q.n, aw*0.5 >= 0.05*q.area - 1e-6 ? 'ok':'bad', `Abre <b>${f2(aw*0.5)} m²</b> frente a ${f2(0.05*q.area)} m² (A.020 art. 12.4 y A.010 art. 38.2).`);
+    if(!took.has(k) && /^d/.test(k)) add('Circulación', `Puerta de ${q.n.toLowerCase()}`, 'bad', `No hay muro libre de ${f2(dW + 0.20)} m hacia el pasaje o la sala para la puerta.`);
+  });
+  if(ingX === null) add('Circulación','Ingreso', 'bad', 'No hay muro de la sala o del pasaje hacia la calle para la puerta de ingreso.');
+  // estructura (mismo cálculo que las demás plantas)
+  const f = x=>Math.round(x*100)/100;
+  const luz = Math.max(2.00, ...Object.values(rooms).filter(q=>!q.sky).map(q=>Math.min(q.x1-q.x0, q.y1-q.y0)));
+  const hL = luz/25 <= 0.17 ? 0.17 : (luz/25 <= 0.20 ? 0.20 : (luz/25 <= 0.25 ? 0.25 : null));
+  add('Estructura','Peralte de losa aligerada', hL===0.17?'ok':(hL?'warn':'bad'), hL ? `Luz corta máxima ${f2(luz)} m → losa de <b>${Math.round(hL*100)} cm</b>.` : `Luz demasiado grande.`);
+  let Lx = 0, Ly = 0;
+  walls.forEach(([x1,y1,x2,y2_,gs])=>{ const L = Math.hypot(x2-x1,y2_-y1) - gs.reduce((s,q)=>s+(q[1]-q[0]),0); if(Math.abs(y2_-y1)<1e-6) Lx += L; else Ly += L; });
+  const lim = v.sis==='portante' ? Math.min(2*H, 5, v.ap==='soga' ? 3.5 : 5.0) : 4.5;
+  const pts = []; const addP = (x,y)=>{ if(!pts.some(p=>Math.abs(p[0]-x)<1e-6 && Math.abs(p[1]-y)<1e-6)) pts.push([f(x),f(y)]); };
+  walls.forEach(([x1,y1,x2,y2_])=>{ addP(x1,y1); addP(x2,y2_); });
+  let maxSeg = 0;
+  walls.forEach(([x1,y1,x2,y2_,gs])=>{
+    const L = Math.hypot(x2-x1,y2_-y1), ux=(x2-x1)/L, uy=(y2_-y1)/L;
+    const on = pts.map(([x,y])=>((x-x1)*ux+(y-y1)*uy)).filter((t,i)=>{ const [x,y]=pts[i]; return Math.abs((x-x1)*uy-(y-y1)*ux)<1e-6 && t>-1e-6 && t<L+1e-6; }).sort((p,q)=>p-q);
+    for(let i=0;i<on.length-1;i++){
+      let a0 = on[i], a1 = on[i+1];
+      while(a1 - a0 > lim + 1e-6){
+        let t = a0 + Math.min(lim, (a1-a0)/Math.ceil((a1-a0)/lim));
+        const gp = gs.find(q=> t > q[0]-0.13 && t < q[1]+0.13); if(gp) t = Math.max(a0+0.5, gp[0]-0.13);
+        if(t <= a0 + 0.3) t = a0 + lim; addP(x1+ux*t, y1+uy*t); maxSeg = Math.max(maxSeg, t-a0); a0 = t;
+      }
+      maxSeg = Math.max(maxSeg, a1-a0);
+    }
+  });
+  const cols = pts, nCols = cols.length;
+  const N = Math.max(v.n, v.nd2>0?2:1), req = v.z*1*v.s*N/56, Ap = Math.max(1, gross);
+  const blando = v.s >= 1.10, cim = blando ? {an:0.60, al:1.00, za:1.20} : {an:0.40, al:0.80, za:1.00};
+  let hv = 0;
+  if(v.sis==='portante'){
+    const G = 'Muro portante';
+    add(G,'Espesor efectivo', T >= H/20 ? 'ok':'bad', `t = <b>${f2(T)} m</b> frente a h/20 = ${f2(H/20)} m.`);
+    const rY = Ly*T/Ap, rX = Lx*T/Ap;
+    add(G,'Densidad E.070, sentido medianeras', rY>=req?'ok':'bad', `ΣL·t/Ap = <b>${rY.toFixed(4)}</b> (L = ${f1(Ly)} m) frente a ${req.toFixed(4)}.`);
+    add(G,'Densidad E.070, sentido fachada', rX>=req?'ok':(rX>=req*0.9?'warn':'bad'), `ΣL·t/Ap = <b>${rX.toFixed(4)}</b> (L = ${f1(Lx)} m) frente a ${req.toFixed(4)}.`);
+    add(G,'Separación de columnas', maxSeg <= lim+1e-6 ? 'ok':'bad', `Tramo más largo <b>${f2(maxSeg)} m</b> frente a ${f2(lim)} m; ${nCols} columnas de ${Math.round(T*100)}×25.`);
+    add(G,'Cimiento corrido', N<=2 ? 'ok':'warn', `Suelo ${blando?'blando':'normal'}: cimiento ${f2(cim.an)} × ${f2(cim.al)} m y sobrecimiento de 0.30 m.`);
+  } else {
+    const G = 'Columna-viga';
+    hv = Math.max(0.30, Math.ceil((Math.max(luz, lim)/12)/0.05 - 1e-9)*0.05);
+    add(G,'Luces entre columnas', maxSeg<=5+1e-6?'ok':'bad', `Luz más larga <b>${f2(maxSeg)} m</b>; ${nCols} columnas de 25×25.`);
+    add(G,'Vigas','ok', `Vigas de <b>25 × ${Math.round(hv*100)} cm</b>.`);
+  }
+  const wallLen = walls.reduce((s,[x1,y1,x2,y2_])=>s+Math.hypot(x2-x1,y2_-y1),0);
+  const openings = walls.reduce((s,w_)=>s+w_[4].reduce((t,q)=>t+(q[1]-q[0])*(q[2]==='door'?2.10:1.2),0),0);
+  const wallNet = Math.max(0, wallLen*H - openings - nCols*0.25*H);
+  const perM2 = v.sis==='portico' ? 36 : (v.ap==='cabeza' ? 71 : 40);
+  const bricks = wallNet*perM2*1.03;
+  const losa = gross, bloques = losa*8.33, e = hL || 0.20;
+  let conc;
+  if(v.sis==='portante') conc = { col: nCols*T*0.25*H, viga: wallLen*T*e, cim: wallLen*cim.an*(cim.za-0.20) + wallLen*T*0.30 };
+  else conc = { col: nCols*0.25*0.25*(H+e), viga: wallLen*0.25*(hv-e), cim: nCols*0.60 + wallLen*0.25*0.40 + wallLen*0.40*0.50 };
+  conc.losa = losa*0.0875; conc.tot = conc.col + conc.viga + conc.cim + conc.losa;
+  const patio = v.fondo - v.rf - D - T;
+  retiros(v, add, patio, []);
+  // ejes y cotas: las líneas de la grilla
+  const AX = [...new Set([0, W, ...P.cols.flatMap(q=>[mx(q.x0), mx(q.x1)]), ...P.strips.flatMap(q=>[mx(q.x0), mx(q.x1)])].map(x=>Math.round(x*1000)/1000))].sort((a,b)=>a-b);
+  const AY = [...new Set([0, D, ...P.rows.map(q=>my(q.y1))].map(y=>Math.round(y*1000)/1000))].sort((a,b)=>a-b);
+  const impAx = AX.map((x,i)=>[String.fromCharCode(65+i), x]), impAy = AY.map((y,i)=>[String(i+1), y]);
+  // cocina: mesada de 0.60 donde la puso la implantación; lavadero en el primer patio libre
+  const kitStrip = P.kit ? [mx(P.kit.x0), my(P.kit.y0), mx(P.kit.x1), my(P.kit.y1)] : null;
+  const pv = Object.values(rooms).find(q=>q.sky && !q.est), lav = pv ? [pv.x0 + T/2 + 0.05, pv.y0 + T/2 + 0.05] : null;
+  const est = P.est ? RR(P.est) : null;
+  const c = P.cols[0] ? P.cols[0].w : 2, y2 = AY[1] || D;
+  const sv = P.cols[0] ? RR(P.cols[0]) : {x0:0, x1:W};
+  const gross2 = 0, cost = gross*v.cm2, wallPct = gross > 0 ? (gross-util)/gross*100 : 0;
+  const cb = {xB: (sv.x0 + sv.x1)/2, bd0:0, labels:[]};
+  return {typ:'T3L', imp:true, impP:P, impAx, impAy, impDoor:ingX, kitStrip, lav, est, pp:0, yp:y2, yd:y2, yh:y2, ys:y2, bd:0, W, D, c, w:c, y2, rooms, gross, gross2, util, checks, wallLen, wallNet, bricks, perM2, losa, bloques, cost, cost2:0, wallPct, hL, v, wD1:0, wSC:0, wD2:0, wD3:0, dDoor:dW, cols, nCols, hv, cim, conc, fl:1, walls, doors, cb, up:null, stair:null};
+}
+// escalera de ida y vuelta de la implantación (en el patio que da a la calle)
+function impStairSvg(r, X, Y, s){
+  const e = r.est; if(!e) return '';
+  const col = 'var(--brick)', cx = (e.x0+e.x1)/2, w = e.x1 - e.x0;
+  let g = `<rect x="${X(e.x0)}" y="${Y(e.y1)}" width="${w*s}" height="${(e.y1-e.y0)*s}" fill="var(--brick-soft, rgba(192,57,43,.08))" stroke="${col}" stroke-width="1.2"/>`;
+  g += `<line x1="${X(cx)}" y1="${Y(e.y0)}" x2="${X(cx)}" y2="${Y(e.y1 - 0.80)}" stroke="${col}" stroke-width="1.4"/>`;
+  for(let y = e.y0 + 0.25; y < e.y1 - 0.80 - 1e-6; y += 0.25) g += `<line x1="${X(e.x0)}" y1="${Y(y)}" x2="${X(e.x1)}" y2="${Y(y)}" stroke="${col}" stroke-width=".6"/>`;
+  g += `<line x1="${X(e.x0)}" y1="${Y(e.y1 - 0.80)}" x2="${X(e.x1)}" y2="${Y(e.y1 - 0.80)}" stroke="${col}" stroke-width="1"/>`;
+  g += `<text x="${X(cx)}" y="${Y(e.y0) - 6}" text-anchor="middle" font-size="10" fill="${col}" paint-order="stroke" stroke="var(--panel)" stroke-width="3">escalera ida y vuelta</text>`;
+  return g;
+}
+// dibujo de la planta de implantación en Diseño: patios, escalera, muros, puertas y camas
+function drawImp(r, P){
+  const {X,Y,s,tw,v} = P, {rooms} = r;
+  let g = '';
+  Object.values(rooms).filter(q=>q.sky).forEach(q=>{
+    g += `<rect x="${X(q.x0)}" y="${Y(q.y1)}" width="${(q.x1-q.x0)*s}" height="${(q.y1-q.y0)*s}" fill="var(--ok-soft)"/>`;
+    if(!q.est) g += `<line x1="${X(q.x0)}" y1="${Y(q.y0)}" x2="${X(q.x1)}" y2="${Y(q.y1)}" stroke="var(--ok)" stroke-width=".7"/><line x1="${X(q.x0)}" y1="${Y(q.y1)}" x2="${X(q.x1)}" y2="${Y(q.y0)}" stroke="var(--ok)" stroke-width=".7"/>`; });
+  g += impStairSvg(r, X, Y, s);
+  const bl = 1.90;
+  Object.keys(rooms).filter(k=>/^d\d/.test(k)).forEach((k,i)=>{ const q = rooms[k], bw = i===0 ? 1.40 : 0.90;
+    const bx = Math.max(q.x0 + T/2 + 0.10, (q.x0+q.x1)/2 - bw/2), by = q.y1 - T/2 - bl;
+    G3.beds.push({q, x0:bx, y0:by, x1:bx+bw, y1:by+bl, head:'N'}); });
+  const op = v.sis==='portico' ? .55 : 1;
+  r.walls.forEach(([x1,y1,x2,y2_,gs])=>{
+    G3.f1.push({x1,y1,x2,y2:y2_,gaps:gs.map(q=>q.slice()),kind:'wall'});
+    const L = Math.hypot(x2-x1,y2_-y1), ux=(x2-x1)/L, uy=(y2_-y1)/L; let t0=0;
+    const seg=(a,b)=>{ if(b-a<=0.01) return; g += `<line x1="${X(x1+ux*a)}" y1="${Y(y1+uy*a)}" x2="${X(x1+ux*b)}" y2="${Y(y1+uy*b)}" stroke="var(--wall)" stroke-opacity="${op}" stroke-width="${tw}" stroke-linecap="square"/>`; };
+    gs.filter(q=>q[1]>q[0]).slice().sort((a,b)=>a[0]-b[0]).forEach(q=>{ seg(t0,q[0]); t0=q[1];
+      if(q[2]==='win') g += `<line x1="${X(x1+ux*q[0])}" y1="${Y(y1+uy*q[0])}" x2="${X(x1+ux*q[1])}" y2="${Y(y1+uy*q[1])}" stroke="var(--wall)" stroke-width="1.2"/>`; });
+    seg(t0,L);
+  });
+  r.doors.forEach(([hx,hy,ux,uy,nx,ny,wd])=>{
+    G3.d1.push([hx,hy,ux,uy,nx,ny,wd]);
+    g += `<line x1="${X(hx)}" y1="${Y(hy)}" x2="${X(hx+nx*wd)}" y2="${Y(hy+ny*wd)}" stroke="var(--wall)" stroke-width="1.6"/>`;
+    const pts=[]; for(let i=0;i<=12;i++){ const t=i/12*Math.PI/2; pts.push(`${X(hx+wd*(Math.cos(t)*ux+Math.sin(t)*nx))},${Y(hy+wd*(Math.cos(t)*uy+Math.sin(t)*ny))}`); }
+    g += `<polyline points="${pts.join(' ')}" fill="none" stroke="var(--muted)" stroke-width="1"/>`;
+  });
+  return g;
+}
+
 function compute(v){
+  if(v.logi === 'imp') return computeImp(v);
   if(v.eloc === 'int' && v.nd <= 2) return computePI(v);
   if(v.nd === 3 && v.pl === 'uno') return v.ty === 'larga' ? compute3L(v) : compute3(v);
   T = (v.sis === 'portante' && v.ap === 'cabeza') ? 0.24 : 0.13;
@@ -1885,7 +2090,8 @@ function draw(r){
   if(r.nt){ g += `<rect x="${XL(0)}" y="${YL(patioY0)}" width="${(v.a + ox - T/2)*s}" height="${r.nt*s}" fill="var(--ok-soft)"/>`;
     g += `<text x="${XL((v.a+ox)/2)}" y="${(YL(patioY0)+YL(v.rf + r.dd + T/2))/2+4}" text-anchor="middle" font-size="10.5" fill="var(--ok)">patio ${f2(r.nt)} m</text>`; }
   let lavX = r.pi ? T/2 + 0.05 : r.typ==='T3' ? v.a + r.P + 0.05 : v.a + 0.02, lavY = r.pi ? r.y2 + T/2 + 0.05 : D + T/2;
-  if(!r.pi){ const sb = r.stair && r.stair.box, hit = (x, y) => sb && x < sb.x1 + 0.05 && x + 0.55 > sb.x0 - 0.05 && y < sb.y1 + 0.05 && y + 0.55 > sb.y0 - 0.05;
+  if(r.imp && r.lav){ lavX = r.lav[0]; lavY = r.lav[1]; }
+  if(!r.pi && !r.imp){ const sb = r.stair && r.stair.box, hit = (x, y) => sb && x < sb.x1 + 0.05 && x + 0.55 > sb.x0 - 0.05 && y < sb.y1 + 0.05 && y + 0.55 > sb.y0 - 0.05;
     if(hit(lavX, lavY)){ const c = [W - T/2 - 0.60, T/2 + 0.05, v.a + 0.02].find(x=>!hit(x, lavY)); if(c !== undefined) lavX = c; else lavY = sb.y1 + 0.10; }
     if(sb && sb.x1 < W - 1.6 && lavY < sb.y1 && lavX < sb.x1 + 1.7 && lavX + 0.55 > sb.x1) lavY = sb.y1 + 0.10; }
   g += `<rect x="${X(lavX)}" y="${Y(lavY + 0.55)}" width="${0.55*s}" height="${0.55*s}" rx="3" fill="var(--furn)" stroke="var(--wet-line)" stroke-width="1"/>`;
@@ -1900,7 +2106,8 @@ function draw(r){
   }
   const t3 = r.typ === 'T3', tL = r.typ === 'T3L';
   let scDoor0 = v.a + 0.30;
-  if(tL){ g += drawL(r, {X,Y,s,tw,v}); } else {
+  if(r.imp) scDoor0 = r.impDoor != null ? r.impDoor : W/2;
+  if(tL){ g += r.imp ? drawImp(r, {X,Y,s,tw,v}) : drawL(r, {X,Y,s,tw,v}); } else {
   // furniture
   const bed = (q, front) => {
     const bw = q === rooms.d1 ? 1.40 : 0.90, bl = 1.90; // dormitorio 1 = padres (cama de 1.40); los demás = hijos (cama simple de 0.90)
@@ -2008,7 +2215,7 @@ function draw(r){
   }
   }
   g += drawStair(X, Y, s, r.stair, false);
-  const cols = r.cols;
+  const cols = r.cols || [];
   const cs = Math.max(6, 0.25*s*0.9);
   if(v.sis==='portico') cols.forEach(([x,y])=>{ g += `<rect x="${X(x)-cs/2}" y="${Y(y)-cs/2}" width="${cs}" height="${cs}" fill="var(--wall)"/>`; });
   else g += colSvg(cols, G3.f1, X, Y, s);
@@ -2020,7 +2227,8 @@ function draw(r){
     return `<text x="${cx}" y="${cy-2}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="${fs}" fill="var(--ink)">${q.n}</text>`+
            `<text x="${cx}" y="${cy+14}" text-anchor="middle" font-family="var(--f-mono)" font-size="${fs-1.5}" fill="${q.fail?'var(--bad)':'var(--muted)'}">${f1(q.area)} m²</text>`;
   };
-  if(r.pi){
+  if(r.imp){ Object.entries(rooms).forEach(([k,q])=>{ if(q.sky || /^pa/.test(k) || (k==='co' && q.inSc)) return; g += lab(q, k==='co' && rooms.ba && !q.inSc && rooms.ba.y0 >= q.y0 - 1e-6 && rooms.ba.y1 <= q.y1 + 1e-6 ? (q.y1 + rooms.ba.y1)/2 : k==='ba' || k==='co' ? undefined : q.y0 + 0.45); }); }
+  else if(r.pi){
     ['d2','d1','sc','co','ba'].forEach(k=>{ g += lab(rooms[k], k==='d2' ? rooms.d2.y0+0.40 : k==='d1' ? rooms.d1.y1-0.45 : undefined); });
     g += `<text x="${X(r.rooms.pz.x0+0.2)}" y="${Y(r.rooms.pz.y1)+16}" text-anchor="start" font-size="11" font-weight="600" fill="var(--ok)">patio interior</text>`;
     g += `<text x="${X(v.a+(W-c-v.a)/2)}" y="${Y((r.yp+D-r.bd)/2)}" text-anchor="middle" font-size="12" font-weight="600" fill="var(--ink)">Hall</text>`;
@@ -2033,14 +2241,14 @@ function draw(r){
     const pa = rooms.pa; g += `<text transform="translate(${X((pa.x0+pa.x1)/2)+4},${Y((pa.y0+pa.y1)/2)}) rotate(-90)" text-anchor="middle" font-size="10.5" fill="var(--muted)">pasaje ${f2(pa.cw)}</text>`;
   } else { g += lab(rooms.d1, rooms.d1.y0 + 0.40); g += lab(rooms.d2, rooms.d2.y1 - 0.45); g += lab(rooms.sc); g += lab(rooms.co); g += lab(rooms.ba); }
   // axes & dims
-  const ax = tL ? [['A',0],['B',v.a],['C',W-c],['D',W]] : t3 ? [['A',0],['B',v.a],['C',v.a+r.P],['D',W]] : [['A',0],['B',v.a],['C',W-c],['D',W]];
+  const ax = r.imp ? r.impAx : tL ? [['A',0],['B',v.a],['C',W-c],['D',W]] : t3 ? [['A',0],['B',v.a],['C',v.a+r.P],['D',W]] : [['A',0],['B',v.a],['C',W-c],['D',W]];
   ax.forEach(([n,x])=>{ g += `<text x="${X(x)}" y="${YL(-vd)+40}" text-anchor="middle" font-family="var(--f-mono)" font-size="11" fill="var(--muted)">${n}</text>`; });
   const cota = (x, y, val, k, lab, anchor) => k ? `<text class="cota" tabindex="0" role="button" data-k="${k}" data-v="${f2(val)}" aria-label="Cota ${lab}: ${f2(val)} m. Clic para editar" x="${x}" y="${y}" text-anchor="${anchor}" font-family="var(--f-mono)" font-size="11" fill="var(--muted)"><title>Ejes ${lab}: clic para editar</title>${f2(val)}</text>` : `<text x="${x}" y="${y}" text-anchor="${anchor}" font-family="var(--f-mono)" font-size="11" fill="var(--muted)">${f2(val)}</text>`;
-  const dimx = tL ? [[0,v.a,'a','A–B'],[v.a,W-c,'bm','B–C'],[W-c,W,'c','C–D']] : t3 ? [[0,v.a,'a','A–B'],[v.a,v.a+r.P,null],[v.a+r.P,W,'b3','C–D']] : [[0,v.a,'a','A–B'],[v.a,W-c,'bm','B–C'],[W-c,W,'c','C–D']];
+  const dimx = r.imp ? r.impAx.slice(0,-1).map(([n,x],i)=>[x, r.impAx[i+1][1], null, n+'–'+r.impAx[i+1][0]]) : tL ? [[0,v.a,'a','A–B'],[v.a,W-c,'bm','B–C'],[W-c,W,'c','C–D']] : t3 ? [[0,v.a,'a','A–B'],[v.a,v.a+r.P,null],[v.a+r.P,W,'b3','C–D']] : [[0,v.a,'a','A–B'],[v.a,W-c,'bm','B–C'],[W-c,W,'c','C–D']];
   dimx.forEach(([x0,x1,k,lab])=>{ g += cota((X(x0)+X(x1))/2, YL(-vd)+56, x1-x0, k, lab, 'middle'); });
-  const ay = r.pi ? [['1',0],['2',y2],['3',r.ys],['4',r.yp],['5',D]] : tL ? [['1',0],['2',y2],['3',r.yp],['4',r.yd],['5',D]] : t3 ? [['1',0],['2',y2],['3',r.yb],['4',D]] : [['1',0],['2',y2],['3',D-w],['4',D]];
+  const ay = r.imp ? r.impAy : r.pi ? [['1',0],['2',y2],['3',r.ys],['4',r.yp],['5',D]] : tL ? [['1',0],['2',y2],['3',r.yp],['4',r.yd],['5',D]] : t3 ? [['1',0],['2',y2],['3',r.yb],['4',D]] : [['1',0],['2',y2],['3',D-w],['4',D]];
   ay.forEach(([n,y])=>{ g += `<text x="${X(0)-20}" y="${Y(y)+4}" text-anchor="end" font-family="var(--f-mono)" font-size="11" fill="var(--muted)">${n}</text>`; });
-  (r.pi ? [[0,y2,'y2only','1–2'],[y2,r.ys,null],[r.ys,r.yp,'wonly','3–4'],[r.yp,D,'d3','4–5']] : tL ? [[0,y2,'y2','1–2'],[y2,r.yp,'pp','2–3'],[r.yp,r.yd,'y2','3–4'],[r.yd,D,'d3','4–5']] : t3 ? [[0,y2,'y2','1–2'],[y2,r.yb,'w','2–3'],[r.yb,D,'y3','3–4']] : [[0,y2,'y2','1–2'],[y2,D-w,'ym','2–3'],[D-w,D,'w','3–4']]).forEach(([y0,y1,k,lab])=>{ if(y1-y0>0.01) g += cota(XR+24, (Y(y0)+Y(y1))/2+4, y1-y0, k, lab, 'start'); });
+  (r.imp ? r.impAy.slice(0,-1).map(([n,y],i)=>[y, r.impAy[i+1][1], null, n+'–'+r.impAy[i+1][0]]) : r.pi ? [[0,y2,'y2only','1–2'],[y2,r.ys,null],[r.ys,r.yp,'wonly','3–4'],[r.yp,D,'d3','4–5']] : tL ? [[0,y2,'y2','1–2'],[y2,r.yp,'pp','2–3'],[r.yp,r.yd,'y2','3–4'],[r.yd,D,'d3','4–5']] : t3 ? [[0,y2,'y2','1–2'],[y2,r.yb,'w','2–3'],[r.yb,D,'y3','3–4']] : [[0,y2,'y2','1–2'],[y2,D-w,'ym','2–3'],[D-w,D,'w','3–4']]).forEach(([y0,y1,k,lab])=>{ if(y1-y0>0.01) g += cota(XR+24, (Y(y0)+Y(y1))/2+4, y1-y0, k, lab, 'start'); });
   [[0,v.rf],[patioY0,F]].forEach(([y0,y1])=>{ if(y1-y0>0.3) g += `<text x="${XR+24}" y="${(YL(y0)+YL(y1))/2+4}" font-family="var(--f-mono)" font-size="11" fill="var(--ok)">${f2(y1-y0)}</text>`; });
   // cotas totales del terreno: fondo (derecha) y frente (abajo)
   { const c = 'var(--ink)', xr = XR+64, a = YL(0), b = YL(F), yb = YL(-vd)+80, l0 = XL(0), l1 = XL(L);
@@ -2445,7 +2653,7 @@ function furnWet(r, X, Y, s){
   const P = swingPts(G3.d1);
   let g = (r.v.tal === 'todo' ? [] : G3.beds).map(b=> bedSvg(placeBed(b, P), X, Y, s)).join('');
   g += bathSvg(R.ba, G3.d1, X, Y, s);
-  const strip = (r.typ === 'T3' || r.typ === 'T3L') ? [W-T/2-0.60, co.y0+T/2, W-T/2, co.y1-T/2] : [co.x0+T/2, co.y0+T/2, co.x0+T/2+0.60, co.y1-T/2];
+  const strip = r.kitStrip ? r.kitStrip : (r.typ === 'T3' || r.typ === 'T3L') ? [W-T/2-0.60, co.y0+T/2, W-T/2, co.y1-T/2] : [co.x0+T/2, co.y0+T/2, co.x0+T/2+0.60, co.y1-T/2];
   g += kitchenSvg(co, strip, X, Y, s);
   const hits = [...new Set(FURN_HITS)];
   r.checks.push({g:'Circulación', t:'Puertas libres de muebles', st: hits.length ? 'bad' : 'ok', d: hits.length ? `El giro de una puerta toca los muebles en: <b>${hits.join(', ')}</b>. Ensancha ese ambiente o mueve la puerta.` : 'Ninguna puerta, al abrirse, toca una cama, la cocina, el lavadero o los aparatos del baño: los muebles se colocan fuera del barrido de cada hoja.'});
@@ -3062,17 +3270,18 @@ function adjR(a, b){
 function relaciones(r){
   const out = [], R = r.rooms, D = r.D;
   const add = (st,t,d) => out.push({st,t,d});
-  const common = ['sc','ha','pa'].filter(k=>R[k]).map(k=>R[k]);
+  const common = Object.keys(R).filter(k=>/^(sc|ha|pa)/.test(k) && !R[k].sky).map(k=>R[k]);
   if(R.d2 && R.d2.n === 'Comedor-estudio') common.push(R.d2);
   const nm = q => (/^Sala/.test(q.n) ? 'la ' : 'el ') + q.n.toLowerCase();
   if(R.co && R.sc){
-    const ok = adjR(R.co, R.sc) || (R.ha && adjR(R.co, R.ha) && adjR(R.ha, R.sc));
+    const ok = adjR(R.co, R.sc) || common.some(q=> q !== R.sc && adjR(R.co, q) && adjR(q, R.sc));
     add(ok?'ok':'warn', 'Cocina junto al comedor', ok ? 'La cocina está pegada a la sala-comedor: se sirve la mesa sin cruzar otro ambiente.' : 'La cocina no toca la sala-comedor: hay que cruzar otro ambiente para servir la mesa.');
   }
   if(R.co){
-    const viaP = ['ha','pa'].map(k=>R[k]).find(q=> q && adjR(R.co, q) && Math.abs(q.y1-D) < 1e-6);
-    const ok = Math.abs(R.co.y1 - D) < 1e-6 || !!viaP;
-    add(ok?'ok':'warn', 'Cocina con salida al patio-lavandería', ok ? (viaP ? `La cocina sale al patio por ${nm(viaP)}: la ropa y la basura no cruzan la sala.` : 'La cocina da al muro posterior y sale directo al patio, donde está la lavandería.') : 'La cocina no da al patio: la lavandería queda lejos de la zona húmeda.');
+    const viaP = Object.keys(R).filter(k=>/^(ha|pa)/.test(k)).map(k=>R[k]).find(q=> q && adjR(R.co, q) && Math.abs(q.y1-D) < 1e-6);
+    const pzC = r.imp ? Object.values(R).find(q=> q.sky && !q.est && adjR(R.co, q)) : null;
+    const ok = Math.abs(R.co.y1 - D) < 1e-6 || !!viaP || !!pzC;
+    add(ok?'ok':'warn', 'Cocina con salida al patio-lavandería', ok ? (pzC && !viaP ? 'La cocina da al patio vecino, donde está el lavadero (por ahora con ventana; la salida es por el pasaje).' : viaP ? `La cocina sale al patio por ${nm(viaP)}: la ropa y la basura no cruzan la sala.` : 'La cocina da al muro posterior y sale directo al patio, donde está la lavandería.') : 'La cocina no da al patio: la lavandería queda lejos de la zona húmeda.');
   }
   if(R.ba){
     const c = common.find(q=>adjR(R.ba,q)), byK = R.co && adjR(R.ba, R.co);
@@ -3228,7 +3437,8 @@ function relRender(r){
   const b1 = fl1.find(q=>q.c==='bc');
   if(scQ && b1){ const w = reach(b1, scQ, P.fl[0]); res['sc-bc'] = w ? ['ok', `Baño y sala: ${w}.`] : ['warn','Las visitas llegan al baño cruzando la cocina o un dormitorio.']; }
   if(coQ && b1) res['co-bc'] = adjR(coQ, b1) ? ['ok','Cocina y baño comparten muro: las instalaciones se agrupan.'] : ['warn','Cocina y baño separados: dos montantes de agua y desagüe.'];
-  if(coQ) res['co-pl'] = patio > 0.3 ? (toPatio(coQ) ? ['ok','La cocina sale al patio-lavandería.'] : ['bad','La cocina no da al patio: la ropa y la basura cruzan la casa.']) : ['warn','No hay patio posterior.'];
+  if(coQ && r.imp){ const pz = Object.values(r.rooms).filter(q=>q.sky && !q.est); const ok = pz.some(z=> coQ.x1 >= z.x0 - 0.2 && coQ.x0 <= z.x1 + 0.2 && coQ.y1 >= z.y0 - 0.2 && coQ.y0 <= z.y1 + 0.2); res['co-pl'] = ok ? ['ok','La cocina da al patio de la grilla, donde va el lavadero.'] : ['warn','La cocina no toca ningún patio de la grilla: el lavadero queda lejos.']; }
+  else if(coQ) res['co-pl'] = patio > 0.3 ? (toPatio(coQ) ? ['ok','La cocina sale al patio-lavandería.'] : ['bad','La cocina no da al patio: la ropa y la basura cruzan la casa.']) : ['warn','No hay patio posterior.'];
   if(P.dp && P.ds.length) res['dp-ds'] = ['ok','Indiferente.'];
   ['in-co','in-bc','in-pl','sc-pl','bc-pl'].forEach(k=>{ if(!res[k]) res[k] = ['ok','Indiferente.']; });
   const mk = {ok:'✓', warn:'!', bad:'✗'};
@@ -3455,7 +3665,7 @@ function cuadro(r){
   const planBad = r.checks.filter(c=>c.st==='bad' && /Norma|Antropometría|Iluminación|Ventilación|Circulación|Etapa 3/.test(c.g));
   addV('Obligatorio (RNE y VIS)', planBad.length ? 'bad':'ok', 'Iluminación, ventilación, alturas, pasajes y escalera', planBad.length ? `No cumple en el plano: ${planBad.map(c=>c.t.toLowerCase()).join(', ')}. Mira la pestaña Diseño.` : 'El plano cumple A.010 art. 20, 23 y 38 y la altura libre de la A.020: son las exigencias que no se negocian con el nivel.');
   const patio = v.fondo - v.rf - r.D - T;
-  const ext = P.L.filter(x=>x.ext).reduce((s,x)=>s+x.adj,0), patioA = P.Wmax*patio;
+  const ext = P.L.filter(x=>x.ext).reduce((s,x)=>s+x.adj,0), patioA = r.imp ? Object.values(r.rooms).filter(q=>q.sky).reduce((s,q)=>s+(q.x1-q.x0)*(q.y1-q.y0),0) : P.Wmax*patio;
   addV('Recomendado (nivel '+NIV[nivel].toLowerCase()+')', patioA >= ext + 0.90*P.Wmax - 1e-6 ? 'ok':'warn', 'Patio para lavandería y escalera', `El patio tiene <b>${f1(patioA)} m²</b>; la lavandería${v.nd2?' y la escalera ocupan':' ocupa'} ${f1(ext)} m² y hace falta una franja de paso de 0.90 m.`);
 
   // Alternativas
@@ -3803,6 +4013,7 @@ function pjRebar(r, built2, H2){
 // ---------- Diseño Pro: planta con ejes y cotas, cortes que se desplazan y elevaciones ----------
 let proFurn = (()=>{ try { return localStorage.getItem('vvm-pro-muebles') === '1'; } catch(e){ return false; } })(), proFloor = 1, proCut = {y:null, x:null}, proGeo = null, proRAF = 0;
 function axesOf(r){
+  if(r.imp) return {ax:r.impAx, ay:r.impAy};
   const v = r.v, W = r.W, D = r.D, tL = r.typ === 'T3L', t3 = r.typ === 'T3';
   const ax = t3 ? [['A',0],['B',v.a],['C',v.a+r.P],['D',W]] : [['A',0],['B',v.a],['C',W-r.c],['D',W]];
   let ay = r.pi ? [['1',0],['2',r.y2],['3',r.ys],['4',r.yp],['5',D]] : tL ? [['1',0],['2',r.y2],['3',r.yp],['4',r.yd],['5',D]] : t3 ? [['1',0],['2',r.y2],['3',r.yb],['4',D]] : [['1',0],['2',r.y2],['3',D-r.w],['4',D]];
@@ -3950,6 +4161,7 @@ function proPlan(r){
   else g += colSvg(r.cols, list, X, Y, s);
   g += '</g>';
   if(st) g += '<g data-l="ESCALERA">' + drawStair(X, Y, s, st, f2nd) + '</g>';
+  else if(r.imp && !f2nd) g += '<g data-l="ESCALERA">' + impStairSvg(r, X, Y, s) + '</g>';
   rooms.forEach(q=>{
     if(!q.n || q.open && q.sky) { if(q.sky) g += `<text x="${X((q.x0+q.x1)/2)}" y="${Y((q.y0+q.y1)/2)+4}" text-anchor="middle" font-size="10.5" fill="var(--ok)">${q.n === "Patio interior" ? "patio interior" : "patio de luz"}</text>`; return; }
     const yy0 = f2nd && Math.abs(q.y0) < 1e-6 ? -vo : q.y0, cw = q.x1-q.x0-T, cd = q.y1-yy0-T, cx = (q.x0+q.x1)/2, cy = (yy0+q.y1)/2;
@@ -4423,7 +4635,7 @@ function impCols(F, R_){ // mismo cálculo que smartFit de la Solución 4 (sin l
   return {...best, G2, ws};
 }
 function impPlan(v, o){
-  const R_ = {...IMP_R, r2: o.r2 ? IMP_R.r2 : 0}, F = v.lote, rf = o.rf ? Math.max(0, v.rf) : 0, B = Math.max(0, v.fondo - rf);
+  const R_ = {...IMP_R, r2: o.r2 ? IMP_R.r2 : 0}, F = v.lote, rf = Math.max(0, v.rf), rp = Math.max(0, v.rp), B = Math.max(0, v.fondo - rf - rp);
   const C = impCols(F, R_), Rw = impRows(B, R_), W = C.W, Hn = Rw.H, cc = R_.cc;
   // x de cada columna y franja, desde la derecha (columna 0 = servicio); espejo: servicio a la izquierda
   const cols = [], strips = []; let x = F;
@@ -4440,7 +4652,7 @@ function impPlan(v, o){
   const estA = est ? est.w*est.l : 0;
   // baño: siguiendo la columna; en el vacío si queda el mínimo + 5 puntos, si no en el primer construido
   const bw = (sv ? sv.w : 2) - T, bd = bw < 2.10 ? 1.75 : 1.40, bA = bw*bd;
-  const freeAfter = (voidA - estA - bA + rf*F)/lotA*100;
+  const freeAfter = (voidA - estA - bA + (rf+rp)*F)/lotA*100;
   const s1 = cell(0,1), s2 = cell(0,2);
   let bath = null, kit = null;
   if(s1){
@@ -4454,7 +4666,7 @@ function impPlan(v, o){
   }
   const builtA = cells.filter(q=>q.built).reduce((s,q)=>s+q.w*q.h,0) + strips.reduce((s,q)=>s+(q.x1-q.x0)*B,0);
   const techado = builtA + estA + (bath && bath.inVoid ? bA : 0);
-  const freeA = voidA - estA - (bath && bath.inVoid ? bA : 0) + rf*F, freePct = freeA/lotA*100;
+  const freeA = voidA - estA - (bath && bath.inVoid ? bA : 0) + (rf+rp)*F, freePct = freeA/lotA*100;
   // zonas y ambientes: fila de la calle = social; cocina = social; el resto construido = privado (dormitorios)
   cells.forEach(q=>{ if(q.built) q.zone = q.r===0 || (kit && kit.cell===q) ? 'soc' : 'pri'; });
   // franja de la última fila con algo construido delante: se suma al ambiente vecino (no hace falta como pasillo)
@@ -4472,12 +4684,12 @@ function impPlan(v, o){
     else { n = 'Dormitorio ' + (++nD); k = 'd'; }
     rooms.push({q, n, k, w, h, x0, x1, absorbed, a:Math.max(0,w)*Math.max(0,h)});
   });
-  return {F, B, rf, R_, C, Rw, cols, strips, rows, cells, cell, left, est, estA, bath, kit, bA, lotA, voidA, builtA, techado, freeA, freePct, rooms, o, W, Hn};
+  return {F, B, rf, rp, R_, C, Rw, cols, strips, rows, cells, cell, left, est, estA, bath, kit, bA, lotA, voidA, builtA, techado, freeA, freePct, rooms, o, W, Hn};
 }
 function impChecks(P, v){
   const L = [], add = (s,t,d) => L.push({s,t,d}), {F, B, C, Rw, cells, cell, rooms, est, bath, kit, R_} = P;
   add(C.ok ? 'ok':'bad', 'Columnas', C.ok ? `${C.W} columna${C.W>1?'s':''} desde ${P.o.mir?'la izquierda':'la derecha'}: ${C.ws.map(f2).join(' · ')} con franjas de ${f2(R_.cc)}${C.gs?`; la columna de servicio crece a ${f2(C.gs)} porque el tramo variable ya está en su máximo de ${f2(R_.v1)}`:''}. Cierra justo con el frente de ${f2(F)} m.` : `Con ${f2(F)} m de frente la regla no cierra: ${P.left>0?'sobran':'faltan'} ${f2(Math.abs(P.left))} m (tramo variable de ${f2(R_.v0)} a ${f2(R_.v1)}).`);
-  add(Rw.ok ? 'ok':'bad', 'Filas', Rw.ok ? `${Rw.H} filas desde la calle: ${Rw.hs.map(f2).join(' · ')} (fila 1 de ${f2(R_.s0)} a ${f2(R_.s1)}${R_.r2?`, fila 2 fija de ${f2(R_.r2)}`:''}, las demás de ${f2(R_.b0)} a ${f2(R_.b1)}). Cierra con ${f2(B)} m de fondo${P.rf?` (el fondo menos el retiro frontal de ${f2(P.rf)} m)`:''}.` : `Con ${f2(B)} m de fondo las filas no caben: ${Rw.d>0?'sobran':'faltan'} ${f2(Math.abs(Rw.d))} m.`);
+  add(Rw.ok ? 'ok':'bad', 'Filas', Rw.ok ? `${Rw.H} filas desde la calle: ${Rw.hs.map(f2).join(' · ')} (fila 1 de ${f2(R_.s0)} a ${f2(R_.s1)}${R_.r2?`, fila 2 fija de ${f2(R_.r2)}`:''}, las demás de ${f2(R_.b0)} a ${f2(R_.b1)}). Cierra con ${f2(B)} m de fondo${P.rf||P.rp?` (el fondo menos los retiros del Terreno: frontal ${f2(P.rf)}, posterior ${f2(P.rp)} m)`:''}.` : `Con ${f2(B)} m de fondo${P.rf||P.rp?` (sin los retiros de ${f2(P.rf)} y ${f2(P.rp)} m)`:''} las filas no caben: ${Rw.d>0?'sobran':'faltan'} ${f2(Math.abs(Rw.d))} m.${P.rf||P.rp?' La Solución 4 usa todo el fondo: pon los retiros en 0 si tu certificado no los pide.':''}`);
   add(P.freePct >= P.o.lib-1e-6 ? 'ok':'bad', 'Área libre', `${f1(P.freeA)} m² libres = <b>${f1(P.freePct)} %</b> del lote frente a ${P.o.lib} % (regla de la Solución 4; el certificado de parámetros puede pedir otro). ${bath&&bath.inVoid?'La escalera y el baño puestos en un vacío cuentan':'La escalera puesta en un vacío cuenta'} como construido.`);
   add(P.techado >= 35-1e-6 ? 'ok':'bad', 'Área techada (VIS)', `<b>${f1(P.techado)} m²</b> techados en el 1.er piso (cuadrados construidos, franjas${P.estA?', escalera':''}) frente a 35 m² del módulo VIS (DS 005-2025).`);
   // cada construido toca un vacío o la calle
@@ -4509,9 +4721,9 @@ function impChecks(P, v){
     add('warn', 'Ancho de la escalera', `Cada tramo mide 0.80 m (1.60 entre los dos). El verificador usa 0.90 m de ancho (A.020 art. 15.1); con tramos de 0.90 la escalera pide 1.80 × 3.20 y sigue entrando en la columna de ${f2(sv.w)}${sv.w - T < 1.80 ? ', justo con el muro: revisa' : ''}.`); }
   return L;
 }
-let impMir = false, impR2 = true, impRF = false, impLib = 30;
+let impMir = false, impR2 = true, impLib = 30;
 function impRender(r){
-  const v = r.v, P = impPlan(v, {mir:impMir, r2:impR2, rf:impRF, lib:impLib}), L = impChecks(P, v);
+  const v = r.v, P = r.impP || impPlan(v, {mir:impMir, r2:impR2, lib:impLib}), L = impChecks(P, v);
   const s = Math.min(34, 520/Math.max(P.F, 1)), mL = 56, mT = 46, mR = 58, mB = 50, Wd = P.F*s + mL + mR, Hd = v.fondo*s + mT + mB;
   const X = x => mL + x*s, Y = y => mT + (v.fondo - P.rf - y)*s; // la calle abajo
   const ZC = {soc:'#e2b850', pri:'#8cc084'};
@@ -4609,6 +4821,8 @@ function render(){
 
 function generate(){
   const base = read();
+  if(base.logi === 'imp'){ render(); const r = lastR, P = r && r.impP, nb = r ? r.checks.filter(c=>c.st==='bad').length : 0;
+    el('gen-msg').innerHTML = P ? `<b style="color:var(--ok)">Planta de implantación:</b> grilla de ${P.W} columna${P.W>1?'s':''} × ${P.Hn} filas con la lógica de la Solución 4 (pestaña Implantación), ${f1(r.gross)} m² techados. ${nb ? `<b style="color:var(--bad)">${nb} verificaci${nb>1?'ones':'ón'} en rojo</b>: míralas abajo.` : 'Cumple todas las verificaciones.'}` : ''; return; }
   const maxW = base.lote - sideUse(base);
   // más de 9 m de frente no hace falta: a ≤ 4.00 y b ≤ 5.00; el resto del lote queda libre a un costado
   const Wt = Math.min(9.00, Math.floor(maxW/M + 1e-6)*M);
@@ -4774,7 +4988,7 @@ el('ppm').addEventListener('change', ()=>{ if(el('ppm').value !== 'auto') el('pp
 el('gen').addEventListener('click', ()=>{ el('gen-msg').textContent = 'Buscando…'; setTimeout(generate, 30); });
 
 // Los datos del terreno y del programa regeneran la planta solos; las cotas entre ejes solo redibujan.
-const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc','ind','auto','pat'];
+const autoKeys = ['lote','fondo','rf','rp','vd','fr','rl','nd','nd2','pmr','sis','ap','med','tam','esc','ind','auto','pat','logi'];
 let genTimer = null;
 const regen = () => {
   if(el('nd2').value!=='0' && parseInt(el('n').value,10) < 2) el('n').value = '2';
@@ -4831,9 +5045,9 @@ el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d'
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); el('tab-btn-imp').addEventListener('click', ()=>showTab('imp')); el('imp-mir').addEventListener('change', e=>{ impMir = e.target.checked; if(lastR) impRender(lastR); }); el('imp-r2').addEventListener('change', e=>{ impR2 = e.target.checked; if(lastR) impRender(lastR); }); el('imp-rf').addEventListener('change', e=>{ impRF = e.target.checked; if(lastR) impRender(lastR); }); el('imp-lib').addEventListener('input', e=>{ impLib = parseFloat(e.target.value)||0; if(lastR) impRender(lastR); }); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); el('tab-btn-imp').addEventListener('click', ()=>showTab('imp')); el('imp-mir').addEventListener('change', e=>{ impMir = e.target.checked; if(el('logi').value==='imp') render(); else if(lastR) impRender(lastR); }); el('imp-r2').addEventListener('change', e=>{ impR2 = e.target.checked; if(el('logi').value==='imp') render(); else if(lastR) impRender(lastR); }); el('imp-lib').addEventListener('input', e=>{ impLib = parseFloat(e.target.value)||0; if(el('logi').value==='imp') render(); else if(lastR) impRender(lastR); }); el('logi').addEventListener('change', ()=>{ if(el('logi').value==='imp'){ if((parseFloat(el('rf').value)||0) > 0 || (parseFloat(el('rp').value)||0) > 0){ el('rf').value = '0.00'; el('rp').value = '0.00'; } } }); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-19a';
+const APP_VERSION = '2026-11-19b';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
