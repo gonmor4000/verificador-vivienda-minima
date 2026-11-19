@@ -281,6 +281,7 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <button type="button" role="tab" id="tab-btn-are" aria-selected="false">Cuadro de áreas</button>
     <button type="button" role="tab" id="tab-btn-rel" aria-selected="false">Relaciones</button>
     <button type="button" role="tab" id="tab-btn-bol" aria-selected="false">Diagrama de bolas</button>
+    <button type="button" role="tab" id="tab-btn-imp" aria-selected="false">Implantación</button>
     <button type="button" role="tab" id="tab-btn-mat" aria-selected="false">Materiales</button>
     <button type="button" role="tab" id="tab-btn-eta" aria-selected="false">Etapas</button>
     <button type="button" role="tab" id="tab-btn-reg" aria-selected="false">Reglas</button>
@@ -626,10 +627,36 @@ dialog.wz::backdrop{background:rgba(20,24,22,.55)}
     <p class="hint" id="bo-note" style="margin:8px 0 0"></p>
   </section>
 
+  <section id="tab-imp" class="card" hidden aria-label="Implantación">
+    <h2>Implantación por grilla (Solución 4)</h2>
+    <p class="hint" style="margin-top:0">Las reglas de la <b>Solución 4</b> del estudio «Soluciones de implantación» aplicadas al lote de la pestaña Diseño, y revisadas con las reglas de este verificador. <b>Columnas desde la derecha</b>: una columna de servicio de 2.00, una franja de 1.00 (circulación) y un tramo variable de 2.50 a 4.50; si hay más frente, otra franja, otra columna de 2.00 y así. Con dos columnas, si el tramo variable llega a 4.50, la de servicio crece. <b>Filas desde la calle</b>: la primera de 2.50 a 3.50 (lo más larga posible), la segunda fija de 4.00 y las demás iguales de 3.50 a 5.00. Lo construido va en <b>damero</b> con los vacíos; cada construido toca un vacío o la calle. <b>Columna de servicio</b>: la escalera de ida y vuelta en el vacío que da a la calle (para independizar el piso de arriba), el baño siguiendo la columna (en el vacío solo si queda el área libre mínima + 5 puntos) y la cocina de 0.60 a su lado, hacia el mismo ducto, ventilando a un vacío de 1.80. Fila de la calle social (amarillo), el resto privado (verde). Área libre mínima: 30 %.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:10px 18px;align-items:center;margin:0 0 10px">
+      <label class="v3-chk"><input type="checkbox" id="imp-mir"> Columna de servicio a la izquierda (espejo)</label>
+      <label class="v3-chk"><input type="checkbox" id="imp-r2" checked> Fila 2 fija en 4.00</label>
+      <label class="v3-chk"><input type="checkbox" id="imp-rf"> Respetar el retiro frontal del Terreno (la Solución 4 usa todo el fondo)</label>
+      <label class="v3-chk">Área libre mínima <input type="number" id="imp-lib" value="30" min="0" max="90" step="1" style="width:56px"> %</label>
+    </div>
+    <div class="kpis" id="imp-kpis"></div>
+    <div class="rl-cols" style="margin-top:12px">
+      <div class="bo-wrap" id="imp-svg" style="overflow:auto"></div>
+      <div class="checks" id="imp-chk"></div>
+    </div>
+    <div class="legend" style="margin-top:8px">
+      <span><i class="sw" style="background:#e2b850"></i>Social</span>
+      <span><i class="sw" style="background:#8cc084"></i>Privada</span>
+      <span><i class="sw" style="background:#1d3f8f"></i>Cocina</span>
+      <span><i class="sw" style="background:#2f6fd1"></i>Baño</span>
+      <span><i class="sw" style="background:#fde3df;outline:1px solid #c0392b"></i>Escalera</span>
+      <span><i class="sw" style="background:#fff;outline:1px solid #6b78c8"></i>Vacío (patio)</span>
+    </div>
+    <p class="hint" id="imp-note" style="margin:8px 0 0"></p>
+  </section>
+
   <section id="tab-cam" class="card rules" hidden aria-label="Cambios">
     <h2>Cambios importantes</h2>
     <p class="hint" style="margin-top:0">Registro de los cambios importantes de la herramienta, del más reciente al más antiguo.</p>
     <ul class="log">
+      <li><time datetime="2026-11-19">19 nov 2026</time><span><b>Pestaña «Implantación» (prueba, sin publicar)</b>: las reglas de la Solución 4 del estudio «Soluciones de implantación» (columna de servicio de 2.00 desde la derecha, franja de 1.00, tramo variable de 2.50 a 4.50; fila de la calle de 3.50, fila 2 de 4.00 y las demás de 3.50 a 5.00; damero; escalera de ida y vuelta en el vacío de la calle, baño y cocina en la columna de servicio; área libre mínima 30 %) aplicadas al lote de Diseño y revisadas con las reglas del verificador: dormitorios, luz por los vacíos (A.020 art. 11.4 a), ventilación de la cocina, baño, escalera, área techada VIS. Muestra lo que cumple y lo que no, y lo compara con el plano de Diseño.</span></li>
       <li><time datetime="2026-11-18">18 nov 2026</time><span><b>RNE: tema «Vivienda bifamiliar»</b>: en el RNE consultable, el enlace <a href="rne.html#tema-bifamiliar">rne.html#tema-bifamiliar</a> reúne los artículos vigentes que nombran la vivienda bifamiliar (A.020 art. 4, 11.4 b y nota v, 15.2 g, 25.3, 27 cuadro 09; A.120 art. 28) con la palabra resaltada, más dos relacionados (A.010 art. 8.3 l y A.020 art. 30).</span></li>
       <li><time datetime="2026-11-16">16 nov 2026</time><span><b>Dos niveles: mínimo funcional y estándar</b>. El antiguo «económico» se llama ahora <b>estándar</b> (mismas superficies de la tabla del estudio) y el otro nivel es el <b>mínimo funcional</b> (mueble y circulación). En Cuadro de áreas y Relaciones las columnas se llaman así. «Sacarle el máximo provecho» usa el mínimo funcional; vivir, el estándar. El acceso al patio va por la cocina salvo que se elija el pasillo.</span></li>
       <li><time datetime="2026-11-15">15 nov 2026</time><span><b>Puertas verificadas en el cuadro de vanos</b> (A.020 art. 12.2, cuadro 6): cada puerta de Diseño Pro dice qué ambientes une, su mínimo (0.90 acceso principal, 0.80 dormitorios, estar, comedor y cocina, 0.70 baños y servicios, todas de 2.10 de alto) y si cumple. El ingreso sigue en 1.00 m. La puerta del 2.º piso pasa a 0.90 cuando los pisos se independizan, y la de la escalera interior ya no se recorta a 0.75.</span></li>
@@ -4368,6 +4395,170 @@ function growApply(r, v){
   if(!isAtr(v) && spare >= 2.70 + T - 1e-6) add('Primero horizontal, luego vertical', 'warn', `Antes de subir al 2.º piso todavía quedan <b>${f2(spare)} m</b> de fondo libre en el 1.er piso (dejando ${f2(keep)} m de patio). La casa crece primero en horizontal, que es más barato y no necesita escalera: prueba con más dormitorios abajo (casa larga o tres franjas) y sube cuando el 1.er piso esté completo.`);
   else add('Primero horizontal, luego vertical', 'ok', `El 1.er piso ya ocupa el fondo edificable (queda el patio de ${f2(Math.max(0,patio))} m): la casa crece primero en horizontal y recién entonces sube.`);
 }
+// ---------- Implantación por grilla: reglas de la Solución 4 (artefacto «Soluciones de implantación», v154, 19 nov 2026) ----------
+// Columnas desde la derecha: grilla de servicio 2.00 | franja 1.00 | tramo variable 2.50–4.50 | franja | grilla 2.00 …
+// Filas desde la calle: fila 1 de 2.50–3.50 (lo más larga posible), fila 2 fija de 4.00 (opcional), las demás iguales de 3.50–5.00.
+// Damero: lo construido alterna con los vacíos; las franjas son construidas (circulación). Área libre mínima 30 %.
+const IMP_R = {g2:2.00, cc:1.00, v0:2.50, v1:4.50, b0:3.50, b1:5.00, s0:2.50, s1:3.50, r2:4.00};
+function impRows(B, R_){ // mismo cálculo que rowFit de la Solución 4
+  const {b0,b1,s0,s1,r2} = R_; let Hb = null;
+  for(let H=1; H<=8; H++){ let st, ch, ok; const f2 = r2 > 0 && H >= 3 ? r2 : 0;
+    if(H===1){ st = Math.max(s0, Math.min(s1, B)); ch = st; ok = Math.abs(st-B) < 1e-9; }
+    else { const n = H-1-(f2?1:0), rem = B-f2;
+      if(n===0){ st = Math.max(s0, Math.min(s1, rem)); ok = Math.abs(st-rem) < 1e-9; ch = f2 || st; }
+      else { const lo = Math.max(s0, rem-n*b1), hi = Math.min(s1, rem-n*b0); if(lo <= hi+1e-9){ st = hi; ok = true; } else { st = rem-n*b1 > s1 ? s1 : s0; ok = false; } ch = Math.max(b0, Math.min(b1, (rem-st)/n)); } }
+    const n_ = H===1 ? 0 : H-1-(f2?1:0), used = st+f2+n_*ch, err = Math.abs(B-used), c = {H, ch, st, f2, ok, err, d:B-used};
+    if(!Hb || (ok && !Hb.ok) || (ok===Hb.ok && err < Hb.err-1e-9)) Hb = c; }
+  const hs = [Hb.st]; if(Hb.H > 1){ if(Hb.f2) hs.push(Hb.f2); while(hs.length < Hb.H) hs.push(Hb.ch); }
+  return {...Hb, hs};
+}
+function impCols(F, R_){ // mismo cálculo que smartFit de la Solución 4 (sin la Solución 5)
+  const {g2,cc,v0,v1} = R_; let best = null;
+  for(let W=1; W<=5; W++){ const n2 = Math.ceil(W/2), nV = Math.floor(W/2), fix = g2*n2 + (W-1)*cc + (W===1?cc:0);
+    const V = nV ? (F-fix)/nV : v0, ok = nV ? V >= v0-1e-9 && V <= v1+1e-9 : Math.abs(F-fix) < 1e-9;
+    const Vc = Math.max(v0, Math.min(v1, V)), used = fix + Vc*nV, err = Math.abs(F-used), c = {W, V:Vc, ok, err, used};
+    if(!best || (ok && !best.ok) || (ok===best.ok && err < best.err-1e-9)) best = c; }
+  if(!best.ok && F > g2+cc+v1+1e-9 && F <= cc+2*v1+1e-9) best = {W:2, V:v1, ok:true, err:0, used:F, gs:F-cc-v1}; // la columna de servicio crece
+  const G2 = best.gs || g2, ws = []; for(let c=0; c<best.W; c++) ws.push(c%2===0 ? G2 : best.V);
+  return {...best, G2, ws};
+}
+function impPlan(v, o){
+  const R_ = {...IMP_R, r2: o.r2 ? IMP_R.r2 : 0}, F = v.lote, rf = o.rf ? Math.max(0, v.rf) : 0, B = Math.max(0, v.fondo - rf);
+  const C = impCols(F, R_), Rw = impRows(B, R_), W = C.W, Hn = Rw.H, cc = R_.cc;
+  // x de cada columna y franja, desde la derecha (columna 0 = servicio); espejo: servicio a la izquierda
+  const cols = [], strips = []; let x = F;
+  for(let c=0; c<W; c++){ const w = C.ws[c]; cols.push({c, x0:x-w, x1:x, w, srv:c===0}); x -= w; if(c < W-1 || W===1){ strips.push({x0:x-cc, x1:x}); x -= cc; } }
+  const left = x; // lo que sobra (o falta, si es negativo) a la izquierda
+  if(o.mir){ cols.forEach(q=>{ const a = F-q.x1, b = F-q.x0; q.x0 = a; q.x1 = b; }); strips.forEach(q=>{ const a = F-q.x1, b = F-q.x0; q.x0 = a; q.x1 = b; }); }
+  const rows = []; let y = 0; Rw.hs.forEach((h,i)=>{ rows.push({r:i, y0:y, y1:y+h, h}); y += h; });
+  const cells = []; cols.forEach(q=> rows.forEach(rr=> cells.push({c:q.c, r:rr.r, x0:q.x0, x1:q.x1, y0:rr.y0, y1:rr.y1, w:q.w, h:rr.h, built:(q.c+rr.r)%2===1, srv:q.srv})));
+  const cell = (c, r) => cells.find(q=>q.c===c && q.r===r);
+  const lotA = F*v.fondo, voidA = cells.filter(q=>!q.built).reduce((s,q)=>s+q.w*q.h,0);
+  // escalera de ida y vuelta (1.60 × 3.20) centrada en el vacío de servicio que da a la calle
+  const sv = cell(0,0), est = sv ? {x0:(sv.x0+sv.x1)/2-0.80, x1:(sv.x0+sv.x1)/2+0.80, y0:Math.max(sv.y0, (sv.y0+sv.y1)/2-1.60), w:1.60, l:3.20} : null;
+  if(est) est.y1 = est.y0 + est.l;
+  const estA = est ? est.w*est.l : 0;
+  // baño: siguiendo la columna; en el vacío si queda el mínimo + 5 puntos, si no en el primer construido
+  const bw = (sv ? sv.w : 2) - T, bd = bw < 2.10 ? 1.75 : 1.40, bA = bw*bd;
+  const freeAfter = (voidA - estA - bA + rf*F)/lotA*100;
+  const s1 = cell(0,1), s2 = cell(0,2);
+  let bath = null, kit = null;
+  if(s1){
+    const inVoid = !!s2 && freeAfter >= o.lib + 5 - 1e-9;
+    const hostB = inVoid ? s2 : s1, far = inVoid && (s2.h - T - bd) >= 1.80 - 1e-9, by0 = far ? hostB.y1 - T/2 - bd : hostB.y0 + T/2; // en el vacío, el baño va al fondo para que la cocina ventile al resto del vacío
+    bath = {x0:hostB.x0+T/2, x1:hostB.x1-T/2, y0:by0, y1:by0+bd, inVoid, far, cell:hostB};
+    // cocina de 0.60 en el mismo cuadrado si caben baño + 0.60 + 0.90; si no, en el construido social más cercano
+    const fitSame = !inVoid && (s1.h - T) >= bd + 0.60 + 0.90 - 1e-9;
+    if(inVoid || fitSame){ kit = {x0:s1.x0+T/2, x1:s1.x1-T/2, y0:s1.y1-T/2-0.60, y1:s1.y1-T/2, cell:s1, along:true}; }
+    else { const so = cells.find(q=>q.built && q.r===0); if(so) kit = {x0:so.x0+T/2, x1:so.x1-T/2, y0:so.y1-T/2-0.60, y1:so.y1-T/2, cell:so, along:true, far:true}; }
+  }
+  const builtA = cells.filter(q=>q.built).reduce((s,q)=>s+q.w*q.h,0) + strips.reduce((s,q)=>s+(q.x1-q.x0)*B,0);
+  const techado = builtA + estA + (bath && bath.inVoid ? bA : 0);
+  const freeA = voidA - estA - (bath && bath.inVoid ? bA : 0) + rf*F, freePct = freeA/lotA*100;
+  // zonas y ambientes: fila de la calle = social; cocina = social; el resto construido = privado (dormitorios)
+  cells.forEach(q=>{ if(q.built) q.zone = q.r===0 || (kit && kit.cell===q) ? 'soc' : 'pri'; });
+  // franja de la última fila con algo construido delante: se suma al ambiente vecino (no hace falta como pasillo)
+  const lastR = Hn-1, rooms = []; let nD = 0;
+  cells.filter(q=>q.built).sort((a,b)=>a.r-b.r || a.c-b.c).forEach(q=>{
+    let w = q.w - T, h = q.h - T, x0 = q.x0, x1 = q.x1, absorbed = false;
+    if(q.r === 0){ const st = strips.find(s=> Math.abs(s.x1-q.x0)<1e-6 || Math.abs(s.x0-q.x1)<1e-6); if(st && !rooms.some(z=>z.absorbed===st)){ w += st.x1-st.x0; x0 = Math.min(x0, st.x0); x1 = Math.max(x1, st.x1); absorbed = st; } } // la franja de la calle es el ingreso: se suma a la sala
+    if(q.r === lastR && q.zone==='pri'){ const st = strips.find(s=> Math.abs(s.x1-q.x0)<1e-6 || Math.abs(s.x0-q.x1)<1e-6); if(st){ w += st.x1-st.x0; x0 = Math.min(x0, st.x0); x1 = Math.max(x1, st.x1); absorbed = st; } }
+    let n, k;
+    if(kit && kit.cell===q && bath && bath.cell===q) { n = 'Cocina y baño'; k = 'cb'; }
+    else if(kit && kit.cell===q && q.r===0) { n = 'Sala-comedor-cocina'; k = 'sc'; }
+    else if(kit && kit.cell===q) { n = 'Cocina'; k = 'co'; }
+    else if(bath && bath.cell===q && !bath.inVoid) { n = 'Baño'; k = 'bc'; }
+    else if(q.r===0) { n = rooms.some(z=>z.k==='sc') ? 'Estar' : 'Sala-comedor'; k = 'sc'; }
+    else { n = 'Dormitorio ' + (++nD); k = 'd'; }
+    rooms.push({q, n, k, w, h, x0, x1, absorbed, a:Math.max(0,w)*Math.max(0,h)});
+  });
+  return {F, B, rf, R_, C, Rw, cols, strips, rows, cells, cell, left, est, estA, bath, kit, bA, lotA, voidA, builtA, techado, freeA, freePct, rooms, o, W, Hn};
+}
+function impChecks(P, v){
+  const L = [], add = (s,t,d) => L.push({s,t,d}), {F, B, C, Rw, cells, cell, rooms, est, bath, kit, R_} = P;
+  add(C.ok ? 'ok':'bad', 'Columnas', C.ok ? `${C.W} columna${C.W>1?'s':''} desde ${P.o.mir?'la izquierda':'la derecha'}: ${C.ws.map(f2).join(' · ')} con franjas de ${f2(R_.cc)}${C.gs?`; la columna de servicio crece a ${f2(C.gs)} porque el tramo variable ya está en su máximo de ${f2(R_.v1)}`:''}. Cierra justo con el frente de ${f2(F)} m.` : `Con ${f2(F)} m de frente la regla no cierra: ${P.left>0?'sobran':'faltan'} ${f2(Math.abs(P.left))} m (tramo variable de ${f2(R_.v0)} a ${f2(R_.v1)}).`);
+  add(Rw.ok ? 'ok':'bad', 'Filas', Rw.ok ? `${Rw.H} filas desde la calle: ${Rw.hs.map(f2).join(' · ')} (fila 1 de ${f2(R_.s0)} a ${f2(R_.s1)}${R_.r2?`, fila 2 fija de ${f2(R_.r2)}`:''}, las demás de ${f2(R_.b0)} a ${f2(R_.b1)}). Cierra con ${f2(B)} m de fondo${P.rf?` (el fondo menos el retiro frontal de ${f2(P.rf)} m)`:''}.` : `Con ${f2(B)} m de fondo las filas no caben: ${Rw.d>0?'sobran':'faltan'} ${f2(Math.abs(Rw.d))} m.`);
+  add(P.freePct >= P.o.lib-1e-6 ? 'ok':'bad', 'Área libre', `${f1(P.freeA)} m² libres = <b>${f1(P.freePct)} %</b> del lote frente a ${P.o.lib} % (regla de la Solución 4; el certificado de parámetros puede pedir otro). ${bath&&bath.inVoid?'La escalera y el baño puestos en un vacío cuentan':'La escalera puesta en un vacío cuenta'} como construido.`);
+  add(P.techado >= 35-1e-6 ? 'ok':'bad', 'Área techada (VIS)', `<b>${f1(P.techado)} m²</b> techados en el 1.er piso (cuadrados construidos, franjas${P.estA?', escalera':''}) frente a 35 m² del módulo VIS (DS 005-2025).`);
+  // cada construido toca un vacío o la calle
+  const nb = q => [[q.c-1,q.r],[q.c+1,q.r],[q.c,q.r-1],[q.c,q.r+1]].map(([c,r])=>cell(c,r)).filter(Boolean);
+  const lonely = cells.filter(q=>q.built && !(q.r===0 || nb(q).some(z=>!z.built)));
+  add(lonely.length ? 'bad':'ok', 'Cada construido toca un vacío', lonely.length ? `${lonely.length} cuadrado${lonely.length>1?'s':''} construido${lonely.length>1?'s':''} sin un vacío ni la calle al lado.` : 'Todos los cuadrados construidos tocan, por lo menos por un lado, un vacío o la calle (regla de la Solución 4).');
+  // ambientes
+  const sc = rooms.filter(z=>z.k==='sc'), scA = sc.reduce((s,z)=>s+z.a,0), scMin = fmin('sa',v).a + fmin('cm',v).a;
+  add(scA >= (REFT.sa.est+REFT.cm.est)*(1-SC_INT)-1e-6 ? 'ok' : scA >= scMin-1e-6 ? 'warn':'bad', 'Sala-comedor', `${sc.map(z=>z.n).join(' + ') || '—'}: <b>${f1(scA)} m²</b> libres en la fila de la calle (con la franja del ingreso) frente a ${f1(scMin)} m² de mínimo funcional (sofá y mesa de 4) y ${f1((REFT.sa.est+REFT.cm.est)*(1-SC_INT))} m² del estándar.`);
+  const ds = rooms.filter(z=>z.k==='d'), bedOk = z => Math.min(z.w,z.h) >= 2.60-1e-6 && Math.max(z.w,z.h) >= 2.70-1e-6;
+  add(ds.length >= 2 ? 'ok' : ds.length ? 'warn':'bad', 'Dormitorios (VIS)', `${ds.length} cuadrado${ds.length===1?'':'s'} en la zona privada: ${ds.map(z=>`${z.n} ${f2(z.w)} × ${f2(z.h)} libres${z.absorbed?' (con la franja del fondo)':''}`).join('; ') || 'ninguno'}. La VIS pide 2 dormitorios.`);
+  ds.forEach(z=> add(bedOk(z) ? 'ok':'bad', z.n, bedOk(z) ? `${f2(z.w)} × ${f2(z.h)} m libres (${f1(z.a)} m²): entra la cama de 1.40 con 0.60 a cada lado (mínimo funcional 2.60 × 2.70).` : `${f2(z.w)} × ${f2(z.h)} m libres: <b>no entra la cama de 1.40 con 0.60 a cada lado</b> (mínimo funcional 2.60 × 2.70). Una columna de ${f2(z.q.w)} solo sirve para servicio${z.q.r===P.Hn-1?'':', o hay que sumarle la franja'}.`));
+  // iluminación de cada ambiente por un vacío o la calle (A.020 art. 11.4 a: 2.00 frente a dormitorio, sala o comedor)
+  rooms.filter(z=>z.k==='d' || z.k==='sc').forEach(z=>{
+    const q = z.q, ops = [];
+    if(q.r===0) ops.push({d:99, t:'a la calle'});
+    nb(q).filter(n=>!n.built).forEach(n=>{ const hor = n.r===q.r, dist = (hor ? n.w : n.h) - T, busy = est && n===cell(0,0) ? ' (con la escalera)' : bath && bath.inVoid && n===bath.cell ? ' (con el baño)' : ''; ops.push({d: busy ? dist - (hor ? 1.60 : 3.20)/2 : dist, t:`al vacío de ${f2(n.w)} × ${f2(n.h)}${busy}`}); });
+    const best = ops.sort((a,b)=>b.d-a.d)[0];
+    add(best && best.d >= 2.00-1e-6 ? 'ok':'bad', `Luz de ${z.n.toLowerCase()}`, best ? `Ventana ${best.t}${best.d<90?`: ${f2(best.d)} m libres frente a la ventana`:''} frente a 2.00 m (A.020 art. 11.4 a).` : 'No da a ningún vacío ni a la calle.');
+  });
+  // cocina: ventilación natural a un vacío de 1.80, a la calle o por el comedor; solo el baño puede ir a un ducto
+  if(kit){ const q = kit.cell, up = cell(q.c, q.r+1), bIn = bath && bath.inVoid && bath.cell===up, busy = up && ((bIn && !bath.far) || (est && up===cell(0,0)));
+    const free = up ? (bIn && bath.far ? bath.y0 - up.y0 - T/2 : up.h - T) : 0, ok = up && !up.built && !busy && free >= 1.80-1e-6, viaCom = kit.far;
+    add(ok ? 'ok' : viaCom ? 'warn':'bad', 'Ventilación de la cocina', ok ? `La mesada de 0.60 va contra el vacío del fondo de ${f2(up.w)} × ${f2(up.h)}: ${f2(free)} m libres frente a 1.80 m (A.020 art. 11.4 a)${bIn ? '; el baño se corre al fondo de ese vacío para dejarle la luz' : ''}. Ventila natural; solo el baño va a ducto.` : viaCom ? `La cocina no entra junto al baño y pasa a ${q.r===0?'la sala-comedor':'otro cuadrado'}: ventila a través del comedor. Revísalo.` : `La cocina no da a un vacío libre de 1.80 m${busy?' (el vacío del frente tiene el baño o la escalera)':''}: tiene que ventilar a la calle, a un vacío de 1.80 o por el comedor (solo el baño puede ir a ducto).`); }
+  if(bath){ const ok = bath.x1-bath.x0 >= 1.30-1e-6 && bath.y1-bath.y0 >= 1.30-1e-6 && (bath.x1-bath.x0)*(bath.y1-bath.y0) >= fmin('bc',v).a-1e-6;
+    add(ok ? 'ok':'bad', 'Baño', `${bath.inVoid ? 'En el vacío de la columna de servicio (queda área libre de sobra)' : 'En el primer construido de la columna de servicio'}: ${f2(bath.x1-bath.x0)} × ${f2(bath.y1-bath.y0)} m${Math.abs(bath.y1-bath.y0-1.75)<1e-6?' (baño cuadrado de 1.75)':' (baño grande de 1.40)'} frente al mínimo funcional de 1.30 × 1.80. ${kit && kit.cell===bath.cell || (kit && bath.inVoid && !bath.far) ? 'La cocina va al lado: mismo ducto.' : bath.far ? 'Va al fondo del vacío, para que la cocina ventile: no comparten ducto (no es obligatorio).' : ''} Puerta de 0.70 a la franja (A.020 art. 12.2).`); }
+  if(est){ const sv = cell(0,0), fits = est.l <= sv.h - T + 1e-6 && est.w <= sv.w - T + 1e-6;
+    add(fits ? 'ok':'bad', 'Escalera', `De ida y vuelta 1.60 × 3.20 centrada en el vacío de servicio que da a la calle (${f2(sv.w)} × ${f2(sv.h)}): ${fits ? 'entra' : 'no entra'}. Sube al 2.º piso sin pasar por la casa, así que el piso de arriba se puede independizar.`);
+    add('warn', 'Ancho de la escalera', `Cada tramo mide 0.80 m (1.60 entre los dos). El verificador usa 0.90 m de ancho (A.020 art. 15.1); con tramos de 0.90 la escalera pide 1.80 × 3.20 y sigue entrando en la columna de ${f2(sv.w)}${sv.w - T < 1.80 ? ', justo con el muro: revisa' : ''}.`); }
+  return L;
+}
+let impMir = false, impR2 = true, impRF = false, impLib = 30;
+function impRender(r){
+  const v = r.v, P = impPlan(v, {mir:impMir, r2:impR2, rf:impRF, lib:impLib}), L = impChecks(P, v);
+  const s = Math.min(34, 520/Math.max(P.F, 1)), mL = 56, mT = 46, mR = 58, mB = 50, Wd = P.F*s + mL + mR, Hd = v.fondo*s + mT + mB;
+  const X = x => mL + x*s, Y = y => mT + (v.fondo - P.rf - y)*s; // la calle abajo
+  const ZC = {soc:'#e2b850', pri:'#8cc084'};
+  let g = `<rect x="${X(0)}" y="${Y(P.B)}" width="${P.F*s}" height="${v.fondo*s}" fill="none" stroke="#c0392b" stroke-dasharray="6 3" stroke-width="1.2"/>`;
+  if(P.rf) g += `<rect x="${X(0)}" y="${Y(0)}" width="${P.F*s}" height="${P.rf*s}" fill="var(--ok-soft)"/><text x="${X(P.F/2)}" y="${Y(-P.rf/2)+4}" text-anchor="middle" font-size="10" fill="var(--ok)">retiro frontal ${f2(P.rf)}</text>`;
+  P.cells.forEach(q=>{
+    if(!q.built){ g += `<rect x="${X(q.x0)}" y="${Y(q.y1)}" width="${q.w*s}" height="${q.h*s}" fill="#fff" stroke="#6b78c8" stroke-width=".6"/><path d="M${X(q.x0)},${Y(q.y1)} L${X(q.x1)},${Y(q.y0)} M${X(q.x1)},${Y(q.y1)} L${X(q.x0)},${Y(q.y0)}" stroke="#6b78c8" stroke-width=".6"/>`; return; }
+    g += `<rect x="${X(q.x0)}" y="${Y(q.y1)}" width="${q.w*s}" height="${q.h*s}" fill="${ZC[q.zone]||'#222'}"/>`;
+  });
+  P.strips.forEach(st=> P.rows.forEach(rr=>{ const nbs = P.cells.filter(q=>q.r===rr.r && q.built && (Math.abs(q.x1-st.x0)<1e-6 || Math.abs(q.x0-st.x1)<1e-6)); const z = nbs.some(q=>q.zone==='soc') ? 'soc' : nbs.length ? 'pri' : rr.r===0 ? 'soc' : 'pri';
+    g += `<rect x="${X(st.x0)}" y="${Y(rr.y1)}" width="${(st.x1-st.x0)*s}" height="${rr.h*s}" fill="${ZC[z]}" opacity=".75"/>`; }));
+  // muros solo en el borde de lo construido (el eje en la línea de la grilla; en el borde del lote, hacia adentro)
+  const built = (x, y) => { if(x < 0 || x > P.F || y < 0 || y > P.B) return false; if(P.strips.some(st=> x > st.x0 && x < st.x1)) return true; const q = P.cells.find(c=> x > c.x0 && x < c.x1 && y > c.y0 && y < c.y1); return q ? q.built : false; };
+  const wall = (x0,y0,x1,y1) => { const t = T*s; g += x0===x1 ? `<rect x="${X(x0)-t/2}" y="${Y(y1)}" width="${t}" height="${(y1-y0)*s}" fill="#1b1b1b"/>` : `<rect x="${X(x0)}" y="${Y(y0)-t/2}" width="${(x1-x0)*s}" height="${t}" fill="#1b1b1b"/>`; };
+  const xs = [...new Set([0, P.F, ...P.cols.flatMap(q=>[q.x0,q.x1]), ...P.strips.flatMap(q=>[q.x0,q.x1])].map(x=>Math.round(x*1000)/1000))].filter(x=>x>=-1e-6 && x<=P.F+1e-6).sort((a,b)=>a-b);
+  const ys = [...new Set([0, P.B, ...P.rows.flatMap(q=>[q.y0,q.y1])].map(y=>Math.round(y*1000)/1000))].sort((a,b)=>a-b);
+  for(let i=0;i<xs.length-1;i++) for(let j=0;j<ys.length;j++){ const xm = (xs[i]+xs[i+1])/2, a = built(xm, ys[j]-0.01), b = built(xm, ys[j]+0.01); if(a !== b) wall(xs[i], ys[j], xs[i+1], ys[j]); }
+  for(let j=0;j<ys.length-1;j++) for(let i=0;i<xs.length;i++){ const ym = (ys[j]+ys[j+1])/2, a = built(xs[i]-0.01, ym), b = built(xs[i]+0.01, ym); if(a !== b) wall(xs[i], ys[j], xs[i], ys[j+1]); }
+  if(P.est){ const e = P.est; g += `<rect x="${X(e.x0)}" y="${Y(e.y1)}" width="${e.w*s}" height="${e.l*s}" fill="#fde3df" stroke="#c0392b" stroke-width="1.2"/><line x1="${X((e.x0+e.x1)/2)}" y1="${Y(e.y1-0.80)}" x2="${X((e.x0+e.x1)/2)}" y2="${Y(e.y0+0.10)}" stroke="#c0392b" stroke-width="2"/>`;
+    for(let k=1; k<10; k++){ const yy = e.y0 + 0.10 + k*0.25; if(yy > e.y1 - 0.80) break; g += `<line x1="${X(e.x0)}" y1="${Y(yy)}" x2="${X(e.x1)}" y2="${Y(yy)}" stroke="#c0392b" stroke-width=".5"/>`; }
+    g += `<text x="${X((e.x0+e.x1)/2)}" y="${Y(e.y0)-5}" text-anchor="middle" font-size="9" fill="#c0392b" paint-order="stroke" stroke="#fde3df" stroke-width="3">escalera</text>`; }
+  if(P.bath){ const b = P.bath; g += `<rect x="${X(b.x0)}" y="${Y(b.y1)}" width="${(b.x1-b.x0)*s}" height="${(b.y1-b.y0)*s}" fill="#2f6fd1" opacity=".85"/><text x="${X((b.x0+b.x1)/2)}" y="${Y((b.y0+b.y1)/2)+4}" text-anchor="middle" font-size="10" fill="#fff" font-weight="600">Baño</text>`; }
+  if(P.kit){ const k = P.kit; g += `<rect x="${X(k.x0)}" y="${Y(k.y1)}" width="${(k.x1-k.x0)*s}" height="${(k.y1-k.y0)*s}" fill="#1d3f8f"/><text x="${X((k.x0+k.x1)/2)}" y="${Y(k.y0)+12}" text-anchor="middle" font-size="9.5" fill="#1d3f8f" font-weight="600">cocina 0.60</text>`; }
+  P.rooms.forEach(z=>{ const q = z.q, cx = (z.x0+z.x1)/2, cy = (q.y0+q.y1)/2 + (P.kit && P.kit.cell===q ? -0.35 : 0);
+    if(z.k==='cb' || z.k==='bc' || z.k==='co') return;
+    g += `<text x="${X(cx)}" y="${Y(cy)}" text-anchor="middle" font-family="var(--f-display)" font-weight="600" font-size="11.5" fill="#1b1b1b">${z.n}</text><text x="${X(cx)}" y="${Y(cy)+13}" text-anchor="middle" font-family="var(--f-mono)" font-size="9.5" fill="#1b1b1b">${f2(z.w)} × ${f2(z.h)}</text>`; });
+  // cotas: columnas arriba, filas a la derecha
+  const dimC = (a, b, y, t, c) => `<line x1="${X(a)}" y1="${y}" x2="${X(b)}" y2="${y}" stroke="${c}" stroke-width=".8"/><line x1="${X(a)}" y1="${y-4}" x2="${X(a)}" y2="${y+4}" stroke="${c}"/><line x1="${X(b)}" y1="${y-4}" x2="${X(b)}" y2="${y+4}" stroke="${c}"/><text x="${X((a+b)/2)}" y="${y-4}" text-anchor="middle" font-family="var(--f-mono)" font-size="9.5" fill="${c}">${t}</text>`;
+  [...P.cols.map(q=>[q.x0,q.x1,f2(q.w)+(q.srv?' serv.':''),'#b5651d']), ...P.strips.map(q=>[q.x0,q.x1,f2(q.x1-q.x0),'#3949ab'])].forEach(([a,b,t,c])=> g += dimC(a, b, mT-14, t, c));
+  g += dimC(0, P.F, mT-32, `${f2(P.F)} m`, 'var(--ink)');
+  P.rows.forEach(rr=>{ const xx = X(P.F)+16; g += `<line x1="${xx}" y1="${Y(rr.y0)}" x2="${xx}" y2="${Y(rr.y1)}" stroke="#b5651d" stroke-width=".8"/><line x1="${xx-4}" y1="${Y(rr.y0)}" x2="${xx+4}" y2="${Y(rr.y0)}" stroke="#b5651d"/><text x="${xx+5}" y="${Y((rr.y0+rr.y1)/2)+3}" font-family="var(--f-mono)" font-size="9.5" fill="#b5651d">${f2(rr.h)}</text>`; });
+  g += `<text x="${X(P.F/2)}" y="${Y(-P.rf)+18}" text-anchor="middle" font-size="10.5" fill="var(--muted)">calle</text>`;
+  el('imp-svg').innerHTML = `<svg viewBox="0 0 ${Wd} ${Hd}" role="img" aria-label="Implantación por grilla de la Solución 4 en el lote de ${f2(P.F)} × ${f2(v.fondo)} m">${g}</svg>`;
+  const lbl = {ok:'cumple', warn:'aviso', bad:'no cumple'}, nB = L.filter(c=>c.s==='bad').length;
+  el('imp-chk').innerHTML = '<ul>' + L.map(c=>`<li><span class="pill ${c.s}">${lbl[c.s]}</span><span class="t">${c.t}</span><span class="d">${c.d}</span></li>`).join('') + '</ul>';
+  const dg = r.gross, dFree = (P.lotA - dg)/P.lotA*100;
+  el('imp-kpis').innerHTML = [
+    ['Grilla', `${P.W} <small>col.</small> × ${P.Hn} <small>filas</small>`],
+    ['Techado 1.er piso', `${f1(P.techado)} <small>m²</small>`],
+    ['Área libre', `${f1(P.freePct)} <small>%</small>`],
+    ['Dormitorios', `${P.rooms.filter(z=>z.k==='d').length}`],
+    ['Verificaciones', `${L.length - nB} <small>de ${L.length} sin rojo</small>`],
+    ['Plano de Diseño', `${f1(dg)} <small>m² · ${f1(dFree)} % libre</small>`]
+  ].map(([k,val])=>`<div class="kpi"><div class="k">${k}</div><div class="v">${val}</div></div>`).join('');
+  el('imp-note').innerHTML = `Mismo lote que la pestaña Diseño (${f2(P.F)} × ${f2(v.fondo)} m). La Solución 4 ocupa el lote con <b>${f1(P.techado)} m²</b> en damero y deja ${f1(P.freePct)} % libre; el plano de Diseño techa ${f1(dg)} m² y deja ${f1(dFree)} %. ${nB ? `<b style="color:var(--bad)">${nB} verificación${nB>1?'es':''} en rojo</b>: es lo que la Solución 4 todavía no resuelve con las reglas del verificador.` : 'Ninguna verificación en rojo.'} Por ahora es solo el 1.er piso; el plano de Diseño no cambia.`;
+}
+
 function render(){
   const v = read();
   ['a','b','d','ddr','y2','w','c'].forEach(k=> el(k+'-o').textContent = f2(v[k])+' m');
@@ -4376,6 +4567,7 @@ function render(){
   try { cuadro(r); } catch(e){ console.error('cuadro de áreas', e); }
   try { relRender(r); } catch(e){ console.error('relaciones', e); }
   try { bolas(r); } catch(e){ console.error('bolas', e); }
+  try { impRender(r); } catch(e){ console.error('implantación', e); }
   try { materiales(r); } catch(e){ console.error('materiales', e); }
   try { parRender(r); } catch(e){ console.error('parámetros', e); }
   try { etapas(r); applyProj(r); } catch(e){ console.error('etapas', e); }
@@ -4616,7 +4808,7 @@ el('ndt').addEventListener('change', ()=>{
   document.querySelectorAll('.presets button').forEach(x=>x.classList.remove('on'));
   regen();
 });
-const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('tab-par').hidden = k!=='par'; el('tab-zon').hidden = k!=='zon'; if(k==='zon') zonOpen(); el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','mat','eta','reg','zon','par','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
+const showTab = (k) => { if(k==='pro') setTimeout(()=>{ if(lastR) try { proRender(lastR); } catch(e){ console.error('diseño pro', e); } }, 0); el('tab-dis').hidden = k!=='dis'; el('tab-reg').hidden = k!=='reg'; el('tab-are').hidden = k!=='are'; el('tab-cam').hidden = k!=='cam'; el('tab-3d').hidden = k!=='3d'; el('tab-mat').hidden = k!=='mat'; el('tab-pro').hidden = k!=='pro'; el('tab-rne').hidden = k!=='rne'; el('tab-eta').hidden = k!=='eta'; el('tab-rel').hidden = k!=='rel'; el('tab-bol').hidden = k!=='bol'; el('tab-imp').hidden = k!=='imp'; el('tab-par').hidden = k!=='par'; el('tab-zon').hidden = k!=='zon'; if(k==='zon') zonOpen(); el('pj-bar').hidden = !['dis','3d','eta'].includes(k); if(k==='3d') open3D(); ['dis','pro','3d','are','rel','bol','imp','mat','eta','reg','zon','par','rne','cam'].forEach(t=>{ const b = el('tab-btn-'+t); b.classList.toggle('on', t===k); b.setAttribute('aria-selected', t===k); }); };
 // Exportar el 3D a SketchUp: COLLADA 1.4.1 en metros, con lo que se ve en el visor (etapa, techos, 1.er piso)
 el('v3-dae').addEventListener('click', async ()=>{
   const msg = el('v3-dae-msg');
@@ -4639,9 +4831,9 @@ el('tab-btn-dis').addEventListener('click', ()=>showTab('dis')); el('tab-btn-3d'
 el('v3-fly').addEventListener('click', ()=> setFly(!(d3 && d3.fly.on)));
 document.querySelectorAll('[data-v3]').forEach(b=> b.addEventListener('click', ()=>{ document.querySelectorAll('[data-v3]').forEach(x=>x.classList.toggle('on', x===b)); view3D(b.dataset.v3); }));
 ['v3-techo','v3-p1'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) build3D(lastR); })); el('tab-btn-are').addEventListener('click', ()=>showTab('are'));
-document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
+document.querySelectorAll('.seg button[data-niv]').forEach(b=> b.addEventListener('click', ()=>{ nivel = b.dataset.niv; try { localStorage.setItem('vvm-nivel', nivel); } catch(e){} if(el('tam').value === 'lote') regen(); else render(); })); el('tab-btn-reg').addEventListener('click', ()=>showTab('reg')); el('tab-btn-cam').addEventListener('click', ()=>showTab('cam')); el('tab-btn-mat').addEventListener('click', ()=>showTab('mat')); el('tab-btn-pro').addEventListener('click', ()=>showTab('pro')); el('tab-btn-rne').addEventListener('click', ()=>showTab('rne')); el('tab-btn-par').addEventListener('click', ()=>showTab('par')); el('tab-btn-zon').addEventListener('click', ()=>showTab('zon')); el('tab-btn-eta').addEventListener('click', ()=>showTab('eta')); el('tab-btn-rel').addEventListener('click', ()=>showTab('rel')); el('tab-btn-bol').addEventListener('click', ()=>showTab('bol')); el('tab-btn-imp').addEventListener('click', ()=>showTab('imp')); el('imp-mir').addEventListener('change', e=>{ impMir = e.target.checked; if(lastR) impRender(lastR); }); el('imp-r2').addEventListener('change', e=>{ impR2 = e.target.checked; if(lastR) impRender(lastR); }); el('imp-rf').addEventListener('change', e=>{ impRF = e.target.checked; if(lastR) impRender(lastR); }); el('imp-lib').addEventListener('input', e=>{ impLib = parseFloat(e.target.value)||0; if(lastR) impRender(lastR); }); ['bo-adj','bo-zon'].forEach(id=> el(id).addEventListener('change', ()=>{ if(lastR) bolas(lastR); }));
 // Versión de la herramienta: se actualiza con cada cambio importante (misma fecha que la pestaña Cambios)
-const APP_VERSION = '2026-11-16a';
+const APP_VERSION = '2026-11-19a';
 el('ver').textContent = 'Versión ' + APP_VERSION;
 // Dentro de Claude la copia no se actualiza sola: se ofrece abrir la página publicada, siempre con una dirección nueva
 const ON_PAGES = /(^|\.)github\.io$/.test(location.hostname);
